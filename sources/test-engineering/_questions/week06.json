@@ -1,0 +1,435 @@
+{
+  "week": 6,
+  "title": "Advanced Test Design: Graph Coverage, Data Flow, Decision Tables",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "In a control flow graph (CFG), what does a node represent?",
+      "options": [
+        "A statement, or a block of statements that always run one after another",
+        "A possible transfer of control from one statement or block to the next",
+        "A place where a variable gets a value, such as an assignment or input",
+        "One combination of conditions together with the actions that follow from it",
+        "A state the system stays in until a specific event moves it to another"
+      ],
+      "explanation": "A CFG node is a single statement or a block of statements that always execute in sequence; a possible transfer of control between nodes is an edge, not a node.",
+      "slide": 5
+    },
+    {
+      "n": 2,
+      "prompt": "Which ISTQB coverage measure corresponds to Ammann and Offutt's edge coverage?",
+      "options": [
+        "Branch coverage",
+        "Statement coverage",
+        "Decision table coverage",
+        "Prime path coverage",
+        "All-uses coverage"
+      ],
+      "explanation": "ISTQB calls edge coverage branch coverage and measures it as branches exercised divided by all branches; statement coverage is the ISTQB name for node coverage.",
+      "slide": 7
+    },
+    {
+      "n": 3,
+      "prompt": "The control flow graph of this function has one node per line plus a single exit node:\n1 def classify(x, y):\n2     if x > 0:\n3         if y > 0:\n4             return \"both positive\"\n5         return \"x positive, y non-positive\"\n6     return \"x non-positive\"\nWhat node and edge coverage does the single test classify(-5, 3) reach?",
+      "options": [
+        "Node coverage 57%, edge coverage 37.5%",
+        "Node coverage 50%, edge coverage 37.5%",
+        "Node coverage 57%, edge coverage 50%",
+        "Node coverage 37.5%, edge coverage 57%",
+        "Node coverage 67%, edge coverage 43%"
+      ],
+      "explanation": "The graph has 7 nodes (lines 1-6 and exit) and 8 edges; the path 1 → 2 → 6 → exit visits 4 of 7 nodes (57%) and takes 3 of 8 edges (37.5%), so the same test gives two different numbers.",
+      "slide": 8
+    },
+    {
+      "n": 4,
+      "prompt": "A test suite for this function already contains classify(-5, 3):\n1 def classify(x, y):\n2     if x > 0:\n3         if y > 0:\n4             return \"both positive\"\n5         return \"x positive, y non-positive\"\n6     return \"x non-positive\"\nWhich two added tests bring edge coverage to 100%?",
+      "options": [
+        "classify(5, 3) and classify(5, -2)",
+        "classify(5, 3) and classify(-5, -3)",
+        "classify(-5, -3) and classify(5, -2)",
+        "classify(0, 3) and classify(5, 0)",
+        "classify(5, 0) and classify(3, -1)"
+      ],
+      "explanation": "classify(-5, 3) never reaches line 3, so the added tests must take both edges of the inner decision: classify(5, 3) goes from line 3 to line 4 and classify(5, -2) goes from line 3 to line 5. Every other pair misses the edge to line 4 or the edge to line 5 (x = 0 and y = 0 count as non-positive).",
+      "slide": 8
+    },
+    {
+      "n": 5,
+      "prompt": "coverage.py with --branch is run after the single test classify(-5, 3). Line 2 of classify is if x > 0:, whose true branch goes to line 3 and whose false branch goes to line 6. The report shows line 2 in yellow as a partial branch. What does that mean?",
+      "options": [
+        "Line 2 ran, but the jump from line 2 to line 3 never happened",
+        "Line 2 never ran, so neither of its branches was taken",
+        "Line 2 ran, but the jump from line 2 to line 6 never happened",
+        "Line 2 ran, and both of its branches were taken at least once",
+        "Line 2 defines a variable whose value is never used later"
+      ],
+      "explanation": "With x = -5, line 2 runs and jumps to line 6, but the jump 2 → 3 never happens, so the tool marks line 2 as a partial branch; lines that never ran are shown in red instead.",
+      "slide": 9
+    },
+    {
+      "n": 6,
+      "prompt": "A graph has the edges A→B, A→C, B→D, C→D, D→E, D→F and E→F. The two tests A-B-D-E-F and A-C-D-F take every edge. Which of these edge pairs through the join node D is left uncovered?",
+      "options": [
+        "B → D → F",
+        "B → D → E",
+        "C → D → F",
+        "A → B → D",
+        "A → C → D"
+      ],
+      "explanation": "D has 2 in-edges and 2 out-edges, so there are 2 × 2 = 4 pairs through it; the tests take only B → D → E and C → D → F, leaving B → D → F and C → D → E uncovered. Edge-pair coverage asks for all four, so it also tests how the first decision combines with the second.",
+      "slide": 10
+    },
+    {
+      "n": 7,
+      "prompt": "Which description defines a prime path?",
+      "options": [
+        "A simple path that is not part of any longer simple path",
+        "A path that starts at an initial node and ends at a final node",
+        "A path from a definition to a use with no other definition on it",
+        "Any path of up to two edges that can be reached in the graph",
+        "A simple path that starts at the initial node of the graph"
+      ],
+      "explanation": "A prime path is a simple path (no repeated node, except that it may start and end at the same node) that no longer simple path contains; a path from an initial to a final node is a test path.",
+      "slide": 11
+    },
+    {
+      "n": 8,
+      "prompt": "A graph has the edges 1→2, 2→3, 3→4, 4→2 and 2→5, where node 5 is the exit. Which of these is a prime path?",
+      "options": [
+        "[2, 3, 4, 2]",
+        "[1, 2, 3]",
+        "[1, 2, 3, 4, 2]",
+        "[2, 3, 4]",
+        "[4, 2, 5]"
+      ],
+      "explanation": "[2, 3, 4, 2] is simple because only its first and last node are the same, and no longer simple path contains it. [1, 2, 3] and [2, 3, 4] sit inside [1, 2, 3, 4], [4, 2, 5] sits inside [3, 4, 2, 5], and [1, 2, 3, 4, 2] is not simple because node 2 repeats without being the start.",
+      "slide": 12
+    },
+    {
+      "n": 9,
+      "prompt": "What does it mean that coverage criterion A subsumes criterion B?",
+      "options": [
+        "Every test set that satisfies A also satisfies B",
+        "Every test set that satisfies B also satisfies A",
+        "A always needs fewer tests than B on the same graph",
+        "A and B always need exactly the same set of tests",
+        "A measures control flow while B measures data flow"
+      ],
+      "explanation": "Subsumption means that satisfying A guarantees B, as edge coverage guarantees node coverage; the reverse direction does not hold in general.",
+      "slide": 13
+    },
+    {
+      "n": 10,
+      "prompt": "The code is if (x > 0) { y = 1; } with no else branch. What does the single test x = 1 achieve?",
+      "options": [
+        "100% node coverage but not 100% edge coverage",
+        "100% edge coverage but not 100% node coverage",
+        "100% node coverage and 100% edge coverage",
+        "Neither 100% node coverage nor 100% edge coverage",
+        "100% edge-pair coverage but not 100% edge coverage"
+      ],
+      "explanation": "With x = 1 every node is visited, but the false edge of the decision is never taken; this is why node coverage does not subsume edge coverage, while edge coverage does subsume node coverage.",
+      "slide": 13
+    },
+    {
+      "n": 11,
+      "prompt": "In data flow testing, when is a path from a definition of a variable to a use of it def-clear?",
+      "options": [
+        "When no other definition of that variable lies on the path",
+        "When no other use of that variable lies on the path",
+        "When the path visits every definition of that variable",
+        "When the path contains no decision nodes at all",
+        "When the variable is defined before the function is called"
+      ],
+      "explanation": "A def-clear path has no other definition of the variable between the def and the use; a def and a use joined by at least one such path form a du-pair.",
+      "slide": 15
+    },
+    {
+      "n": 12,
+      "prompt": "Which list gives every du-pair (def line, use line) for the variable price?\n1  price = read_price()\n2  if price > 100:\n3      price = 100\n4  print(price)",
+      "options": [
+        "(1, 2), (1, 4), (3, 4)",
+        "(1, 2), (3, 4)",
+        "(1, 2), (1, 3), (3, 4)",
+        "(1, 4), (2, 4), (3, 4)",
+        "(1, 2), (1, 4), (2, 3), (3, 4)"
+      ],
+      "explanation": "price is defined on lines 1 and 3 and used on lines 2 (p-use) and 4 (c-use); (1, 4) counts because 1 → 2 → 4 is def-clear, even though 1 → 2 → 3 → 4 is not. Line 3 only assigns price, so it is a def, not a use.",
+      "slide": 16
+    },
+    {
+      "n": 13,
+      "prompt": "In this bill code, which line holds a p-use of total?\n1  total = 0\n2  for item in order:\n3      total = total + item.price\n4  if total > 200:\n5      total = total * 0.9\n6  print(total)",
+      "options": [
+        "Line 4, if total > 200:",
+        "Line 3, total = total + item.price",
+        "Line 5, total = total * 0.9",
+        "Line 6, print(total)",
+        "Line 1, total = 0"
+      ],
+      "explanation": "A p-use reads the variable inside a decision, as line 4 does; lines 3, 5 and 6 read total in a computation, which are c-uses, and line 1 is only a definition.",
+      "slide": 17
+    },
+    {
+      "n": 14,
+      "prompt": "Which test covers the du-pair (line 1, line 6) for total in this bill code?\n1  total = 0\n2  for item in order:\n3      total = total + item.price\n4  if total > 200:\n5      total = total * 0.9\n6  print(total)",
+      "options": [
+        "An empty order, so the loop body never runs",
+        "An order with one item of 150 TL",
+        "An order with one item of 250 TL",
+        "An order with two items of 120 TL each",
+        "An order whose items add up to exactly 200 TL"
+      ],
+      "explanation": "Any item runs line 3, which redefines total, so only an empty order gives the def-clear path 1 → 2 → 4 → 6 (with total = 0 the discount on line 5 is skipped as well).",
+      "slide": 17
+    },
+    {
+      "n": 15,
+      "prompt": "Which statement correctly contrasts all-defs coverage with all-uses coverage?",
+      "options": [
+        "All-defs: each def reaches at least one use; all-uses: each def reaches every use it can reach",
+        "All-defs: each def reaches every use it can reach; all-uses: each def reaches at least one use",
+        "All-defs: every def line is executed once; all-uses: every use line is executed once",
+        "All-defs: each def reaches at least one use; all-uses: every simple def-clear path is taken",
+        "All-defs: each variable is defined only once; all-uses: each variable is used only once"
+      ],
+      "explanation": "All-defs needs one def-clear path from every definition to at least one of its uses, while all-uses needs a def-clear path to every use the definition can reach; taking every simple def-clear path is the stronger all-du-paths criterion.",
+      "slide": 18
+    },
+    {
+      "n": 16,
+      "prompt": "Which statement about all-du-paths coverage is true?",
+      "options": [
+        "It needs every simple def-clear path from each def to each of its uses",
+        "It needs only one def-clear path from each def to one of its uses",
+        "It is subsumed by all-defs, so all-defs tests always satisfy it",
+        "It never needs more tests than all-uses, even with loops in between",
+        "It needs every path, including ones that repeat a loop many times"
+      ],
+      "explanation": "All-du-paths asks for every simple def-clear path from each definition to each of its uses and subsumes all-uses, which subsumes all-defs; it can need many more tests than all-uses when branches or loops lie between a def and its use.",
+      "slide": 18
+    },
+    {
+      "n": 17,
+      "prompt": "For the variable price in this code, which test set achieves all-uses coverage?\n1  price = read_price()\n2  if price > 100:\n3      price = 100\n4  print(price)",
+      "options": [
+        "price = 150 and price = 50",
+        "price = 150 only",
+        "price = 50 only",
+        "price = 150 and price = 200",
+        "price = 50 and price = 80"
+      ],
+      "explanation": "price = 150 runs 1 → 2 → 3 → 4 and covers (1, 2) and (3, 4), which is already enough for all-defs; all-uses also needs (1, 4), which a value of 100 or less such as price = 50 covers through 1 → 2 → 4.",
+      "slide": 19
+    },
+    {
+      "n": 18,
+      "prompt": "In this function body, total is not assigned anywhere else:\nfor item in order:\n    total = total + item.price\nprint(total)\nWhich data flow anomaly does it contain?",
+      "options": [
+        "total is used before any definition",
+        "total is defined and never used",
+        "total is defined twice with no use in between",
+        "item is used before any definition",
+        "item is defined and never used"
+      ],
+      "explanation": "On the first iteration total + item.price reads total before anything has assigned it, so the program reads a default or leftover value where the language does not stop this at compile time. Every definition of total is followed by a use, and item is defined by the loop and used in item.price.",
+      "slide": 20
+    },
+    {
+      "n": 19,
+      "prompt": "Which order lists the graph coverage criteria from strongest to weakest, as in the subsumption ladder?",
+      "options": [
+        "Complete path, prime path, edge-pair, edge, node",
+        "Complete path, edge-pair, prime path, edge, node",
+        "Prime path, complete path, edge-pair, edge, node",
+        "Complete path, prime path, edge, edge-pair, node",
+        "Complete path, prime path, edge-pair, node, edge"
+      ],
+      "explanation": "In the ladder each criterion subsumes the one below it, from complete path down to edge coverage (ISTQB branch coverage) and finally node coverage (ISTQB statement coverage); the one dashed arrow holds only on graphs without self-loops.",
+      "slide": 21
+    },
+    {
+      "n": 20,
+      "prompt": "A restaurant gives students 10% off and a free dessert with orders over 400 TL, but both offers end at 18:00. With the true/false conditions \"student\", \"order over 400 TL\" and \"before 18:00\", how many columns does the full decision table have before minimization?",
+      "options": [
+        "8 columns",
+        "6 columns",
+        "3 columns",
+        "9 columns",
+        "5 columns"
+      ],
+      "explanation": "A full decision table has a column for every combination, so n true/false conditions give 2^n columns: 2^3 = 8. Merging columns comes only afterwards, during minimization.",
+      "slide": 26
+    },
+    {
+      "n": 21,
+      "prompt": "In the tutorial's login decision table, what does the Combinations column list for the rule whose expected result is \"Enter valid credentials to login\"?",
+      "options": [
+        "Both invalid; either of them invalid",
+        "Both blank; either of them blank",
+        "Both valid; either of them valid",
+        "User id blank; password invalid",
+        "NA, because only one combination applies"
+      ],
+      "explanation": "That row lists \"Both invalid\" and \"Either of them invalid\"; \"Both blank\" and \"Either of them blank\" belong to the rule that asks for non-blank credentials, and the Login rule shows NA.",
+      "slide": 28
+    },
+    {
+      "n": 22,
+      "prompt": "In ISTQB decision table notation, how do the condition entries \"-\" and \"N/A\" differ?",
+      "options": [
+        "\"-\" means the condition does not affect the outcome; N/A means the combination is infeasible",
+        "\"-\" means the combination is infeasible; N/A means the condition does not affect the outcome",
+        "\"-\" means the condition is not satisfied; N/A means the column has not been tested yet",
+        "\"-\" means the action does not happen; N/A means the action happens for this rule",
+        "They mean the same thing; N/A is only an older way of writing the dash \"-\""
+      ],
+      "explanation": "ISTQB writes \"-\" for a condition that does not matter and keeps N/A for combinations that cannot happen. The tutorial's NA means \"does not matter\", so it corresponds to the ISTQB dash.",
+      "slide": 29
+    },
+    {
+      "n": 23,
+      "prompt": "The full login decision table has four columns for C1 (both fields filled?) and C2 (valid user id and password?). Why does the minimized table have only three columns?",
+      "options": [
+        "When C1 is F the outcome is the same for either value of C2, so two columns merge",
+        "The combination of a blank field with valid credentials is infeasible, so it is dropped",
+        "Columns that lead to any error message are combined into one single column",
+        "When C2 is T the outcome is the same for either value of C1, so two columns merge",
+        "The \"Log in\" action needs no separate test, so its column is removed"
+      ],
+      "explanation": "With a blank field the system asks for non-blank credentials whatever C2 is, so columns 1 and 2 merge into R1 with C2 = \"-\"; the combination is not infeasible, its C2 value simply does not matter.",
+      "slide": 31
+    },
+    {
+      "n": 24,
+      "prompt": "According to the tutorial's rules for turning a logical flow diagram into a decision table, what must the finished table do?",
+      "options": [
+        "Cover every branch and every leaf (result) of the logical tree",
+        "Include only the leaves that end in a successful result",
+        "Hold one boundary value from every partition in each of its rules",
+        "List the decision boxes as results and the leaves as validations",
+        "Leave out results that can be reached by more than one combination"
+      ],
+      "explanation": "The validations in the decision boxes become columns of the table and every result (leaf) of the flow diagram must be covered; after completing the table one verifies that all branches and leaves of the logical tree are covered.",
+      "slide": 32
+    },
+    {
+      "n": 25,
+      "prompt": "A decision table has 8 columns, 2 of which are infeasible combinations. The tests exercise 3 of the feasible columns. What is the decision table coverage?",
+      "options": [
+        "50%",
+        "37.5%",
+        "75%",
+        "60%",
+        "25%"
+      ],
+      "explanation": "The coverage items are only the feasible columns, so coverage is 3 / 6 = 50%; dividing by all 8 columns (37.5%) wrongly counts the infeasible ones.",
+      "slide": 33
+    },
+    {
+      "n": 26,
+      "prompt": "A login page passes the three tests that give 100% decision table coverage. Which aspect do these tests leave to equivalence partitioning and boundary value analysis?",
+      "options": [
+        "The values inside a condition, such as how long a user id may be",
+        "The feasible rules of the table, each exercised at least once",
+        "The rule that a blank field triggers the non-blank alert",
+        "The rule that valid credentials lead to a successful login",
+        "The rule that invalid credentials trigger the valid-credentials alert"
+      ],
+      "explanation": "100% decision table coverage tests every rule once but not the values inside a condition, such as which field is blank, which password is wrong or how long a user id may be; equivalence partitioning and boundary value analysis cover that part.",
+      "slide": 33
+    },
+    {
+      "n": 27,
+      "prompt": "Which of these is an advantage of the decision table technique?",
+      "options": [
+        "Missing or contradictory rules show up as empty or conflicting columns",
+        "Boundary values and partitions fit directly into the table template",
+        "The table stays small no matter how many conditions there are",
+        "It tests behaviour that depends on the order of events over time",
+        "A wrong rule in the table is caught by running the table's own tests"
+      ],
+      "explanation": "Gaps and contradictions in the rules appear as empty or conflicting columns. The table itself still needs a review, because a wrong rule in the table simply produces a wrong test.",
+      "slide": 34
+    },
+    {
+      "n": 28,
+      "prompt": "An order can be placed, paid and then cancelled, and the correct result depends on the order in which these events happen. Which technique fits this behaviour better than a decision table?",
+      "options": [
+        "State transition testing",
+        "Equivalence partitioning",
+        "Boundary value analysis",
+        "Error guessing",
+        "Checklist-based testing"
+      ],
+      "explanation": "A decision table describes combinations of conditions at one moment; when the result depends on the order of events, state transition testing fits better.",
+      "slide": 35
+    },
+    {
+      "n": 29,
+      "prompt": "A password must be 8 to 16 characters long, which gives the length partitions 0-7, 8-16 and 17 and up. Which lengths does 3-value boundary value analysis select?",
+      "options": [
+        "0, 1, 6, 7, 8, 9, 15, 16, 17, 18",
+        "0, 7, 8, 16, 17",
+        "7, 8, 9, 15, 16, 17",
+        "1, 6, 7, 8, 9, 15, 16, 17, 18",
+        "4, 12, 20"
+      ],
+      "explanation": "The boundaries are the smallest and largest value of every partition (0, 7, 8, 16, 17), and 3-value BVA adds both neighbours of each, while 0 has no lower neighbour. 0, 7, 8, 16, 17 alone is the 2-value set, and 4, 12, 20 is one equivalence partitioning value per partition.",
+      "slide": 39
+    },
+    {
+      "n": 30,
+      "prompt": "In an order state machine with the states Placed, Paid, Shipped and Cancelled, cancelling a shipped order is rejected as an invalid transition. Which coverage level requires a test that attempts it?",
+      "options": [
+        "All transitions, including attempts at invalid ones",
+        "All states",
+        "All valid transitions",
+        "All feasible decision table columns",
+        "All edges of the code's control flow graph"
+      ],
+      "explanation": "State transition coverage can target all states, all valid transitions, or all transitions including attempts at invalid ones; only the last level asks for a test such as cancelling a shipped order.",
+      "slide": 41
+    },
+    {
+      "n": 31,
+      "prompt": "Which technique designs, runs and evaluates tests at the same time, often inside a fixed time box and with a short written charter?",
+      "options": [
+        "Exploratory testing",
+        "Error guessing",
+        "Checklist-based testing",
+        "State transition testing",
+        "Decision table testing"
+      ],
+      "explanation": "This describes exploratory testing; error guessing relies on the tester's experience and lists of faults seen before, and checklist-based testing works through a prepared list of conditions.",
+      "slide": 42
+    },
+    {
+      "n": 32,
+      "prompt": "A payment field offers the choices Cash, Card and Voucher, which have no order. Which statement is true?",
+      "options": [
+        "Equivalence partitioning applies, but boundary value analysis does not",
+        "Boundary value analysis applies, but equivalence partitioning does not",
+        "Both apply, with Cash and Voucher used as the boundary values",
+        "Neither applies, because the input is not a number",
+        "Only 3-value boundary value analysis applies to such a list"
+      ],
+      "explanation": "Equivalence partitioning fits any kind of input, including options, while boundary value analysis needs values that have an order, so an unordered list of choices has no boundaries to test.",
+      "slide": 44
+    },
+    {
+      "n": 33,
+      "prompt": "In the recommended steps for writing test cases for business logic, which step comes last, as a final touch?",
+      "options": [
+        "Error guessing based on experience",
+        "A decision table for every feasible rule combination",
+        "Boundary value analysis and equivalence partitioning",
+        "Combinations and permutations for field-level validations",
+        "State transition testing of the business flow"
+      ],
+      "explanation": "The steps are a decision table first, then boundary value analysis and equivalence partitioning for input ranges, then combinations for field-level validations, and finally error guessing with experience as a final touch.",
+      "slide": 46
+    }
+  ]
+}

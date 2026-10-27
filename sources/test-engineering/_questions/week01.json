@@ -1,0 +1,305 @@
+{
+  "week": 1,
+  "title": "The Role of Test Engineering and Quality Fundamentals",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "How does the modern definition describe Test Engineering?",
+      "options": [
+        "A proactive QA discipline across the whole lifecycle, aimed at preventing defects",
+        "A reactive QC activity performed after implementation, focused on finding defects",
+        "A distinct downstream phase that starts only once all coding is complete",
+        "A process-auditing function that certifies teams against ISO standards",
+        "A developer-only practice limited to writing unit tests for each function"
+      ],
+      "explanation": "The modern definition calls Test Engineering a proactive quality assurance discipline that spans the entire lifecycle and focuses on preventing defects; testing as a separate downstream phase describes the older waterfall role.",
+      "slide": 4
+    },
+    {
+      "n": 2,
+      "prompt": "Which description matches Quality Assurance (QA)?",
+      "options": [
+        "Process-oriented activities such as policies, standards, audits and improvement loops",
+        "Product-oriented activities that evaluate whether a deliverable meets requirements",
+        "Dynamic evaluation of a product by executing it under specified conditions",
+        "Checking the conformance of the product to its specifications",
+        "Checking the product's fitness for purpose together with stakeholders"
+      ],
+      "explanation": "QA is process-oriented and establishes confidence that quality will be achieved through policies, standards, audits and improvement loops; evaluating whether a specific deliverable meets requirements is Quality Control.",
+      "slide": 5
+    },
+    {
+      "n": 3,
+      "prompt": "According to the course's definition of testing, what does testing provide?",
+      "options": [
+        "Information about risk and quality, not guarantees",
+        "A guarantee that no defects remain in the product",
+        "Formal proof that the product conforms to its specification",
+        "Confidence that the development process will achieve quality",
+        "A complete record of every possible input and its output"
+      ],
+      "explanation": "Testing executes the product under specified conditions and observes outcomes, which provides information about risk and quality but no guarantees; building confidence in the process is what QA does.",
+      "slide": 5
+    },
+    {
+      "n": 4,
+      "prompt": "Before release, a team lets real end users try the product to check whether it actually fits their needs and purpose. Which activity is this?",
+      "options": [
+        "Validation",
+        "Verification",
+        "Static testing",
+        "Unit testing",
+        "Quality assurance audit"
+      ],
+      "explanation": "Validation asks 'Are we building the right product?' and checks fitness for purpose with stakeholders; verification only checks conformance to the specifications.",
+      "slide": 5
+    },
+    {
+      "n": 5,
+      "prompt": "Which statement about Quality Assurance (QA) and Quality Control (QC) is correct?",
+      "options": [
+        "QA is proactive/preventive, while QC is reactive/detective",
+        "QA is reactive/detective, while QC is proactive/preventive",
+        "QA is product-oriented, while QC is process-oriented",
+        "QA is owned by QC personnel, while QC involves the entire organization",
+        "QA produces defect logs, while QC produces training materials"
+      ],
+      "explanation": "The QA/QC comparison lists QA as proactive/preventive and process-oriented (the whole team's responsibility) and QC as reactive/detective and product-oriented (done by QC personnel).",
+      "slide": 6
+    },
+    {
+      "n": 6,
+      "prompt": "In the ISO/IEC 25010 product quality model, testability is listed as a sub-characteristic of which characteristic?",
+      "options": [
+        "Maintainability",
+        "Reliability",
+        "Usability",
+        "Functional suitability",
+        "Portability"
+      ],
+      "explanation": "ISO/IEC 25010 lists testability under Maintainability, together with modularity, reusability, analyzability and modifiability.",
+      "slide": 7
+    },
+    {
+      "n": 7,
+      "prompt": "Which of the following is a static testing activity?",
+      "options": [
+        "Running a linter and SAST on the source code",
+        "Executing unit tests in the CI pipeline",
+        "Running a performance test on the system",
+        "Conducting user acceptance testing (UAT)",
+        "Running API/integration tests against a service"
+      ],
+      "explanation": "Static testing evaluates artefacts without executing the code, and linters and SAST are listed static examples; unit, performance, UAT and API/integration tests execute the system, so they are dynamic.",
+      "slide": 8
+    },
+    {
+      "n": 8,
+      "prompt": "What is the core idea of Equivalence Partitioning (EP)?",
+      "options": [
+        "Group inputs into classes that behave alike and test one representative per class",
+        "Test the minimum, maximum and the values just inside and outside each limit",
+        "Enumerate combinations of conditions and the expected outcome of each one",
+        "Rank test items by likelihood, impact and detectability before testing them",
+        "Execute every possible input value to reach complete input coverage"
+      ],
+      "explanation": "EP partitions inputs into classes expected to behave similarly and tests one representative from each class; testing the minimum, maximum and their neighbours is boundary value analysis.",
+      "slide": 9
+    },
+    {
+      "n": 9,
+      "prompt": "Which test design technique is meant for logic with multiple conditions, enumerating their combinations and expected outcomes?",
+      "options": [
+        "Decision tables / cause-effect",
+        "Equivalence partitioning",
+        "Boundary value analysis",
+        "Risk-based testing",
+        "Exploratory testing"
+      ],
+      "explanation": "Decision tables / cause-effect handle logic with multiple conditions by enumerating condition combinations and expected outcomes, minimized with pairwise where appropriate.",
+      "slide": 9
+    },
+    {
+      "n": 10,
+      "prompt": "A password must be 8–20 characters long. Which set of length equivalence classes matches the course's worked example?",
+      "options": [
+        "<8 invalid, 8–20 valid, >20 invalid",
+        "<8 valid, 8–20 valid, >20 invalid",
+        "<8 invalid, 8–20 invalid, >20 valid",
+        "<7 invalid, 7–21 valid, >21 invalid",
+        "<8 invalid, 8–20 valid, >20 valid"
+      ],
+      "explanation": "The worked example partitions length into <8 (invalid), 8–20 (valid) and >20 (invalid); 7 and 21 are boundary test values, not limits of the valid class.",
+      "slide": 10
+    },
+    {
+      "n": 11,
+      "prompt": "An input field accepts integers from 1 to 100. Testing just below, at and just above each boundary, which values does boundary value analysis select?",
+      "options": [
+        "0, 1, 2, 99, 100, 101",
+        "1, 50, 100",
+        "0, 1, 100, 101",
+        "1, 2, 99, 100",
+        "-1, 0, 101, 102"
+      ],
+      "explanation": "BVA tests just below, at and just above each boundary: 0, 1, 2 around the minimum and 99, 100, 101 around the maximum; leaving out 2 and 99 misses the just-inside values.",
+      "slide": 11
+    },
+    {
+      "n": 12,
+      "prompt": "Using the course's risk-based testing rubric, a feature is rated likelihood 4, impact 5 and detectability 2. What is its RPN?",
+      "options": [
+        "40",
+        "20",
+        "11",
+        "10",
+        "100"
+      ],
+      "explanation": "RPN = Likelihood × Impact × Detectability = 4 × 5 × 2 = 40; 20 ignores detectability and 11 adds the scores instead of multiplying them.",
+      "slide": 13
+    },
+    {
+      "n": 13,
+      "prompt": "On the 1–5 risk-based testing rubric, what does a detectability score of 5 mean?",
+      "options": [
+        "Hard to detect until production",
+        "Easy to detect before release",
+        "Frequent in the field or code-change area",
+        "Safety, financial or regulatory breach",
+        "Cosmetic impact only"
+      ],
+      "explanation": "On the rubric, detectability 1 means easy to detect pre-release and 5 means hard to detect until production, so a higher detectability score raises the risk.",
+      "slide": 13
+    },
+    {
+      "n": 14,
+      "prompt": "In the risk assessment matrix, what risk level results from a Remote (D) probability combined with Catastrophic (1) severity?",
+      "options": [
+        "Serious",
+        "High",
+        "Medium",
+        "Low",
+        "Eliminated"
+      ],
+      "explanation": "In the matrix, Remote (D) with Catastrophic (1) is rated Serious; Catastrophic severity becomes High only at Occasional (C) or a more frequent probability.",
+      "slide": 14
+    },
+    {
+      "n": 15,
+      "prompt": "How does the test engineer's role differ between sequential (waterfall) and incremental development?",
+      "options": [
+        "Waterfall: testing is a distinct downstream phase; incremental: testers take part repeatedly across increments",
+        "Waterfall: testers take part repeatedly across increments; incremental: testing is a distinct downstream phase",
+        "Waterfall: regression testing is central; incremental: regression testing is no longer needed",
+        "Waterfall: early feedback becomes possible; incremental: feedback waits until deployment",
+        "Waterfall: testers sit in cross-functional teams; incremental: testing starts after deployment"
+      ],
+      "explanation": "In waterfall, testing is a distinct downstream phase; in incremental development, software is developed and tested in increments, so testers participate repeatedly, regression testing becomes important and early feedback is possible.",
+      "slide": 16
+    },
+    {
+      "n": 16,
+      "prompt": "How does the test engineer's position change in Agile and DevOps environments?",
+      "options": [
+        "Test engineers become integrated members of cross-functional teams",
+        "Test engineers form a separate team that tests after implementation",
+        "Test engineers test only once the full release has been completed",
+        "Test engineers focus on manual testing and avoid test automation",
+        "Test engineers join the project only during the maintenance phase"
+      ],
+      "explanation": "With CI/CD, continuous testing, test automation and shift-left testing, test engineers in Agile and DevOps become integrated members of cross-functional teams rather than a separate downstream group.",
+      "slide": 17
+    },
+    {
+      "n": 17,
+      "prompt": "Which responsibility is listed under a modern test engineer's Quality Assurance focus?",
+      "options": [
+        "Establishing quality gates and exit criteria",
+        "Reviewing overnight CI/CD test results",
+        "Developing test automation frameworks",
+        "Conducting exploratory testing sessions",
+        "Managing test data and test environments"
+      ],
+      "explanation": "Establishing quality gates and exit criteria is listed under the Quality Assurance focus; reviewing overnight CI/CD results is a daily activity, while automation frameworks, exploratory testing and test data/environments are technical activities.",
+      "slide": 19
+    },
+    {
+      "n": 18,
+      "prompt": "In the testing pyramid, which description fits the base layer?",
+      "options": [
+        "Unit tests: many tests, fast execution, low cost",
+        "Integration tests: moderate number, medium speed and cost",
+        "System/E2E tests: fewer tests, slower execution, higher cost",
+        "Unit tests: fewer tests, slower execution, higher cost",
+        "System/E2E tests: many tests, fast execution, low cost"
+      ],
+      "explanation": "The base of the pyramid is unit tests: many tests, fast execution and low cost; fewer, slower and costlier tests belong to the System/E2E top, and integration tests sit in the middle.",
+      "slide": 20
+    },
+    {
+      "n": 19,
+      "prompt": "Which statement correctly describes unit testing?",
+      "options": [
+        "Done by developers, mostly white-box, with mocked dependencies",
+        "Done by an independent test team in a production-like environment",
+        "Done by business users to validate the business requirements",
+        "Done by external users in their own real environment",
+        "Done on the complete integrated application across browsers"
+      ],
+      "explanation": "Unit testing is performed by developers, primarily white-box, in a development environment with mocked dependencies; an independent team in a production-like environment describes system testing.",
+      "slide": 21
+    },
+    {
+      "n": 20,
+      "prompt": "A team integrates the low-level modules first and writes drivers to call them. Which integration strategy is this?",
+      "options": [
+        "Bottom-up",
+        "Top-down",
+        "Big Bang",
+        "Sandwich/Hybrid",
+        "System integration"
+      ],
+      "explanation": "Bottom-up integration starts with low-level modules and uses drivers; top-down starts with top-level modules and uses stubs, and Big Bang integrates all modules simultaneously.",
+      "slide": 22
+    },
+    {
+      "n": 21,
+      "prompt": "During system testing, a tester runs the application on several browsers and operating systems. Which type of system testing is this?",
+      "options": [
+        "Compatibility testing",
+        "Usability testing",
+        "Performance testing",
+        "Security testing",
+        "Functional testing"
+      ],
+      "explanation": "Compatibility testing covers different browsers and operating systems; performance covers response times, throughput and scalability, and usability covers user experience and interface design.",
+      "slide": 23
+    },
+    {
+      "n": 22,
+      "prompt": "What distinguishes beta testing from alpha testing?",
+      "options": [
+        "Beta uses external users in a real environment; alpha is internal testing by the organization",
+        "Beta is internal testing by the organization; alpha uses external users in a real environment",
+        "Beta is the final validation by business users; alpha is unit testing by developers",
+        "Beta tests interactions between modules; alpha tests the complete integrated system",
+        "Beta is done by an independent test team; alpha is done by external end users"
+      ],
+      "explanation": "Alpha testing is internal testing by the organization, while beta testing uses external users in a real environment; final validation by business users is User Acceptance Testing (UAT).",
+      "slide": 24
+    },
+    {
+      "n": 23,
+      "prompt": "According to the course's ethics guidance, how should test engineers handle Personally Identifiable Information (PII) in test data?",
+      "options": [
+        "Use masked or synthetic data where possible",
+        "Copy unmodified production data for realism",
+        "Include real PII in reports for traceability",
+        "Keep PII unmasked but only in test environments",
+        "Avoid documenting assumptions about the data"
+      ],
+      "explanation": "The ethics guidance says to respect privacy and PII by using masked or synthetic data where possible, and to document residual risk and assumptions explicitly.",
+      "slide": 25
+    }
+  ]
+}

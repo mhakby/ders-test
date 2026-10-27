@@ -1,0 +1,227 @@
+{
+  "week": 9,
+  "title": "Pairwise / Combinatorial Testing (ACTS, PICT)",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "A system has 10 parameters and each parameter has 5 possible values. How many test cases does testing every combination require?",
+      "options": [
+        "9,765,625 (5^10)",
+        "100,000 (10^5)",
+        "50 (10 × 5)",
+        "3,125 (5^5)",
+        "1,024 (2^10)"
+      ],
+      "explanation": "Each of the 10 parameters independently takes one of 5 values, so there are 5^10 = 9,765,625 combinations; 10^5 swaps base and exponent. This is why testing all combinations is practically impossible.",
+      "slide": 3
+    },
+    {
+      "n": 2,
+      "prompt": "A web application must be tested on 4 browsers, 3 operating systems, 3 screen resolutions, 3 languages and 2 themes. How many test cases does full exhaustive coverage require?",
+      "options": [
+        "216",
+        "15",
+        "72",
+        "108",
+        "432"
+      ],
+      "explanation": "Exhaustive coverage multiplies the number of values per parameter: 4 × 3 × 3 × 3 × 2 = 216. Adding them (15) only counts the distinct values, not the combinations.",
+      "slide": 4
+    },
+    {
+      "n": 3,
+      "prompt": "According to the Kuhn & Reilly (NIST, 2002) research cited in the lecture, roughly what share of software faults is caused by the interaction of two parameter values?",
+      "options": [
+        "About 90%",
+        "About 70%",
+        "About 98%",
+        "About 50%",
+        "About 30%"
+      ],
+      "explanation": "The \"90% rule\" states that about 90% of faults are caused by the interaction of two parameter values. About 70% is the share caused by a single parameter value, and about 98% involves three or fewer parameters.",
+      "slide": 5
+    },
+    {
+      "n": 4,
+      "prompt": "Which statement about where bugs hide matches the research presented in the lecture?",
+      "options": [
+        "About 98% of faults are caused by interactions of three or fewer parameters",
+        "About 70% of faults are caused by the interaction of two parameter values",
+        "About 90% of faults are caused by a single parameter value",
+        "Most critical bugs come from complex interactions of many parameters",
+        "Most faults need interactions of four or more parameters to appear"
+      ],
+      "explanation": "The research reports about 70% single-parameter faults, about 90% two-parameter interactions and about 98% for three or fewer parameters. The most critical bugs are therefore found in simple interactions, not complex ones.",
+      "slide": 5
+    },
+    {
+      "n": 5,
+      "prompt": "What does pairwise (2-way) testing guarantee about the generated test suite?",
+      "options": [
+        "Every possible pair of values across all parameters is tested at least once",
+        "Every combination of all parameter values is tested exactly once",
+        "Each pair of parameters is tested with just one value combination",
+        "Every possible trio of values across all parameters is tested at least once",
+        "Every parameter is tested alone while the others keep default values"
+      ],
+      "explanation": "Instead of testing all combinations, pairwise testing covers every possible pair of values across all parameters at least once, so one value combination per parameter pair is not enough. Covering every trio is 3-way testing, and covering every full combination is exhaustive testing.",
+      "slide": 6
+    },
+    {
+      "n": 6,
+      "prompt": "Parameters A, B and C each have two values (a1/a2, b1/b2, c1/c2). Which set of four tests achieves full pairwise coverage?",
+      "options": [
+        "(a1,b1,c1), (a1,b2,c2), (a2,b1,c2), (a2,b2,c1)",
+        "(a1,b1,c1), (a1,b2,c1), (a2,b1,c1), (a2,b2,c1)",
+        "(a1,b1,c1), (a1,b2,c2), (a2,b1,c1), (a2,b2,c2)",
+        "(a1,b1,c1), (a1,b1,c2), (a2,b2,c1), (a2,b2,c2)",
+        "(a1,b1,c2), (a1,b2,c1), (a2,b1,c1), (a2,b2,c1)"
+      ],
+      "explanation": "The set (a1,b1,c1), (a1,b2,c2), (a2,b1,c2), (a2,b2,c1) contains all four A-B, A-C and B-C value pairs, so 4 tests replace the 8 exhaustive combinations. Every other set misses at least one pair; for example, the set in which B and C always match never pairs b1 with c2.",
+      "slide": 6
+    },
+    {
+      "n": 7,
+      "prompt": "Which test strength is described as a basic \"smoke test\" in which every value is tested once?",
+      "options": [
+        "1-way",
+        "2-way (pairwise)",
+        "3-way",
+        "t-way with t = 4",
+        "Exhaustive testing"
+      ],
+      "explanation": "1-way testing only requires every value to be tested once, which the lecture calls a basic smoke test. 2-way testing covers every pair and is described as the industry workhorse.",
+      "slide": 7
+    },
+    {
+      "n": 8,
+      "prompt": "Which statement about test strengths in t-way testing is correct?",
+      "options": [
+        "3-way testing covers every trio of values and is meant for high-risk systems",
+        "1-way testing covers every pair of values and is the industry workhorse",
+        "2-way testing covers every trio of values and is meant for high-risk systems",
+        "t-way testing is a special case of pairwise testing where t is always 2",
+        "3-way testing tests each value only once and serves as a smoke test"
+      ],
+      "explanation": "3-way testing covers every trio of values and is suggested for high-risk systems, finding about 98% of faults. Pairwise testing is the special case t = 2 of the general t-way form, not the other way round.",
+      "slide": 7
+    },
+    {
+      "n": 9,
+      "prompt": "What is the engineering trade-off when the strength t of combinatorial testing is increased?",
+      "options": [
+        "Fault detection rate increases, but so does the number of test cases",
+        "Fault detection rate increases while the number of test cases stays the same",
+        "The number of test cases drops because invalid combinations are removed",
+        "Fault detection rate drops because each test becomes more complex",
+        "Both the fault detection rate and the number of test cases decrease"
+      ],
+      "explanation": "As t increases, the fault detection rate rises together with the number of test cases, moving from lower cost/fewer tests towards higher coverage/more tests. Removing invalid combinations is the job of constraints, not of raising t.",
+      "slide": 7
+    },
+    {
+      "n": 10,
+      "prompt": "Which description fits PICT rather than ACTS?",
+      "options": [
+        "Command-line driven Microsoft tool, ideal for CI/CD pipeline integration",
+        "GUI-based NIST tool, excellent for learning and analysis",
+        "NIST-backed tool known for its strong IPOG algorithm support",
+        "Tool nicknamed \"The Researcher's Choice\" for learning and analysis",
+        "Tool whose main strengths are its GUI and its NIST research backing"
+      ],
+      "explanation": "PICT (Pairwise Independent Combinatorial Testing) is Microsoft's open-source, command-line tool with a rich constraint language, called \"The Automation Engineer's Ally\". A GUI, IPOG algorithm support and NIST backing describe ACTS, \"The Researcher's Choice\".",
+      "slide": 8
+    },
+    {
+      "n": 11,
+      "prompt": "Which sequence correctly describes generating tests with PICT?",
+      "options": [
+        "Write model.txt with parameters and values, run pict model.txt, get a tab-separated test plan",
+        "Write model.txt with parameters and values, run pict model.txt, get every exhaustive combination",
+        "Draw the model in a GUI, export it as XML, then run the IPOG algorithm by hand",
+        "Write test scripts first, run pict on the scripts, then read a coverage percentage",
+        "List only seeded test cases, run acts model.txt, then receive a PDF report"
+      ],
+      "explanation": "PICT reads a simple text model file that defines parameters and values, is run from the command line with pict model.txt, and outputs an optimized, tab-separated test plan. It does not output every exhaustive combination; the point is a reduced suite.",
+      "slide": 9
+    },
+    {
+      "n": 12,
+      "prompt": "In a browser/OS model, Safari only runs on macOS, so a test such as Safari + Windows cannot be executed. Which tool feature keeps such tests out of the generated suite?",
+      "options": [
+        "Constraints",
+        "Seeding",
+        "Raising the strength from 2-way to 3-way",
+        "Switching to 1-way smoke testing",
+        "Generating all exhaustive combinations"
+      ],
+      "explanation": "Constraints such as IF [Browser] = \"Safari\" THEN [OS] = \"macOS\"; tell the tool which combinations are impossible or invalid, making the suite realistic and executable. Seeding does a different job: it forces specific tests into the suite.",
+      "slide": 10
+    },
+    {
+      "n": 13,
+      "prompt": "In combinatorial testing tools, what is seeding?",
+      "options": [
+        "Manually specifying test cases that must be included in the final suite",
+        "Telling the tool which value combinations are impossible or invalid",
+        "Raising the strength t so that every trio of values is covered",
+        "Randomly sampling a subset of all exhaustive combinations",
+        "Removing tests that cover the same value pair more than once"
+      ],
+      "explanation": "Seeding forces specific, pre-defined test cases, such as the most common user configuration or a previously known bug scenario, into the final suite. Declaring invalid combinations is what constraints do.",
+      "slide": 10
+    },
+    {
+      "n": 14,
+      "prompt": "In the e-commerce payment case study, 1,296 full-combination test cases were reduced to about 25 pairwise tests. What outcome does the lecture report?",
+      "options": [
+        "A 98% reduction in test cases with 100% pairwise coverage",
+        "A 90% reduction in test cases with 100% pairwise coverage",
+        "A 98% reduction in test cases with about 90% pairwise coverage",
+        "A 75% reduction in test cases with full exhaustive coverage",
+        "A 50% reduction in test cases with 98% pairwise coverage"
+      ],
+      "explanation": "Going from 1,296 to about 25 tests is a 98% reduction while still covering 100% of the value pairs. Pairwise testing does not keep exhaustive coverage; it guarantees full coverage of pairs.",
+      "slide": 11
+    },
+    {
+      "n": 15,
+      "prompt": "Which task is a good fit for combinatorial testing as a primary technique?",
+      "options": [
+        "API parameter testing of REST/SOAP endpoints",
+        "Testing complex user workflows with sequential steps",
+        "Testing a state machine where the order of events matters",
+        "Performance testing of a high-traffic web service",
+        "Security testing of a web application's login page"
+      ],
+      "explanation": "API parameter testing is listed with configuration/compatibility testing, complex form validation and systems with many independent parameters as good uses. Sequential workflows and order-dependent state machines are not primary uses, and for performance and security testing it is only a supplement, not a replacement.",
+      "slide": 12
+    },
+    {
+      "n": 16,
+      "prompt": "What does the term \"combinatorial explosion\" refer to?",
+      "options": [
+        "Exponential growth in test cases that makes exhaustive testing impossible",
+        "The sharp drop in test cases achieved when moving from exhaustive to pairwise testing",
+        "The rapid rise in defects when many parameters interact in a production system",
+        "Linear growth of test cases each time one new value is added to a parameter",
+        "The failure of a test generator when two of its constraints contradict each other"
+      ],
+      "explanation": "Combinatorial explosion is the exponential growth in the number of test cases as parameter values are combined (for example 5^10 = 9,765,625), which makes exhaustive testing impossible. The growth is exponential, not linear.",
+      "slide": 13
+    },
+    {
+      "n": 17,
+      "prompt": "In the smart home lab, the PICT constraint IF [Security] = \"Armed Away\" THEN [Lighting] = \"Off\"; is added. What effect does it have on the generated tests?",
+      "options": [
+        "Every test with Security = Armed Away has Lighting = Off",
+        "Every test with Lighting = Off has Security = Armed Away",
+        "Armed Away and Lighting = Off never appear in the same test",
+        "Lighting is set to Off in every test, whatever the Security value",
+        "Security = Armed Away is excluded from the suite entirely"
+      ],
+      "explanation": "The IF-THEN constraint marks Armed Away combined with any Lighting value other than Off as invalid, so every Armed Away test has Lighting = Off. It does not restrict other Security values, so Lighting = Off can still appear with Disarmed or Armed Home.",
+      "slide": 14
+    }
+  ]
+}

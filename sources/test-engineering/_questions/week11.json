@@ -1,0 +1,253 @@
+{
+  "week": 11,
+  "title": "Chaos Engineering and Resilience Testing",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "In July 2024, a single software failure at CrowdStrike cost Fortune 500 companies an estimated how much in a matter of hours?",
+      "options": [
+        "$5.4 billion",
+        "$540 million",
+        "$54 billion",
+        "$1.8 billion",
+        "$12.5 billion"
+      ],
+      "explanation": "The lecture cites an estimated $5.4 billion loss for Fortune 500 companies, showing that failures of complex distributed systems are a multi-billion dollar reality that traditional testing cannot anticipate.",
+      "slide": 3
+    },
+    {
+      "n": 2,
+      "prompt": "According to the lecture, human error contributes to what share of preventable incidents?",
+      "options": [
+        "79%",
+        "43.3%",
+        "21%",
+        "50%",
+        "95%"
+      ],
+      "explanation": "The Hurricane Sandy slide states that human error contributes to 79% of preventable incidents; 43.3% is Amazon's reported decrease in SLA violations after GameDays.",
+      "slide": 4
+    },
+    {
+      "n": 3,
+      "prompt": "Which sequence matches the timeline of Netflix's chaos engineering origin story?",
+      "options": [
+        "2008 database corruption, 2010 Chaos Monkey created, 2011 Simian Army announced, 2012 open-sourced",
+        "2008 database corruption, 2010 Simian Army announced, 2011 Chaos Monkey created, 2012 open-sourced",
+        "2008 Chaos Monkey created, 2010 database corruption, 2011 Simian Army announced, 2012 open-sourced",
+        "2008 database corruption, 2010 Chaos Monkey open-sourced, 2011 Simian Army announced, 2012 Chaos Kong created",
+        "2006 database corruption, 2008 Chaos Monkey created, 2010 Simian Army announced, 2012 open-sourced"
+      ],
+      "explanation": "After the August 2008 database corruption halted DVD shipping for three days, Netflix created Chaos Monkey in 2010, announced the Simian Army in 2011 and open-sourced it in 2012.",
+      "slide": 5
+    },
+    {
+      "n": 4,
+      "prompt": "Which Simian Army tool simulates the failure of an entire AWS Availability Zone?",
+      "options": [
+        "Chaos Gorilla",
+        "Chaos Kong",
+        "Chaos Monkey",
+        "Latency Monkey",
+        "Security Monkey"
+      ],
+      "explanation": "Chaos Gorilla simulates the loss of a whole AWS Availability Zone; Chaos Kong goes a step further and simulates a full AWS region failure.",
+      "slide": 6
+    },
+    {
+      "n": 5,
+      "prompt": "A team wants to check that its services stay resilient when network communication becomes slow rather than failing outright. Which Simian Army tool is designed for this?",
+      "options": [
+        "Latency Monkey",
+        "Chaos Monkey",
+        "Chaos Gorilla",
+        "Security Monkey",
+        "Chaos Kong"
+      ],
+      "explanation": "Latency Monkey injects artificial delays to test resilience to network degradation; Chaos Monkey instead randomly terminates production instances to test survival of instance loss.",
+      "slide": 6
+    },
+    {
+      "n": 6,
+      "prompt": "How does principlesofchaos.org define Chaos Engineering?",
+      "options": [
+        "Experimenting on a system to build confidence that it can withstand turbulent conditions in production",
+        "Testing a system before release to prove that it contains no defects under turbulent conditions",
+        "Load testing a system to find the maximum traffic it can handle before it crashes in production",
+        "Randomly breaking production systems without any hypothesis to see how users are affected",
+        "Simulating attacks on a system to find security vulnerabilities before they reach production"
+      ],
+      "explanation": "The quoted definition is experimenting on a system to build confidence in its capability to withstand turbulent conditions in production; the lecture also describes it as a hypothesis-driven, scientific practice.",
+      "slide": 7
+    },
+    {
+      "n": 7,
+      "prompt": "In the fourth and final step of a chaos experiment, \"Disprove Hypothesis\", what do engineers do?",
+      "options": [
+        "Systematically look for differences between the control and experimental groups to find weaknesses",
+        "Establish a measurable baseline of normal system behavior before anything is changed",
+        "Predict that the steady state will continue in both the control and experimental groups",
+        "Inject real-world failure events such as server crashes, network partitions and CPU spikes",
+        "Restore every terminated instance and confirm that the hypothesis has been proven true"
+      ],
+      "explanation": "Disproving the hypothesis means searching for differences between the control and experimental groups to expose weaknesses; defining a baseline, predicting that steady state continues and injecting failures are steps 1, 2 and 3.",
+      "slide": 7
+    },
+    {
+      "n": 8,
+      "prompt": "In the lecture's payment-microservice example, which statement is the steady state hypothesis?",
+      "options": [
+        "Under normal load, the checkout service keeps p99 latency under 200ms and an error rate below 0.1%",
+        "Terminate 30% of the checkout service instances while the service is handling normal load",
+        "Auto-scaling and load balancing restore the checkout service within 30 seconds of the failure",
+        "The checkout service must never fail, no matter how many of its instances are terminated",
+        "Inject real-world failure events into the checkout service and then record its error rate"
+      ],
+      "explanation": "A steady state hypothesis is a measurable, quantifiable description of normal behavior (p99 latency under 200ms, error rate below 0.1%); terminating 30% of instances is the experiment, and recovery within 30 seconds is the expected result.",
+      "slide": 8
+    },
+    {
+      "n": 9,
+      "prompt": "A team is ready to run its first chaos experiment in production. Following the principle of minimizing the blast radius, which target should it start with?",
+      "options": [
+        "A single container",
+        "An entire service",
+        "One Availability Zone",
+        "A full AWS region",
+        "Every pod in the cluster"
+      ],
+      "explanation": "The blast radius grows from container to instance/pod, service, Availability Zone and region, and teams should begin with the smallest possible blast radius in production, so a single container comes first.",
+      "slide": 9
+    },
+    {
+      "n": 10,
+      "prompt": "What is the purpose of automated stop conditions (circuit breakers) in chaos experiments?",
+      "options": [
+        "To halt an experiment if the system deviates too far from steady state",
+        "To randomly terminate production instances during an experiment",
+        "To widen the blast radius automatically after each successful run",
+        "To move an experiment from production back into a staging environment",
+        "To measure how long the system runs before its next failure occurs"
+      ],
+      "explanation": "Circuit breakers are a control mechanism for the blast radius: they automatically stop an experiment when the system strays too far from its steady state.",
+      "slide": 9
+    },
+    {
+      "n": 11,
+      "prompt": "Which statement about the modern chaos engineering toolkit (2023-2025) is correct?",
+      "options": [
+        "LitmusChaos is a CNCF project best suited to Kubernetes environments",
+        "Gremlin is a CNCF project with native Kubernetes (K8s) integration",
+        "Chaos Monkey is a commercial SaaS tool aimed at enterprise adoption",
+        "AWS FIS is an open-source tool known as the original chaos tool",
+        "Azure Chaos Studio is a commercial SaaS tool known for GameDays"
+      ],
+      "explanation": "LitmusChaos is the CNCF project with native K8s integration; Gremlin is the commercial SaaS tool known for being user-friendly and for GameDays, while Chaos Monkey is the original open-source tool.",
+      "slide": 10
+    },
+    {
+      "n": 12,
+      "prompt": "A service runs on average 200 hours before it fails and then takes on average 2 hours to restore. Using the formula from the lecture, what is its MTBF?",
+      "options": [
+        "202 hours",
+        "198 hours",
+        "200 hours",
+        "100 hours",
+        "400 hours"
+      ],
+      "explanation": "MTBF = MTTF + MTTR, so 200 hours + 2 hours = 202 hours; 200 hours on its own is only the MTTF.",
+      "slide": 11
+    },
+    {
+      "n": 13,
+      "prompt": "Which resilience metric answers the question \"How long can a system be expected to run before it fails?\"",
+      "options": [
+        "MTTF (Mean Time to Failure)",
+        "MTTR (Mean Time to Recovery)",
+        "MTBF (Mean Time Between Failures)",
+        "p99 latency",
+        "Error rate"
+      ],
+      "explanation": "MTTF measures how long a system runs before it fails; MTTR measures how quickly service is restored after a failure, and MTBF is the total time from one failure to the next.",
+      "slide": 11
+    },
+    {
+      "n": 14,
+      "prompt": "According to the industry benchmark for MTTR given in the lecture, elite teams restore service in under how much time?",
+      "options": [
+        "5 minutes",
+        "30 minutes",
+        "30 seconds",
+        "60 minutes",
+        "15 minutes"
+      ],
+      "explanation": "The benchmark is under 30 minutes for top teams and under 5 minutes for elite teams.",
+      "slide": 11
+    },
+    {
+      "n": 15,
+      "prompt": "A system offering 99.99% availability (\"four nines\") allows approximately how much downtime per year?",
+      "options": [
+        "52.56 minutes",
+        "8.76 hours",
+        "5.26 minutes",
+        "4.4 minutes",
+        "44 minutes"
+      ],
+      "explanation": "Four nines means 52.56 minutes of annual downtime (about 4.4 minutes per month); 8.76 hours per year corresponds to three nines and 5.26 minutes to five nines.",
+      "slide": 12
+    },
+    {
+      "n": 16,
+      "prompt": "What key result did Amazon report after implementing GameDays?",
+      "options": [
+        "A 43.3% decrease in SLA violations",
+        "A 79% decrease in preventable incidents",
+        "A 43.3% decrease in mean time to recovery",
+        "A 50% decrease in deployment failures",
+        "A 30% decrease in p99 latency"
+      ],
+      "explanation": "Amazon's dedicated 2-4 hour GameDay periods led to a 43.3% decrease in SLA violations; 79% is the share of preventable incidents attributed to human error.",
+      "slide": 13
+    },
+    {
+      "n": 17,
+      "prompt": "What distinguishes Google's DiRT (Disaster Recovery Testing) program from the other industry approaches described in the lecture?",
+      "options": [
+        "It goes beyond technology to test business processes and human response",
+        "It runs automated chaos experiments continuously in production",
+        "It sets aside dedicated 2-4 hour periods for teams to run experiments",
+        "It randomly terminates production instances to test instance loss",
+        "It provides native Kubernetes integration as a CNCF project"
+      ],
+      "explanation": "DiRT, founded in 2006 by Site Reliability Engineers, also tests business processes and human response; continuous automated chaos in production describes Netflix, and 2-4 hour periods describe Amazon's GameDays.",
+      "slide": 13
+    },
+    {
+      "n": 18,
+      "prompt": "In the Honeycomb case study on an AWS Availability Zone failure, when did the team intentionally run its production experiment?",
+      "options": [
+        "During peak traffic, for a realistic test",
+        "During off-peak hours, to avoid customer impact",
+        "During a maintenance window, with users logged out",
+        "Before any staging tests, to save rollout time",
+        "Only after a real AZ outage, to confirm the cause"
+      ],
+      "explanation": "Honeycomb ran staging tests first, then progressed to production and intentionally ran the experiment during peak traffic for a realistic test, terminating a third of its 'Shepherd' pods with zero customer impact.",
+      "slide": 14
+    },
+    {
+      "n": 19,
+      "prompt": "Which statement reflects the core principles of resilient engineering presented in the lecture?",
+      "options": [
+        "Reducing MTTR is often more valuable than trying to prevent all failures",
+        "Preventing all failures is more valuable than reducing recovery time",
+        "Experiments should start with the largest blast radius to learn the most",
+        "Technical tools alone are enough; no cultural change is required",
+        "Experiments should stay manual and separate from the CI/CD pipeline"
+      ],
+      "explanation": "The lecture states that reducing MTTR is often more valuable than trying to prevent all failures; it also says to start with a small blast radius, pair tools with cultural transformation and automate experiments in CI/CD.",
+      "slide": 15
+    }
+  ]
+}

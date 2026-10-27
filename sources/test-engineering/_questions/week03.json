@@ -1,0 +1,331 @@
+{
+  "week": 3,
+  "title": "TDD, Mocking & CI/CD Pipelines",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "Which set of characteristics describes a unit test?",
+      "options": [
+        "Tests one function or class in isolation; fast and deterministic",
+        "Tests several services together through their real network APIs",
+        "Tests the full user journey through the UI on a staging system",
+        "Tests one class against a real database so results match production",
+        "Tests one function but may give different results on each run"
+      ],
+      "explanation": "A unit test validates a single unit (function/class) in isolation with fast, deterministic, repeatable checks. Spanning services, the UI or a real database breaks isolation, and changing results contradict \"deterministic\".",
+      "slide": 3
+    },
+    {
+      "n": 2,
+      "prompt": "In the Red → Green → Refactor cycle of TDD, what is done in the green step?",
+      "options": [
+        "Write the minimal code needed to make the failing test pass",
+        "Write a failing test that specifies the next behavior",
+        "Clean up the design while using the tests as a safety net",
+        "Write the complete design of the module before any code",
+        "Add tests for code that has already been fully implemented"
+      ],
+      "explanation": "Green means making the failing test pass with minimal code. Writing the failing test first is the red step, and cleaning up with the tests as a safety net is the refactor step.",
+      "slide": 4
+    },
+    {
+      "n": 3,
+      "prompt": "In the step-by-step TDD workflow, how long should each cycle typically be kept?",
+      "options": [
+        "About 2–10 minutes",
+        "Under 1 second",
+        "About 1–2 hours",
+        "About one working day",
+        "About one full sprint"
+      ],
+      "explanation": "The workflow says to repeat and keep cycles short (2–10 min) to maintain momentum. Under 1 second is the target for running a local test suite segment, not for a TDD cycle.",
+      "slide": 5
+    },
+    {
+      "n": 4,
+      "prompt": "Which statement about TDD is correct?",
+      "options": [
+        "It complements, rather than replaces, integration and E2E tests",
+        "It means writing the unit tests after the code is finished",
+        "It requires a complete, detailed design to be made up front",
+        "It is a form of end-to-end testing through the user interface",
+        "It works best with large units that are entangled with I/O"
+      ],
+      "explanation": "TDD is not writing tests after coding, not full design up front and not end-to-end testing; it complements higher-level tests. Large units entangled with I/O are listed as a pitfall because they slow the cycles.",
+      "slide": 6
+    },
+    {
+      "n": 5,
+      "prompt": "In the comparison of Big Design Up Front and Emergent Design, which characteristic belongs to Emergent Design?",
+      "options": [
+        "Assumes change is cheap",
+        "Think before you code",
+        "Supports governance",
+        "Requires abstract thinking",
+        "Fixes the design before coding"
+      ],
+      "explanation": "Emergent Design assumes change is cheap, handles ambiguity and requires detail thinking. Thinking before you code, supporting governance and requiring abstract thinking are listed for Big Design Up Front.",
+      "slide": 7
+    },
+    {
+      "n": 6,
+      "prompt": "Among the limits and pitfalls of TDD, what does \"test theater\" mean?",
+      "options": [
+        "Tests that produce coverage without adding real value",
+        "Tests that fail randomly because of time or concurrency",
+        "Tests that break because they over-specify internals",
+        "Tests that mock every collaborator and become fragile",
+        "Tests that run slowly because the units are too large"
+      ],
+      "explanation": "\"Test theater\" is listed as coverage without value. Over-specifying internals, mocking everything and overly large units are separate pitfalls, and random failures from time or concurrency describe flaky tests.",
+      "slide": 9
+    },
+    {
+      "n": 7,
+      "prompt": "A class reads its configuration from a global static singleton, which makes it hard to unit test. Which change follows the design-for-testability guidance?",
+      "options": [
+        "Inject the dependency through an interface or abstraction",
+        "Move the configuration into another global static variable",
+        "Merge the class and its dependencies into one larger unit",
+        "Make the singleton's fields public so tests can change them",
+        "Test it only end-to-end so the real singleton gets set up"
+      ],
+      "explanation": "Designing for testability favors dependency inversion with interfaces/abstractions and clear seams for substituting dependencies, and says to avoid global state and static singletons that hide dependencies.",
+      "slide": 10
+    },
+    {
+      "n": 8,
+      "prompt": "A constructor requires a logger parameter, but the behavior under test never uses the logger. Which type of test double is intended for this case?",
+      "options": [
+        "Dummy",
+        "Stub",
+        "Spy",
+        "Mock",
+        "Fake"
+      ],
+      "explanation": "A dummy is passed but never used. Stubs return canned values, fakes are lightweight working implementations, spies record interactions and mocks verify them, none of which is needed here.",
+      "slide": 11
+    },
+    {
+      "n": 9,
+      "prompt": "What distinguishes a mock from a stub?",
+      "options": [
+        "A mock verifies interactions; a stub returns canned values",
+        "A mock returns canned values; a stub verifies interactions",
+        "A mock is passed but never used; a stub records interactions",
+        "A mock is a working in-memory version; a stub is never used",
+        "A mock records interactions only; a stub verifies call arguments"
+      ],
+      "explanation": "A mock verifies behavior/interaction while a stub returns canned values. Being passed but never used describes a dummy, a lightweight working implementation is a fake, and recording interactions is a spy.",
+      "slide": 11
+    },
+    {
+      "n": 10,
+      "prompt": "Which dependency is the most appropriate to mock in a unit test?",
+      "options": [
+        "An external HTTP service that the class calls",
+        "The project's own domain data model classes",
+        "The sorting algorithm the team implemented",
+        "A simple value object defined in the codebase",
+        "The system under test whose behavior is checked"
+      ],
+      "explanation": "Mocking is recommended for external or hard-to-control dependencies such as I/O, time and HTTP. The course says not to mock your own data models or algorithms, and the system under test is exercised, not replaced.",
+      "slide": 12
+    },
+    {
+      "n": 11,
+      "prompt": "When using a mocking framework, why should mocks be reset or torn down between tests?",
+      "options": [
+        "To keep state from leaking from one test into the next",
+        "To raise the statement and branch coverage of the suite",
+        "To verify how many times each method was called",
+        "To stub exceptions thrown by the mocked dependency",
+        "To set up given/when expectations for the next call"
+      ],
+      "explanation": "Resetting/teardown isolates state between tests to avoid leakage. Verifying call counts, stubbing exceptions and arranging given/when expectations are separate mocking-framework patterns.",
+      "slide": 13
+    },
+    {
+      "n": 12,
+      "prompt": "In the Arrange–Act–Assert structure, what belongs to the Act phase?",
+      "options": [
+        "Invoking exactly one behavior of the system under test",
+        "Creating the inputs, test doubles and system under test",
+        "Checking the resulting outcome or the interaction made",
+        "Resetting mocks so that no state leaks into later tests",
+        "Invoking several behaviors in a row to share one setup"
+      ],
+      "explanation": "Act invokes one behavior; preparing inputs, doubles and the system under test is Arrange, and checking the outcome or interaction is Assert. Invoking several behaviors contradicts the one-behavior-per-test rule.",
+      "slide": 14
+    },
+    {
+      "n": 13,
+      "prompt": "You want to run the same test logic against many input values, including boundary values and representatives of each equivalence class, without copying the test. Which technique fits?",
+      "options": [
+        "Parameterized tests driven by data sets",
+        "Mutation testing of the assertions",
+        "Smoke tests after promotion to staging",
+        "A canary rollout with gradual traffic",
+        "Spies that record every interaction"
+      ],
+      "explanation": "Parameterized tests cover multiple cases with data sets and focus on boundary values and equivalence classes. Mutation testing measures how strong the tests are rather than adding input cases.",
+      "slide": 15
+    },
+    {
+      "n": 14,
+      "prompt": "A unit test fails intermittently because it uses the current system time and unseeded random numbers. Which fix matches the recommended approach?",
+      "options": [
+        "Control the clock and seed the random number generator",
+        "Read the time from a real network time server instead",
+        "Run the test concurrently with others to expose timing",
+        "Move the test into the nightly end-to-end test suite",
+        "Raise the minimum coverage threshold in the pipeline"
+      ],
+      "explanation": "Flakiness caused by time and randomness is fixed by controlling clocks and RNGs (seeds/clocks). Real networks and concurrency are themselves listed as causes of flaky tests, not fixes.",
+      "slide": 16
+    },
+    {
+      "n": 15,
+      "prompt": "Weak assertions can still yield high coverage. Which technique is suggested to catch such weak assertions?",
+      "options": [
+        "Mutation testing",
+        "Branch coverage",
+        "Smoke testing",
+        "Contract testing",
+        "Build matrices"
+      ],
+      "explanation": "Statement/branch/condition coverage is useful but not a goal, because weak assertions can still produce high coverage; mutation testing is named as the way to catch weak assertions.",
+      "slide": 17
+    },
+    {
+      "n": 16,
+      "prompt": "Which of the following is listed as a test smell or anti-pattern?",
+      "options": [
+        "Slow \"unit\" tests that touch real I/O",
+        "One behavior per test with a clear name",
+        "Seeding randomness to keep tests deterministic",
+        "Using fakes to keep tests realistic and fast",
+        "Arranging inputs and doubles before acting"
+      ],
+      "explanation": "Slow \"unit\" tests touching real I/O are listed as a smell alongside over-mocking, testing private internals and giant copy-pasted setups. The other options are practices the course recommends.",
+      "slide": 18
+    },
+    {
+      "n": 17,
+      "prompt": "As a reason to automate testing, what does \"shift-left\" mean?",
+      "options": [
+        "Catching issues earlier in the development process",
+        "Moving most testing to just before the production release",
+        "Running the test suite only in the production environment",
+        "Replacing most unit tests with a larger set of E2E tests",
+        "Waiting to automate tests until the code is fully stable"
+      ],
+      "explanation": "Automation catches issues early, which is what \"shift-left\" means. Pushing testing toward release or production is the opposite, and replacing unit tests with E2E tests contradicts the testing pyramid.",
+      "slide": 20
+    },
+    {
+      "n": 18,
+      "prompt": "A team has 400 end-to-end tests, 60 integration tests and 20 unit tests, and feedback is slow. What does the testing pyramid suggest?",
+      "options": [
+        "Have many fast unit tests, fewer integration and few E2E tests",
+        "Add more E2E tests, since they give the broadest confidence",
+        "Keep equal numbers of unit, integration and E2E tests",
+        "Replace the unit tests with integration tests against services",
+        "Remove all E2E tests and rely on unit tests alone"
+      ],
+      "explanation": "The pyramid calls for many fast, cheap unit tests, fewer service/integration tests and few end-to-end tests to keep feedback quick. Integration/E2E tests are still used for cross-service confidence, so removing them all is wrong.",
+      "slide": 21
+    },
+    {
+      "n": 19,
+      "prompt": "After a trigger such as a push or PR, which order matches the high-level pipeline anatomy?",
+      "options": [
+        "Build → Test → Analyze → Package → Deploy",
+        "Test → Build → Package → Analyze → Deploy",
+        "Build → Package → Deploy → Test → Analyze",
+        "Analyze → Build → Deploy → Package → Test",
+        "Build → Analyze → Deploy → Test → Package"
+      ],
+      "explanation": "A pipeline triggers on push/PR/schedule, then runs Build → Test → Analyze → Package → Deploy, followed by feedback such as status checks, artifacts and notifications.",
+      "slide": 22
+    },
+    {
+      "n": 20,
+      "prompt": "Which activity belongs to the typical CD stages rather than the typical CI stages?",
+      "options": [
+        "Smoke tests and health checks on staging",
+        "Checkout and dependency restore with caching",
+        "Linting and static analysis such as SAST",
+        "Unit tests run in parallel or as a matrix",
+        "Integration tests with services such as a DB or API"
+      ],
+      "explanation": "CD promotes the build to staging, runs smoke tests and health checks, and gates promotion to production. Checkout, dependency caching, linting/static analysis, unit tests and integration tests are listed as CI stages.",
+      "slide": 24
+    },
+    {
+      "n": 21,
+      "prompt": "How does trunk-based development compare with GitFlow?",
+      "options": [
+        "Trunk-based enables rapid integration; GitFlow offers stricter release control",
+        "Trunk-based offers stricter release control; GitFlow enables rapid integration",
+        "Both offer identical trade-offs, so choosing between them does not matter",
+        "Both are production deployment strategies, like canary and blue/green",
+        "Both remove the need for PR checks as quality gates before merging"
+      ],
+      "explanation": "Trunk-based development enables rapid integration while GitFlow offers stricter release control. They are branching models with trade-offs, not deployment strategies, and PR checks are still used as quality gates.",
+      "slide": 25
+    },
+    {
+      "n": 22,
+      "prompt": "Which pairing of acronym and pipeline topic is correct?",
+      "options": [
+        "SLSA – provenance of builds",
+        "SemVer – secrets scanning",
+        "SBOM – deployment strategy",
+        "SAST – artifact versioning",
+        "AAA – pipeline triggers"
+      ],
+      "explanation": "SLSA basics are named together with build provenance. SemVer is for versioned artifacts, SBOM belongs to dependency scanning, SAST to static analysis/security checks, and AAA (Arrange–Act–Assert) to unit test structure.",
+      "slide": 28
+    },
+    {
+      "n": 23,
+      "prompt": "Which pairing of test type and typical CI timing is correct?",
+      "options": [
+        "Performance and load tests – on a schedule or pre-release",
+        "Fast unit tests – only nightly, never on push",
+        "E2E/UI tests – on every push before linting",
+        "Contract/integration tests – only after production deploy",
+        "Performance and load tests – on every single push"
+      ],
+      "explanation": "Fast unit tests run on every push, contract/integration tests on PRs or nightly, E2E/UI tests on staging or nightly, and performance/load tests on a schedule or pre-release to balance speed and depth.",
+      "slide": 29
+    },
+    {
+      "n": 24,
+      "prompt": "Which description of a deployment strategy is correct?",
+      "options": [
+        "Rolling: updates instances in batches with health checks",
+        "Canary: switches all traffic instantly with easy rollback",
+        "Blue/green: gradual rollout driven by production metrics",
+        "Feature flags: tie each deployment directly to a release",
+        "Rolling: updates all instances at once without any checks"
+      ],
+      "explanation": "Rolling updates change instances in batches with health checks. Blue/green gives an instant switch and easy rollback, canary is a gradual metrics-driven rollout, and feature flags decouple deploy from release.",
+      "slide": 31
+    },
+    {
+      "n": 25,
+      "prompt": "Which duration do the team best practices target for PR pipelines?",
+      "options": [
+        "Under about 10 minutes",
+        "Under about 1 second",
+        "Under about 1 hour",
+        "Under about 4 hours",
+        "Under about 24 hours"
+      ],
+      "explanation": "Best practices say to keep PR pipelines under about 10 minutes and to fail fast with clear, actionable messages. Under 1 second is the target for a local test suite segment, not a whole pipeline.",
+      "slide": 36
+    }
+  ]
+}

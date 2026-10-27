@@ -1,0 +1,253 @@
+{
+  "week": 10,
+  "title": "Security Testing & Threat Modeling (OWASP ZAP)",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "Which statement matches the IBM \"Cost of a Data Breach Report 2023\" figures presented in the lecture?",
+      "options": [
+        "Healthcare is the most expensive sector, averaging $10.93 million per breach",
+        "The average data breach costs $10.93 million across all industries",
+        "Breaches take on average 147 days to identify and contain",
+        "The average cost of a data breach is $4.45 billion",
+        "Healthcare is the cheapest sector, averaging $4.45 million per breach"
+      ],
+      "explanation": "The report gives an average breach cost of $4.45 million, an average of 277 days to identify and contain a breach, and $10.93 million for healthcare, the most expensive industry. $10.93 million is the healthcare figure, not the overall average.",
+      "slide": 2
+    },
+    {
+      "n": 2,
+      "prompt": "Which breach is correctly matched with its cause?",
+      "options": [
+        "SolarWinds (2020): supply chain attack",
+        "Equifax (2017): supply chain attack",
+        "Log4Shell (2021): unpatched Apache Struts vulnerability",
+        "Equifax (2017): remote code execution in a common logging library",
+        "SolarWinds (2020): unpatched Apache Struts vulnerability"
+      ],
+      "explanation": "SolarWinds (2020) was a supply chain attack that compromised 18,000+ organizations. Equifax (2017) was caused by an unpatched Apache Struts vulnerability (147 million records lost), and Log4Shell (2021) by remote code execution in a common logging library.",
+      "slide": 3
+    },
+    {
+      "n": 3,
+      "prompt": "What is the key message of the \"old way vs. new way\" comparison of security in the development lifecycle?",
+      "options": [
+        "Security is a continuous process integrated throughout the entire SDLC",
+        "Security testing is a separate phase performed just before release",
+        "Security testing replaces the normal test phase once code is complete",
+        "Security is handled only in the Monitor stage after deployment",
+        "Security work starts only after a breach has been detected"
+      ],
+      "explanation": "The lecture states that security is not a phase but a continuous process integrated throughout the entire SDLC, with threat modeling, SAST and DAST built into the cycle. A single security-testing phase just before release is the crossed-out \"old way\".",
+      "slide": 4
+    },
+    {
+      "n": 4,
+      "prompt": "In the lecture's \"new way\" lifecycle diagram, where are SAST and DAST placed?",
+      "options": [
+        "SAST (static analysis) at Code, DAST (dynamic analysis) at Test",
+        "DAST (dynamic analysis) at Code, SAST (static analysis) at Test",
+        "SAST (static analysis) at Plan, DAST (dynamic analysis) at Monitor",
+        "SAST (static analysis) at Deploy, DAST (dynamic analysis) at Plan",
+        "Both SAST and DAST in one security phase just before Release"
+      ],
+      "explanation": "The diagram attaches SAST (Static Analysis) to the Code stage and DAST (Dynamic Analysis) to the Test stage, with threat modeling placed early, between Plan and Code. Grouping both into one pre-release phase is the \"old way\" the slide rejects.",
+      "slide": 4
+    },
+    {
+      "n": 5,
+      "prompt": "Starting from \"What are we building?\", in which order does the threat modeling process ask its four questions?",
+      "options": [
+        "What are we building? → What can go wrong? → What will we do about it? → Did we do a good job?",
+        "What are we building? → What will we do about it? → What can go wrong? → Did we do a good job?",
+        "What are we building? → Did we do a good job? → What can go wrong? → What will we do about it?",
+        "What are we building? → What can go wrong? → Did we do a good job? → What will we do about it?",
+        "What are we building? → What will we do about it? → Did we do a good job? → What can go wrong?"
+      ],
+      "explanation": "The cycle runs from system definition and analysis (What are we building?) to threat identification (What can go wrong?), then mitigation and countermeasures (What will we do about it?), and finally validation and verification (Did we do a good job?). Countermeasures can only be chosen after threats have been identified.",
+      "slide": 5
+    },
+    {
+      "n": 6,
+      "prompt": "What do the six letters of STRIDE stand for?",
+      "options": [
+        "Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege",
+        "Spoofing, Tampering, Reproducibility, Information Disclosure, Denial of Service, Exploitability",
+        "Sniffing, Tampering, Repudiation, Injection, Denial of Service, Elevation of Privilege",
+        "Spoofing, Tracing, Repudiation, Information Disclosure, Damage, Elevation of Privilege",
+        "Scanning, Tampering, Replay, Interception, Discoverability, Elevation of Privilege"
+      ],
+      "explanation": "STRIDE names six threat categories: Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service and Elevation of Privilege. Damage, Reproducibility, Exploitability and Discoverability are DREAD factors used for risk scoring, not STRIDE categories.",
+      "slide": 6
+    },
+    {
+      "n": 7,
+      "prompt": "During threat modeling, a team notes that a standard user could find a way to gain admin access. Which STRIDE category does this threat belong to?",
+      "options": [
+        "Elevation of Privilege",
+        "Spoofing",
+        "Tampering",
+        "Repudiation",
+        "Information Disclosure"
+      ],
+      "explanation": "A standard user gaining admin access is the lecture's example of Elevation of Privilege. Spoofing is illustrated by a fake login page, Tampering by SQL injection, Repudiation by deleting audit logs and Information Disclosure by sensitive data in an error message.",
+      "slide": 6
+    },
+    {
+      "n": 8,
+      "prompt": "How do STRIDE and DREAD differ in threat modeling?",
+      "options": [
+        "STRIDE sorts threats into six categories; DREAD quantifies each threat's risk",
+        "DREAD sorts threats into six categories; STRIDE quantifies each threat's risk",
+        "STRIDE is ZAP's active scan mode; DREAD is ZAP's passive scan mode",
+        "STRIDE lists the OWASP Top 10 risks; DREAD lists the fixes for them",
+        "STRIDE is a SAST tool used at Code; DREAD is a DAST tool used at Test"
+      ],
+      "explanation": "STRIDE provides six categories of threats to guide the analysis, while DREAD rates a threat on five factors and averages them into a risk score, because not all threats are equal. Neither is a scanner mode or a list of OWASP risks.",
+      "slide": 7
+    },
+    {
+      "n": 9,
+      "prompt": "A threat is rated Damage 6, Reproducibility 5, Exploitability 7, Affected Users 4 and Discoverability 8. Using the DREAD calculation from the lecture, what is its risk score?",
+      "options": [
+        "6.0",
+        "30",
+        "8.4",
+        "5.0",
+        "7.0"
+      ],
+      "explanation": "The DREAD score is the average of the five ratings: (6 + 5 + 7 + 4 + 8) / 5 = 30 / 5 = 6.0. 30 is the sum before dividing, and 8.4 is the score of the lecture's SQL injection example.",
+      "slide": 7
+    },
+    {
+      "n": 10,
+      "prompt": "Which OWASP Top 10 code and category pairing is correct?",
+      "options": [
+        "A01: Broken Access Control",
+        "A01: Injection",
+        "A03: Cryptographic Failures",
+        "A02: Security Misconfiguration",
+        "A05: Vulnerable and Outdated Components"
+      ],
+      "explanation": "In the OWASP Top 10 list shown, A01 is Broken Access Control, A02 Cryptographic Failures, A03 Injection, A05 Security Misconfiguration and A06 Vulnerable and Outdated Components.",
+      "slide": 8
+    },
+    {
+      "n": 11,
+      "prompt": "Which change fixes the SQL injection in this code?\nquery = \"SELECT * FROM users WHERE username = '\" + user_input + \"';\"\ncursor.execute(query)",
+      "options": [
+        "Use a ? placeholder and pass user_input as a separate argument to execute()",
+        "Check that the logged-in user's ID matches the requested resource ID",
+        "Append user_input after the closing quote instead of inside the quotes",
+        "Replace SELECT * with SELECT username so that fewer columns are returned",
+        "Run a ZAP passive scan before each query to filter out malicious input"
+      ],
+      "explanation": "The secure code uses \"SELECT * FROM users WHERE username = ?;\" with cursor.execute(query, (user_input,)), so input such as ' OR '1'='1 is no longer concatenated into the SQL string. Checking the user's ID against the resource ID is the fix for IDOR, not for injection.",
+      "slide": 9
+    },
+    {
+      "n": 12,
+      "prompt": "A logged-in user calls GET /api/user/123 for their own data, changes the URL to GET /api/user/124 and receives another user's data. What fix does the lecture recommend?",
+      "options": [
+        "On the server, check that the user's ID matches the requested resource ID",
+        "Use parameterized queries with ? placeholders in every API endpoint",
+        "On the client, check that the ID in the URL belongs to the current user",
+        "Encrypt the API response so that other users' data cannot be read",
+        "Run ZAP's active scan in production so that such requests are blocked"
+      ],
+      "explanation": "This is an IDOR flaw (A01: Broken Access Control); the fix is a server-side check that the logged-in user's ID matches the requested resource ID before any data is returned. Parameterized queries fix SQL injection, not access control.",
+      "slide": 9
+    },
+    {
+      "n": 13,
+      "prompt": "Which OWASP ZAP feature is used for automated site mapping?",
+      "options": [
+        "Spider",
+        "Passive scan",
+        "Active scan",
+        "Intercepting proxy",
+        "HTML report"
+      ],
+      "explanation": "The lecture lists \"Spider for Automated Site Mapping\" among ZAP's features. The passive scan monitors traffic and the active scan sends attack payloads to find vulnerabilities; neither is the mapping feature.",
+      "slide": 10
+    },
+    {
+      "n": 14,
+      "prompt": "A tester with explicit permission wants ZAP to find SQL injection, cross-site scripting (XSS) and path traversal flaws in a test system. Which ZAP capability is designed for this?",
+      "options": [
+        "Active scan",
+        "Passive scan",
+        "Spider",
+        "Intercepting proxy",
+        "Report generation"
+      ],
+      "explanation": "The active scan (\"the attacker\") sends thousands of malicious payloads and finds critical flaws such as SQL injection, XSS and path traversal. The passive scan only monitors traffic and finds low-hanging fruit such as missing security headers.",
+      "slide": 11
+    },
+    {
+      "n": 15,
+      "prompt": "Which statement about ZAP's passive scan is correct?",
+      "options": [
+        "It only monitors HTTP traffic and is safe to use on production systems",
+        "It sends thousands of malicious payloads to find vulnerabilities",
+        "It finds critical flaws such as SQL injection by attacking input fields",
+        "It modifies requests in transit to trigger cross-site scripting errors",
+        "It maps the whole site automatically without observing any traffic"
+      ],
+      "explanation": "The passive scan (\"the listener\") monitors HTTP traffic without modifying it, finds issues like missing security headers, sensitive info in comments and insecure cookie flags, and is safe on production systems. Sending malicious payloads to find SQL injection is what the active scan does.",
+      "slide": 11
+    },
+    {
+      "n": 16,
+      "prompt": "In the OWASP Juice Shop lab (http://localhost:3000), what is the first, reconnaissance step of the mission?",
+      "options": [
+        "Browse the site through ZAP's proxy and perform a passive scan",
+        "Run the active scanner to find SQL injection on the login page",
+        "Enter <script>alert('XSS')</script> into the site's search bar",
+        "Score every discovered page with the DREAD formula",
+        "Generate the ZAP HTML report and send it to the developers"
+      ],
+      "explanation": "Reconnaissance means using ZAP's proxy to browse the site and perform a passive scan. Using the active scanner for SQL injection on the login page and testing reflected XSS in the search bar are the later exploitation steps.",
+      "slide": 12
+    },
+    {
+      "n": 17,
+      "prompt": "In a professional ZAP vulnerability report, what does the \"Evidence\" shown with the affected URL contain?",
+      "options": [
+        "The specific attack payload",
+        "The CWE reference for the weakness",
+        "The count of High, Medium and Low risks",
+        "The recommended code fix",
+        "The DREAD score of the finding"
+      ],
+      "explanation": "The report pairs the affected URL with evidence, which is the specific attack payload (for example the <script>alert('XSS')</script> request). CWE links belong under References, risk counts under the Risk Breakdown, and fixes under Solution Recommendations.",
+      "slide": 13
+    },
+    {
+      "n": 18,
+      "prompt": "Which rule for security testing does the lecture state?",
+      "options": [
+        "Always get explicit, written permission and respect the agreed-upon scope",
+        "Verbal permission is enough as long as the scope is put in writing later",
+        "Systems outside the scope may be tested if they look clearly vulnerable",
+        "Permission is needed only for active scans run against production systems",
+        "Written permission is needed only once a vulnerability has been found"
+      ],
+      "explanation": "The lecture says to ALWAYS get explicit, written permission before any testing, ALWAYS define and respect the agreed-upon scope, and NEVER test systems outside it, because unauthorized security testing is a crime. Permission is required before any testing, not only before active scans.",
+      "slide": 14
+    },
+    {
+      "n": 19,
+      "prompt": "Which legal references does the lecture cite for unauthorized security testing?",
+      "options": [
+        "Turkey: TCK Articles 243 and 244; USA: Computer Fraud and Abuse Act (CFAA)",
+        "Turkey: TCK Articles 243 and 244; USA: Common Weakness Enumeration (CWE)",
+        "Turkey: TCK Articles 343 and 344; USA: Computer Fraud and Abuse Act (CFAA)",
+        "Turkey: TCK Articles 234 and 235; USA: Computer Fraud and Abuse Act (CFAA)",
+        "Turkey: TCK Articles 243 and 244; USA: OWASP Top 10 compliance rules"
+      ],
+      "explanation": "The lecture cites TCK Article 243 (Unauthorized Access) and Article 244 (System Disruption) for Turkey, and the Computer Fraud and Abuse Act (CFAA) for the USA. CWE and the OWASP Top 10 are vulnerability references, not laws.",
+      "slide": 14
+    }
+  ]
+}

@@ -1,0 +1,409 @@
+{
+  "week": 5,
+  "title": "Integration Testing and API Testing with Postman",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "A test sends POST /orders to a running service that writes to a real database. How is this test classified?",
+      "options": [
+        "An API test by interface and an integration test by level",
+        "An integration test by interface and an API test by level",
+        "A unit test by level and a code test by interface",
+        "A system test by level and a UI test by interface",
+        "An API test, which is its own level between integration and system"
+      ],
+      "explanation": "Test level (how big the piece is) and test interface (where you touch the system) are independent questions: an HTTP request is the API interface, and a service with a real database is the integration level. API is an interface, not a level.",
+      "slide": 5
+    },
+    {
+      "n": 2,
+      "prompt": "What caused the loss of the Mars Climate Orbiter in 1999?",
+      "options": [
+        "Ground software sent pound-force seconds; navigation expected newton seconds",
+        "The navigation module failed its own unit tests but was launched anyway",
+        "Ground software called the navigation module in the wrong order",
+        "Expired credentials blocked ground software from reaching navigation",
+        "Navigation software received null values for the thruster impulse"
+      ],
+      "explanation": "Each module passed its own tests; the defect lived in the interface, where thruster impulse in pound-force seconds was read as newton seconds, off by a factor of 4.45.",
+      "slide": 6
+    },
+    {
+      "n": 3,
+      "prompt": "A team tests how its online shop works together with an external payment provider that it does not own. Which kind of integration testing is this?",
+      "options": [
+        "System integration testing, because the provider is a system the team does not own",
+        "Component integration testing, because both parts belong to the same system",
+        "Component integration testing, because the two parts exchange data through an API",
+        "Unit testing, because the payment provider counts as one external module",
+        "Acceptance testing, because the provider decides which payments are accepted"
+      ],
+      "explanation": "System integration testing covers your system and systems you do not own, such as a payment provider; component integration testing covers parts inside one system, such as the order service and its database.",
+      "slide": 7
+    },
+    {
+      "n": 4,
+      "prompt": "A service starts returning null for a field that its caller assumes is always present, and the caller crashes. Which typical interface defect is this?",
+      "options": [
+        "Missing data",
+        "Data mismatch",
+        "Call order",
+        "Error handling",
+        "Configuration"
+      ],
+      "explanation": "Missing data covers missing fields or unexpected null values; data mismatch would mean differing formats or units such as dates or currency.",
+      "slide": 8
+    },
+    {
+      "n": 5,
+      "prompt": "Which statement correctly compares big-bang and incremental integration?",
+      "options": [
+        "Big-bang needs no stubs or drivers, but a failure could come from anywhere",
+        "Incremental needs no stubs or drivers, but testing starts late",
+        "Big-bang reveals defects early, but needs more planning",
+        "Incremental combines all modules first, then tests the whole system",
+        "Big-bang makes defects easy to locate, but needs stubs or drivers"
+      ],
+      "explanation": "Big-bang combines everything at once, so it needs no stubs or drivers but failures are hard to locate and testing starts late. Incremental integration finds defects early and locates them easily, at the cost of stubs or drivers and more planning.",
+      "slide": 9
+    },
+    {
+      "n": 6,
+      "prompt": "The UI calls the order and payment services, which call the database layer and the bank adapter. Only the database layer and the bank adapter are finished so far. Which approach fits?",
+      "options": [
+        "Bottom-up integration, with drivers calling the database layer and bank adapter",
+        "Top-down integration, with stubs replacing the database layer and bank adapter",
+        "Bottom-up integration, with stubs replacing the unfinished UI and services",
+        "Top-down integration, with drivers standing in for the unfinished UI",
+        "Big-bang integration, with stubs replacing the unfinished services"
+      ],
+      "explanation": "Bottom-up starts with the low-level modules, and drivers act as the callers that are not ready yet. Stubs replace called modules, which is what top-down needs below the UI.",
+      "slide": 10
+    },
+    {
+      "n": 7,
+      "prompt": "Which drawback belongs to bottom-up integration rather than top-down integration?",
+      "options": [
+        "Nothing is visible until late in the integration",
+        "Low-level defects show up late in the integration",
+        "Modules below the UI must be replaced by stubs",
+        "A failure could come from anywhere in the system",
+        "Testing cannot start until every module is combined"
+      ],
+      "explanation": "Bottom-up tests low-level logic early but nothing is visible until late; top-down gives an early working skeleton, but its low-level defects show up late.",
+      "slide": 10
+    },
+    {
+      "n": 8,
+      "prompt": "What is a driver in integration testing?",
+      "options": [
+        "A fake caller that calls the module under test because the real caller is not ready",
+        "A fake callee that stands in for a called module and returns canned answers",
+        "A stub that also checks which operation was called, how often and with what data",
+        "A simplified but working implementation, such as an in-memory database",
+        "A server that simulates a third-party API and returns errors or delays on demand"
+      ],
+      "explanation": "A driver is a fake caller of the module under test; the fake callee on the other side that returns fixed, canned answers is a stub.",
+      "slide": 11
+    },
+    {
+      "n": 9,
+      "prompt": "A test replaces the email service with a test double that returns \"sent\" and also checks that it was called exactly once with the customer's address. What kind of test double is this?",
+      "options": [
+        "A mock",
+        "A stub",
+        "A driver",
+        "A fake",
+        "A container"
+      ],
+      "explanation": "A mock is a stub that also checks how it was called: which operation, how often and with what data. A plain stub only returns fixed, canned answers.",
+      "slide": 12
+    },
+    {
+      "n": 10,
+      "prompt": "Which statement about the test pyramid is true?",
+      "options": [
+        "Integration and API tests find interface defects unit tests miss, but can fail for more reasons",
+        "End-to-end UI tests should be the most numerous because they are closest to real use",
+        "Unit tests sit at the top because they are the slowest but most realistic tests",
+        "Integration and API tests are the fastest and cheapest, so they form the base",
+        "The pyramid is a strict law, so teams should never deviate from its proportions"
+      ],
+      "explanation": "The pyramid (a heuristic, not a law) has many fast, cheap unit tests at the bottom, some integration/API tests that catch interface defects but can fail due to network, data or timing, and few slow end-to-end tests at the top.",
+      "slide": 13
+    },
+    {
+      "n": 11,
+      "prompt": "For an integration test's dependencies, which option gives the highest realism but the lowest speed?",
+      "options": [
+        "A real database started in a container for each run, e.g. with Testcontainers",
+        "A fake, such as an in-memory database used instead of the real one",
+        "A mock server that simulates a third-party API you do not control",
+        "A stub that returns fixed, canned answers for every call",
+        "A driver that calls the module under test in place of the real caller"
+      ],
+      "explanation": "A real dependency in a container has high realism but low speed; a fake has medium realism and high speed, and a mock server has low realism and high speed.",
+      "slide": 14
+    },
+    {
+      "n": 12,
+      "prompt": "You want to test how your system behaves when a third-party payment API you do not control answers with an error or a long delay. Which setup fits best?",
+      "options": [
+        "A mock server that returns errors or delays on demand",
+        "A real payment API started in a container for each run",
+        "An in-memory fake that replaces the order database",
+        "A driver that calls the real payment API directly",
+        "A big-bang run against the provider's live service"
+      ],
+      "explanation": "A mock server simulates a third-party API you do not control and can return errors or delays on demand; containers are for real dependencies such as a database or message broker.",
+      "slide": 14
+    },
+    {
+      "n": 13,
+      "prompt": "How is an HTTP request structured?",
+      "options": [
+        "First line: method and path; then headers; after a blank line: the body",
+        "First line: headers; then method and path; after a blank line: the body",
+        "First line: status code; then headers; after a blank line: the body",
+        "First line: method and path; then the body; after a blank line: headers",
+        "First line: the body; then headers; after a blank line: method and path"
+      ],
+      "explanation": "The first line holds the method and path (e.g. POST /orders), the next lines are headers (metadata), and the body, often JSON, follows the blank line. A status code belongs to the response, not the request.",
+      "slide": 16
+    },
+    {
+      "n": 14,
+      "prompt": "What is the difference between the HTTP methods PUT and PATCH?",
+      "options": [
+        "PUT replaces a resource; PATCH partly updates it",
+        "PUT partly updates a resource; PATCH replaces it",
+        "PUT creates a new resource; PATCH removes it",
+        "PUT reads a resource; PATCH creates a new one",
+        "PUT removes a resource; PATCH reads it back"
+      ],
+      "explanation": "PUT replaces and PATCH partly updates a resource; creating is POST, reading is GET and removing is DELETE.",
+      "slide": 17
+    },
+    {
+      "n": 15,
+      "prompt": "Which of these status codes signals a server error?",
+      "options": [
+        "503 Service Unavailable",
+        "404 Not Found",
+        "401 Unauthorized",
+        "400 Bad Request",
+        "204 No Content"
+      ],
+      "explanation": "The first digit gives the family: 5xx codes such as 500 and 503 are server errors, 4xx codes are client errors and 2xx codes are success.",
+      "slide": 18
+    },
+    {
+      "n": 16,
+      "prompt": "An API answers POST /orders with 201 Created and a correct body, but the order is never stored. Which of the six API-test checks catches this defect?",
+      "options": [
+        "Side effects: read the order back, e.g. with GET /orders/42",
+        "Status code: compare it with the code the specification promises",
+        "Schema: check that every required field has the right type",
+        "Headers: check Content-Type, Location and security headers",
+        "Response time: check that it is within the agreed limit"
+      ],
+      "explanation": "Only the side-effect check verifies that the action really happened, by reading the order back; the status code, body, schema, headers and response time can all look correct while nothing was saved.",
+      "slide": 19
+    },
+    {
+      "n": 17,
+      "prompt": "In an API test, what is the difference between checking the schema and checking body values?",
+      "options": [
+        "Schema checks required fields and their types; body values check the data is correct",
+        "Schema checks the data is correct; body values check required fields and their types",
+        "Schema checks the response headers; body values check the status code",
+        "Schema checks the response time; body values check the side effects",
+        "Schema checks the request that was sent; body values check the response"
+      ],
+      "explanation": "A schema check confirms that every required field is present with the right type, while a body-value check confirms the returned data is correct, e.g. status is \"received\" and quantity is 2.",
+      "slide": 19
+    },
+    {
+      "n": 18,
+      "prompt": "For POST /orders, quantity must be between 1 and 10. Which responses do the boundary tests quantity = 0, 1, 10, 11 expect, in that order?",
+      "options": [
+        "400, 201, 201, 400",
+        "201, 201, 201, 201",
+        "400, 201, 400, 400",
+        "500, 201, 201, 500",
+        "404, 201, 201, 404"
+      ],
+      "explanation": "0 and 11 lie just outside the valid range and are rejected with 400, while 1 and 10 are valid boundaries that create the order with 201; a 5xx would mean the API did not fail politely.",
+      "slide": 20
+    },
+    {
+      "n": 19,
+      "prompt": "A negative test sends POST /orders without any token. Which status code should it expect?",
+      "options": [
+        "401 Unauthorized",
+        "403 Forbidden",
+        "400 Bad Request",
+        "404 Not Found",
+        "500 Internal Server Error"
+      ],
+      "explanation": "Sending no token gives 401; 403 (or 404) is expected when another customer's token is used to read someone else's order.",
+      "slide": 20
+    },
+    {
+      "n": 20,
+      "prompt": "In Postman, what is an environment?",
+      "options": [
+        "A set of variable values for one target, such as development, test or production",
+        "An ordered group of requests and their tests that is run as a whole",
+        "One HTTP call made up of a method, URL, headers and a body",
+        "A CI workflow that runs the collection on every push and pull request",
+        "A report of one collection run written in JUnit format for CI"
+      ],
+      "explanation": "An environment holds variable values for one target, like choosing which restaurant branch to visit; an ordered group of requests and tests is a collection, and a single HTTP call is a request.",
+      "slide": 21
+    },
+    {
+      "n": 21,
+      "prompt": "What are scripts in Postman?",
+      "options": [
+        "JavaScript code that runs before or after a request",
+        "Files that hold variable values for one target",
+        "Placeholders such as {{token}} reused across requests",
+        "Ordered groups of requests that are run as a whole",
+        "JUnit reports that are written after a collection run"
+      ],
+      "explanation": "Scripts are JavaScript run before (Pre-request) or after (Post-response) a request; placeholders such as {{token}} are variables, and per-target value sets are environments.",
+      "slide": 22
+    },
+    {
+      "n": 22,
+      "prompt": "When does a Postman check written as pm.test(name, fn) pass?",
+      "options": [
+        "When its function throws no error",
+        "When its function returns true",
+        "When the response status is 200",
+        "When the response arrives within 500 ms",
+        "When pm.response.json() returns a body"
+      ],
+      "explanation": "pm.test(name, fn) is one named check that passes if its function throws no error; a status code or response time is only checked when an assertion inside the function tests it.",
+      "slide": 23
+    },
+    {
+      "n": 23,
+      "prompt": "Which line in a Post-response script asserts that the HTTP status code of the response is 201?",
+      "options": [
+        "pm.response.to.have.status(201);",
+        "pm.environment.set(\"status\", 201);",
+        "pm.expect(pm.response.responseTime).to.eql(201);",
+        "pm.expect(pm.response.json().status).to.eql(201);",
+        "pm.test(\"status\", 201);"
+      ],
+      "explanation": "pm.response.to.have.status(201) checks the HTTP status code; pm.response.json().status reads the body field \"status\" (e.g. \"received\"), not the status code.",
+      "slide": 23
+    },
+    {
+      "n": 24,
+      "prompt": "POST /auth returns {\"token\": \"abc123\"}. Which Post-response line saves the token so that later requests can send Authorization: Bearer {{token}}?",
+      "options": [
+        "pm.environment.set(\"token\", pm.response.json().token);",
+        "pm.environment.get(\"token\", pm.response.json().token);",
+        "pm.expect(\"token\").to.eql(pm.response.json().token);",
+        "pm.test(\"token\", pm.response.json().token);",
+        "pm.response.set(\"token\", pm.environment.token);"
+      ],
+      "explanation": "pm.environment.set stores the value as the variable token, which later requests reuse through {{token}}; pm.expect and pm.test only check values and store nothing.",
+      "slide": 25
+    },
+    {
+      "n": 25,
+      "prompt": "Which Postman CLI command runs the collection orders.json once per row of a CSV file?",
+      "options": [
+        "postman collection run orders.json -d orders.csv",
+        "postman collection run orders.json -e orders.csv",
+        "postman collection run orders.json -r orders.csv",
+        "postman collection run orders.json --bail orders.csv",
+        "postman collection run orders.csv -d orders.json"
+      ],
+      "explanation": "-d supplies the data file for a data-driven run with one iteration per CSV row; -e selects an environment and -r chooses reporters such as cli,junit.",
+      "slide": 27
+    },
+    {
+      "n": 26,
+      "prompt": "By default, what happens when a test fails during a Postman CLI collection run?",
+      "options": [
+        "The failure is reported and the run continues with the remaining requests",
+        "The run stops at the first failure and skips the remaining requests",
+        "The failed request is retried until its test passes",
+        "The failure is reported, but the run ends with exit code zero",
+        "The failing test is removed from the collection before the next run"
+      ],
+      "explanation": "By default every request runs and failed tests are reported; only --bail stops the run at the first failure, and any failed test still gives a non-zero exit code.",
+      "slide": 28
+    },
+    {
+      "n": 27,
+      "prompt": "Which statement about Newman, compared with the Postman CLI, is true?",
+      "options": [
+        "It is open source and runs v2.1 JSON collections only",
+        "It is closed source and digitally signed by Postman",
+        "It runs both v2.1 JSON and v3 YAML collections",
+        "It also offers monitors, mocks and spec linting",
+        "It is actively developed by Postman as of 2026"
+      ],
+      "explanation": "Newman is open source (since 2014), supports only v2.1 JSON and is no longer maintained (2026); closed source, v3 YAML support and monitors or mocks describe the Postman CLI.",
+      "slide": 29
+    },
+    {
+      "n": 28,
+      "prompt": "In a CI pipeline that runs a Postman collection, what turns a failed API test into a red build?",
+      "options": [
+        "The collection run ends with a non-zero exit code",
+        "The JUnit report is written to postman-cli-reports/",
+        "The workflow is triggered by a pull request",
+        "The --bail option stops the run early",
+        "The Test Results tab shows a failed test"
+      ],
+      "explanation": "Any failed test gives a non-zero exit code, and that exit code is how the CI server knows the build failed and stops the change before it reaches users.",
+      "slide": 31
+    },
+    {
+      "n": 29,
+      "prompt": "A collection needs an API key when it runs in GitHub Actions. Where should the key be kept?",
+      "options": [
+        "In the CI secret store, passed to the run as an environment variable",
+        "In the environment file committed next to the collection",
+        "In the collection JSON, typed into every request header",
+        "In the CSV data file used for the data-driven run",
+        "In the workflow YAML file under .github/workflows/"
+      ],
+      "explanation": "Secrets such as API keys and passwords live in the CI secret store and are passed as environment variables; they must never be committed to the repository.",
+      "slide": 32
+    },
+    {
+      "n": 30,
+      "prompt": "In the chart of nine API test types, how does stress testing differ from load testing?",
+      "options": [
+        "Stress deliberately creates high loads to see if APIs still work; load tests capacity by simulating loads",
+        "Load deliberately creates high loads to see if APIs still work; stress tests capacity by simulating loads",
+        "Stress sends unexpected data to find vulnerabilities; load compares results of old and new apps",
+        "Stress tests interactions between the UI and APIs; load tests several API calls together",
+        "Stress simply checks whether the APIs are working; load tests against external threats"
+      ],
+      "explanation": "The chart describes load testing as testing the application's capacity by simulating loads, and stress testing as deliberately creating high loads to see whether the APIs still function normally.",
+      "slide": 33
+    },
+    {
+      "n": 31,
+      "prompt": "Which pairing of a test type and a suggested topic to look up is correct?",
+      "options": [
+        "Security testing: OWASP API Security Top 10",
+        "Contract testing: k6 or JMeter",
+        "Performance testing: Pact",
+        "Security testing: consumer-driven contracts",
+        "Performance testing: OpenAPI"
+      ],
+      "explanation": "OWASP API Security Top 10 belongs to security testing; OpenAPI, consumer-driven contracts and Pact belong to contract testing, and k6 or JMeter to performance testing.",
+      "slide": 34
+    }
+  ]
+}

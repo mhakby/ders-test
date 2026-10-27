@@ -1,0 +1,240 @@
+{
+  "week": 7,
+  "title": "Model and Property-Based Testing",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "Which statement describes property-based testing, as opposed to traditional example-based testing?",
+      "options": [
+        "Properties are stated and many test cases are generated automatically",
+        "Each test pairs one specific input with one expected output",
+        "Test cases are hand-picked by the tester, which can add human bias",
+        "Each property is checked against a single fixed input value",
+        "Every generated input needs a hand-written expected output"
+      ],
+      "explanation": "In property-based testing you specify properties that must always hold and the tool generates many random test cases (Test Case 1…N) to check them. One specific input with one expected output, chosen manually and prone to human bias, describes example-based testing.",
+      "slide": 3
+    },
+    {
+      "n": 2,
+      "prompt": "In model-based testing, what is a model?",
+      "options": [
+        "A simplified, abstract representation of the real system",
+        "A highly optimised version of the production implementation",
+        "A boolean condition that must hold for every valid input",
+        "A component that produces random input data for tests",
+        "The smallest failing input found after shrinking"
+      ],
+      "explanation": "A model is a simplified, abstract representation that is easier to reason about than the real implementation. A boolean condition that always holds is a property, and producing random data is the job of a generator.",
+      "slide": 4
+    },
+    {
+      "n": 3,
+      "prompt": "A team applies model-based testing to a highly optimised Set implementation. Which model matches the course example?",
+      "options": [
+        "A simple List plus the rule that no duplicates are allowed",
+        "A second, equally optimised Set written by another team",
+        "A random generator that produces integer lists",
+        "A sorting function whose output is always ordered",
+        "A simple List that keeps every duplicate it is given"
+      ],
+      "explanation": "The complex implementation is compared against a simple, trusted model: a List with the rule \"no duplicates allowed\". Another optimised Set is not simpler, and a List that keeps duplicates would not behave like a Set.",
+      "slide": 4
+    },
+    {
+      "n": 4,
+      "prompt": "Which pair of properties is given for a sorting function?",
+      "options": [
+        "The output is sorted and contains exactly the same elements as the input",
+        "The output equals the input and contains no duplicate elements",
+        "The output is the reversed input and has the same length",
+        "The output is sorted and is always shorter than the input",
+        "The output is sorted and reversing it twice yields the input"
+      ],
+      "explanation": "For a sorting function the listed properties are that the output is sorted and contains exactly the same elements as the input. Reversing twice gives back the list that was reversed (the output), not the original input.",
+      "slide": 5
+    },
+    {
+      "n": 5,
+      "prompt": "In model-based testing, the same random sequence of operations has been run on both the model and the real system. What is the next step?",
+      "options": [
+        "Compare the states and outputs of the model and the real system",
+        "Define an abstract model of the system under test",
+        "Define the same operations for the model and the real system",
+        "Replace the real system with the model in production",
+        "Discard the model and keep only the real system's output"
+      ],
+      "explanation": "The steps are: define an abstract model, define the same operations for model and real system, generate random operation sequences, run them on both, then compare states and outputs. Defining the model and operations happens earlier.",
+      "slide": 6
+    },
+    {
+      "n": 6,
+      "prompt": "In the guidance on when to use each approach, which kind of target is listed for model-based testing rather than plain property-based testing?",
+      "options": [
+        "State machines such as protocols or device states",
+        "Pure functions that have no side effects",
+        "String manipulation and parsing routines",
+        "Mathematical functions and algorithms",
+        "Specific use cases checked with one fixed example"
+      ],
+      "explanation": "State machines (protocols, device states), APIs and complex workflows are listed under model-based testing. Pure functions, string manipulation/parsing and mathematical functions/algorithms are listed under property-based testing, and specific use cases suit example-based testing.",
+      "slide": 19
+    },
+    {
+      "n": 7,
+      "prompt": "In property-based testing, what is the role of a generator?",
+      "options": [
+        "Producing random input data for the property",
+        "Minimizing a failing test case to a simpler one",
+        "Stating a boolean condition that must hold",
+        "Comparing system outputs against a trusted model",
+        "Reporting how many generated tests have passed"
+      ],
+      "explanation": "The core ingredients are generators (produce random input data), properties (boolean true/false conditions) and shrinking (minimize failing test cases).",
+      "slide": 7
+    },
+    {
+      "n": 8,
+      "prompt": "In QuickCheck (Haskell), what provides random data generation?",
+      "options": [
+        "The Arbitrary typeclass",
+        "The @ForAll annotation",
+        "The @Provide annotation",
+        "The @Property annotation",
+        "The JUnit Jupiter engine"
+      ],
+      "explanation": "QuickCheck uses the Arbitrary typeclass for random data generation. @ForAll, @Provide and @Property are jqwik annotations, and JUnit 5 (Jupiter) is the framework jqwik integrates with.",
+      "slide": 8
+    },
+    {
+      "n": 9,
+      "prompt": "Given this Haskell code:\nprop_reverse :: [Int] -> Bool\nprop_reverse xs = reverse (reverse xs) == xs\nmain = quickCheck prop_reverse\nWhat does quickCheck prop_reverse do by default?",
+      "options": [
+        "Generates 100 random integer lists and runs the property on each",
+        "Runs the property once on a fixed list chosen by the tester",
+        "Checks every possible integer list exhaustively before reporting",
+        "Generates random lists until the property passes once, then stops",
+        "Compares the reverse function against a simple model of a list"
+      ],
+      "explanation": "quickCheck uses the Arbitrary instance for [Int] to generate many random lists (100 by default) and runs prop_reverse on each, printing \"+++ OK, passed 100 tests.\" or reporting a counter-example if one fails.",
+      "slide": 9
+    },
+    {
+      "n": 10,
+      "prompt": "Which of these has the form of a composition property?",
+      "options": [
+        "f (g x) == h x",
+        "f(x) == x",
+        "reverse (reverse xs) == xs",
+        "sort result is ordered",
+        "insert preserves membership"
+      ],
+      "explanation": "Composition is written f (g x) == h x. f(x) == x is identity, reverse (reverse xs) == xs is involution, and the sort/insert statements are collection properties.",
+      "slide": 10
+    },
+    {
+      "n": 11,
+      "prompt": "In this jqwik property, where do the values of xs come from?\n@Property\nboolean reverseTwiceGivesOriginal(@ForAll List<Integer> xs) {\n    ...\n}",
+      "options": [
+        "jqwik automatically generates many List<Integer> values",
+        "The tester supplies one fixed list inside the method body",
+        "A separate @Provide method is required to build each list",
+        "JUnit 5 reads the lists from an external CSV data file",
+        "They are shrunk counter-examples saved from a prior run"
+      ],
+      "explanation": "@ForAll asks jqwik to supply random values for that parameter, so jqwik automatically generates many List<Integer> values and checks the property for all of them. @Provide is only needed for named custom generators.",
+      "slide": 12
+    },
+    {
+      "n": 12,
+      "prompt": "In jqwik, how is a named custom generator defined and used?",
+      "options": [
+        "Defined with @Provide and used via @ForAll(\"name\")",
+        "Defined with @ForAll and used via @Provide(\"name\")",
+        "Defined with @Property and used via @ForAll(\"name\")",
+        "Defined with @Provide and used via @Property(\"name\")",
+        "Defined as an Arbitrary typeclass and used via quickCheck"
+      ],
+      "explanation": "Named generators are declared with @Provide and referenced with @ForAll(\"name\"). @Property marks the property method itself, and the Arbitrary typeclass with quickCheck belongs to Haskell's QuickCheck.",
+      "slide": 14
+    },
+    {
+      "n": 13,
+      "prompt": "A jqwik generator is defined as:\nArbitraries.strings()\n    .withCharRange('a', 'z')\n    .ofMinLength(1).ofMaxLength(5)\nWhich value could it generate?",
+      "options": [
+        "\"abcde\"",
+        "\"\"",
+        "\"abcdef\"",
+        "\"ABC\"",
+        "\"ab1\""
+      ],
+      "explanation": "The generator yields strings of length 1–5 made of lowercase letters a–z. The empty string is too short, \"abcdef\" is too long, and uppercase letters or digits are outside the character range.",
+      "slide": 15
+    },
+    {
+      "n": 14,
+      "prompt": "When a property fails, what is the goal of shrinking?",
+      "options": [
+        "Finding the smallest, simplest failing example",
+        "Reducing the number of generated test runs",
+        "Removing the failing input from the test report",
+        "Simplifying the property until it passes again",
+        "Compressing generated data to save memory"
+      ],
+      "explanation": "jqwik/QuickCheck shrink the failing input to the smallest, simplest failing example (e.g. a 100-element list down to maybe 2 elements), which makes debugging much easier.",
+      "slide": 16
+    },
+    {
+      "n": 15,
+      "prompt": "A jqwik property encodes the intuition that in Java a % b is always between 0 and b - 1. Which input is a counter-example?",
+      "options": [
+        "a = -1, b = 2 (result -1)",
+        "a = 1, b = 2 (result 1)",
+        "a = 3, b = 2 (result 1)",
+        "a = 4, b = 2 (result 0)",
+        "a = 5, b = 3 (result 2)"
+      ],
+      "explanation": "In Java, modulo with a negative a can be negative, so -1 % 2 == -1 falls outside 0 to b - 1, a language-specific corner case. The other inputs all give results inside that range.",
+      "slide": 17
+    },
+    {
+      "n": 16,
+      "prompt": "Which of these is listed as a disadvantage of property-based testing?",
+      "options": [
+        "Good properties are harder to define",
+        "Only a limited number of inputs is used",
+        "Boundary cases are often missed",
+        "Fewer chances to hit corner cases",
+        "All inputs must be chosen by hand"
+      ],
+      "explanation": "The listed cons of property-based testing are that good properties are harder to define and it requires more abstract thinking. A limited number of inputs and missed boundary cases are the cons of example-based testing.",
+      "slide": 18
+    },
+    {
+      "n": 17,
+      "prompt": "Which statement correctly compares QuickCheck and jqwik?",
+      "options": [
+        "QuickCheck is the origin of property-based testing; jqwik fits into JUnit 5",
+        "jqwik is the origin of property-based testing; QuickCheck fits into JUnit 5",
+        "Only jqwik shrinks failing inputs; QuickCheck only reports the first failure",
+        "Only QuickCheck generates random data; jqwik relies on fixed examples",
+        "jqwik is mainly backed by the functional programming community"
+      ],
+      "explanation": "QuickCheck (Haskell) is the origin of property-based testing with strong functional-programming support, while jqwik fits naturally into JUnit 5 test suites. Both provide random generation and shrinking.",
+      "slide": 20
+    },
+    {
+      "n": 18,
+      "prompt": "Which statement about property-based testing in industry is correct?",
+      "options": [
+        "Teams used to example-based thinking may resist it at first",
+        "It weakens regression suites by replacing fixed examples",
+        "It increases the effort of manual test case design",
+        "It is rarely used in finance, telecom or network protocols",
+        "It has no learning curve for developers or testers"
+      ],
+      "explanation": "Challenges include a learning curve and initial resistance from teams used to example-based thinking. Its advantages are stronger regression suites and less manual test case design, and it is used in finance, telecom and network protocols.",
+      "slide": 21
+    }
+  ]
+}

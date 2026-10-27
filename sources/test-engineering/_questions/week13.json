@@ -1,0 +1,266 @@
+{
+  "week": 13,
+  "title": "Formal Verification: Bridging Proofs and Testing",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "Which statement expresses the fundamental insight of the lecture about testing and formal verification?",
+      "options": [
+        "Testing shows the presence of bugs; formal verification proves their absence",
+        "Testing proves the absence of bugs; formal verification shows their presence",
+        "Testing and formal verification both prove the absence of all possible bugs",
+        "Testing finds design flaws; formal verification finds only coding errors",
+        "Testing proves correctness; formal verification estimates how often bugs occur"
+      ],
+      "explanation": "Testing runs a finite set of inputs, so it can reveal bugs but not rule them out, while formal verification constructs a mathematical proof that they are absent. The reversed statement swaps the two roles.",
+      "slide": 3
+    },
+    {
+      "n": 2,
+      "prompt": "Exhaustively testing a 64-bit processor requires 2^64 (about 18 quintillion) test cases. At 1 billion tests per second, approximately how long does the lecture say this would take?",
+      "options": [
+        "About 635 years",
+        "About 18 years",
+        "About 64 years",
+        "About 6,350 years",
+        "About 2,048 years"
+      ],
+      "explanation": "The state space explosion example states that 2^64 test cases at 1 billion tests per second would take approximately 635 years, which is why exhaustive testing is infeasible.",
+      "slide": 4
+    },
+    {
+      "n": 3,
+      "prompt": "In the argument for why testing isn't enough, what does the \"needle in a haystack\" problem refer to?",
+      "options": [
+        "Critical bugs lurk in rare combinations of concurrent events and timing conditions",
+        "The number of test cases grows exponentially with the size of the input",
+        "Static analysis tools report many bugs that turn out not to be real",
+        "Proof assistants need a human to guide every step of a proof",
+        "Properties must be written in temporal logic before they can be checked"
+      ],
+      "explanation": "The needle-in-a-haystack problem is about rarity: critical bugs hide in rare combinations of concurrent events, fault scenarios and timing conditions, and at millions of requests per second such \"extremely rare\" events happen regularly. Exponential growth of test cases is the separate state space explosion problem.",
+      "slide": 4
+    },
+    {
+      "n": 4,
+      "prompt": "Which statement correctly contrasts testing and formal verification?",
+      "options": [
+        "Testing covers only the tested cases; formal verification covers all possible inputs and states",
+        "Testing covers all possible inputs and states; formal verification covers only the proven cases",
+        "Testing covers design and implementation; formal verification focuses only on the implementation",
+        "Testing constructs a mathematical proof; formal verification runs a finite set of inputs",
+        "Testing can prove the absence of bugs; formal verification can only prove their presence"
+      ],
+      "explanation": "Testing runs a finite set of inputs, so its coverage is the tested cases only, while formal verification constructs a proof covering ALL possible inputs and states. It is formal verification, not testing, whose scope covers both design and implementation.",
+      "slide": 5
+    },
+    {
+      "n": 5,
+      "prompt": "On the formal methods spectrum of rigor, which pairing of technique and computational complexity is correct?",
+      "options": [
+        "Model checking: PSPACE-complete",
+        "Static analysis: undecidable",
+        "Theorem proving: polynomial",
+        "SMT solving: PSPACE-complete",
+        "Model checking: NP-complete"
+      ],
+      "explanation": "The spectrum lists static analysis as polynomial, model checking as PSPACE-complete and theorem proving as undecidable, with SMT solving (NP-complete) as the enabling technology. NP-complete belongs to SMT solving, not model checking.",
+      "slide": 6
+    },
+    {
+      "n": 6,
+      "prompt": "In model checking, how are the system and the properties to be checked expressed?",
+      "options": [
+        "System as a finite-state machine; properties in temporal logic",
+        "System in temporal logic; properties as a finite-state machine",
+        "System as source code; properties as unit test assertions",
+        "System as random inputs; properties as minimal counterexamples",
+        "System in formal logic; properties as a correctness certificate"
+      ],
+      "explanation": "Model checking takes a system model (a finite-state machine) and properties written in temporal logic; the tool then explores all reachable states and returns either a proof or a counterexample.",
+      "slide": 7
+    },
+    {
+      "n": 7,
+      "prompt": "In LTL, □ means \"always\", ◇ means \"eventually\", → means \"implies\" and ¬ means \"not\". Which formula states \"Every request eventually gets a response\"?",
+      "options": [
+        "□(request → ◇response)",
+        "◇(request → □response)",
+        "□(response → ◇request)",
+        "□(¬request → ◇response)",
+        "◇(request → ◇response)"
+      ],
+      "explanation": "□ applied to (request → ◇response) says that at every point, a request implies that a response eventually follows. Starting the formula with ◇ instead would require this at only some single point, not for every request.",
+      "slide": 7
+    },
+    {
+      "n": 8,
+      "prompt": "In theorem proving, what role does the machine (the proof assistant) play?",
+      "options": [
+        "It verifies every step of a proof that a human guides",
+        "It automatically explores every reachable state of the model",
+        "It generates random inputs and shrinks any failing case",
+        "It approximates program behavior without running the code",
+        "It finds the whole proof automatically with no human input"
+      ],
+      "explanation": "Theorem proving is interactive: a human guides the proof construction and the machine acts as a meticulous assistant that verifies each step, producing a correctness certificate. Automatically exploring all reachable states describes model checking.",
+      "slide": 8
+    },
+    {
+      "n": 9,
+      "prompt": "Which strength does theorem proving offer that distinguishes it from model checking?",
+      "options": [
+        "It can handle infinite state spaces",
+        "It is fully automated from end to end",
+        "It requires little expertise to use",
+        "It always runs in polynomial time",
+        "It produces concrete counterexamples"
+      ],
+      "explanation": "Theorem proving handles infinite state spaces and offers the strongest guarantees, while model checking suffers from state space explosion in large systems. Full automation and concrete counterexamples are model checking's strengths, whereas theorem proving is labor-intensive and needs significant expertise.",
+      "slide": 8
+    },
+    {
+      "n": 10,
+      "prompt": "Which static analysis technique is described as safely approximating program behavior?",
+      "options": [
+        "Abstract interpretation",
+        "Symbolic execution",
+        "Data flow analysis",
+        "Type systems",
+        "Bounded checking"
+      ],
+      "explanation": "Abstract interpretation safely approximates program behavior. Symbolic execution runs the program with symbolic instead of concrete values, data flow analysis tracks how data moves through programs, and type systems catch errors at compile time.",
+      "slide": 9
+    },
+    {
+      "n": 11,
+      "prompt": "A team wants a fully automated technique that finds bugs without running the code and scales to a very large codebase. They can accept occasional reports of bugs that aren't real. Which approach fits best?",
+      "options": [
+        "Static analysis",
+        "Theorem proving",
+        "Model checking",
+        "Property-based testing",
+        "Exhaustive testing"
+      ],
+      "explanation": "Static analysis finds bugs without running code, is automated and scales to very large codebases, at the cost of possible false positives (reporting bugs that aren't real). Model checking is also automated but is limited by system scale.",
+      "slide": 9
+    },
+    {
+      "n": 12,
+      "prompt": "A team needs deep, foundational verification and is willing to build proofs interactively with a proof assistant. Which tool from the verification toolbox fits?",
+      "options": [
+        "Coq",
+        "TLA+",
+        "Alloy",
+        "SPIN",
+        "Z3"
+      ],
+      "explanation": "Coq (INRIA, France) is the proof assistant for deep, foundational verification. TLA+ and SPIN are model checkers, Alloy does bounded checking for software design, and Z3 is an SMT solver used as a backend for many tools.",
+      "slide": 10
+    },
+    {
+      "n": 13,
+      "prompt": "Which statement about Amazon's use of TLA+ is correct?",
+      "options": [
+        "A 939-line DynamoDB spec found 3 bugs, one with a 35-step trace",
+        "An 804-line S3 spec found 3 bugs, one with a 35-step trace",
+        "A 102-line EBS spec found only 2 subtle bugs in the service",
+        "Amazon reports that engineers need 1-2 months to learn TLA+",
+        "A 939-line DynamoDB spec found no bugs, confirming its design"
+      ],
+      "explanation": "The 939-line DynamoDB spec found 3 bugs, including one with a 35-step trace that would be \"nearly impossible\" to find via testing. The 804-line S3 spec found 2 bugs, the 102-line EBS spec found 3, and Amazon says engineers learn TLA+ in 2-3 weeks.",
+      "slide": 11
+    },
+    {
+      "n": 14,
+      "prompt": "A developer tests a buggy reverse function with the property `for any list x, reverse(reverse(x)) == x`. After generating random inputs, the framework finds one that fails. What does a property-based testing framework do next?",
+      "options": [
+        "Shrinks it to the smallest input that still reproduces the bug",
+        "Explores all reachable states to prove that the failure is real",
+        "Reports it as a false positive and keeps generating new inputs",
+        "Issues a correctness certificate covering all the passing inputs",
+        "Rewrites the property as a temporal logic formula and rechecks it"
+      ],
+      "explanation": "Property-based testing defines a property, generates hundreds or thousands of random inputs, and on failure shrinks to a minimal counterexample: the smallest possible input that reproduces the bug.",
+      "slide": 12
+    },
+    {
+      "n": 15,
+      "prompt": "The Intel Pentium FDIV bug (1994) occurred in roughly 1 in 9 billion random divisions and led to a $475 million recall. What was the underlying flaw?",
+      "options": [
+        "5 missing entries in a 2,048-cell lookup table of the division unit",
+        "A 64-bit float converted to a 16-bit signed integer, causing overflow",
+        "Software reused from an older chip without being re-verified for it",
+        "A deadlock between concurrent floating-point division operations",
+        "A rounding error in 1 of every 2,048 floating-point divisions"
+      ],
+      "explanation": "The floating-point division unit returned incorrect results because 5 entries were missing from a 2,048-cell lookup table. The 64-bit-to-16-bit conversion overflow is the Ariane 5 bug, not the Pentium bug.",
+      "slide": 13
+    },
+    {
+      "n": 16,
+      "prompt": "What was the bug behind the Ariane 5 Flight 501 explosion (1996)?",
+      "options": [
+        "A 64-bit float for velocity overflowed when converted to a 16-bit signed integer",
+        "A 16-bit signed integer for velocity lost precision when converted to a 64-bit float",
+        "Five missing entries in a lookup table produced wrong floating-point divisions",
+        "A deadlock between two guidance processes stopped all velocity updates",
+        "A 32-bit altitude value overflowed when converted to an 8-bit unsigned integer"
+      ],
+      "explanation": "A 64-bit float representing velocity was converted to a 16-bit signed integer; the value was larger than 32,767 and overflowed, leading to a software exception, guidance system failure and self-destruct. Missing lookup-table entries describe the Pentium FDIV bug.",
+      "slide": 14
+    },
+    {
+      "n": 17,
+      "prompt": "What lesson does the lecture draw from the Ariane 5 Flight 501 failure?",
+      "options": [
+        "Reused software must be re-verified; static analysis could have detected the bug",
+        "Software that worked on Ariane 4 could safely be reused without further checks",
+        "The bug could only have been found by flight testing the real rocket",
+        "The bug was detectable only by theorem proving, not by static analysis",
+        "Floating-point hardware must be checked against lookup tables before launch"
+      ],
+      "explanation": "The software was reused from the slower Ariane 4 without re-verifying it for Ariane 5's faster trajectory, so the lesson is that reuse requires re-verification. Post-accident analysis showed the bug was detectable by static analysis.",
+      "slide": 14
+    },
+    {
+      "n": 18,
+      "prompt": "Which statement about industries where formal methods are standard practice is correct?",
+      "options": [
+        "DO-178C, via its DO-333 supplement, allows formal methods as an alternative to testing for avionics",
+        "ISO 26262, via its DO-333 supplement, allows formal methods as an alternative to testing for avionics",
+        "NASA uses the Coq proof assistant as its standard theorem prover for aerospace work",
+        "DO-178C is the automotive functional safety standard for brake control and steering",
+        "Hardware design adopted formal methods as standard practice because of the Ariane 5 explosion"
+      ],
+      "explanation": "In aerospace, DO-178C (via the DO-333 supplement) allows formal methods as an alternative to testing for avionics, and NASA uses the PVS theorem prover. ISO 26262 is the automotive standard, and hardware design has used formal methods since the Pentium bug.",
+      "slide": 15
+    },
+    {
+      "n": 19,
+      "prompt": "According to the lecture's key insights, how do testing and formal verification fit into a mature engineering process?",
+      "options": [
+        "Both are necessary parts of the process, since they serve different goals",
+        "Formal verification replaces testing once a proof of correctness exists",
+        "Testing alone is sufficient as long as enough random inputs are generated",
+        "Formal verification is too costly to use outside academic research projects",
+        "Property-based testing fully replaces both unit testing and formal verification"
+      ],
+      "explanation": "Under the \"tale of two goals\" insight, testing finds bugs while verification proves correctness, and both are necessary parts of a mature engineering process. Formal methods are also used daily at Amazon, Microsoft, Intel and NASA, so they are not limited to research.",
+      "slide": 16
+    },
+    {
+      "n": 20,
+      "prompt": "A developer wants to start applying formal thinking right away with the smallest learning investment. Which option from the recommended learning path fits, with its approximate learning time?",
+      "options": [
+        "Property-based testing with Hypothesis for Python, about 1 day",
+        "Design modeling with Alloy, about 1 day",
+        "TLA+ for distributed systems, about 1 week",
+        "Deep verification with Coq via Software Foundations, about 2-3 weeks",
+        "Property-based testing with Hypothesis for Python, about 1-2 months"
+      ],
+      "explanation": "The learning path recommends property-based testing (Hypothesis for Python) to start now, with about 1 day of learning. Alloy design modeling takes about 1 week, TLA+ about 2-3 weeks and Coq via Software Foundations about 1-2 months.",
+      "slide": 17
+    }
+  ]
+}

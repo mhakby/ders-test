@@ -1,0 +1,305 @@
+{
+  "week": 8,
+  "title": "Performance and Reliability in Test Engineering",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "In the 'dual mandate' of modern engineering, how do the performance and reliability pillars differ in focus?",
+      "options": [
+        "Performance focuses on behavior now; reliability on endurance over time",
+        "Performance focuses on endurance over time; reliability on behavior now",
+        "Performance focuses on repairable systems; reliability on non-repairable ones",
+        "Performance focuses on failure rates; reliability on response times",
+        "Performance focuses on data volume; reliability on concurrent users"
+      ],
+      "explanation": "Performance excellence means being fast, responsive and efficient under load to meet immediate demands (behavior now). Reliability assurance means operating without failure over the entire lifecycle (endurance over time).",
+      "slide": 3
+    },
+    {
+      "n": 2,
+      "prompt": "In terms of which aspects does performance testing evaluate a system?",
+      "options": [
+        "Responsiveness, stability and resource usage under workload",
+        "Failure rate, MTTF and MTBF over the system's lifecycle",
+        "Infant mortality, useful life and wear-out behaviour",
+        "Survival probability beyond a specified time t",
+        "Statement, branch and path coverage of the code"
+      ],
+      "explanation": "Performance testing evaluates responsiveness, stability and resource usage under workload, asking for example how fast the system responds and how many concurrent users it can handle. Failure rates, MTTF/MTBF and bathtub phases belong to reliability.",
+      "slide": 4
+    },
+    {
+      "n": 3,
+      "prompt": "Which type of performance test applies a sustained load over an extended period?",
+      "options": [
+        "Endurance (soak) testing",
+        "Spike testing",
+        "Stress testing",
+        "Volume testing",
+        "Scalability testing"
+      ],
+      "explanation": "Endurance (soak) testing applies a sustained load for an extended period. Spike testing uses sudden dramatic increases in load, stress testing goes beyond normal capacity, and volume testing uses large amounts of data.",
+      "slide": 5
+    },
+    {
+      "n": 4,
+      "prompt": "When ticket sales open, a website's traffic suddenly jumps to many times its usual level within seconds. Which performance test simulates this situation?",
+      "options": [
+        "Spike testing",
+        "Endurance (soak) testing",
+        "Volume testing",
+        "Load testing",
+        "Scalability testing"
+      ],
+      "explanation": "Spike testing simulates sudden dramatic increases in load. Load testing simulates the expected user load, and endurance testing holds a load for an extended period.",
+      "slide": 5
+    },
+    {
+      "n": 5,
+      "prompt": "How does stress testing differ from load testing?",
+      "options": [
+        "Stress pushes beyond normal capacity; load simulates expected load",
+        "Stress simulates expected load; load pushes beyond normal capacity",
+        "Stress uses large amounts of data; load uses many concurrent users",
+        "Stress holds the load for days; load uses sudden bursts of traffic",
+        "Stress checks scaling up or out; load checks recovery from failure"
+      ],
+      "explanation": "Load testing simulates the expected user load, while stress testing pushes the system beyond its normal capacity. Large amounts of data are volume testing, and a long sustained load is endurance (soak) testing.",
+      "slide": 5
+    },
+    {
+      "n": 6,
+      "prompt": "In performance testing, what does throughput measure?",
+      "options": [
+        "Transactions per unit time, such as TPS or RPS",
+        "The time between a request and its response",
+        "The percentage of requests that fail",
+        "CPU, memory and disk I/O consumption",
+        "The probability of failure by time t"
+      ],
+      "explanation": "Throughput is transactions per unit time (TPS/RPS). The time between request and response is response time, the percentage of failed requests is the error rate, and CPU/memory/disk I/O is resource utilization.",
+      "slide": 6
+    },
+    {
+      "n": 7,
+      "prompt": "Which target values does the lecture give for CPU utilization and for the error rate in production?",
+      "options": [
+        "CPU below 80%, error rate below 1%",
+        "CPU below 50%, error rate below 5%",
+        "CPU below 80%, error rate below 5%",
+        "CPU below 95%, error rate below 1%",
+        "CPU below 90%, error rate below 0.1%"
+      ],
+      "explanation": "The lecture gives a CPU utilization target of less than 80% and an error-rate target of less than 1% for production.",
+      "slide": 6
+    },
+    {
+      "n": 8,
+      "prompt": "What does the reliability function R(t) = P(T > t) give, where T is the time to failure?",
+      "options": [
+        "The probability that the system survives beyond time t",
+        "The probability that the system has failed by time t",
+        "The instantaneous rate of failure at time t",
+        "The average time between two consecutive failures",
+        "The probability that the system is operational at any given time"
+      ],
+      "explanation": "R(t) is the probability of survival beyond time t. The probability of failure by time t is the unreliability F(t) = 1 − R(t), and the probability of being operational at any given time is availability.",
+      "slide": 7
+    },
+    {
+      "n": 9,
+      "prompt": "Which formula defines the failure rate (hazard function) λ(t)?",
+      "options": [
+        "λ(t) = f(t) / R(t)",
+        "λ(t) = R(t) / f(t)",
+        "λ(t) = 1 − R(t)",
+        "λ(t) = f(t) × R(t)",
+        "λ(t) = F(t) / R(t)"
+      ],
+      "explanation": "λ(t) = f(t) / R(t) is the instantaneous rate of failure at time t, given survival up to t. The expression 1 − R(t) is the unreliability F(t), not the failure rate.",
+      "slide": 7
+    },
+    {
+      "n": 10,
+      "prompt": "In which phase of the bathtub curve is the failure rate constant, and what causes the failures in that phase?",
+      "options": [
+        "Useful life; random external events",
+        "Infant mortality; manufacturing defects and design flaws",
+        "Wear-out; age-related deterioration",
+        "Useful life; manufacturing defects and design flaws",
+        "Wear-out; random external events"
+      ],
+      "explanation": "In the useful-life phase the failure rate is constant, failures come from random external events, and the phase is modeled by the exponential distribution. Manufacturing defects and design flaws cause infant mortality, and age-related deterioration causes wear-out.",
+      "slide": 9
+    },
+    {
+      "n": 11,
+      "prompt": "A Weibull analysis of field data gives a shape parameter β = 0.6. Which phase of the bathtub curve does this indicate?",
+      "options": [
+        "Infant mortality, with a decreasing failure rate",
+        "Useful life, with a constant failure rate",
+        "Wear-out, with an increasing failure rate",
+        "Wear-out, with a decreasing failure rate",
+        "Useful life, with an increasing failure rate"
+      ],
+      "explanation": "For the Weibull distribution, β < 1 indicates infant mortality (decreasing failure rate), β = 1 indicates useful life and β > 1 indicates wear-out.",
+      "slide": 11
+    },
+    {
+      "n": 12,
+      "prompt": "What does the memoryless property of the exponential distribution mean?",
+      "options": [
+        "A component's future reliability is independent of its current age",
+        "A component's failure rate rises steadily as it gets older",
+        "Failures cluster around an average lifetime of the component",
+        "Early failures are weeded out, so the failure rate decreases",
+        "The shape parameter β decides which failure phase applies"
+      ],
+      "explanation": "Memoryless means a component's future reliability is independent of its current age, which fits the constant failure rate of the useful-life phase. Failures clustering around an average lifetime describe the normal distribution.",
+      "slide": 12
+    },
+    {
+      "n": 13,
+      "prompt": "Which statement about failure distributions is correct?",
+      "options": [
+        "The Weibull distribution can model all three bathtub phases",
+        "The exponential distribution models the wear-out phase",
+        "The normal distribution models infant mortality failures",
+        "A Weibull distribution with β = 1 models wear-out failures",
+        "The exponential distribution has an increasing failure rate"
+      ],
+      "explanation": "The Weibull distribution is the 'Swiss Army Knife' of reliability: its shape parameter β lets it model infant mortality, useful life and wear-out. The exponential distribution models useful life (constant failure rate), and the normal distribution models wear-out.",
+      "slide": 12
+    },
+    {
+      "n": 14,
+      "prompt": "Which statement about MTTF and MTBF is correct?",
+      "options": [
+        "MTBF = MTTF + MTTR, and MTBF is used for repairable systems",
+        "MTTF = MTBF + MTTR, and MTTF is used for repairable systems",
+        "MTBF = MTTF − MTTR, and MTBF is used for non-repairable systems",
+        "MTTF is the average time between consecutive failures",
+        "MTBF is the expected time until the first failure"
+      ],
+      "explanation": "MTBF, the average time between consecutive failures, applies to repairable systems such as servers and equals MTTF + MTTR. MTTF is the expected time until the first failure and applies to non-repairable systems such as light bulbs.",
+      "slide": 13
+    },
+    {
+      "n": 15,
+      "prompt": "A repairable system has MTBF = 495 hours and MTTR = 5 hours. What is its availability according to the lecture's formula?",
+      "options": [
+        "99%",
+        "98%",
+        "99.9%",
+        "95%",
+        "1%"
+      ],
+      "explanation": "Availability A = MTBF / (MTBF + MTTR) = 495 / (495 + 5) = 495 / 500 = 0.99, i.e. 99%.",
+      "slide": 13
+    },
+    {
+      "n": 16,
+      "prompt": "How much annual downtime corresponds to 'four nines' (99.99%) availability?",
+      "options": [
+        "52.6 minutes",
+        "8.76 hours",
+        "5.26 minutes",
+        "52.6 hours",
+        "87.6 minutes"
+      ],
+      "explanation": "99.99% ('four nines') allows 52.6 minutes of downtime per year, while 99.9% ('three nines') allows 8.76 hours and 99.999% ('five nines') allows 5.26 minutes.",
+      "slide": 14
+    },
+    {
+      "n": 17,
+      "prompt": "Three components with reliabilities 0.9, 0.9 and 0.8 are connected in series. What is the system reliability?",
+      "options": [
+        "0.648",
+        "0.72",
+        "0.8",
+        "0.867",
+        "0.998"
+      ],
+      "explanation": "In a series system R_system = R1 × R2 × R3 = 0.9 × 0.9 × 0.8 = 0.648. It is lower than the least reliable component (0.8), because the system fails if any single component fails.",
+      "slide": 15
+    },
+    {
+      "n": 18,
+      "prompt": "Two identical components, each with reliability 0.9, are connected in parallel. What is the system reliability?",
+      "options": [
+        "0.99",
+        "0.81",
+        "0.9",
+        "0.95",
+        "1.8"
+      ],
+      "explanation": "For a parallel system R_system = 1 − (1 − R)^n = 1 − (0.1)^2 = 0.99, higher than a single component because the system works if at least one component works. The value 0.81 would be the series result.",
+      "slide": 15
+    },
+    {
+      "n": 19,
+      "prompt": "What does the lecture mean by performability?",
+      "options": [
+        "A unified performance-reliability measure that allows degraded states",
+        "The probability that a system survives beyond a specified time t",
+        "The share of time a system is operational, MTBF / (MTBF + MTTR)",
+        "The number of transactions a system completes per unit of time",
+        "A test that pushes a system beyond its normal operating capacity"
+      ],
+      "explanation": "Performability is a unified measure combining performance and reliability, acknowledging that systems can operate in degraded states. Survival beyond time t is R(t), and MTBF / (MTBF + MTTR) is availability.",
+      "slide": 17
+    },
+    {
+      "n": 20,
+      "prompt": "According to the causal chain linking performance to failure, why is performance monitoring also a form of reliability monitoring?",
+      "options": [
+        "Rising response times or CPU use are early warnings of reliability issues",
+        "High CPU utilization lowers λ(t) by weeding out weak components early",
+        "High load moves worn components back into the useful-life phase",
+        "Response time and MTTF are calculated with the same formula",
+        "Performance metrics change only after the system has already failed"
+      ],
+      "explanation": "High performance demand increases system stress (CPU, memory, thermal load), which accelerates wear-out mechanisms and increases λ(t). Rising response times or CPU utilization are therefore early warnings that enable predictive maintenance.",
+      "slide": 18
+    },
+    {
+      "n": 21,
+      "prompt": "In the performance-reliability trade-off matrix, where does an overclocked CPU running at its thermal limit with no resource buffers belong?",
+      "options": [
+        "Living on the Edge: high performance, low reliability",
+        "Over-Engineered: low performance, high reliability",
+        "Well-Architected: high performance, high reliability",
+        "Unacceptable: low performance, low reliability",
+        "Living on the Edge: low performance, high reliability"
+      ],
+      "explanation": "An overclocked CPU at its thermal limit gives high performance but low reliability ('Living on the Edge'). A heavily derated component is Over-Engineered, and a load-balanced, fault-tolerant system with performance margins is the Well-Architected goal.",
+      "slide": 19
+    },
+    {
+      "n": 22,
+      "prompt": "In the data center case study (10,000 servers, 99.99% availability required), how was automated failover tested?",
+      "options": [
+        "Performance tests were run during simulated server failures",
+        "A 5,000-hour thermal cycling test accelerated server aging",
+        "Weibull analysis modeled the degradation of server capacitors",
+        "Load balancing was switched off to test each server alone",
+        "Each server's MTBF was raised to 200,000 hours before testing"
+      ],
+      "explanation": "The team ran performance testing during simulated server failure scenarios to test automated failover, on an N+1 redundant, load-balanced architecture; it achieved 99.995% availability. Thermal cycling and Weibull analysis of capacitors belong to the automotive ECU case study.",
+      "slide": 20
+    },
+    {
+      "n": 23,
+      "prompt": "In the automotive ECU case study, what was Weibull analysis used for?",
+      "options": [
+        "Modeling capacitor degradation, the primary wear-out failure mode",
+        "Checking that the real-time cycle time stayed below 10 ms",
+        "Simulating server failures to test automated failover",
+        "Converting the availability target into annual downtime",
+        "Modeling infant mortality caused by software design flaws"
+      ],
+      "explanation": "Weibull analysis modeled capacitor degradation, the primary wear-out failure mode; performance was tested separately at temperature extremes and in a 5,000-hour combined test with thermal cycling. The projected MTTF exceeded 200,000 hours.",
+      "slide": 21
+    }
+  ]
+}

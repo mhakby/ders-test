@@ -1,0 +1,253 @@
+{
+  "week": 12,
+  "title": "CI/CD Pipelines and Docker for Testing",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "In the lecture, Docker is introduced as the tool that solves which universal problem?",
+      "options": [
+        "The 'it works on my machine' problem",
+        "The 'too many manual releases' problem",
+        "The 'merge conflicts on main' problem",
+        "The 'flaky end-to-end tests' problem",
+        "The 'slow code review' problem"
+      ],
+      "explanation": "Docker solves the 'it works on my machine' problem by ensuring consistency everywhere, while CI/CD pipelines are described as the engine for automating software delivery.",
+      "slide": 2
+    },
+    {
+      "n": 2,
+      "prompt": "A team's pipeline automatically packages every successfully tested build and delivers it to a staging environment, but a person must approve each release to production. Which practice is this?",
+      "options": [
+        "Continuous Delivery",
+        "Continuous Deployment",
+        "Continuous Integration",
+        "Infrastructure as Code",
+        "Smoke testing"
+      ],
+      "explanation": "Continuous Delivery extends CI by delivering tested builds to staging and keeps a manual gate before production; Continuous Deployment removes that gate and deploys every passing change to production without human intervention.",
+      "slide": 4
+    },
+    {
+      "n": 3,
+      "prompt": "What is the stated goal of Continuous Integration (CI)?",
+      "options": [
+        "Find and fix integration bugs early and quickly through frequent commits",
+        "Keep code deployable at all times, with a manual gate before production",
+        "Automatically deploy every passing change directly to production",
+        "Validate the full system in a production-like staging environment",
+        "Perform a basic health check right after each deployment"
+      ],
+      "explanation": "In CI developers commit frequently and each commit triggers a build and tests, with the goal of finding integration bugs early; keeping code deployable behind a manual gate is the goal of Continuous Delivery.",
+      "slide": 4
+    },
+    {
+      "n": 4,
+      "prompt": "Which order matches the stages of a CI/CD pipeline?",
+      "options": [
+        "Source → Build → Test → Staging → Deploy",
+        "Source → Test → Build → Staging → Deploy",
+        "Build → Source → Test → Deploy → Staging",
+        "Source → Build → Staging → Test → Deploy",
+        "Test → Source → Build → Staging → Deploy"
+      ],
+      "explanation": "Code is committed to version control (Source), compiled or packaged (Build), validated by automated tests (Test), deployed to pre-production for final validation (Staging) and then released to users (Deploy).",
+      "slide": 5
+    },
+    {
+      "n": 5,
+      "prompt": "In the test pyramid used for pipeline testing, what is the approximate distribution of tests?",
+      "options": [
+        "Unit ~70%, Integration ~20%, E2E ~10%",
+        "Unit ~10%, Integration ~20%, E2E ~70%",
+        "Unit ~50%, Integration ~30%, E2E ~20%",
+        "Unit ~20%, Integration ~70%, E2E ~10%",
+        "Unit ~33%, Integration ~33%, E2E ~33%"
+      ],
+      "explanation": "Unit tests form the wide base (~70%, fast and cheap, run first), integration tests the middle (~20%) and E2E tests the small top (~10%, slow and expensive but highest confidence).",
+      "slide": 6
+    },
+    {
+      "n": 6,
+      "prompt": "A new release has just been deployed and the team wants a basic health check to confirm it is working. Which test type does the pipeline testing table assign to this Deploy stage?",
+      "options": [
+        "Smoke tests",
+        "E2E tests",
+        "Unit tests",
+        "Integration tests",
+        "Linting and static analysis"
+      ],
+      "explanation": "Smoke tests run at the Deploy stage as a basic health check after deployment; E2E tests belong to the Staging stage, where the full system is validated in a production-like environment.",
+      "slide": 6
+    },
+    {
+      "n": 7,
+      "prompt": "Which benefit of Docker for testing refers to running tests in a clean, pristine environment every time, eliminating interference?",
+      "options": [
+        "Isolation",
+        "Consistency",
+        "Scalability",
+        "Fail Fast",
+        "Caching"
+      ],
+      "explanation": "Isolation gives every test run a clean environment; Consistency means identical environments for development, testing and production, and Scalability means spinning up containers on demand for parallel tests.",
+      "slide": 7
+    },
+    {
+      "n": 8,
+      "prompt": "Which statement correctly compares containers with virtual machines?",
+      "options": [
+        "Containers share the host kernel, while each VM runs a full guest OS",
+        "Containers start in minutes, while VMs start in a few seconds",
+        "Containers are gigabytes in size, while VMs are only megabytes",
+        "Containers give hardware-level isolation, VMs process-level isolation",
+        "Containers carry hypervisor overhead, while VMs run at near-native speed"
+      ],
+      "explanation": "Containers share the host kernel, start in seconds, are megabytes in size, run at near-native speed and isolate at process level; VMs run a full guest OS on a hypervisor, start in minutes, are gigabytes in size and isolate at hardware level.",
+      "slide": 8
+    },
+    {
+      "n": 9,
+      "prompt": "In Docker terminology, what is an image?",
+      "options": [
+        "A read-only template containing the application and its environment",
+        "A runnable, isolated instance created from a read-only template",
+        "A text file with instructions for building the application package",
+        "A public registry for storing and sharing application packages",
+        "A tool for defining and running multi-container applications"
+      ],
+      "explanation": "An image is a read-only template (the 'class definition' or blueprint); a container is a runnable, isolated instance of it, a Dockerfile is the recipe that builds it and Docker Hub is the registry that stores and shares it.",
+      "slide": 9
+    },
+    {
+      "n": 10,
+      "prompt": "A tester needs to start a web application, its database and a cache together as one multi-container setup. Which Docker concept is designed for this?",
+      "options": [
+        "Docker Compose",
+        "Dockerfile",
+        "Docker Hub",
+        "Docker image",
+        "docker exec"
+      ],
+      "explanation": "Docker Compose is the tool for defining and running multi-container applications (the 'orchestra conductor' for your services); a Dockerfile only holds the instructions to build one image.",
+      "slide": 9
+    },
+    {
+      "n": 11,
+      "prompt": "After installing Docker, which command runs a built-in container whose successful run confirms that the installation is complete?",
+      "options": [
+        "docker run hello-world",
+        "docker --version",
+        "docker pull nginx",
+        "docker ps -a",
+        "docker build -t hello-world ."
+      ],
+      "explanation": "The second verification step, docker run hello-world, runs the built-in \"hello-world\" container; docker --version only checks which Docker version is installed.",
+      "slide": 10
+    },
+    {
+      "n": 12,
+      "prompt": "Which Docker command lists all containers, both running and stopped?",
+      "options": [
+        "docker ps -a",
+        "docker ps",
+        "docker images",
+        "docker logs -f",
+        "docker rmi"
+      ],
+      "explanation": "docker ps -a lists all containers whether running or stopped; plain docker ps lists only running containers, and docker images lists local images.",
+      "slide": 11
+    },
+    {
+      "n": 13,
+      "prompt": "In the Python test Dockerfile, why are requirements.txt copied and the dependencies installed before the rest of the application code is copied?",
+      "options": [
+        "For better caching of the dependency installation step",
+        "Because WORKDIR can only be set after pip has finished",
+        "Because COPY . . would otherwise delete installed packages",
+        "To make the final image read-only before the tests start",
+        "So that pytest runs automatically while the image is built"
+      ],
+      "explanation": "The Dockerfile comment says dependencies are copied and installed first for better caching; the rest of the code is copied afterwards with COPY . .",
+      "slide": 12
+    },
+    {
+      "n": 14,
+      "prompt": "What does the instruction CMD [\"pytest\", \"-v\", \"--html=report.html\"] do in the Python test Dockerfile?",
+      "options": [
+        "Defines the command that runs when the container starts",
+        "Runs pytest once while the image is being built",
+        "Installs pytest and the other listed dependencies",
+        "Sets the working directory inside the container",
+        "Selects the lightweight base image to start from"
+      ],
+      "explanation": "CMD defines the command to run when the container starts, so docker run my-python-tests executes pytest; RUN pip install installs the dependencies, WORKDIR sets the directory and FROM picks the base image.",
+      "slide": 12
+    },
+    {
+      "n": 15,
+      "prompt": "Which statement about Jenkins, GitLab CI and GitHub Actions is correct?",
+      "options": [
+        "Jenkins is self-hosted and highly configurable, with a steeper learning curve",
+        "GitHub Actions is self-hosted and configured with a Groovy Jenkinsfile",
+        "GitLab CI supports Docker only through plugins and is the easiest to learn",
+        "Jenkins is built into GitHub and is best suited to open-source projects",
+        "GitHub Actions is best for complex enterprise needs and maximum control"
+      ],
+      "explanation": "Jenkins is self-hosted, highly configurable, supports Docker via plugins and has the steeper learning curve, suiting complex enterprise needs; GitHub Actions is built into GitHub, is the easiest to learn and suits GitHub-hosted and open-source projects.",
+      "slide": 13
+    },
+    {
+      "n": 16,
+      "prompt": "A project is hosted on GitLab and will use GitLab CI. Which file defines its pipeline configuration?",
+      "options": [
+        ".gitlab-ci.yml",
+        "Jenkinsfile",
+        ".github/workflows/*.yml",
+        "Dockerfile",
+        ".gitlab/workflows/ci.yml"
+      ],
+      "explanation": "GitLab CI is configured with .gitlab-ci.yml; Jenkins uses a Groovy-based Jenkinsfile and GitHub Actions uses YAML files under .github/workflows/.",
+      "slide": 13
+    },
+    {
+      "n": 17,
+      "prompt": "In a GitHub Actions workflow file, which key specifies the virtual machine environment for a job (for example ubuntu-latest)?",
+      "options": [
+        "runs-on",
+        "on",
+        "services",
+        "steps",
+        "uses"
+      ],
+      "explanation": "runs-on selects the virtual machine environment for the job; on defines the triggering event, services spins up other containers such as a database, and steps lists the sequence of tasks.",
+      "slide": 14
+    },
+    {
+      "n": 18,
+      "prompt": "A team reorders its pipeline so that the quickest checks, unit tests and linting, run before the slower test suites. Which best practice is this?",
+      "options": [
+        "Fail Fast",
+        "Parallelize",
+        "Cache Dependencies",
+        "Monitor Metrics",
+        "Environment Consistency"
+      ],
+      "explanation": "Fail Fast means running the quickest tests (unit, linting) first; Parallelize means running multiple test suites simultaneously using matrix builds or test sharding.",
+      "slide": 15
+    },
+    {
+      "n": 19,
+      "prompt": "What outcome did Etsy achieve after adopting robust CI/CD pipelines, Infrastructure as Code and fully integrated automated testing?",
+      "options": [
+        "It grew from a few deployments per year to 50+ deploys per day",
+        "It grew from a few deployments per month to 5+ deploys per day",
+        "It grew from one deployment per week to thousands of deploys per day",
+        "It cut deployments to one per quarter in order to reach zero downtime",
+        "It grew from a few deployments per day to 50+ deploys per hour"
+      ],
+      "explanation": "Etsy went from a few deployments per year to 50+ deploys per day with near-zero downtime and faster bug detection; 'thousands of code changes daily' describes Netflix.",
+      "slide": 15
+    }
+  ]
+}

@@ -1,0 +1,409 @@
+{
+  "week": 4,
+  "title": "Coverage Metrics and Mutation Testing",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "Why is code coverage described as a white-box metric?",
+      "options": [
+        "Measuring it requires access to the program's source code",
+        "It is measured only from the program's inputs and outputs",
+        "It checks whether each test verifies the expected results",
+        "It is computed from the number of faults the tests detect",
+        "It can be measured without running the test suite at all"
+      ],
+      "explanation": "Code coverage quantifies how much of the source code is executed when the test suite runs, so measuring it requires the source code. It does not check whether results are verified or count detected faults.",
+      "slide": 3
+    },
+    {
+      "n": 2,
+      "prompt": "A test suite executes every statement of a module but contains no assertions. What does the lecture say about such a suite?",
+      "options": [
+        "It can reach 100% statement coverage but kills almost no mutants",
+        "It can reach 100% statement coverage and kills most mutants",
+        "It reaches 0% statement coverage because nothing is verified",
+        "It kills most mutants, but its coverage cannot be measured",
+        "Its statement coverage is capped at 50% until assertions exist"
+      ],
+      "explanation": "Coverage shows what was executed, not what was verified, so an assertion-free suite can still reach 100%. Because nothing checks the output, it kills almost no mutants (only those that crash or hang).",
+      "slide": 39
+    },
+    {
+      "n": 3,
+      "prompt": "Consider the code if (x > 0) { y = 1; } with no else. A single test with x = 5 is run. What coverage does this test achieve for the code?",
+      "options": [
+        "100% statement coverage and 50% branch coverage",
+        "50% statement coverage and 100% branch coverage",
+        "100% statement coverage and 100% branch coverage",
+        "50% statement coverage and 50% branch coverage",
+        "100% statement coverage and 0% branch coverage"
+      ],
+      "explanation": "The true outcome executes every statement, but an if without an else has two outcomes and the false outcome is never taken, so only 1 of 2 branch outcomes (50%) is covered.",
+      "slide": 7
+    },
+    {
+      "n": 4,
+      "prompt": "A class has 8 methods. The tests call 6 of them, and one of the called methods contains an if body that no test executes. What is the function coverage?",
+      "options": [
+        "75%",
+        "62.5%",
+        "87.5%",
+        "80%",
+        "100%"
+      ],
+      "explanation": "Function coverage = functions called / total functions × 100 = 6 / 8 × 100 = 75%. Untested code inside a called method does not lower it, which is why function coverage is the weakest criterion.",
+      "slide": 8
+    },
+    {
+      "n": 5,
+      "prompt": "For the decision if (A || B || C), assume all three conditions are evaluated in every test (no short-circuit evaluation). Across all tests A takes both true and false, B is only ever true, and C is only ever false. What is the condition coverage?",
+      "options": [
+        "66.7%",
+        "50%",
+        "33.3%",
+        "75%",
+        "100%"
+      ],
+      "explanation": "Condition coverage = condition outcomes exercised / (2 × number of conditions) × 100 = 4 / (2 × 3) × 100 ≈ 66.7%. The four exercised outcomes are A true, A false, B true and C false.",
+      "slide": 9
+    },
+    {
+      "n": 6,
+      "prompt": "For if (A && B), with no short-circuit evaluation, the only tests are (A = true, B = false) and (A = false, B = true). Which result is correct?",
+      "options": [
+        "Condition coverage is 100% and branch coverage is 50%",
+        "Condition coverage is 100% and branch coverage is 100%",
+        "Condition coverage is 50% and branch coverage is 100%",
+        "Condition coverage is 50% and branch coverage is 50%",
+        "Condition coverage is 100% and branch coverage is 0%"
+      ],
+      "explanation": "A and B each take both values, so condition coverage is 100%, but A && B is false in both tests, so the if body never runs and only the false outcome is covered (50%). This is why 100% condition coverage does not guarantee 100% branch coverage.",
+      "slide": 10
+    },
+    {
+      "n": 7,
+      "prompt": "When can line coverage and statement coverage give different results for the same tests?",
+      "options": [
+        "When a single line contains more than one statement",
+        "When a decision contains more than one Boolean condition",
+        "When the tests execute the code but contain no assertions",
+        "When some paths through the function are infeasible",
+        "When the same function is called by more than one test"
+      ],
+      "explanation": "Line coverage counts executable lines and statement coverage counts statements, so they differ when one line holds several statements, e.g. if (x > 0) y = 1;. Several conditions in one decision is what separates condition coverage from branch coverage instead.",
+      "slide": 12
+    },
+    {
+      "n": 8,
+      "prompt": "A loop processes a list and can run at most 10 times (max = 10). Following the loop coverage guidance, which iteration counts should the tests use?",
+      "options": [
+        "0, 1, multiple, 9 and 10 iterations, and try 11",
+        "1, multiple, 10 and 11 iterations, but never 0",
+        "0, 5 and 10 iterations only, as equal partitions",
+        "Only 10 and 11 iterations, to check the limit",
+        "0 and 1 iterations only; multiple is optional"
+      ],
+      "explanation": "Loop coverage requires zero, one and multiple iterations; with a known maximum you also test max − 1 and max and try max + 1, because off-by-one errors often hide at these boundaries.",
+      "slide": 13
+    },
+    {
+      "n": 9,
+      "prompt": "Tests T1 = (1, 1) and T2 = (0, 5) are run on the function below. Which coverage criteria reach 100%?\nint classify(int x, int y) {\n  int r = 0;\n  if (x > 0 && y > 0)\n    r = 1;\n  if (x == 0)\n    r = -1;\n  return r;\n}",
+      "options": [
+        "Statement and branch coverage, but not condition coverage",
+        "Statement, branch and condition coverage",
+        "Statement coverage only; branch coverage stays below 100%",
+        "Condition coverage, but not statement or branch coverage",
+        "Branch coverage only; statement coverage stays below 100%"
+      ],
+      "explanation": "T1 makes the first decision true and the second false, T2 does the opposite, so every statement and all four branch outcomes are executed. The condition y > 0 is never false (in T2, x > 0 is already false so y > 0 is not even evaluated, and y = 5 would be true anyway), so condition coverage stays below 100% until a test such as T3 = (1, −1) is added.",
+      "slide": 14
+    },
+    {
+      "n": 10,
+      "prompt": "A function executes if (x > 0 && y > 0) r = 1; followed by if (x == 0) r = -1; and then returns r. Treating each if statement as one two-way decision, how many entry-to-exit paths does it have, and how many are feasible?",
+      "options": [
+        "4 paths, of which 3 are feasible",
+        "4 paths, and all 4 are feasible",
+        "2 paths, and both are feasible",
+        "3 paths, and all 3 are feasible",
+        "8 paths, of which 6 are feasible"
+      ],
+      "explanation": "Two independent if statements create 2^2 = 4 paths, but the path that makes both decisions true needs x > 0 and x == 0 at the same time, so no input can execute it (an infeasible path).",
+      "slide": 14
+    },
+    {
+      "n": 11,
+      "prompt": "What does it mean that coverage criterion A subsumes criterion B?",
+      "options": [
+        "Every test set that satisfies A also satisfies B",
+        "Every test set that satisfies B also satisfies A",
+        "A and B always need the same number of test cases",
+        "A and B count the same items with different formulas",
+        "No test set that satisfies A can also satisfy B"
+      ],
+      "explanation": "A subsumes B if every test set that satisfies A also satisfies B; the subsuming criterion is stronger, needs more tests and gives more confidence. The reversed direction is the most common mistake.",
+      "slide": 15
+    },
+    {
+      "n": 12,
+      "prompt": "Which statement about the relationship between coverage criteria is true?",
+      "options": [
+        "Branch coverage subsumes statement coverage, but not vice versa",
+        "Statement coverage subsumes branch coverage, but not vice versa",
+        "Condition coverage subsumes branch coverage",
+        "Branch coverage subsumes condition coverage",
+        "A stronger criterion needs fewer tests and gives more confidence"
+      ],
+      "explanation": "Branch coverage subsumes statement coverage, but not the other way round, and condition coverage and branch coverage do not subsume each other. A stronger criterion needs more tests, not fewer.",
+      "slide": 15
+    },
+    {
+      "n": 13,
+      "prompt": "Each test below is written as (A, B). Which test set satisfies MC/DC for the decision if (A && B)?",
+      "options": [
+        "(true, true), (false, true), (true, false)",
+        "(true, true), (false, false)",
+        "(true, false), (false, true)",
+        "(true, true), (false, true)",
+        "(false, false), (true, false), (false, true)"
+      ],
+      "explanation": "Going from (true, true) to (false, true) changes only A and flips the outcome, and going to (true, false) changes only B and flips it, so each condition is shown to independently affect the decision. The set (true, false), (false, true) never makes the decision true.",
+      "slide": 16
+    },
+    {
+      "n": 14,
+      "prompt": "For a decision with 4 conditions, MC/DC can often be achieved with how many tests, compared with the number needed to try every combination?",
+      "options": [
+        "5 tests instead of 16",
+        "4 tests instead of 8",
+        "8 tests instead of 16",
+        "5 tests instead of 8",
+        "4 tests instead of 16"
+      ],
+      "explanation": "MC/DC can often be achieved with n + 1 = 5 tests, while trying every combination needs 2^n = 2^4 = 16 tests. MC/DC is required for the most safety-critical avionics software (DO-178C, Level A).",
+      "slide": 16
+    },
+    {
+      "n": 15,
+      "prompt": "Which pairing of tool and purpose is correct?",
+      "options": [
+        "PIT (Pitest): mutation testing for Java",
+        "JaCoCo: mutation testing for Java",
+        "Stryker: code coverage for JavaScript",
+        "mutmut: code coverage for Python",
+        "Codecov: measuring code coverage for Java"
+      ],
+      "explanation": "PIT is the Java mutation testing tool. JaCoCo measures Java code coverage, Stryker and mutmut are mutation testing tools, and Codecov only collects and displays reports from other tools without measuring coverage itself.",
+      "slide": 36
+    },
+    {
+      "n": 16,
+      "prompt": "Which of the following is an advantage of measuring code coverage?",
+      "options": [
+        "It exposes dead or unreachable code",
+        "It detects requirements that were never implemented",
+        "It shows whether each test checks its results",
+        "It directly measures the fault-detection ability of tests",
+        "It makes 100% path coverage practical for most code"
+      ],
+      "explanation": "Coverage reveals code that no test executes, including dead or unreachable code. It cannot detect missing code or show whether results were checked, and directly measuring fault-detection ability is an advantage of mutation testing.",
+      "slide": 18
+    },
+    {
+      "n": 17,
+      "prompt": "A requirement was never implemented, yet the test suite reaches 100% statement coverage. Why does coverage not reveal this fault?",
+      "options": [
+        "There is no code for the requirement, so nothing exists to cover",
+        "The missing code lies on an infeasible path, so it is excluded",
+        "Coverage tools skip code that no assertion checks",
+        "The fault is an equivalent mutant, so no test can detect it",
+        "Statement coverage counts only functions, not statements"
+      ],
+      "explanation": "Coverage cannot detect missing code (faults of omission): if a requirement was never implemented, there is no code to cover, so the metric can be 100% while the feature is missing.",
+      "slide": 20
+    },
+    {
+      "n": 18,
+      "prompt": "When code coverage becomes a target, developers may write shallow tests just to raise the number. What does the lecture call this effect?",
+      "options": [
+        "Goodhart's law",
+        "Faults of omission",
+        "Subsumption",
+        "The Coupling Effect",
+        "Infeasible paths"
+      ],
+      "explanation": "The lecture names Goodhart's law for this: once coverage is a target, shallow tests can raise the number. Faults of omission are a different limitation, namely missing code that coverage cannot detect.",
+      "slide": 21
+    },
+    {
+      "n": 19,
+      "prompt": "What is the key idea of mutation testing?",
+      "options": [
+        "It tests the tests by injecting small faults they should detect",
+        "It tests the program by feeding random inputs to each function",
+        "It measures how much of the source code the tests execute",
+        "It repairs small faults in the code before testing begins",
+        "It replaces real dependencies with mutants to isolate a unit"
+      ],
+      "explanation": "Mutation testing deliberately makes small changes (mutants) to the source code and checks whether the test suite detects them, so it tests the tests, not the program. Measuring how much code is executed is code coverage.",
+      "slide": 23
+    },
+    {
+      "n": 20,
+      "prompt": "Who first proposed mutation testing, and when?",
+      "options": [
+        "Richard Lipton, in 1971",
+        "DeMillo, Lipton and Sayward, in 1978",
+        "Ammann and Offutt, in 2016",
+        "Offutt et al., in 1996",
+        "Petrović and Ivanković, in 2018"
+      ],
+      "explanation": "Mutation testing was first proposed by Richard Lipton in 1971; DeMillo, Lipton and Sayward formalised it later, in 1978.",
+      "slide": 24
+    },
+    {
+      "n": 21,
+      "prompt": "What is the name of the idea that tests which detect simple faults also tend to detect more complex faults made of several simple ones?",
+      "options": [
+        "The Coupling Effect",
+        "The Competent Programmer Hypothesis",
+        "Goodhart's law",
+        "The RIP model",
+        "Mutation score"
+      ],
+      "explanation": "The Coupling Effect says tests that detect simple faults also tend to detect complex ones. The Competent Programmer Hypothesis instead says programmers write nearly correct code, so real faults are small deviations such as < instead of <=.",
+      "slide": 25
+    },
+    {
+      "n": 22,
+      "prompt": "A mutant is run against the test suite and all tests pass. What is the correct conclusion and next step?",
+      "options": [
+        "It survived; check whether it is equivalent or a test is missing",
+        "It was killed; the tests detected the change, so move on",
+        "It is stillborn; discard it and leave it out of the count",
+        "It survived; delete the tests that passed on the mutant",
+        "It was killed; merge the mutant into the original program"
+      ],
+      "explanation": "If all tests pass, the mutant survived; a mutant is killed only when at least one test fails. The survivor is analysed (equivalent or missing test?), and new or improved tests, which must pass on the original, are added.",
+      "slide": 27
+    },
+    {
+      "n": 23,
+      "prompt": "A generated mutant does not compile. What is it called, and how is it handled?",
+      "options": [
+        "A stillborn mutant; it is discarded and not counted",
+        "A stillborn mutant; it is counted as a killed mutant",
+        "An equivalent mutant; it is subtracted after inspection",
+        "A survived mutant; it reveals a weakness in the tests",
+        "A killed mutant; it raises the mutation score"
+      ],
+      "explanation": "A mutant that does not compile is stillborn; it is discarded before counting and does not enter the mutation score. Equivalent mutants do compile but behave exactly like the original.",
+      "slide": 28
+    },
+    {
+      "n": 24,
+      "prompt": "A tool generates 120 mutants, and 20 of them do not compile. The tests kill 72 of the remaining mutants and 28 survive. Inspection shows that 10 of the survivors are equivalent. What is the mutation score according to the lecture's formula?",
+      "options": [
+        "80%",
+        "72%",
+        "60%",
+        "65.5%",
+        "90%"
+      ],
+      "explanation": "After discarding the 20 stillborn mutants, 100 remain, so the score is 72 / (100 − 10) × 100 = 80%. The value 72% (killed / total) is what many tools report, because equivalent mutants are usually unknown.",
+      "slide": 29
+    },
+    {
+      "n": 25,
+      "prompt": "A test executes a mutated statement, and afterwards the program state differs from that of the original program. The test has no assertion on the affected output, so the mutant survives. Which RIP condition fails?",
+      "options": [
+        "Propagation",
+        "Reachability",
+        "Infection",
+        "Equivalence",
+        "Coupling"
+      ],
+      "explanation": "Reachability (the mutated statement runs) and infection (the state differs) both hold, but propagation also requires the incorrect state to reach the output and an assertion in the test to check it.",
+      "slide": 30
+    },
+    {
+      "n": 26,
+      "prompt": "Which conditions of the RIP model does code coverage guarantee?",
+      "options": [
+        "Reachability only",
+        "Reachability and infection",
+        "Infection and propagation",
+        "Reachability, infection and propagation",
+        "Propagation only"
+      ],
+      "explanation": "Code coverage only guarantees that the code was executed (reachability). Killing a mutant requires reachability, infection and propagation, which is why coverage is not enough.",
+      "slide": 30
+    },
+    {
+      "n": 27,
+      "prompt": "Original code:\nint mod = 1000000007;\nint c = (a + b) % mod;\nA value mutation changes mod to 1007. A test uses a = 1 and b = 2 and checks c. What happens?",
+      "options": [
+        "The mutant survives, because both versions give c = 3",
+        "The mutant is killed, because the constant has changed",
+        "The mutant is stillborn, because 1007 cannot be compiled",
+        "The mutant is equivalent, so no test could ever kill it",
+        "The mutant is killed, because a + b exceeds 1007"
+      ],
+      "explanation": "With such small inputs both versions compute c = 3, so the test passes and the mutant survives. It is not equivalent: larger inputs give different results, so the choice of test data matters.",
+      "slide": 32
+    },
+    {
+      "n": 28,
+      "prompt": "A decision mutation changes if (a < b) to if (a <= b). Which test input can kill this mutant?",
+      "options": [
+        "a = 5, b = 5",
+        "a = 1, b = 100",
+        "a = 9, b = 2",
+        "a = 4, b = 5",
+        "a = -3, b = 0"
+      ],
+      "explanation": "The two decisions differ only when a == b (a < b is false, a <= b is true), so only such a test can kill the mutant; this is why boundary-value tests matter. Changing < to > would be easy to kill, since almost any test with a ≠ b detects it.",
+      "slide": 33
+    },
+    {
+      "n": 29,
+      "prompt": "A mutant is created by removing a method call from the code. Which type of mutation is this?",
+      "options": [
+        "Statement mutation",
+        "Value mutation",
+        "Decision mutation",
+        "Equivalent mutation",
+        "Stillborn mutation"
+      ],
+      "explanation": "Statement mutations delete, duplicate or replace a statement, such as removing a method call. Value mutations change constant values, and decision mutations change operators in a decision, such as < to > or && to ||.",
+      "slide": 34
+    },
+    {
+      "n": 30,
+      "prompt": "Original: for (int i = 0; i < 10; i++) sum += i;\nMutant: for (int i = 0; i != 10; i++) sum += i;\nWhy can no test kill this mutant?",
+      "options": [
+        "Both loops run exactly ten times, so the behaviour is identical",
+        "The mutant does not compile, so it is discarded before testing",
+        "The test suite lacks an assertion that checks the value of sum",
+        "Coverage tools do not instrument the conditions of for loops",
+        "The loop body is never executed by any test in the suite"
+      ],
+      "explanation": "This is an equivalent mutant: the code changed but the behaviour did not. Deciding equivalence is undecidable in general, so surviving mutants often have to be inspected manually, which is one of the main costs of mutation testing.",
+      "slide": 35
+    },
+    {
+      "n": 31,
+      "prompt": "Which statement about mutation testing is correct?",
+      "options": [
+        "Detecting mutants is correlated with detecting real faults",
+        "It costs about one run of the test suite, like coverage",
+        "It can be applied without access to the source code",
+        "Tools can detect all equivalent mutants automatically",
+        "It is a weaker criterion than statement coverage"
+      ],
+      "explanation": "Empirical studies show that detecting mutants is correlated with detecting real faults. Mutation testing is expensive (tests run for every mutant), needs the source code, requires manual inspection of equivalent mutants, and with suitable operators is stronger than statement and branch coverage.",
+      "slide": 37
+    }
+  ]
+}

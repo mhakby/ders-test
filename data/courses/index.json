@@ -1,0 +1,6 @@
+{
+  "courses": [
+    { "id": "isg", "file": "isg.json" },
+    { "id": "test-engineering", "file": "test-engineering.json" }
+  ]
+}

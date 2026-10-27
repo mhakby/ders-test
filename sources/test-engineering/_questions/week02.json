@@ -1,0 +1,292 @@
+{
+  "week": 2,
+  "title": "Unit Testing Fundamentals",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "In the V-model diagram, which testing level is paired with Requirement Gathering on the opposite side of the V?",
+      "options": [
+        "Acceptance Testing",
+        "System Testing",
+        "Integration Testing",
+        "Unit Testing",
+        "Static Testing"
+      ],
+      "explanation": "In the V-model, Requirement Gathering is paired with Acceptance Testing; System Analysis pairs with System Testing, Software Design with Integration Testing and Module Design with Unit Testing.",
+      "slide": 2
+    },
+    {
+      "n": 2,
+      "prompt": "Which question summarizes verification?",
+      "options": [
+        "Are we building the product right?",
+        "Are we building the right product?",
+        "Does the test look at the code?",
+        "Does the test execute the code?",
+        "Is the test based on spec or on use?"
+      ],
+      "explanation": "Verification asks 'Are we building the product right?' and checks conformance to specs; 'Are we building the right product?' is validation, which checks fitness for purpose with stakeholders.",
+      "slide": 3
+    },
+    {
+      "n": 3,
+      "prompt": "In the V-lifecycle testing diagram, which pairing of testing approach and lifecycle levels is shown?",
+      "options": [
+        "Black-box — Specification and SW Integration",
+        "White-box — Analysis and System Test",
+        "Random test — Design and Unit Test",
+        "White-box — Specification and SW Integration",
+        "White-box — Analysis and Specification"
+      ],
+      "explanation": "The V-lifecycle diagram groups Specification and SW Integration as black-box, Design, Implementation and Unit Test as white-box, and Analysis and System Test as random test.",
+      "slide": 4
+    },
+    {
+      "n": 4,
+      "prompt": "What characterizes black-box testing?",
+      "options": [
+        "The internal structure and code are hidden; nothing is known about them",
+        "The tester knows the internal structure and code of the software",
+        "The code is evaluated without the program being executed",
+        "Test inputs are chosen at random instead of from a specification",
+        "Each individual unit is tested in isolation by its developer"
+      ],
+      "explanation": "In black-box testing the internal structure, program or code is hidden and nothing is known about it; knowing the internal structure is white-box testing.",
+      "slide": 5
+    },
+    {
+      "n": 5,
+      "prompt": "A tester reads a method's source code, designs inputs to reach each branch, and then runs those tests. How is this testing classified?",
+      "options": [
+        "Dynamic and white-box",
+        "Static and white-box",
+        "Dynamic and black-box",
+        "Static and black-box",
+        "Random and black-box"
+      ],
+      "explanation": "Running the tests executes the code, so it is dynamic, and designing them from the source code means the tester looks at the code, so it is white-box.",
+      "slide": 6
+    },
+    {
+      "n": 6,
+      "prompt": "What problem are unit testing frameworks such as JUnit and NUnit meant to address?",
+      "options": [
+        "Testing is not closely integrated with development, so progress cannot be measured",
+        "Production code cannot be compiled until a full system test has been run",
+        "GUI tests cannot be automated, so every user journey must be checked by hand",
+        "Requirements cannot be reviewed with stakeholders before coding starts",
+        "Developers cannot deploy to production without an independent test team"
+      ],
+      "explanation": "JUnit/NUnit address the problem that testing is not closely integrated with development, which prevents measuring progress; their philosophy is to develop tests in parallel with the application code or before it.",
+      "slide": 7
+    },
+    {
+      "n": 7,
+      "prompt": "Which statement matches the testing percentages recommended in the course?",
+      "options": [
+        "System tests verify class interactions and make up 20% of tests",
+        "Unit tests verify class interactions and make up 20% of tests",
+        "GUI tests verify end-to-end journeys and make up 70% of tests",
+        "Unit tests verify end-to-end journeys and make up 10% of tests",
+        "System tests verify a single class and make up 70% of tests"
+      ],
+      "explanation": "The slide gives unit tests (behavior of a single class) 70%, system tests (class interactions) 20% and GUI tests (end-to-end journeys) 10% of all tests.",
+      "slide": 8
+    },
+    {
+      "n": 8,
+      "prompt": "In the test pyramid diagram, what changes as you move up from unit tests toward UI and manual tests?",
+      "options": [
+        "More integration and slower tests",
+        "More isolation and faster tests",
+        "More isolation but slower tests",
+        "More integration but faster tests",
+        "More tests and a lower cost per test"
+      ],
+      "explanation": "The pyramid's arrows point to more integration and slower tests toward the top (UI and manual tests), and to more isolation and faster tests toward unit tests at the base.",
+      "slide": 8
+    },
+    {
+      "n": 9,
+      "prompt": "Which statement matches the Units diagram that compares E2E, service and unit scopes?",
+      "options": [
+        "A unit is one Func() or a small group of Func()s in a service",
+        "A unit spans the user interface and several microservices",
+        "The E2E scope covers only one Func() and its database",
+        "The service scope covers the user interface and all microservices",
+        "A unit must always include the service's database"
+      ],
+      "explanation": "The diagram shows one Unit bracket around a single Func() and another around a small group of Func()s inside the service; the E2E scope is the one that spans the user interface and the microservices.",
+      "slide": 9
+    },
+    {
+      "n": 10,
+      "prompt": "In the TestNG CalculatorTest class, what does the @BeforeMethod-annotated setUp() method do?",
+      "options": [
+        "Creates a new Calculator before each test method runs",
+        "Creates one Calculator after all test methods finish",
+        "Runs as an extra test that must pass before testAdd()",
+        "Asserts that the Calculator constructor throws no errors",
+        "Resets the test results after each failed assertion"
+      ],
+      "explanation": "The @BeforeMethod setUp() runs before each test method and assigns a new Calculator, so every test starts with a fresh object; it is setup code, not a test itself.",
+      "slide": 11
+    },
+    {
+      "n": 11,
+      "prompt": "Calculator.add returns a + b and subtract returns a - b. CalculatorTest asserts that add(5, 3) equals 8 and subtract(5, 3) equals 2. What does the TestNG run report?",
+      "options": [
+        "Tests run: 2, Failures: 0, Skips: 0",
+        "Tests run: 2, Failures: 1, Skips: 0",
+        "Tests run: 2, Failures: 0, Skips: 1",
+        "Tests run: 1, Failures: 0, Skips: 0",
+        "Tests run: 3, Failures: 0, Skips: 0"
+      ],
+      "explanation": "Both @Test methods, testAdd and testSubtract, pass because add and subtract are implemented correctly, so TestNG reports 2 tests run with 0 failures and 0 skips; setUp() is not counted as a test.",
+      "slide": 13
+    },
+    {
+      "n": 12,
+      "prompt": "What is the role of assertions in a unit test?",
+      "options": [
+        "They express requirements the unit must meet, replacing human checking",
+        "They create the objects and input values that the test needs before it runs",
+        "They call the method under test with the inputs prepared for the test",
+        "They replace slow dependencies so that the unit can run in isolation",
+        "They record how long each test method takes to finish executing"
+      ],
+      "explanation": "Assertions ensure the code behaves as expected: they express the requirements the unit under test must meet and replace humans in checking that the software does what it should; creating objects is Arrange and calling the method is Act.",
+      "slide": 12
+    },
+    {
+      "n": 13,
+      "prompt": "In the C# BankTests project (Microsoft.VisualStudio.TestTools.UnitTesting), which attributes mark the test class and a test method?",
+      "options": [
+        "[TestClass] and [TestMethod]",
+        "[TestClass] and [Test]",
+        "@BeforeMethod and @Test",
+        "[UnitTest] and [TestMethod]",
+        "[TestSuite] and [TestCase]"
+      ],
+      "explanation": "The BankAccountTests class is marked [TestClass] and its test methods [TestMethod]; @BeforeMethod and @Test are the TestNG annotations from the Java example.",
+      "slide": 16
+    },
+    {
+      "n": 14,
+      "prompt": "In the Debit_WithValidAmount_UpdatesBalance test, what happens in the Arrange section?",
+      "options": [
+        "The starting values and the BankAccount under test are set up",
+        "account.Debit(debitAmount) is called on the account object",
+        "The actual balance is compared with the expected value 7.44",
+        "The intentionally incorrect Debit code is corrected first",
+        "The class is marked with [TestClass] so that it can run"
+      ],
+      "explanation": "Arrange sets beginningBalance, debitAmount and expected and creates the BankAccount; calling Debit is the Act step and comparing actual with expected is the Assert step.",
+      "slide": 18
+    },
+    {
+      "n": 15,
+      "prompt": "The BankAccount.Debit method contains intentionally incorrect code. Which change fixes it so that the debit test passes?",
+      "options": [
+        "Replace m_balance += amount with m_balance -= amount",
+        "Replace amount > m_balance with amount < m_balance",
+        "Remove the check that throws when amount < 0",
+        "Replace m_balance -= amount with m_balance += amount",
+        "Make m_balance a readonly field like m_customerName"
+      ],
+      "explanation": "Debit wrongly adds the amount to the balance (m_balance += amount, marked as intentionally incorrect); the fix replaces it with m_balance -= amount, after which the test passes.",
+      "slide": 19
+    },
+    {
+      "n": 16,
+      "prompt": "Which of the following is listed as a benefit of unit testing?",
+      "options": [
+        "Facilitation of refactoring",
+        "No ongoing maintenance of test cases",
+        "Thorough testing of user interfaces",
+        "Independence from the developers",
+        "Full coverage of interactions between units"
+      ],
+      "explanation": "Facilitation of refactoring is one of the seven listed benefits; maintenance overhead, dependence on developers, and difficulty testing user interfaces and interactions are listed as disadvantages.",
+      "slide": 20
+    },
+    {
+      "n": 17,
+      "prompt": "Why is over-reliance on automated unit tests listed as a disadvantage?",
+      "options": [
+        "It can create a false sense of security about remaining bugs",
+        "Automated unit tests cannot run inside a CI/CD pipeline",
+        "Automated unit tests always run slower than manual tests",
+        "Automation makes ongoing test maintenance unnecessary",
+        "Automated unit tests can only check the user interface"
+      ],
+      "explanation": "Over-reliance on automation can lead to a false sense of security, because automated tests may not uncover all possible issues or bugs.",
+      "slide": 23
+    },
+    {
+      "n": 18,
+      "prompt": "A project relies only on unit tests, and later bugs appear in how two modules exchange data. Which disadvantage of unit testing does this illustrate?",
+      "options": [
+        "Difficulty in testing interactions",
+        "Difficulty in testing user interfaces",
+        "Maintenance overhead",
+        "Dependence on developers",
+        "Time and effort"
+      ],
+      "explanation": "Unit testing focuses only on individual units, so it may not be sufficient for testing interactions between units.",
+      "slide": 22
+    },
+    {
+      "n": 19,
+      "prompt": "A developer writes the unit tests for a new feature before writing the feature's code. Which practice is this?",
+      "options": [
+        "Test-Driven Development (TDD)",
+        "Manual unit testing",
+        "Continuous delivery",
+        "Black-box system testing",
+        "Static testing"
+      ],
+      "explanation": "In Test-Driven Development, developers write tests before writing the actual code; manual unit testing means checking each part by hand without special tools.",
+      "slide": 24
+    },
+    {
+      "n": 20,
+      "prompt": "In the example CI/CD setup, a Git user pushes code to a GitHub repository that contains unit tests. What happens next?",
+      "options": [
+        "A Git webhook triggers AWS CodeBuild, so the unit tests run automatically",
+        "A tester manually runs the unit tests before the next release date",
+        "The unit tests run only after the code is deployed to production",
+        "AWS CodeBuild sends the code back to the user for a manual review",
+        "The repository waits for the weekly scheduled test run to start"
+      ],
+      "explanation": "The push to the repository fires a Git webhook to AWS CodeBuild; in CI/CD, unit tests run automatically whenever new code is added instead of being run by hand.",
+      "slide": 25
+    },
+    {
+      "n": 21,
+      "prompt": "Why is manual unit testing not used much, according to the course?",
+      "options": [
+        "It costs more and must be repeated every time the code changes",
+        "It requires special testing tools that developers do not have",
+        "Developers are not allowed to test their own code by hand",
+        "It can only be applied to graphical user interfaces",
+        "It can only start after the system has been deployed"
+      ],
+      "explanation": "Manual unit testing costs more because people are paid for their testing time and takes a lot of time because tests must be redone whenever the code changes; it needs no special tools and developers often do it themselves.",
+      "slide": 26
+    },
+    {
+      "n": 22,
+      "prompt": "In the CI/CD pipeline diagram, which step comes immediately before deploying changes to production?",
+      "options": [
+        "Deliver the build to staging",
+        "Run the tests",
+        "Notify the test outcome",
+        "Trigger the build",
+        "Notify the build outcome"
+      ],
+      "explanation": "The pipeline order is Commit, Trigger, Build, Notify build outcome, Run tests, Notify test outcome, Deliver build to staging, then Deploy changes to production.",
+      "slide": 27
+    }
+  ]
+}

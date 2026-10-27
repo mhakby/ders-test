@@ -1,0 +1,7 @@
+node_modules/
+dist/
+dev-dist/
+sources/test-engineering/pptx/
+sources/test-engineering/_text/img/
+*.log
+.claude/
