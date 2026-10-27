@@ -1,0 +1,206 @@
+{
+  "intro": {
+    "en": "This set covers Chapter 4 of Jorgensen: the graph theory that later chapters build on for path testing and for system-level models. You will learn degrees and matrices, paths and components, directed graphs and strong components, the cyclomatic number, and four graphs used in testing: program graphs, finite state machines, Petri nets and StateCharts. Watch the cyclomatic number formula: this chapter uses V(G) = e − n + p, while Chapter 9 uses V(G) = e − n + 2p.",
+    "tr": "Bu set Jorgensen'in 4. bölümünü kapsar: sonraki bölümlerin yol testi (path testing) ve sistem düzeyi modeller için üzerine kurduğu graf teorisi. Dereceleri ve matrisleri, yolları ve bileşenleri, yönlü grafları ve güçlü bileşenleri, çevrimsel sayıyı ve testte kullanılan dört grafı öğreneceksiniz: program grafları, sonlu durum makineleri, Petri ağları ve StateChart'lar. Çevrimsel sayı formülüne dikkat edin: bu bölüm V(G) = e − n + p, Bölüm 9 ise V(G) = e − n + 2p kullanır."
+  },
+  "concepts": [
+    {
+      "id": "graph-basics",
+      "title": {
+        "en": "Graphs, degree and the two matrices",
+        "tr": "Graflar, derece ve iki matris"
+      },
+      "body": {
+        "en": "A graph is the tester's basic picture of a program or system: nodes (also called vertices) joined by edges (also called arcs). In testing, nodes are usually program statements, and edges show flow of control or define/use relationships.\n\n- **Degree** deg(n): the number of edges that have node n as an endpoint. The book says the degree indicates a node's \"popularity\".\n- **Isolated node**: a node with degree 0 (e.g., unreachable code, or an object that is never used).\n- **Incidence matrix**: one row per node, one column per edge; an entry is 1 iff the node is an endpoint of the edge. Every column must sum to 2 (an edge has two endpoints), so any other column sum signals a mistake: an integrity check like a parity check. A **row sum is the node's degree**.\n- **Adjacency matrix** (ordinary graph): m × m, entry (i, j) = 1 iff an edge exists between nodes i and j. It is symmetric, and a row sum is again the degree.\n\n**Example:** edges (a, b), (a, c), (c, d) and a fifth node e. deg(a) = 2, deg(c) = 2, deg(b) = deg(d) = 1 and deg(e) = 0, so e is isolated. In the incidence matrix, row a holds two 1s and every column holds exactly two 1s.",
+        "tr": "Graf (graph), test uzmanının bir programı ya da sistemi görmesinin temel yoludur: kenarlarla (edges, arcs) birbirine bağlanan düğümler (nodes, vertices). Testte düğümler genellikle program deyimleridir (statements); kenarlar ise kontrol akışını (flow of control) ya da tanımlama/kullanma (define/use) ilişkilerini gösterir.\n\n- **Derece (degree)** deg(n): uç noktalarından biri n düğümü olan kenarların sayısı. Kitaba göre derece, bir düğümün \"popülerliğini\" gösterir.\n- **Yalıtılmış düğüm (isolated node)**: derecesi 0 olan düğüm (ör. erişilemeyen kod ya da hiç kullanılmayan bir nesne).\n- **Geliş matrisi (incidence matrix)**: her düğüm için bir satır, her kenar için bir sütun; düğüm o kenarın uç noktasıysa değer 1'dir. Her sütunun toplamı 2 olmalıdır (her kenarın iki ucu vardır); başka bir sütun toplamı bir hata olduğunu gösterir: eşlik denetimine (parity check) benzeyen bir bütünlük kontrolü. **Satır toplamı düğümün derecesidir.**\n- **Komşuluk matrisi (adjacency matrix)** (sıradan graf): m × m boyutunda; i ve j düğümleri arasında kenar varsa (i, j) değeri 1'dir. Simetriktir ve satır toplamı yine dereceyi verir.\n\n**Örnek:** kenarlar (a, b), (a, c), (c, d) ve beşinci bir e düğümü. deg(a) = 2, deg(c) = 2, deg(b) = deg(d) = 1 ve deg(e) = 0; yani e yalıtılmıştır. Geliş matrisinde a satırında iki tane 1 vardır ve her sütunda tam iki tane 1 bulunur."
+      },
+      "source": "pp. 54–56"
+    },
+    {
+      "id": "paths-loops",
+      "title": {
+        "en": "Paths, path length and loops",
+        "tr": "Yollar, yol uzunluğu ve döngüler"
+      },
+      "body": {
+        "en": "Structural testing is built on paths, so the chapter first defines them for ordinary (undirected) graphs.\n\n- **Path**: a sequence of edges in which every adjacent pair of edges shares a common node endpoint. Paths are usually written as node sequences, e.g. n1, n2, n5.\n- **Length of a path**: the number of edges in it. This matches how the chapter talks: every node lies on a path of length 0 with itself, and multiplying the adjacency matrix by itself (A²) shows the paths of two edges (length 2); A³ shows the three-edge paths.\n- **Loop (circuit)**: a path in which some node occurs twice. A graph with no such path has no loops.\n- **Finding new loops**: when you add an edge between x and y, every path that already connects x and y becomes a loop once the new edge closes it. If x and y were not connected before, no loop appears.\n\n**Example:** edges (a, b), (b, c), (c, d), (d, e). Adding the edge (b, d) closes exactly one loop, b, c, d, b, because b–c–d was the only path between b and d. The path a, b, c has length 2.",
+        "tr": "Yapısal test (structural testing) yollar üzerine kuruludur; bu yüzden bölüm önce sıradan (yönsüz) graflar için yolları tanımlar.\n\n- **Yol (path)**: ardışık her kenar çiftinin ortak bir uç düğümü paylaştığı kenar dizisi. Yollar genellikle düğüm dizisi olarak yazılır, ör. n1, n2, n5.\n- **Yolun uzunluğu (length)**: yoldaki kenar sayısı. Bu, bölümün anlatımına uyar: her düğüm kendisiyle 0 uzunluklu bir yol üzerindedir ve komşuluk matrisini kendisiyle çarpmak (A²) iki kenarlı (2 uzunluklu) yolları gösterir; A³ ise üç kenarlı yolları gösterir.\n- **Döngü (loop, circuit)**: bir düğümün iki kez geçtiği yol. Böyle bir yolu olmayan grafta döngü yoktur.\n- **Yeni döngüleri bulmak**: x ile y arasına bir kenar eklediğinizde, x ile y'yi zaten bağlayan her yol, yeni kenar onu kapatınca bir döngü olur. x ile y önceden bağlı değilse döngü oluşmaz.\n\n**Örnek:** kenarlar (a, b), (b, c), (c, d), (d, e). (b, d) kenarını eklemek tam olarak bir döngüyü kapatır: b, c, d, b; çünkü b ile d arasındaki tek yol b–c–d idi. a, b, c yolunun uzunluğu 2'dir."
+      },
+      "source": "pp. 56–57; exercises 1–2, p. 75"
+    },
+    {
+      "id": "components-condensation",
+      "title": {
+        "en": "Connectedness, components and condensation graphs",
+        "tr": "Bağlılık, bileşenler ve yoğunlaştırma grafları"
+      },
+      "body": {
+        "en": "Components let a tester split a graph into parts that can be tested independently.\n\n- **Connected**: nodes ni and nj are connected iff they are in the same path. Connectedness is an equivalence relation: reflexive (every node is in a path of length 0 with itself), symmetric (if ni and nj are in a path, so are nj and ni) and transitive (paths can be joined, as A² does for length 2).\n- **Component**: a maximal set of connected nodes. Because connectedness is an equivalence relation, the components partition the nodes. Figure 4.1 has two: {n1, …, n6} and {n7}.\n- **Condensation graph**: replace each component by a single condensing node. The process is algorithmic and the result is unique.\n- An ordinary graph's condensation graph has **no edges**, for two reasons: edges join individual nodes, not sets of nodes; and an edge between two components would put their nodes in one path, so they would form one (maximal) component.\n- **Testing implication**: components are independent, so they can be tested separately.\n\n**Example:** nodes a–f with edges (a, b), (b, c), (d, e). Components: {a, b, c}, {d, e} and {f}; the condensation graph has three nodes and no edges.",
+        "tr": "Bileşenler (components), test uzmanının bir grafı birbirinden bağımsız test edilebilecek parçalara ayırmasını sağlar.\n\n- **Bağlı (connected)**: ni ve nj düğümleri ancak ve ancak aynı yol üzerindeyse bağlıdır. Bağlılık bir denklik ilişkisidir (equivalence relation): yansımalı (reflexive; her düğüm kendisiyle 0 uzunluklu bir yol üzerindedir), simetrik (symmetric; ni ve nj bir yol üzerindeyse nj ve ni de öyledir) ve geçişli (transitive; yollar birleştirilebilir, 2 uzunluklu yollar için A²'nin yaptığı gibi).\n- **Bileşen (component)**: bağlı düğümlerin maksimal kümesi. Bağlılık bir denklik ilişkisi olduğu için bileşenler düğüm kümesini parçalara ayırır (partition). Şekil 4.1'de iki bileşen vardır: {n1, …, n6} ve {n7}.\n- **Yoğunlaştırma grafı (condensation graph)**: her bileşen tek bir yoğunlaştırma düğümüyle (condensing node) değiştirilir. Süreç algoritmiktir ve sonuç tektir.\n- Sıradan bir grafın yoğunlaştırma grafında **hiç kenar yoktur**; iki nedeni vardır: kenarlar düğüm kümelerini değil tek tek düğümleri birleştirir; ayrıca iki bileşen arasındaki bir kenar onların düğümlerini tek bir yola koyardı, böylece hepsi tek bir (maksimal) bileşen olurdu.\n- **Teste etkisi**: bileşenler bağımsızdır, bu yüzden ayrı ayrı test edilebilir.\n\n**Örnek:** a–f düğümleri ve (a, b), (b, c), (d, e) kenarları. Bileşenler: {a, b, c}, {d, e} ve {f}; yoğunlaştırma grafının üç düğümü vardır ve hiç kenarı yoktur."
+      },
+      "source": "pp. 57–58"
+    },
+    {
+      "id": "digraphs",
+      "title": {
+        "en": "Directed graphs: degrees, node types and matrices",
+        "tr": "Yönlü graflar: dereceler, düğüm türleri ve matrisler"
+      },
+      "body": {
+        "en": "Directed graphs (digraphs) give every edge a direction, which fits sequential behavior such as imperative programs. The edge <ni, nj> goes from its initial (start) node ni to its terminal (finish) node nj.\n\n- **indeg(n)**: the number of edges ending at n; **outdeg(n)**: the number starting at n; deg(n) = indeg(n) + outdeg(n).\n- **Node types**: source node, indegree 0; sink node, outdegree 0; transfer (interior) node, indegree ≠ 0 and outdegree ≠ 0. A node that is both a source and a sink is isolated.\n- **Adjacency matrix of a digraph**: a(i, j) = 1 iff there is an edge from node i to node j. It need not be symmetric; a **row sum is the outdegree** and a **column sum is the indegree**.\n- **Reachability matrix**: r(i, j) = 1 iff there is a path from node i to node j. R = I + A + A² + … + A^k, where I is the identity matrix and k is the length of the longest path in the digraph.\n\n**Example:** edges a→b, a→c, b→c, c→d, plus a node e with no edges. a (in 0, out 2) is a source; b (1/1) and c (2/1) are transfer nodes; d (1/0) is a sink; e (0/0) is isolated. Column c of the adjacency matrix sums to 2 = indeg(c). The longest path a→b→c→d has length 3, so k = 3.",
+        "tr": "Yönlü graflar (directed graphs, digraphs) her kenara bir yön verir; bu, buyurgan (imperative) programlar gibi sıralı davranışlara uyar. <ni, nj> kenarı başlangıç (initial, start) düğümü ni'den bitiş (terminal, finish) düğümü nj'ye gider.\n\n- **indeg(n)** (giriş derecesi): n'de biten kenar sayısı; **outdeg(n)** (çıkış derecesi): n'den başlayan kenar sayısı; deg(n) = indeg(n) + outdeg(n).\n- **Düğüm türleri**: kaynak düğüm (source node), giriş derecesi 0; havuz düğüm (sink node), çıkış derecesi 0; aktarma düğümü (transfer/interior node), giriş derecesi ≠ 0 ve çıkış derecesi ≠ 0. Hem kaynak hem havuz olan düğüm yalıtılmıştır (isolated).\n- **Yönlü grafın komşuluk matrisi (adjacency matrix)**: i düğümünden j düğümüne kenar varsa a(i, j) = 1. Simetrik olması gerekmez; **satır toplamı çıkış derecesi**, **sütun toplamı giriş derecesidir**.\n- **Erişilebilirlik matrisi (reachability matrix)**: i düğümünden j düğümüne bir yol varsa r(i, j) = 1. R = I + A + A² + … + A^k; burada I birim matris (identity matrix), k ise yönlü graftaki en uzun yolun uzunluğudur.\n\n**Örnek:** kenarlar a→b, a→c, b→c, c→d ve kenarı olmayan bir e düğümü. a (giriş 0, çıkış 2) bir kaynaktır; b (1/1) ve c (2/1) aktarma düğümleridir; d (1/0) bir havuzdur; e (0/0) yalıtılmıştır. Komşuluk matrisinde c sütununun toplamı 2 = indeg(c). En uzun yol a→b→c→d'nin uzunluğu 3'tür, yani k = 3."
+      },
+      "source": "pp. 59–62"
+    },
+    {
+      "id": "n-connectedness",
+      "title": {
+        "en": "Directed paths, n-connectedness and strong components",
+        "tr": "Yönlü yollar, n-bağlılık ve güçlü bileşenler"
+      },
+      "body": {
+        "en": "In a digraph you may be able to go from ni to nj but not back, so connectedness comes in degrees.\n\n- **Path**: a sequence of edges in which the terminal node of each edge is the initial node of the next. **Cycle**: a directed path that begins and ends at the same node. **Semipath**: a sequence of edges in which, for at least one adjacent pair, the two edges share their initial nodes or their terminal nodes.\n- Nodes ni and nj are **0-connected** iff no path exists between them (in the book's examples, not even a semipath); **1-connected** iff a semipath but no path exists; **2-connected** iff a path exists between them; **3-connected** iff a path goes from ni to nj and a path goes from nj to ni. No other degrees exist.\n- 3-connectedness is an equivalence relation: reflexive through the path of length 0; symmetric because the definition already asks for both directions; transitive because paths can be chained (ni to nj to nk, and back from nk via nj to ni).\n- **Strong component**: a maximal set of 3-connected nodes. The condensation graph of a digraph never contains a loop, so it is a directed acyclic graph (DAG).\n\n**Example:** edges a→b, b→c, c→a, c→d. a, b and c lie on a cycle, so {a, b, c} is a strong component; d can be reached but cannot return, so {d} is one too. b and d are 2-connected.",
+        "tr": "Yönlü grafta ni'den nj'ye gidip geri dönemeyebilirsiniz; bu yüzden bağlılığın dereceleri vardır.\n\n- **Yol (path)**: her kenarın bitiş düğümünün bir sonraki kenarın başlangıç düğümü olduğu kenar dizisi. **Çevrim (cycle)**: aynı düğümde başlayıp biten yönlü yol. **Yarı yol (semipath)**: en az bir ardışık kenar çiftinde iki kenarın başlangıç düğümlerini ya da bitiş düğümlerini paylaştığı kenar dizisi.\n- ni ve nj düğümleri: aralarında yol yoksa (kitabın örneklerinde yarı yol bile yoksa) **0-bağlı (0-connected)**; yarı yol var ama yol yoksa **1-bağlı**; aralarında bir yol varsa **2-bağlı**; ni'den nj'ye bir yol ve nj'den ni'ye bir yol varsa **3-bağlı**dır. Başka bağlılık derecesi yoktur.\n- 3-bağlılık bir denklik ilişkisidir (equivalence relation): 0 uzunluklu yol sayesinde yansımalı (reflexive); tanım zaten iki yönü de istediği için simetrik; yollar uç uca eklenebildiği için geçişli (transitive) (ni'den nj'ye, oradan nk'ye; geri dönüşte nk'den nj üzerinden ni'ye).\n- **Güçlü bileşen (strong component)**: 3-bağlı düğümlerin maksimal kümesi. Yönlü grafın yoğunlaştırma grafı hiçbir zaman döngü içermez; yani bir yönlü çevrimsiz graftır (directed acyclic graph, DAG).\n\n**Örnek:** kenarlar a→b, b→c, c→a, c→d. a, b ve c bir çevrim üzerindedir, bu yüzden {a, b, c} bir güçlü bileşendir; d'ye ulaşılır ama d'den geri dönülemez, bu yüzden {d} de bir güçlü bileşendir. b ile d 2-bağlıdır."
+      },
+      "source": "pp. 61–64; exercise 3, p. 75"
+    },
+    {
+      "id": "program-graphs",
+      "title": {
+        "en": "Program graphs",
+        "tr": "Program grafları"
+      },
+      "body": {
+        "en": "The program graph is the most common use of graph theory in testing, used mainly at the unit level.\n\n- **Traditional definition**: nodes are program statements, and edges represent flow of control: there is an edge from node i to node j iff statement j can be executed immediately after statement i.\n- **Improved definition**: nodes are either entire statements or fragments of a statement; edges still represent flow of control. By convention, a statement fragment can be an entire statement.\n- The structured programming constructs (sequence; selection: If-Then, If-Then-Else, Case; repetition: pretest and post-test loops) all have clear directed graphs (Figure 4.5). Single entry and single exit give a program graph unique source and sink nodes.\n- Unstructured \"spaghetti code\" with GOTOs gives very complex program graphs. Loops and decisions greatly increase the number of possible paths, and so the need for testing. McCabe (1976) popularized the cyclomatic number as an indicator of program complexity.\n- Nonexecutable statements such as comments and data declarations: the simplest answer is to ignore them. The book also separates topologically possible paths from semantically feasible ones.\n\n**Example:** in `if (x > 0) y = 1; else y = 2;` the condition `x > 0` and each assignment can be separate nodes, so one line of code gives three nodes.",
+        "tr": "Program grafı (program graph), graf teorisinin testteki en yaygın kullanımıdır ve özellikle birim (unit) düzeyinde kullanılır.\n\n- **Geleneksel tanım (traditional definition)**: düğümler program deyimleridir, kenarlar kontrol akışını gösterir: j deyimi i deyiminden hemen sonra çalıştırılabiliyorsa i düğümünden j düğümüne bir kenar vardır.\n- **Geliştirilmiş tanım (improved definition)**: düğümler ya tam deyimler ya da deyim parçalarıdır (statement fragments); kenarlar yine kontrol akışını gösterir. Kural olarak bir deyim parçası tam bir deyim de olabilir.\n- Yapısal programlama yapılarının (sıralı yapı (sequence); seçim (selection): If-Then, If-Then-Else, Case; tekrar (repetition): ön koşullu (pretest) ve son koşullu (post-test) döngüler) hepsinin açık yönlü grafları vardır (Şekil 4.5). Tek giriş ve tek çıkış, program grafına tek bir kaynak ve tek bir havuz düğümü verir.\n- GOTO'lu yapısız \"spagetti kod\" (spaghetti code) çok karmaşık program grafları üretir. Döngüler ve kararlar olası yol sayısını, dolayısıyla test ihtiyacını büyük ölçüde artırır. McCabe (1976), çevrimsel sayıyı (cyclomatic number) bir program karmaşıklığı göstergesi olarak yaygınlaştırdı.\n- Yorumlar ve veri bildirimleri gibi çalıştırılmayan deyimler: en basit çözüm onları yok saymaktır. Kitap ayrıca topolojik olarak mümkün yollarla anlamsal olarak uygulanabilir (feasible) yolları birbirinden ayırır.\n\n**Örnek:** `if (x > 0) y = 1; else y = 2;` satırında `x > 0` koşulu ve her atama ayrı düğüm olabilir; yani tek bir kod satırı üç düğüm verir."
+      },
+      "source": "pp. 64–66"
+    },
+    {
+      "id": "cyclomatic-number",
+      "title": {
+        "en": "Cyclomatic number: e − n + p here, e − n + 2p in Chapter 9",
+        "tr": "Çevrimsel sayı: burada e − n + p, Bölüm 9'da e − n + 2p"
+      },
+      "body": {
+        "en": "The cyclomatic number is a graph property with deep implications for testing: for a program graph it is the number of basis paths, so it guides how many paths to test.\n\n- **Chapter 4 definition**: V(G) = e − n + p (e = edges, n = nodes, p = components). V(G) is the number of distinct regions in the graph. Figure 4.1: 5 − 7 + 2 = 0. Digraphs are counted the same way; an isolated node is a component of its own.\n- **Effect of changes**: an edge added between two nodes of the same component raises V(G) by 1; a new node attached to an existing node by one new edge leaves it unchanged.\n- **e − n + 2p elsewhere**: testing (usually) uses strongly connected graphs. Chapter 9 (path testing) and the week 6 slides use V(G) = e − n + 2p for a program graph with one entry and one exit; Chapter 9 gets the same value by adding an edge from the sink back to the source and applying e − n + p. On the graph as drawn (p = 1), e − n + p is 1 smaller.\n- If a question says \"use the chapter's formula e − n + p\", count the graph as drawn, without any extra edge.\n\n**Example:** nodes 1–6 with edges 1→2, 1→3, 2→4, 3→4, 4→5, 4→6, 5→6 (one component). Chapter 4: 7 − 6 + 1 = 2. Chapter 9: 7 − 6 + 2 = 3, the same as 8 − 6 + 1 after adding the edge 6→1.",
+        "tr": "Çevrimsel sayı (cyclomatic number), test için derin sonuçları olan bir graf özelliğidir: program grafı için temel yolların (basis paths) sayısıdır, bu yüzden kaç yolun test edileceğine yol gösterir.\n\n- **Bölüm 4 tanımı**: V(G) = e − n + p (e = kenar, n = düğüm, p = bileşen sayısı). V(G) graftaki ayrı bölgelerin (regions) sayısıdır. Şekil 4.1: 5 − 7 + 2 = 0. Yönlü graflar da aynı şekilde sayılır; yalıtılmış bir düğüm kendi başına bir bileşendir.\n- **Değişikliklerin etkisi**: aynı bileşendeki iki düğüm arasına eklenen bir kenar V(G)'yi 1 artırır; var olan bir düğüme tek bir yeni kenarla bağlanan yeni bir düğüm değeri değiştirmez.\n- **Başka yerde e − n + 2p**: testte (genellikle) güçlü bağlı (strongly connected) graflar kullanılır. Bölüm 9 (yol testi) ve 6. hafta slaytları, tek girişli ve tek çıkışlı bir program grafı için V(G) = e − n + 2p kullanır; Bölüm 9 aynı değeri, havuzdan kaynağa geri giden bir kenar ekleyip e − n + p uygulayarak da elde eder. Çizildiği hâliyle grafta (p = 1) e − n + p 1 küçük çıkar.\n- Bir soru \"bölümün formülü e − n + p'yi kullanın\" diyorsa grafı, hiçbir ek kenar olmadan, çizildiği gibi sayın.\n\n**Örnek:** 1–6 düğümleri ve 1→2, 1→3, 2→4, 3→4, 4→5, 4→6, 5→6 kenarları (tek bileşen). Bölüm 4: 7 − 6 + 1 = 2. Bölüm 9: 7 − 6 + 2 = 3; bu, 6→1 kenarı eklendikten sonraki 8 − 6 + 1 ile aynıdır."
+      },
+      "source": "pp. 58, 65; exercises 4–5, p. 75; Chapter 9, p. 147"
+    },
+    {
+      "id": "finite-state-machines",
+      "title": {
+        "en": "Finite state machines",
+        "tr": "Sonlu durum makineleri"
+      },
+      "body": {
+        "en": "Finite state machines (FSMs) are a standard notation for requirements and for system-level behavior. An FSM is a directed graph in which states are nodes and transitions are edges; source and sink states become initial and terminal nodes, and paths model sequences of behavior.\n\n- **Transition labels**: the \"numerator\" is the event that causes the transition, and the \"denominator\" is the action associated with it. Events are mandatory (transitions do not just happen); actions are optional.\n- **Execution conventions**: the initial state is shown by a transition that comes from nowhere; final states have no outgoing transitions; exactly one state is active at any time; transitions are instantaneous, and events occur one at a time.\n- The same event can have different consequences in different states, so an FSM keeps a history of past events.\n- The book's SATM PIN-entry machine (Figure 4.6) has 5 states and 8 transitions and gives the customer three PIN tries.\n\n**Example:** in a turnstile machine, the label Coin / Unlock means that the event Coin causes the transition and the action is Unlock.",
+        "tr": "Sonlu durum makineleri (finite state machines, FSM) gereksinimler ve sistem düzeyindeki davranış için standart bir gösterimdir. Bir FSM, durumların (states) düğüm, geçişlerin (transitions) kenar olduğu yönlü bir graftır; kaynak ve havuz durumlar başlangıç ve son düğümler olur, yollar da davranış dizilerini modeller.\n\n- **Geçiş etiketleri**: \"pay\" (numerator) geçişe neden olan olay (event), \"payda\" (denominator) ise geçişle ilişkili eylemdir (action). Olaylar zorunludur (geçişler kendiliğinden olmaz); eylemler isteğe bağlıdır.\n- **Çalıştırma kuralları**: başlangıç durumu \"hiçbir yerden\" gelen bir geçişle gösterilir; son durumların dışarı giden geçişi yoktur; herhangi bir anda tam olarak bir durum etkindir (active); geçişler anlıktır ve olaylar birer birer gerçekleşir.\n- Aynı olay farklı durumlarda farklı sonuçlar doğurabilir; böylece bir FSM geçmiş olayların izini tutar.\n- Kitaptaki SATM PIN girişi makinesinin (Şekil 4.6) 5 durumu ve 8 geçişi vardır ve müşteriye üç PIN hakkı verir.\n\n**Örnek:** bir turnike makinesinde Coin / Unlock (Jeton / Kilidi aç) etiketi, geçişe Coin olayının neden olduğu ve eylemin Unlock olduğu anlamına gelir."
+      },
+      "source": "pp. 66–67"
+    },
+    {
+      "id": "petri-nets",
+      "title": {
+        "en": "Petri nets and event-driven Petri nets",
+        "tr": "Petri ağları ve olay güdümlü Petri ağları"
+      },
+      "body": {
+        "en": "Petri nets (from Carl Adam Petri's 1963 dissertation) are the accepted model for protocols, concurrency and distributed processing.\n\n- A Petri net is a **bipartite** directed graph (P, T, In, Out): places P and transitions T; every edge goes from a place to a transition (In) or from a transition to a place (Out).\n- **Marked Petri net**: adds a marking M, the number of tokens in each place, written as a tuple such as <1, 0, 2>.\n- **Enabled**: a transition is enabled if there is at least one token in each of its input places.\n- **Firing** an enabled transition removes one token from each input place and adds one token to each output place.\n- **Conflict**: two transitions are enabled but share an input place, so firing one can disable the other.\n- **Event-driven Petri net (EDPN)**: a tripartite graph of port events (drawn as triangles), data places and transitions. If no transition is enabled, the net is at a point of **event quiescence** (a traditional Petri net calls this **deadlock**); it is broken by creating a token in a port input event place.\n\n**Example:** places (p1, p2, p3) with marking <2, 1, 0>; transition t has input places p1 and p2 and output place p3. t is enabled, and after it fires the marking is <1, 0, 1>.",
+        "tr": "Petri ağları (Petri nets; Carl Adam Petri'nin 1963 doktora tezinden), protokoller, eşzamanlılık (concurrency) ve dağıtık işleme için kabul görmüş modeldir.\n\n- Petri ağı **iki parçalı (bipartite)** yönlü bir graftır (P, T, In, Out): yerler (places) P ve geçişler (transitions) T; her kenar ya bir yerden bir geçişe (In) ya da bir geçişten bir yere (Out) gider.\n- **İşaretli Petri ağı (marked Petri net)**: buna bir M işaretlemesi (marking), yani her yerdeki jeton (token) sayısı eklenir; <1, 0, 2> gibi bir demet olarak yazılır.\n- **Etkin (enabled)**: bir geçiş, her giriş yerinde (input place) en az bir jeton varsa etkindir.\n- Etkin bir geçişi **ateşlemek (firing)**, her giriş yerinden bir jeton çıkarır ve her çıkış yerine (output place) bir jeton ekler.\n- **Çatışma (conflict)**: iki geçiş etkindir ama bir giriş yerini paylaşır, bu yüzden birini ateşlemek diğerini etkisiz kılabilir.\n- **Olay güdümlü Petri ağı (event-driven Petri net, EDPN)**: port olayları (üçgenle çizilir), veri yerleri (data places) ve geçişlerden oluşan üç parçalı (tripartite) bir graf. Hiçbir geçiş etkin değilse ağ bir **olay durgunluğu (event quiescence)** noktasındadır (geleneksel Petri ağında buna **kilitlenme (deadlock)** denir); bu durum bir port giriş olayı yerinde (port input event place) jeton oluşturularak sona erer.\n\n**Örnek:** (p1, p2, p3) yerleri ve <2, 1, 0> işaretlemesi; t geçişinin giriş yerleri p1 ve p2, çıkış yeri p3. t etkindir ve ateşlendikten sonra işaretleme <1, 0, 1> olur."
+      },
+      "source": "pp. 67–73"
+    },
+    {
+      "id": "statecharts",
+      "title": {
+        "en": "StateCharts",
+        "tr": "StateChart'lar"
+      },
+      "body": {
+        "en": "StateCharts (David Harel) tackle the \"state explosion\" of finite state machines by combining Venn diagrams (hierarchy) with directed graphs (connectedness). Tools include StateMate (i-Logix) and the UML control model.\n\n- States are drawn as \"blobs\", and blobs can contain other blobs (substates).\n- An edge with no source state marks the initial state; inside a state, the same notation marks the initial substate.\n- **Edges start and end on the outline of a state.** An edge leaving a state that contains substates \"refers\" to all of them: the transition can occur from any substate.\n- An edge entering such a state goes to its initial (default) substate.\n- **Concurrent states**: a dotted line splits a state into parts that act like parallel machines; a transition into that state makes all parts active (marked, in the Petri net sense).\n- This convention greatly reduces the tendency of FSMs to look like \"spaghetti code\".\n\n**Example:** state Running contains substates Fast (initial) and Slow, and an edge leaves Running's outline to Stopped. The machine can move to Stopped from Fast or from Slow; an edge from Stopped to Running enters Fast.",
+        "tr": "StateChart'lar (David Harel), Venn diyagramlarını (hiyerarşi) yönlü graflarla (bağlılık) birleştirerek sonlu durum makinelerinin \"durum patlaması\" (state explosion) sorununu ele alır. Araçlar arasında StateMate (i-Logix) ve UML kontrol modeli vardır.\n\n- Durumlar \"blob\" olarak çizilir ve blob'lar başka blob'ları (alt durumları, substates) içerebilir.\n- Kaynak durumu olmayan bir kenar başlangıç durumunu gösterir; bir durumun içinde aynı gösterim başlangıç alt durumunu gösterir.\n- **Kenarlar bir durumun dış çizgisinde (outline) başlar ve biter.** Alt durumlar içeren bir durumdan çıkan kenar, onların hepsini \"kapsar\": geçiş herhangi bir alt durumdan olabilir.\n- Böyle bir duruma giren kenar, onun başlangıç (varsayılan, default) alt durumuna gider.\n- **Eşzamanlı durumlar (concurrent states)**: noktalı bir çizgi bir durumu paralel makineler gibi çalışan parçalara böler; o duruma giren bir geçiş tüm parçaları etkin yapar (Petri ağı anlamında işaretli).\n- Bu kural, FSM'lerin \"spagetti kod\" (spaghetti code) gibi görünme eğilimini büyük ölçüde azaltır.\n\n**Örnek:** Running durumu Fast (başlangıç) ve Slow alt durumlarını içerir ve Running'in dış çizgisinden Stopped'a bir kenar çıkar. Makine Stopped'a Fast'ten de Slow'dan da geçebilir; Stopped'dan Running'e giden bir kenar ise Fast'e girer."
+      },
+      "source": "pp. 73–75"
+    }
+  ],
+  "questions": {
+    "1": {
+      "concept": "graph-basics",
+      "explanation_tr": "Geliş matrisinde (incidence matrix) satırlar düğümleri, sütunlar kenarları gösterir; bu yüzden her sütunun toplamı 2 olmalıdır. Sütun toplamlarını kontrol etmek, eşlik denetimine (parity check) benzeyen bir bütünlük kontrolüdür. Bir düğümün derecesi sütun toplamı değil, satır toplamıdır."
+    },
+    "2": {
+      "concept": "components-condensation",
+      "explanation_tr": "Bileşenler (components) bağlı düğümlerin maksimal kümeleridir; bu yüzden iki bileşen arasındaki bir kenar, onların düğümlerini tek bir yola, dolayısıyla aynı bileşene koyardı (ayrıca kenarlar düğüm kümelerini değil, tek tek düğümleri birleştirir). Sonuç olarak bileşenler birbirinden bağımsızdır ve ayrı ayrı test edilebilir."
+    },
+    "3": {
+      "concept": "digraphs",
+      "explanation_tr": "Aktarma düğümünün (transfer node) giriş derecesi ≠ 0 ve çıkış derecesi ≠ 0'dır: n2 (1 giriş, 1 çıkış) ve n4 (2 giriş, 1 çıkış). n1 ve n3 kaynak (source) düğümler, n5 ve n6 havuz (sink) düğümlerdir; n7 ise hem kaynak hem havuz olduğu için yalıtılmış (isolated) bir düğümdür."
+    },
+    "4": {
+      "concept": "digraphs",
+      "explanation_tr": "Yönlü grafta a(i, j) = 1 ancak ve ancak i düğümünden j düğümüne bir kenar varsa; bu yüzden satır toplamı çıkış derecesini (outdegree), sütun toplamı giriş derecesini (indegree) verir. Matrisin simetrik olması gerekmez; sütun toplamının her zaman 2 olması ise geliş matrisine (incidence matrix) aittir."
+    },
+    "5": {
+      "concept": "digraphs",
+      "explanation_tr": "k, D yönlü grafındaki en uzun yolun uzunluğudur ve I birim matristir (identity matrix); r(i, j) = 1 ancak ve ancak i düğümünden j düğümüne bir yol varsa."
+    },
+    "6": {
+      "concept": "n-connectedness",
+      "explanation_tr": "n2–n1–n4–n6 yarı yolu (semipath) vardır, ama iki yönde de yönlü bir yol yoktur (n2 yalnızca n5'e gider ve n3→n4→n6→n3 çevrimi hiçbir zaman n2'ye dönmez). 3'ün ötesinde bir bağlılık derecesi yoktur."
+    },
+    "7": {
+      "concept": "n-connectedness",
+      "explanation_tr": "Güçlü bileşen (strong component), 3-bağlı düğümlerin maksimal kümesidir; n3, n4 ve n6, n3→n4→n6→n3 çevrimi üzerindedir. n1 ise n4'e ulaşır ama hiçbir yol n1'e geri dönmez; {n4, n6} de maksimal değildir. Güçlü bileşenleri yoğunlaştırmak her zaman döngü içermeyen bir yönlü çevrimsiz graf (DAG) verir."
+    },
+    "8": {
+      "concept": "program-graphs",
+      "explanation_tr": "Geleneksel tanımda her düğüm bir program deyimidir; geliştirilmiş tanımda düğümler tam deyimler ya da deyim parçaları (statement fragments) olabilir, kenarlar ise yine kontrol akışını gösterir. Yorumlar gibi çalıştırılmayan deyimler için en basit çözüm onları yok saymaktır."
+    },
+    "9": {
+      "concept": "finite-state-machines",
+      "explanation_tr": "Pay (numerator) geçişe neden olan olay (event), payda (denominator) ise geçişle ilişkili eylemdir (action); olaylar zorunludur, eylemler ise isteğe bağlıdır."
+    },
+    "10": {
+      "concept": "petri-nets",
+      "explanation_tr": "Etkin bir geçişi ateşlemek (firing), her giriş yerinden bir jeton (token) çıkarır ve her çıkış yerine bir jeton ekler; böylece p3 1'den 0'a, p4 ise 2'den 3'e geçer."
+    },
+    "11": {
+      "concept": "petri-nets",
+      "explanation_tr": "EDPN'de hiçbir geçişin etkin olmadığı bir işaretleme (marking), olay durgunluğu (event quiescence) noktasıdır; bu durum bir port giriş olayı yerinde (port input event place) jeton oluşturularak bozulabilir. Geleneksel bir Petri ağında aynı duruma kilitlenme (deadlock) denir."
+    },
+    "12": {
+      "concept": "statecharts",
+      "explanation_tr": "Kenarlar bir durumun dış çizgisinde başlar ve biter; alt durumlar (substates) içeren bir durumdan çıkan kenar onların hepsini kapsar, bu yüzden A → D geçişi B'den de C'den de olabilir. Bu kural, sonlu durum makinelerinin \"spagetti kod\" (spaghetti code) gibi görünmesini önler."
+    },
+    "13": {
+      "concept": "paths-loops",
+      "explanation_tr": "Kenarları saymak, tek bir düğümü 0 uzunluklu bir yol, A²'nin elemanlarını da iki kenarlı (2 uzunluklu) yollar yapar; düğümleri saymak ise tek bir düğüme 1 uzunluğunu verirdi."
+    },
+    "14": {
+      "concept": "paths-loops",
+      "explanation_tr": "Değişiklikten önce {n1, …, n6} bileşeninde hiç döngü (loop) yoktur; bu yüzden yeni (n5, n6) kenarı tam olarak bir döngüyü kapatır: n1–n2–n5–n6–n4–n1 (e1, e4, yeni kenar, e5, e2). n4–n5 ya da n3–n6 kenarı olmadığı için diğer döngüler mevcut değildir."
+    },
+    "15": {
+      "concept": "n-connectedness",
+      "explanation_tr": "ni→nj ile nj→nk yollarını ve nk→nj ile nj→ni yollarını uç uca eklemek, ni ile nk arasında iki yönde de yol verir; bu yüzden ilişki geçişlidir (transitive). Yansımalılık (reflexivity) 0 uzunluklu yoldan gelir (her düğüm bir çevrim üzerinde değildir); simetri, tanımın zaten iki yönü de istemesinden kaynaklanır (yönlü yollar öylece ters çevrilemez). Bir çevrim üzerindeki iki farklı düğüm 3-bağlıdır, bu yüzden ilişki ters simetrik (antisymmetric) değildir."
+    },
+    "16": {
+      "concept": "cyclomatic-number",
+      "explanation_tr": "Case grafında n = 5 düğüm, e = 6 kenar ve p = 1 bileşen vardır; bu yüzden V(G) = 6 − 5 + 1 = 2. 3 değeri e − n + 2p formülünden ya da önce sondan başa bir kenar eklemekten gelirdi; bu soru ikisini de kullanmaz."
+    },
+    "17": {
+      "concept": "cyclomatic-number",
+      "explanation_tr": "Burada e = 9, n = 7 ve p = 2'dir (ana bileşen ile yalıtılmış n7); bu yüzden V(G) = 9 − 7 + 2 = 4. Hiç düğüm eklemeden üç kenar eklemek, değeri baştaki 6 − 7 + 2 = 1'den 3 artırmıştır. 6 değeri e − n + 2p formülünden gelirdi; bu soru o formülü kullanmaz."
+    },
+    "18": {
+      "concept": "cyclomatic-number",
+      "explanation_tr": "Artık e = 8, n = 9 ve p = 2'dir; bu yüzden V(G) = 8 − 9 + 2 = 1. Her yeni düğüm tam olarak bir yeni kenarla birlikte gelir, dolayısıyla e − n değişmez; zincir n5'e bağlı olduğu için de yeni bir bileşen eklenmez."
+    },
+    "19": {
+      "concept": "graph-basics",
+      "explanation_tr": "Bölüm, bir düğümün derecesinin (degree) onun \"popülerliğini\" gösterdiğini söyler; derecesi 0 olan bir düğüm ise bir münzevi (hermit) gibi yalıtılmıştır (isolated)."
+    }
+  }
+}

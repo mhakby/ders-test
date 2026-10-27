@@ -3,6 +3,7 @@ import { courses, findCourse } from './data';
 import { navigate, useRoute } from './router';
 import { CourseHome } from './screens/CourseHome';
 import { CourseList } from './screens/CourseList';
+import { LessonScreen } from './screens/Lesson';
 import { Quiz } from './screens/Quiz';
 import { Summary } from './screens/Summary';
 
@@ -22,6 +23,7 @@ export function App() {
 
   if (route.name === 'courses' || !ci) return <CourseList />;
   if (route.name === 'course') return <CourseHome ci={ci} />;
+  if (route.name === 'lesson') return <LessonScreen ci={ci} setId={route.setId} />;
   if (route.name === 'summary') return <Summary ci={ci} deckId={route.deckId} />;
   return <Quiz key={route.deckId} ci={ci} deckId={route.deckId} />;
 }

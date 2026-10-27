@@ -1,0 +1,146 @@
+{
+  "intro": {
+    "en": "This chapter looks back at structural testing and uses it as a cross-check on functional testing. It asks when testing should stop, shows the gaps (paths no test case exercises) and redundancies (paths exercised again and again) that functional methods leave, and defines three metrics, coverage, redundancy and net redundancy, to measure them. A case study, the Insurance Premium Program, then applies path, data flow and slice analysis to the functional test sets from Chapter 8.",
+    "tr": "Bu bölüm yapısal teste geriye dönüp bakar ve onu fonksiyonel testin çapraz kontrolü (cross-check) olarak kullanır. Testin ne zaman durması gerektiğini sorar, fonksiyonel yöntemlerin bıraktığı boşlukları (gaps: hiçbir test durumunun çalıştırmadığı yollar) ve fazlalıkları (redundancies: tekrar tekrar çalıştırılan yollar) gösterir ve bunları ölçmek için üç ölçüt tanımlar: kapsam, fazlalık ve net fazlalık. Ardından bir vaka çalışması olan Sigorta Primi Programı (Insurance Premium Program), yol, veri akışı ve dilim analizini 8. bölümdeki fonksiyonel test kümelerine uygular."
+  },
+  "concepts": [
+    {
+      "id": "when-to-stop",
+      "title": {
+        "en": "When should testing stop?",
+        "tr": "Test ne zaman durmalı?"
+      },
+      "body": {
+        "en": "Every test effort has to end somewhere. The book lists seven possible answers to “When should testing stop?”:\n\n- when you run out of time: all too common\n- when continued testing causes no new failures\n- when continued testing reveals no new faults\n- when you cannot think of any new test cases: good if you followed the book's precepts and guidelines, as unfortunate as running out of time if it comes from a lack of motivation\n- when you reach a point of diminishing returns: it has some appeal, since serious testing has continued and fault discovery has slowed; the trade-off is clear only if the cost (or risk) of remaining faults can be determined, “a big IF”\n- when mandated coverage has been attained: “a pretty good one”\n- when all faults have been removed: cannot be guaranteed\n\n**Software reliability models** support the “no new failures” and “no new faults” answers; both have been used with success in industry.\n\nThe chapter follows the coverage answer and uses structural testing as a cross-check on functional testing. The question then reduces to which coverage metric to use; the answer most common in industrial practice is **DD-paths** (decision-to-decision paths, Chapter 9).",
+        "tr": "Her test çalışması bir yerde bitmek zorundadır. Kitap “Test ne zaman durmalı?” sorusuna yedi olası cevap sıralar:\n\n- zaman tükendiğinde: ne yazık ki çok yaygın\n- teste devam etmek yeni arızalara (failures) yol açmadığında\n- teste devam etmek yeni hatalar (faults) ortaya çıkarmadığında\n- yeni bir test durumu (test case) düşünemediğinde: kitabın ilke ve yönergelerini izlediysen iyi, motivasyon eksikliğinden kaynaklanıyorsa zamanın tükenmesi kadar talihsiz\n- azalan getiri noktasına (point of diminishing returns) ulaşıldığında: biraz çekicidir, çünkü ciddi test sürmüş ve hata bulma yavaşlamıştır; ödünleşim (trade-off) ancak kalan hataların maliyeti (veya riski) belirlenebilirse açıktır, “büyük bir EĞER”\n- zorunlu kılınan kapsama (mandated coverage) ulaşıldığında: “oldukça iyi bir cevap”\n- tüm hatalar giderildiğinde: garanti edilemez\n\n**Yazılım güvenilirlik modelleri (software reliability models)** “yeni arıza yok” ve “yeni hata yok” cevaplarını destekler; ikisi de endüstride başarıyla kullanılmıştır.\n\nBölüm kapsam cevabını izler ve yapısal testi fonksiyonel testin çapraz kontrolü (cross-check) olarak kullanır. Soru böylece hangi kapsam ölçütünün kullanılacağına indirgenir; endüstriyel uygulamada en yaygın cevap **DD-path'lerdir** (karardan karara yollar, 9. bölüm)."
+      },
+      "source": "pp. 175–176"
+    },
+    {
+      "id": "gaps-redundancies",
+      "title": {
+        "en": "Gaps and redundancies: the triangle program",
+        "tr": "Boşluklar ve fazlalıklar: üçgen programı"
+      },
+      "body": {
+        "en": "Functional testing has twin problems: **gaps**, parts of the program that no test case exercises, and **redundancies**, parts that many test cases exercise again and again. Structural coverage makes both visible.\n\nThe book uses the (klutzy) traditional triangle implementation, which has exactly 11 feasible paths:\n\n- p1: Equilateral\n- p2, p3: Isosceles / Not a Triangle when b = c\n- p4, p5: Isosceles / Not a Triangle when a = c\n- p6, p7: Isosceles / Not a Triangle when a = b\n- p8, p9, p10: Not a Triangle because a + b ≤ c, b + c ≤ a, a + c ≤ b\n- p11: Scalene\n\nThe program first compares the sides pairwise and records the matches in a variable, match; p8–p11 are taken only when match = 0 (no two sides equal).\n\n**Nominal boundary value testing** gives 15 test cases from the values 1, 2, 100, 199, 200, with the other two sides at the nominal value 100, so every test case has at least two equal sides.\n\n**Worst-case boundary value testing** gives 125 test cases; Table 11.3 counts how many take each path (p1–p11: 5, 12, 6, 11, 6, 12, 7, 17, 18, 19, 12). Together they provide full path coverage, but the redundancy is onerous.\n\n**Example:** sides (1, 2, 5) are all different and 1 + 2 ≤ 5, so this test case takes p8.",
+        "tr": "Fonksiyonel testin ikiz sorunları vardır: **boşluklar (gaps)**, yani hiçbir test durumunun (test case) çalıştırmadığı program parçaları, ve **fazlalıklar (redundancies)**, yani birçok test durumunun tekrar tekrar çalıştırdığı parçalar. Yapısal kapsam ikisini de görünür kılar.\n\nKitap (hantal) geleneksel üçgen uygulamasını kullanır; bu uygulamanın tam olarak 11 gerçekleştirilebilir (feasible) yolu vardır:\n\n- p1: Eşkenar (Equilateral)\n- p2, p3: b = c iken İkizkenar (Isosceles) / Üçgen Değil (Not a Triangle)\n- p4, p5: a = c iken İkizkenar / Üçgen Değil\n- p6, p7: a = b iken İkizkenar / Üçgen Değil\n- p8, p9, p10: a + b ≤ c, b + c ≤ a, a + c ≤ b olduğu için Üçgen Değil\n- p11: Çeşitkenar (Scalene)\n\nProgram önce kenarları ikişer ikişer karşılaştırır ve eşleşmeleri match değişkenine kaydeder; p8–p11 yalnızca match = 0 olduğunda (hiçbir iki kenar eşit değilken) izlenir.\n\n**Nominal sınır değer testi (nominal boundary value testing)** 1, 2, 100, 199, 200 değerlerinden 15 test durumu üretir; diğer iki kenar nominal değer olan 100'de tutulur, bu yüzden her test durumunda en az iki kenar eşittir.\n\n**En kötü durum sınır değer testi (worst-case boundary value testing)** 125 test durumu üretir; Tablo 11.3 her yolu kaç test durumunun izlediğini sayar (p1–p11: 5, 12, 6, 11, 6, 12, 7, 17, 18, 19, 12). Birlikte tam yol kapsamı sağlarlar, ama fazlalık külfetlidir (onerous).\n\n**Örnek:** (1, 2, 5) kenarlarının hepsi farklıdır ve 1 + 2 ≤ 5 olduğundan bu test durumu p8'i izler."
+      },
+      "source": "pp. 176–178"
+    },
+    {
+      "id": "method-metrics",
+      "title": {
+        "en": "Coverage, redundancy and net redundancy",
+        "tr": "Kapsam, fazlalık ve net fazlalık"
+      },
+      "body": {
+        "en": "These three metrics turn gaps and redundancy into numbers, so a functional testing method can be evaluated against a structural metric.\n\nA functional method M generates m test cases. A structural metric S identifies s elements in the unit under test, always something countable (program paths, DD-Paths, slices). When executed, the m test cases traverse n of the s elements.\n\n- **Coverage** C(M,S) = n/s deals with gaps: when it is less than 1, there are gaps in the coverage. Since n ≤ s, it is never above 1.\n- **Redundancy** R(M,S) = m/s: the bigger it is, the greater the redundancy.\n- **Net redundancy** NR(M,S) = m/n: more useful than R, because it refers to things actually traversed, not to the total space of things to be traversed.\n\nFurther facts:\n\n- The metrics are devised so that the best possible value of each is 1.\n- When C(M,S) = 1, algebra forces R(M,S) = NR(M,S).\n- Infeasible paths are not counted: a test case can never traverse one.\n- They apply to any functional method except special value testing.\n- They are only half the battle: how effective test cases are against kinds of faults is not available; choose structural metrics for the faults you anticipate.\n\n**Example:** m = 18 test cases traverse n = 9 of s = 12 DD-Paths: C = 9/12 = 0.75 (gaps), R = 18/12 = 1.50, NR = 18/9 = 2.00.",
+        "tr": "Bu üç ölçüt boşlukları ve fazlalığı sayılara çevirir; böylece bir fonksiyonel test yöntemi bir yapısal ölçüte göre değerlendirilebilir.\n\nBir fonksiyonel yöntem M, m test durumu (test case) üretir. Bir yapısal ölçüt S, test edilen birimde s öğe belirler; bunlar her zaman sayılabilir şeylerdir (program yolları, DD-Path'ler, dilimler). Çalıştırılan m test durumu, s öğenin n tanesini geçer.\n\n- **Kapsam (coverage)** C(M,S) = n/s boşluklarla ilgilidir: 1'den küçükse kapsamda boşluklar vardır. n ≤ s olduğundan asla 1'in üstüne çıkmaz.\n- **Fazlalık (redundancy)** R(M,S) = m/s: ne kadar büyükse fazlalık o kadar fazladır.\n- **Net fazlalık (net redundancy)** NR(M,S) = m/n: R'den daha yararlıdır, çünkü geçilecek öğelerin tüm uzayına değil, gerçekten geçilen öğelere atıfta bulunur.\n\nDiğer bilgiler:\n\n- Ölçütler, her birinin mümkün olan en iyi değeri 1 olacak şekilde tasarlanmıştır.\n- C(M,S) = 1 olduğunda cebir R(M,S) = NR(M,S) olmasını zorunlu kılar.\n- Gerçekleştirilemeyen (infeasible) yollar sayılmaz: bir test durumu böyle bir yolu asla geçemez.\n- Özel değer testi (special value testing) dışındaki her fonksiyonel yönteme uygulanırlar.\n- Bunlar işin yalnızca yarısıdır: test durumlarının hata türlerine karşı ne kadar etkili olduğu bilgisi mevcut değildir; beklediğin hatalara uygun yapısal ölçütler seç.\n\n**Örnek:** m = 18 test durumu, s = 12 DD-Path'in n = 9 tanesini geçer: C = 9/12 = 0.75 (boşluklar var), R = 18/12 = 1.50, NR = 18/9 = 2.00."
+      },
+      "source": "pp. 177–178"
+    },
+    {
+      "id": "metric-tables",
+      "title": {
+        "en": "Reading the metric tables",
+        "tr": "Ölçüt tablolarını okumak"
+      },
+      "body": {
+        "en": "Applying C, R and NR to the book's examples shows how to read them.\n\nTriangle program, structural metric = its 11 paths (Table 11.4; m, n, s → C, R, NR):\n\n- Nominal boundary values: 15, 7, 11 → 0.64, 1.36, 2.14. C is below 1, so there are gaps.\n- Worst-case boundary values: 125, 11, 11, with C = 1.00.\n- Goal: s, s, s → 1.00, 1.00, 1.00.\n\nHow to read a row: first look at C. C = 1 means no gaps, and then R = NR. Next compare R or NR with the best possible value 1: the further above 1, the more redundant the test cases.\n\nCommission problem (Table 11.5; m, n, s → C, R):\n\n- Output boundary value: 25, 11, 11 → 1, 2.27\n- Decision table: 3, 11, 11 → 1, 0.27\n- DD-Path: 25, 11, 11 → 1, 2.27\n- DU-Path: 25, 33, 33 → 1, 0.76\n- Slice: 25, 40, 40 → 1, 0.63\n\nIn general, more sophisticated structural metrics result in more elements (a larger s), so a given functional method tends to become less effective when evaluated in terms of more rigorous structural metrics.\n\n**Example:** 30 test cases measured against 10 elements give R = 3.00; against 60 elements, R = 0.50.",
+        "tr": "C, R ve NR'yi kitabın örneklerine uygulamak bunların nasıl okunacağını gösterir.\n\nÜçgen programı, yapısal ölçüt = 11 yolu (Tablo 11.4; m, n, s → C, R, NR):\n\n- Nominal sınır değerler (nominal boundary values): 15, 7, 11 → 0.64, 1.36, 2.14. C 1'in altında, yani boşluklar var.\n- En kötü durum sınır değerleri (worst-case boundary values): 125, 11, 11; C = 1.00.\n- Hedef (goal): s, s, s → 1.00, 1.00, 1.00.\n\nBir satır nasıl okunur: önce C'ye bak. C = 1 boşluk yok demektir ve o zaman R = NR'dir. Sonra R'yi veya NR'yi mümkün olan en iyi değer olan 1 ile karşılaştır: 1'in ne kadar üstündeyse test durumlarında (test cases) o kadar çok fazlalık vardır.\n\nKomisyon problemi (Tablo 11.5; m, n, s → C, R):\n\n- Çıktı sınır değeri (output bva): 25, 11, 11 → 1, 2.27\n- Karar tablosu (decision table): 3, 11, 11 → 1, 0.27\n- DD-Path: 25, 11, 11 → 1, 2.27\n- DU-Path: 25, 33, 33 → 1, 0.76\n- Dilim (slice): 25, 40, 40 → 1, 0.63\n\nGenel olarak daha gelişmiş yapısal ölçütler daha fazla öğe (daha büyük bir s) ortaya çıkarır; bu yüzden belirli bir fonksiyonel yöntem, daha sıkı yapısal ölçütlerle değerlendirildiğinde daha az etkili olma eğilimindedir.\n\n**Örnek:** 10 öğeye göre ölçülen 30 test durumu R = 3.00 verir; 60 öğeye göre R = 0.50 verir."
+      },
+      "source": "pp. 178–179"
+    },
+    {
+      "id": "sophistication-trends",
+      "title": {
+        "en": "Sophistication, number of items and effort",
+        "tr": "Gelişmişlik, öğe sayısı ve çaba"
+      },
+      "body": {
+        "en": "Choosing a structural metric means weighing how much it finds against how much work it costs. The book orders structural methods by sophistication: DD-Path, Basis Path, DU-Path, Slice.\n\n- **Figure 11.2, trend of test coverage items (s):** low for DD-Paths, a slight dip at Basis Path, then rising through DU-Paths to high for slices.\n- **Figure 11.3, trend of test method effort** (the effort to identify the coverage items): rises steadily, lowest for DD-Paths and highest for slices, with no dip.\n\nSo the more sophisticated methods mostly identify more items, and they always take more effort to identify them. For functional testing methods there was a pleasing trade-off; for structural methods we no longer have it. Instead, these graphs illustrate the importance of choosing an appropriate structural coverage metric.\n\n**Example:** moving the same test suite from DD-Path coverage to slice coverage means more effort to identify the items and a larger s, and so a lower R for the same m.",
+        "tr": "Bir yapısal ölçüt seçmek, ne kadar şey bulduğunu ne kadar işe mal olduğuyla tartmak demektir. Kitap yapısal yöntemleri gelişmişliğe (sophistication) göre sıralar: DD-Path, Basis Path, DU-Path, Slice.\n\n- **Şekil 11.2, test kapsam öğelerinin (s) eğilimi:** DD-Path'lerde düşük, Basis Path'te hafif bir düşüş, sonra DU-Path'lerden geçerek dilimlerde yükseğe çıkar.\n- **Şekil 11.3, test yöntemi çabasının eğilimi** (kapsam öğelerini belirleme çabası): sürekli artar; DD-Path'lerde en düşük, dilimlerde en yüksektir ve düşüş yoktur.\n\nYani daha gelişmiş yöntemler çoğunlukla daha fazla öğe belirler ve bunları belirlemek her zaman daha fazla çaba ister. Fonksiyonel test yöntemlerinde hoş bir ödünleşim (trade-off) vardı; yapısal yöntemlerde artık yok. Bunun yerine bu grafikler uygun bir yapısal kapsam ölçütü seçmenin önemini gösterir.\n\n**Örnek:** aynı test kümesini DD-Path kapsamından dilim kapsamına taşımak, öğeleri belirlemek için daha fazla çaba ve daha büyük bir s, dolayısıyla aynı m için daha düşük bir R demektir."
+      },
+      "source": "pp. 179–180"
+    },
+    {
+      "id": "insurance-paths",
+      "title": {
+        "en": "Case study: paths of the Insurance Premium Program",
+        "tr": "Vaka çalışması: Sigorta Primi Programının yolları"
+      },
+      "body": {
+        "en": "The case study checks the Chapter 8 functional test sets for the Insurance Premium Program against the program's paths.\n\nPseudocode, with very little error checking:\n\n- 1 `Input(baseRate, driverAge, points)`, 2 `premium = 0`, 3 `Select Case driverAge`\n- Case 1: 16 ≤ driverAge < 20 (nodes 4–8), Case 2: 20 ≤ driverAge < 25 (9–13), Case 3: 25 ≤ driverAge < 45 (14–18), Case 4: 45 ≤ driverAge < 60 (19–23), Case 5: 60 ≤ driverAge < 120 (24–28); each sets ageMultiplier and, if points is low enough, safeDrivingReduction\n- Case 6: Else (29), output “Driver age out of range” (30)\n- 31 End Select, 32 `premium = baseRate * ageMultiplier − safeDrivingReduction`, 33 `Output(premium)`\n\nAges under 16 or over 120 are not checked separately (Exercise 3); only the Else clause catches them. The graph is acyclic, V(G) = 11, and exactly 11 feasible paths exist: p1–p10 through Cases 1–5 (two per case: the If on points false or true) and the Else path p11 = 1-2-3-29-30-31-32-33.\n\nPaths covered by the Chapter 8 test sets (Table 11.7):\n\n- Boundary value, 25 test cases: p1, p2, p7, p8, p9, p10\n- Worst-case boundary value, 273: p1–p10\n- Weak equivalence class, 5: p2, p4, p6, p8, p9\n- Strong equivalence class, 25: p1–p10\n- Decision table, 10: p1–p10\n- Hybrid, 25: p1–p11\n\nOnly the hybrid approach yields complete path coverage. A path no test case traverses is a gap: path coverage is not met, and nodes that lie only on that path never execute.",
+        "tr": "Vaka çalışması, Sigorta Primi Programı (Insurance Premium Program) için 8. bölümde üretilen fonksiyonel test kümelerini programın yollarına göre kontrol eder.\n\nÇok az hata denetimi yapan sözde kod (pseudocode):\n\n- 1 `Input(baseRate, driverAge, points)`, 2 `premium = 0`, 3 `Select Case driverAge`\n- Case 1: 16 ≤ driverAge < 20 (düğüm 4–8), Case 2: 20 ≤ driverAge < 25 (9–13), Case 3: 25 ≤ driverAge < 45 (14–18), Case 4: 45 ≤ driverAge < 60 (19–23), Case 5: 60 ≤ driverAge < 120 (24–28); her biri ageMultiplier'ı ve points yeterince düşükse safeDrivingReduction'ı ayarlar\n- Case 6: Else (29), “Driver age out of range” çıktısı (30)\n- 31 End Select, 32 `premium = baseRate * ageMultiplier − safeDrivingReduction`, 33 `Output(premium)`\n\n16'dan küçük veya 120'den büyük yaşlar ayrıca denetlenmez (Alıştırma 3); onları yalnızca Else dalı yakalar. Graf döngüsüzdür (acyclic), V(G) = 11'dir ve tam olarak 11 gerçekleştirilebilir (feasible) yol vardır: p1–p10 Case 1–5'ten geçer (her durum için iki tane: points üzerindeki If yanlış veya doğru), Else yolu ise p11 = 1-2-3-29-30-31-32-33'tür.\n\n8. bölümdeki test kümelerinin kapsadığı yollar (Tablo 11.7):\n\n- Sınır değer (boundary value), 25 test durumu (test case): p1, p2, p7, p8, p9, p10\n- En kötü durum sınır değer (worst-case boundary value), 273: p1–p10\n- Zayıf denklik sınıfı (weak equivalence class), 5: p2, p4, p6, p8, p9\n- Güçlü denklik sınıfı (strong equivalence class), 25: p1–p10\n- Karar tablosu (decision table), 10: p1–p10\n- Hibrit (hybrid), 25: p1–p11\n\nYalnızca hibrit yaklaşım tam yol kapsamı sağlar. Hiçbir test durumunun geçmediği bir yol bir boşluktur: yol kapsamı sağlanmaz ve yalnızca o yol üzerinde bulunan düğümler hiç çalışmaz."
+      },
+      "source": "pp. 179–183"
+    },
+    {
+      "id": "insurance-conditions-dataflow",
+      "title": {
+        "en": "Case study: conditions, data flow and slices",
+        "tr": "Vaka çalışması: koşullar, veri akışı ve dilimler"
+      },
+      "body": {
+        "en": "Covering every path is not the whole story; the case study also looks at conditions, data flow and slices.\n\n**Path-based testing:** the graph is acyclic, so only 11 paths exist, and the best choice is test cases that exercise each path. This automatically constitutes both statement and DD-Path coverage; the remaining path-based coverage metrics are not applicable.\n\n**Compound conditions:** each Case predicate has the form a ≤ x < b; e.g. 20 ≤ driverAge < 25 combines 20 ≤ driverAge and driverAge < 25. Such predicates indicate **multiple-condition coverage**, which needs test cases that exercise their extreme values. Only the worst-case boundary value (273) and hybrid (25) test cases do that.\n\n**Data flow testing** is “boring” here: driverAge, points and safeDrivingReduction all occur in six definition-clear du-paths. The uses of driverAge (in the Select Case predicates) and of points (in the If conditions) are both predicate uses. All-Paths implies all the lower data flow coverages (Chapter 10).\n\n**Slice testing** gives little insight either. Four slices are of interest: S(safeDrivingReduction, 32), S(ageMultiplier, 32), S(baseRate, 32) = {1} and S(Premium, 31) = {2}; their union, plus the EndIf statements, is the whole program. The only insight: if a failure occurred at line 32, the slices on safeDrivingReduction and ageMultiplier separate the program into two pieces, which simplifies fault isolation.",
+        "tr": "Her yolu kapsamak hikâyenin tamamı değildir; vaka çalışması koşullara, veri akışına ve dilimlere de bakar.\n\n**Yol tabanlı test (path-based testing):** graf döngüsüz olduğundan yalnızca 11 yol vardır ve en iyi seçim, her yolu çalıştıran test durumlarıdır (test cases). Bu otomatik olarak hem deyim (statement) hem de DD-Path kapsamı sağlar; kalan yol tabanlı kapsam ölçütleri uygulanamaz.\n\n**Bileşik koşullar (compound conditions):** her Case yüklemi a ≤ x < b biçimindedir; örneğin 20 ≤ driverAge < 25, 20 ≤ driverAge ve driverAge < 25 basit koşullarını birleştirir. Böyle yüklemler **çoklu koşul kapsamına (multiple-condition coverage)** işaret eder; bunun için uç değerlerini çalıştıran test durumları gerekir. Bunu yalnızca en kötü durum sınır değer (273) ve hibrit (25) test durumları yapar.\n\n**Veri akışı testi (data flow testing)** burada “sıkıcıdır”: driverAge, points ve safeDrivingReduction'ın hepsi altı tanım-temiz du-path'te yer alır. driverAge'in (Select Case yüklemlerinde) ve points'in (If koşullarında) kullanımlarının ikisi de yüklem kullanımıdır (predicate use). All-Paths, alttaki tüm veri akışı kapsamlarını da gerektirir (10. bölüm).\n\n**Dilim testi (slice testing)** de pek fikir vermez. İlgi çeken dört dilim vardır: S(safeDrivingReduction, 32), S(ageMultiplier, 32), S(baseRate, 32) = {1} ve S(Premium, 31) = {2}; bunların birleşimi, EndIf deyimleriyle birlikte, programın tamamıdır. Tek kazanç: 32. satırda bir arıza (failure) olursa safeDrivingReduction ve ageMultiplier dilimleri programı iki parçaya ayırır; bu da hatanın yerini bulmayı (fault isolation) kolaylaştırır."
+      },
+      "source": "pp. 182–183"
+    }
+  ],
+  "questions": {
+    "1": {
+      "concept": "when-to-stop",
+      "explanation_tr": "Yazılım güvenilirlik modelleri “yeni arıza yok” ve “yeni hata yok” cevaplarını destekler ve her ikisi de endüstride başarıyla kullanılmıştır. Zamanın tükenmesi ne yazık ki çok yaygındır, tüm hataların giderildiği garanti edilemez; kapsam cevabı ise bölümün “oldukça iyi” dediği cevaptır."
+    },
+    "2": {
+      "concept": "when-to-stop",
+      "explanation_tr": "Bölüm, endüstriyel uygulamada en yaygın cevabın DD-path'ler olduğunu söyler. DU-path'ler ve dilimler gibi daha gelişmiş ölçütler daha fazla kapsam öğesi belirler ve bunları belirlemek daha fazla çaba gerektirir."
+    },
+    "3": {
+      "concept": "gaps-redundancies",
+      "explanation_tr": "Nominal sınır değer test durumları p1-p7'yi kapsar; p8, p9, p10'u (a + b <= c, b + c <= a veya a + c <= b olduğu için Üçgen Değil) ve p11'i (Çeşitkenar) kaçırır. 125 en kötü durum test durumu birlikte tam yol kapsamı sağlar, ama fazlalıkları külfetlidir."
+    },
+    "4": {
+      "concept": "method-metrics",
+      "explanation_tr": "NR(M,S) = m/n gerçekten geçilen öğelere, R(M,S) = m/s ise geçilecek öğelerin tüm uzayına atıfta bulunur. Üç ölçütün de mümkün olan en iyi değeri 1'dir, gerçekleştirilemeyen yollar hiç sayılmaz, C(M,S) = 1 yalnızca R(M,S) = NR(M,S) olmasını zorunlu kılar; hata türlerine göre etkinlik ise bölümün mevcut olmadığını söylediği bir bilgidir."
+    },
+    "5": {
+      "concept": "metric-tables",
+      "explanation_tr": "C(M,S)'nin 1'in altında olması boşluklara işaret ederdi; C(M,S) = 1 ile 11 yolun hepsi kapsanır ve cebir bu durumda R(M,S) = NR(M,S) olmasını zorunlu kılar. Her ölçütün mümkün olan en iyi değeri 1'dir, bu yüzden 11.36 çok yüksek fazlalık demektir."
+    },
+    "6": {
+      "concept": "metric-tables",
+      "explanation_tr": "m = 25 sabitken, s 11 DD-Path'ten 33 DU-Path'e ve 40 dilime çıktıkça R(M,S) = m/s düşer. Genel olarak daha gelişmiş yapısal ölçütler daha fazla öğe ortaya çıkarır; bu yüzden bir fonksiyonel yöntem, daha sıkı yapısal ölçütlerle değerlendirildiğinde daha az etkili görünme eğilimindedir."
+    },
+    "7": {
+      "concept": "sophistication-trends",
+      "explanation_tr": "Çaba gelişmişlikle birlikte artar; Basis Path'teki düşüş çaba grafiğine değil, Şekil 11.2'ye (test kapsam öğesi sayısı) aittir. Fonksiyonel yöntemlerin aksine burada hoş bir ödünleşim yoktur; bu da uygun bir yapısal kapsam ölçütü seçmenin önemini gösterir."
+    },
+    "8": {
+      "concept": "insurance-paths",
+      "explanation_tr": "25 sınır değer test durumu yalnızca altı yolu (p1, p2, p7, p8, p9 ve p10) kapsarken, 25 güçlü denklik sınıfı test durumu on yolu (p1-p10) kapsar. Dolayısıyla eşit sayıda test durumu çok farklı yol kapsamı verebilir."
+    },
+    "9": {
+      "concept": "insurance-conditions-dataflow",
+      "explanation_tr": "Bölüm, test durumları bu uç değerleri çalıştıran yöntemlerin yalnızca en kötü durum sınır değer testi (273 test durumu) ve hibrit yaklaşım (25 test durumu) olduğunu söyler. 11 yolun hepsini kapsamak deyim ve DD-Path kapsamı sağlar, ama çoklu koşul kapsamı bu uç değerleri gerektirir."
+    },
+    "10": {
+      "concept": "insurance-conditions-dataflow",
+      "explanation_tr": "Bölüm, driverAge'in (Select Case yüklemlerinde) ve points'in (If koşullarında) kullanımlarının ikisinin de yüklem kullanımı olduğunu belirtir. Bu problem için veri akışı testini sıkıcı bulur: driverAge, points ve safeDrivingReduction'ın hepsi altı tanım-temiz du-path'te yer alır."
+    },
+    "11": {
+      "concept": "method-metrics",
+      "explanation_tr": "C(M,S) = n/s = 8/10 = 0.80 (1'in altında, yani boşluklar var), R(M,S) = m/s = 20/10 = 2.00 ve NR(M,S) = m/n = 20/8 = 2.50. R ile NR'yi yer değiştirmek, tüm öğeleri (s) gerçekten geçilen öğelerle (n) karıştırmak demektir."
+    },
+    "12": {
+      "concept": "insurance-paths",
+      "explanation_tr": "Tablo 11.7'de hibrit dışındaki her yöntem en fazla p1-p10'u kapsar; yalnızca 25 hibrit test durumu p1-p11'i kapsar ve böylece aralık dışı Case 6 yoluna ulaşır. En kötü durum sınır değer test durumları, sayıca çok (273) olmalarına rağmen p10'da kalır."
+    },
+    "13": {
+      "concept": "insurance-paths",
+      "explanation_tr": "Aralık dışı yaşlar p11 = 1-2-3-29-30-31-32-33 üzerindeki Else dalına (Case 6) girer; bu yüzden böyle yaşlar içermeyen test durumları p11'i geçilmemiş, 29-30 düğümlerini de çalıştırılmamış bırakır ve yol kapsamı sağlanmaz. C(M,S) hiçbir zaman 1'i aşamaz; V(G) = 11 ise testlerin değil, program grafının bir özelliğidir."
+    }
+  }
+}

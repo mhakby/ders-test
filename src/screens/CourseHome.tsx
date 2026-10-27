@@ -29,6 +29,13 @@ export function CourseHome({ ci }: { ci: CourseIndex }) {
     else setMessage(`${deckTitle(ci, deckId)}: seçili kapsamda soru yok.`);
   };
 
+  // A set with a lesson opens its lesson first, until the lesson was seen or the set was started.
+  const openSet = (set: (typeof course.sets)[number]) => {
+    const started = set.questions.some(q => p.answers[q.id]);
+    if (set.lesson && !started && !p.lessonSeen?.[set.id]) navigate({ name: 'lesson', courseId: course.id, setId: set.id });
+    else start(`set:${set.id}`);
+  };
+
   const toggleSet = (setId: string) =>
     updateProgress(course.id, d => {
       const next = new Set(d.scope ?? course.sets.map(x => x.id));
@@ -153,6 +160,7 @@ export function CourseHome({ ci }: { ci: CourseIndex }) {
         <p className="muted small">
           Kutucuklar karma test ve tekrar listelerinin kapsamını belirler.
           {course.presets?.length ? ` ${course.presets.map(x => x.title).join(', ')} kısayolu sınav kapsamını tek dokunuşla seçer.` : ''}
+          {course.sets.some(x => x.lesson) ? ' 📖 setin konu anlatımını açar.' : ''}
         </p>
         <ul className="set-list">
           {course.sets.map(set => {
@@ -173,7 +181,7 @@ export function CourseHome({ ci }: { ci: CourseIndex }) {
                 >
                   {checked ? '✓' : ''}
                 </button>
-                <button type="button" className="set-row" onClick={() => start(`set:${set.id}`)}>
+                <button type="button" className="set-row" onClick={() => openSet(set)}>
                   <span className="set-title">
                     {fromBook && <span aria-label="Kitap">📘 </span>}
                     {set.title}
@@ -185,6 +193,16 @@ export function CourseHome({ ci }: { ci: CourseIndex }) {
                   </span>
                   <Strip ids={setIds} answerOf={id => p.answers[id]} />
                 </button>
+                {set.lesson && (
+                  <a
+                    className="lesson-btn"
+                    href={href({ name: 'lesson', courseId: course.id, setId: set.id })}
+                    aria-label={`${set.title}: konu anlatımı`}
+                    title="Konu anlatımı"
+                  >
+                    📖
+                  </a>
+                )}
               </li>
             );
           })}

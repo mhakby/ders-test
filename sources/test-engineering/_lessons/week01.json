@@ -1,0 +1,242 @@
+{
+  "intro": {
+    "en": "This first set gives you the vocabulary and the big picture of test engineering: what QA, QC, testing, verification and validation mean, how static and dynamic testing differ, and the core test design techniques (equivalence partitioning, boundary value analysis, decision tables) plus risk-based prioritization. It ends with the test engineer's role in different lifecycles and the four test levels. Every later week builds on these ideas, so a tester needs them to talk precisely about quality.",
+    "tr": "Bu ilk set, test mühendisliğinin temel kavramlarını ve genel resmini verir: QA, QC, test, doğrulama ve geçerlemenin ne anlama geldiği, statik ve dinamik testin farkı, temel test tasarım teknikleri (eşdeğer bölümleme, sınır değer analizi, karar tabloları) ve risk tabanlı önceliklendirme. Son olarak farklı yaşam döngülerinde test mühendisinin rolünü ve dört test seviyesini ele alır. Sonraki tüm haftalar bu fikirlerin üzerine kurulur; bir test uzmanı kalite hakkında kesin konuşabilmek için bunlara ihtiyaç duyar."
+  },
+  "concepts": [
+    {
+      "id": "quality-terminology",
+      "title": {
+        "en": "Test engineering, QA, QC and testing",
+        "tr": "Test mühendisliği, QA, QC ve test"
+      },
+      "body": {
+        "en": "These four terms are often mixed up, but the course gives each a precise meaning. Knowing them tells you what kind of quality work you are doing.\n\n- **Test Engineering** (modern definition): a proactive quality assurance discipline that integrates quality considerations throughout the entire software development lifecycle, focusing on preventing defects (mistakes in the product) and ensuring system reliability, security and user satisfaction. In the older waterfall view, testing was only a distinct downstream phase after coding.\n- **Quality Assurance (QA)**: process-oriented activities that establish confidence that quality will be achieved — policies, standards, audits, improvement loops.\n- **Quality Control (QC)**: product-oriented activities that evaluate whether a specific deliverable meets requirements — reviews, inspections, testing outcomes. In ISO 9000 terms, QC provides confidence that quality requirements have been fulfilled.\n- **Testing**: dynamic evaluation of a product by executing it under specified conditions and observing outcomes. It provides information about risk and quality, **not guarantees**.\n\nQA vs QC comparison:\n- Approach: QA proactive/preventive; QC reactive/detective\n- Responsibility: QA the entire team/organization; QC the QC personnel\n- Activities: QA training, process design, audits; QC testing, inspection, verification\n- Output: QA processes, training materials, standards; QC test reports, defect logs, pass/fail results\n\n**Textbook:** software quality assurance (SQA) improves the product by improving the process, while testing is product oriented. This remark is about testing itself, not about the broader test engineering discipline above.",
+        "tr": "Bu dört terim sık karıştırılır, ama ders her birine kesin bir anlam verir. Bunları bilmek, ne tür bir kalite çalışması yaptığınızı anlamanızı sağlar.\n\n- **Test Mühendisliği (Test Engineering)** (modern tanım): kalite kaygılarını yazılım geliştirme yaşam döngüsünün tamamına yayan, hataları (defects; üründeki yanlışlar) önlemeye ve sistemin güvenilirliğini, güvenliğini ve kullanıcı memnuniyetini sağlamaya odaklanan proaktif bir kalite güvencesi disiplinidir. Eski şelale (waterfall) görüşünde test, yalnızca kodlamadan sonra gelen ve akışın sonunda yer alan ayrı bir aşamaydı (downstream phase).\n- **Kalite Güvencesi (Quality Assurance, QA)**: kalitenin sağlanacağına dair güven oluşturan süreç odaklı faaliyetler — politikalar, standartlar, denetimler (audits), iyileştirme döngüleri.\n- **Kalite Kontrolü (Quality Control, QC)**: belirli bir teslimatın gereksinimleri karşılayıp karşılamadığını değerlendiren ürün odaklı faaliyetler — gözden geçirmeler (reviews), denetlemeler (inspections), test sonuçları. ISO 9000'e göre QC, kalite gereksinimlerinin karşılandığına dair güven sağlar.\n- **Test (testing)**: ürünü belirlenmiş koşullar altında çalıştırıp sonuçları gözlemleyerek yapılan dinamik değerlendirme. Risk ve kalite hakkında bilgi sağlar, **garanti vermez**.\n\nQA ve QC karşılaştırması:\n- Yaklaşım: QA proaktif/önleyici; QC reaktif/tespit edici\n- Sorumluluk: QA tüm ekip/kuruluş; QC, QC personeli\n- Faaliyetler: QA eğitim, süreç tasarımı, denetim; QC test, denetleme, doğrulama\n- Çıktı: QA süreçler, eğitim materyalleri, standartlar; QC test raporları, hata kayıtları (defect logs), geçti/kaldı sonuçları\n\n**Ders kitabı:** yazılım kalite güvencesi (SQA) süreci iyileştirerek ürünü iyileştirir, test ise ürün odaklıdır. Bu not testin kendisi hakkındadır, yukarıdaki daha geniş test mühendisliği disiplini hakkında değil."
+      },
+      "source": "slides 4–6, 16; textbook ch. 1 p. 10"
+    },
+    {
+      "id": "vv-quality-model",
+      "title": {
+        "en": "Verification, validation and the ISO/IEC 25010 quality model",
+        "tr": "Doğrulama, geçerleme ve ISO/IEC 25010 kalite modeli"
+      },
+      "body": {
+        "en": "Verification and validation check a product from two different angles:\n- **Verification** — 'Are we building the product right?' It checks conformance to the specifications (the written requirements).\n- **Validation** — 'Are we building the right product?' It checks fitness for purpose with stakeholders (the people who use or pay for the product).\n\n**Example:** comparing a report screen field by field with its specification is verification; asking accountants to work with the screen and say whether it really helps their job is validation.\n\nTo decide what 'quality' means, the slides use the ISO/IEC 25010 product quality model (ISO = International Organization for Standardization, IEC = International Electrotechnical Commission). Characteristic — example sub-characteristics:\n- Functional suitability — completeness, correctness, appropriateness\n- Performance efficiency — time behavior, resource utilization, capacity\n- Compatibility — coexistence, interoperability\n- Usability — appropriateness recognizability, learnability, operability, user error protection, user interface aesthetics, accessibility\n- Reliability — maturity, availability, fault tolerance, recoverability\n- Security — confidentiality, integrity, non-repudiation, accountability, authenticity\n- Maintainability — modularity, reusability, analyzability, modifiability, testability\n- Portability — adaptability, installability, replaceability\n\nUse the model as a trade-off framework to focus testing on what matters most for the context.",
+        "tr": "Doğrulama ve geçerleme ürünü iki farklı açıdan kontrol eder:\n- **Doğrulama (verification)** — 'Ürünü doğru mu geliştiriyoruz?' Spesifikasyonlara (yazılı gereksinimlere) uygunluğu kontrol eder.\n- **Geçerleme (validation)** — 'Doğru ürünü mü geliştiriyoruz?' Ürünün amaca uygunluğunu paydaşlarla (stakeholders; ürünü kullanan veya parasını ödeyen kişiler) birlikte kontrol eder.\n\n**Örnek:** bir rapor ekranını alan alan spesifikasyonuyla karşılaştırmak doğrulamadır; muhasebecilerden ekranla çalışıp işlerine gerçekten yarayıp yaramadığını söylemelerini istemek geçerlemedir.\n\n'Kalite'nin ne demek olduğuna karar vermek için slaytlar ISO/IEC 25010 ürün kalite modelini kullanır (ISO = Uluslararası Standardizasyon Örgütü, IEC = Uluslararası Elektroteknik Komisyonu). Özellik — örnek alt özellikler:\n- Fonksiyonel uygunluk (functional suitability) — tamlık, doğruluk, uygunluk\n- Performans verimliliği (performance efficiency) — zaman davranışı, kaynak kullanımı, kapasite\n- Uyumluluk (compatibility) — birlikte var olma (coexistence), birlikte çalışabilirlik (interoperability)\n- Kullanılabilirlik (usability) — uygunluğun tanınabilirliği, öğrenilebilirlik, işletilebilirlik, kullanıcı hatasından koruma, kullanıcı arayüzü estetiği, erişilebilirlik\n- Güvenilirlik (reliability) — olgunluk, hazır bulunma (availability), hata toleransı, kurtarılabilirlik\n- Güvenlik (security) — gizlilik, bütünlük, inkâr edilemezlik, hesap verebilirlik, sahicilik (authenticity)\n- Bakım kolaylığı (maintainability) — modülerlik, yeniden kullanılabilirlik, analiz edilebilirlik, değiştirilebilirlik (modifiability), test edilebilirlik (testability)\n- Taşınabilirlik (portability) — uyarlanabilirlik, kurulabilirlik, yerine konabilirlik (replaceability)\n\nModeli, bağlamda en önemli olana testi odaklamak için bir ödünleşim (trade-off) çerçevesi olarak kullanın."
+      },
+      "source": "slides 5, 7"
+    },
+    {
+      "id": "static-vs-dynamic",
+      "title": {
+        "en": "Static vs dynamic testing",
+        "tr": "Statik ve dinamik test"
+      },
+      "body": {
+        "en": "Every testing activity falls on one side of a simple question: is the code executed?\n\n- **Static testing** evaluates artefacts (requirements, designs, code and other work products) **without executing code**. It is 'shift-left' work: quality checks moved earlier in the lifecycle. Examples: requirements walkthroughs, design reviews, code reviews, checklists, linters, SAST (static application security testing), secret scanning, dependency/SBOM (software bill of materials) checks.\n- Benefits of static testing: early defect detection, cheaper fixes, better shared understanding.\n- **Dynamic testing** **executes** the system or its components. Examples: unit, API/integration, system, UAT (user acceptance testing), performance, security, accessibility, usability.\n\n**Example:** reading a function's source code to spot a wrong loop condition is static; calling the function with test inputs and checking the result is dynamic.\n\n**Textbook:** reviews can find faults, including faults of omission (something required that was never written), without executing anything; a failure, by contrast, only happens when faulty code executes.",
+        "tr": "Her test faaliyeti basit bir soruya göre ayrılır: kod çalıştırılıyor mu?\n\n- **Statik test (static testing)** yapıtları (artefacts: gereksinimler, tasarımlar, kod ve diğer çalışma ürünleri) **kodu çalıştırmadan** değerlendirir. Bu bir 'sola kaydırma' (shift-left) çalışmasıdır: kalite kontrolleri yaşam döngüsünde daha erkene alınır. Örnekler: gereksinim gözden geçirmeleri (walkthroughs), tasarım incelemeleri, kod incelemeleri, kontrol listeleri, linter'lar, SAST (statik uygulama güvenlik testi), gizli bilgi (secret) taraması, bağımlılık/SBOM (yazılım malzeme listesi) kontrolleri.\n- Statik testin faydaları: hataların erken tespiti, daha ucuz düzeltmeler, daha iyi ortak anlayış.\n- **Dinamik test (dynamic testing)** sistemi veya bileşenlerini **çalıştırır**. Örnekler: birim, API/entegrasyon, sistem, UAT (kullanıcı kabul testi), performans, güvenlik, erişilebilirlik, kullanılabilirlik testleri.\n\n**Örnek:** bir fonksiyonun kaynak kodunu okuyup hatalı bir döngü koşulunu fark etmek statiktir; fonksiyonu test girdileriyle çağırıp sonucu kontrol etmek dinamiktir.\n\n**Ders kitabı:** gözden geçirmeler hiçbir şey çalıştırmadan kusurları (faults) bulabilir, eksiklik kusurları (faults of omission; gerekli olduğu hâlde hiç yazılmamış şeyler) dahil; arıza (failure) ise yalnızca kusurlu kod çalıştığında ortaya çıkar."
+      },
+      "source": "slide 8; textbook ch. 1 pp. 3–4"
+    },
+    {
+      "id": "equivalence-partitioning",
+      "title": {
+        "en": "Equivalence partitioning (EP)",
+        "tr": "Eşdeğer bölümleme (EP)"
+      },
+      "body": {
+        "en": "Testing every possible input is impossible, so test design techniques select a small number of tests that represent the system or are likely to reveal errors. Equivalence partitioning (EP) is the most basic one.\n\n- **Rule:** partition the inputs into classes (groups) expected to behave similarly, then test **one representative from each class**.\n- A class is **valid** if its inputs should be accepted and **invalid** if they should be rejected. Every rule in the specification can create its own classes, not only the numeric range.\n- A fully valid input must lie in a valid class of every rule at the same time.\n\nLecture worked example — password: 8–20 chars, at least one letter and one digit, no spaces:\n- length: <8 (invalid), 8–20 (valid), >20 (invalid)\n- characters: letters only, digits only, both (only 'both' is valid)\n- spaces: present (invalid) or absent (valid)\n\nHomework field: integers 1–999, leading zeros rejected. The range gives <1 (invalid), 1–999 (valid), >999 (invalid); the leading-zero rule adds its own invalid class, even for numbers whose value lies inside 1–999.\n\n**Example:** an age field accepting 18–65 has classes <18, 18–65, >65; one representative each could be 10, 40, 70.\n\n**Textbook:** equivalence class testing also takes one element from each class. 'Normal' forms use valid values only, 'robust' forms add invalid ones. Weak robust equivalence class testing uses the valid cases plus one extra case per invalid class, each with a single invalid value.",
+        "tr": "Olası her girdiyi test etmek imkânsızdır; bu yüzden test tasarım teknikleri sistemi temsil eden veya hata ortaya çıkarma olasılığı yüksek az sayıda test seçer. Eşdeğer bölümleme (equivalence partitioning, EP) bunların en temelidir.\n\n- **Kural:** girdileri benzer davranması beklenen sınıflara (gruplara) böl, sonra **her sınıftan bir temsilci** test et.\n- Bir sınıf, girdileri kabul edilmeliyse **geçerli (valid)**, reddedilmeliyse **geçersiz (invalid)** sınıftır. Yalnızca sayısal aralık değil, spesifikasyondaki her kural kendi sınıflarını oluşturabilir.\n- Tamamen geçerli bir girdi, aynı anda her kuralın geçerli bir sınıfında olmalıdır.\n\nDersteki çözümlü örnek — parola: 8–20 karakter, en az bir harf ve bir rakam, boşluk yok:\n- uzunluk: <8 (geçersiz), 8–20 (geçerli), >20 (geçersiz)\n- karakterler: yalnızca harf, yalnızca rakam, ikisi de (yalnızca 'ikisi de' geçerlidir)\n- boşluk: var (geçersiz) veya yok (geçerli)\n\nÖdev alanı: 1–999 arası tam sayılar, baştaki sıfırlar reddedilir. Aralık <1 (geçersiz), 1–999 (geçerli), >999 (geçersiz) sınıflarını verir; baştaki sıfır kuralı, değeri 1–999 içinde olan sayılar için bile kendi geçersiz sınıfını ekler.\n\n**Örnek:** 18–65 kabul eden bir yaş alanının sınıfları <18, 18–65, >65'tir; her birinden temsilci olarak 10, 40, 70 seçilebilir.\n\n**Ders kitabı:** eşdeğerlik sınıfı testi (equivalence class testing) de her sınıftan bir eleman alır. 'Normal' biçimler yalnızca geçerli değerleri kullanır, 'sağlam' (robust) biçimler geçersiz değerleri de ekler. Zayıf sağlam eşdeğerlik sınıfı testi (weak robust equivalence class testing), geçerli durumlara ek olarak her geçersiz sınıf için, her biri tek bir geçersiz değer içeren birer durum daha kullanır."
+      },
+      "source": "slides 9–12; textbook ch. 6 pp. 97–100"
+    },
+    {
+      "id": "boundary-value-analysis",
+      "title": {
+        "en": "Boundary value analysis (BVA): slides vs textbook",
+        "tr": "Sınır değer analizi (BVA): slaytlar ve ders kitabı"
+      },
+      "body": {
+        "en": "Defects cluster at boundaries: a loop that tests `<` instead of `<=`, or a counter that is off by one, fails only at the edge of a range. Boundary value analysis (BVA) therefore tests values at and around each limit.\n\n- **Slides:** identify the boundaries, then test **just below, at and just above** each boundary (slide 9 phrases it as min, min±1, max, max±1 and just-inside/just-outside values).\n- The lecture's password example (length 8–20) lists lengths 7, 8, 9, 20, 21.\n\n**Example:** for a field accepting 10–50 the slide rule gives 9, 10, 11 and 49, 50, 51.\n\n**The textbook (Jorgensen) defines BVA differently:**\n- BVA uses five values per variable: min, min+ (just above min), nom (a nominal, typical value), max- (just below max) and max. All are inside the range; holding the other variables at nominal, n variables give 4n + 1 test cases.\n- **Robustness testing**, a simple extension of BVA, adds min- (slightly less than the minimum) and max+ (slightly greater than the maximum). Its main value is that it forces attention on exception handling.\n- **Worst-case testing** takes the Cartesian product (all combinations) of the five normal values: 5^n cases, still without min- or max+.\n- **Special value testing** relies on the tester's domain knowledge and experience.\n\nSo the slides' rule already includes the outside values, while the book adds them only in robustness testing.",
+        "tr": "Hatalar sınırlarda yoğunlaşır: `<=` yerine `<` kontrol eden bir döngü ya da bir eksik/fazla sayan (off by one) sayaç yalnızca aralığın kenarında hata verir. Bu yüzden sınır değer analizi (boundary value analysis, BVA) her sınırın üzerindeki ve çevresindeki değerleri test eder.\n\n- **Slaytlar:** sınırları belirle, sonra her sınırın **hemen altını, kendisini ve hemen üstünü** test et (slayt 9 bunu min, min±1, max, max±1 ve sınırın hemen içi/hemen dışı değerler olarak ifade eder).\n- Dersteki parola örneği (uzunluk 8–20) 7, 8, 9, 20, 21 uzunluklarını listeler.\n\n**Örnek:** 10–50 kabul eden bir alan için slayt kuralı 9, 10, 11 ve 49, 50, 51 değerlerini verir.\n\n**Ders kitabı (Jorgensen) BVA'yı farklı tanımlar:**\n- BVA her değişken için beş değer kullanır: min, min+ (min'in hemen üstü), nom (nominal, tipik bir değer), max- (max'ın hemen altı) ve max. Hepsi aralığın içindedir; diğer değişkenler nominalde tutulduğunda n değişken 4n + 1 test durumu verir.\n- **Sağlamlık testi (robustness testing)** BVA'nın basit bir uzantısıdır ve min- (minimumun biraz altı) ile max+ (maksimumun biraz üstü) değerlerini ekler. Asıl değeri, dikkati istisna yönetimine (exception handling) çekmesidir.\n- **En kötü durum testi (worst-case testing)** beş normal değerin Kartezyen çarpımını (tüm kombinasyonlarını) alır: 5^n durum, yine min- veya max+ olmadan.\n- **Özel değer testi (special value testing)** test uzmanının alan bilgisine ve deneyimine dayanır.\n\nYani slaytların kuralı dış değerleri zaten içerir; kitap ise bunları yalnızca sağlamlık testinde ekler."
+      },
+      "source": "slides 9–11; textbook ch. 5 pp. 80–84"
+    },
+    {
+      "id": "decision-tables",
+      "title": {
+        "en": "Decision tables (cause–effect)",
+        "tr": "Karar tabloları (neden–sonuç)"
+      },
+      "body": {
+        "en": "Equivalence partitioning and BVA look at inputs one at a time. When the result depends on several conditions together, use a decision table (also called cause–effect).\n\n- **Steps (slides):** identify the conditions → derive the combinations of conditions → determine the expected result for each combination. Then select a minimal set of rules that still covers all combinations.\n- With n binary (true/false) conditions there are 2^n combinations: 2 conditions give 4, 3 give 8.\n- **Textbook terms:** each column is a **rule**, and rules are test cases. A **don't care** entry (–) means the condition does not matter for that rule. Each don't care doubles a rule's count (the number of combinations the rule covers): rule count = 2^(number of don't cares). The counts of all rules must add up to 2^n.\n- Rules with the same outcome can be merged with don't cares, but only when one pattern covers exactly those combinations.\n\n**Example:** a loan is approved only if has_income = T and has_debt = F.\n- Rule 1: has_income = F, has_debt = – → reject (count 2)\n- Rule 2: has_income = T, has_debt = T → reject (count 1)\n- Rule 3: has_income = T, has_debt = F → approve (count 1)\n\nCounts 2 + 1 + 1 = 4 = 2^2. The two reject rules cannot merge: no single pattern covers exactly their three combinations.\n\nThe lecture's password table uses the conditions length_ok, has_letter, has_digit and has_space.",
+        "tr": "Eşdeğer bölümleme ve BVA girdilere tek tek bakar. Sonuç birkaç koşula birlikte bağlı olduğunda karar tablosu (decision table; neden–sonuç, cause–effect da denir) kullanılır.\n\n- **Adımlar (slaytlar):** koşulları belirle → koşulların kombinasyonlarını çıkar → her kombinasyon için beklenen sonucu belirle. Sonra tüm kombinasyonları hâlâ kapsayan en küçük kural kümesini seç.\n- n ikili (doğru/yanlış) koşul için 2^n kombinasyon vardır: 2 koşul 4, 3 koşul 8 kombinasyon verir.\n- **Ders kitabı terimleri:** her sütun bir **kuraldır (rule)** ve kurallar test durumlarıdır. **Fark etmez (don't care)** girdisi (–), o kural için koşulun önemli olmadığı anlamına gelir. Her fark etmez girdisi kuralın sayımını (rule count; kuralın kapsadığı kombinasyon sayısı) ikiye katlar: kural sayımı = 2^(fark etmez sayısı). Tüm kuralların sayımlarının toplamı 2^n olmalıdır.\n- Aynı sonucu veren kurallar fark etmez girdileriyle birleştirilebilir, ama yalnızca tek bir desen tam olarak o kombinasyonları kapsıyorsa.\n\n**Örnek:** bir kredi yalnızca has_income = T ve has_debt = F ise onaylanır.\n- Kural 1: has_income = F, has_debt = – → ret (sayım 2)\n- Kural 2: has_income = T, has_debt = T → ret (sayım 1)\n- Kural 3: has_income = T, has_debt = F → onay (sayım 1)\n\nSayımlar 2 + 1 + 1 = 4 = 2^2. İki ret kuralı birleştirilemez: tek bir desen onların üç kombinasyonunu tam olarak kapsamaz.\n\nDersin parola tablosu length_ok, has_letter, has_digit ve has_space koşullarını kullanır."
+      },
+      "source": "slides 9–11; textbook ch. 7 pp. 112–113"
+    },
+    {
+      "id": "risk-based-testing",
+      "title": {
+        "en": "Risk-based testing: RPN and risk matrices",
+        "tr": "Risk tabanlı test: RPN ve risk matrisleri"
+      },
+      "body": {
+        "en": "Risk-based testing (RBT) prioritizes tests by risk, so the riskiest items get the deepest testing. The slides use a simple FMEA-style table (FMEA: failure mode and effects analysis).\n\n- **RPN** (risk priority number) = Likelihood × Impact × Detectability (L × I × D), each scored 1–5. Multiply, do not add.\n- Likelihood: 1 = rare, 5 = frequent in the field or code-change area.\n- Impact: 1 = cosmetic, 5 = safety/financial/regulatory breach.\n- Detectability: 1 = easy to detect pre-release, 5 = hard to detect until production, so a higher score means more risk.\n- High-RPN items get deeper testing (e.g. negative tests, fuzzing, security probes).\n\n**Example:** L = 3, I = 2, D = 4 gives RPN = 3 × 2 × 4 = 24.\n\nRisk assessment matrix; values for severity Catastrophic (1), Critical (2), Marginal (3), Negligible (4) in that order:\n- Frequent (A), Probable (B): High, High, Serious, Medium\n- Occasional (C): High, Serious, Medium, Low\n- Remote (D): Serious, Medium, Medium, Low\n- Improbable (E): Medium, Medium, Medium, Low\n- Eliminated (F): Eliminated\n\n5×5 impact–probability matrix: cell = impact score × probability score. Impact can be judged on cost, schedule, product quality, safety, environment or reputation; scores 1–5 are named Very Low, Low, Medium, High, Very High.\n- Schedule delay: <0.5 months = 1, 0.5–1 = 2, 1–3 = 3, 3–6 = 4, >6 = 5\n- Probability: <0.1% = 1, 0.1%–10% = 2, 10%–50% = 3, 50%–90% = 4, >90% = 5",
+        "tr": "Risk tabanlı test (risk-based testing, RBT) testleri riske göre önceliklendirir; böylece en riskli öğeler en derin testi alır. Slaytlar basit bir FMEA tarzı tablo kullanır (FMEA: hata türleri ve etkileri analizi).\n\n- **RPN** (risk öncelik sayısı, risk priority number) = Olasılık × Etki × Tespit edilebilirlik (Likelihood × Impact × Detectability, L × I × D); her biri 1–5 arası puanlanır. Toplanmaz, çarpılır.\n- Olasılık (likelihood): 1 = nadir, 5 = sahada veya kod değişikliği yapılan bölgede sık.\n- Etki (impact): 1 = kozmetik, 5 = emniyet (safety)/finansal/yasal düzenleme ihlali.\n- Tespit edilebilirlik (detectability): 1 = sürüm öncesi kolay tespit edilir, 5 = üretim ortamına (production) kadar zor tespit edilir; yani yüksek puan daha fazla risk demektir.\n- Yüksek RPN'li öğeler daha derin test alır (ör. negatif testler, fuzzing, güvenlik yoklamaları).\n\n**Örnek:** L = 3, I = 2, D = 4 ise RPN = 3 × 2 × 4 = 24.\n\nRisk değerlendirme matrisi; şiddet (severity) sütunları sırasıyla Felaket (Catastrophic, 1), Kritik (Critical, 2), Marjinal (Marginal, 3), İhmal edilebilir (Negligible, 4):\n- Sık (Frequent, A), Muhtemel (Probable, B): High, High, Serious, Medium\n- Ara sıra (Occasional, C): High, Serious, Medium, Low\n- Uzak (Remote, D): Serious, Medium, Medium, Low\n- Pek olası değil (Improbable, E): Medium, Medium, Medium, Low\n- Elenmiş (Eliminated, F): Eliminated\n\n(High = Yüksek, Serious = Ciddi, Medium = Orta, Low = Düşük)\n\n5×5 etki–olasılık matrisi: hücre = etki puanı × olasılık puanı. Etki; maliyet, takvim, ürün kalitesi, emniyet, çevre veya itibar üzerinden değerlendirilebilir; 1–5 puanlarının adları Çok Düşük, Düşük, Orta, Yüksek, Çok Yüksek'tir (Very Low, Low, Medium, High, Very High).\n- Takvim gecikmesi: <0.5 ay = 1, 0.5–1 = 2, 1–3 = 3, 3–6 = 4, >6 = 5\n- Olasılık: <%0.1 = 1, %0.1–%10 = 2, %10–%50 = 3, %50–%90 = 4, >%90 = 5"
+      },
+      "source": "slides 13–14"
+    },
+    {
+      "id": "test-engineer-role",
+      "title": {
+        "en": "The test engineer's role, responsibilities and ethics",
+        "tr": "Test mühendisinin rolü, sorumlulukları ve etik"
+      },
+      "body": {
+        "en": "How a test engineer works depends on the development model:\n- **Sequential (waterfall):** Requirements → Design → Implementation → Testing → Deployment → Maintenance. Testing is a distinct downstream phase.\n- **Incremental:** software is developed and tested in increments, so test engineers participate repeatedly across increments, regression testing (re-checking that existing features still work after a change) becomes important, and early feedback becomes possible.\n- **Agile and DevOps:** continuous integration and continuous delivery (CI/CD), continuous testing, test automation and shift-left testing. Test engineers become integrated members of cross-functional teams (teams that mix developers, testers and other roles).\n\nModern responsibilities, as the slides group them:\n- Technical: design and execute tests across levels, develop and maintain automation frameworks, risk-based testing and impact analysis, test environments and test data, exploratory and session-based testing.\n- Daily: review overnight CI/CD results, discuss blocking issues, plan sprint testing, update execution status and coverage.\n- Collaborative: requirements reviews and design discussions, testability improvements with developers, input on user experience and product strategy, linking technical and business teams.\n- Quality Assurance focus: establish quality gates and exit criteria, monitor quality metrics and reporting, support continuous improvement, ensure compliance with quality standards.\n\n**Ethics:** report truthfully and quantify uncertainty and risk; respect privacy and Personally Identifiable Information (PII) by using masked or synthetic data where possible; document residual risk and assumptions explicitly.",
+        "tr": "Bir test mühendisinin çalışma biçimi geliştirme modeline bağlıdır:\n- **Sıralı (şelale, waterfall):** Gereksinimler → Tasarım → Gerçekleştirim → Test → Dağıtım → Bakım. Test, akışın sonunda yer alan ayrı bir aşamadır (downstream phase).\n- **Artımlı (incremental):** yazılım artımlar hâlinde geliştirilip test edilir; bu yüzden test mühendisleri artımlar boyunca tekrar tekrar yer alır, regresyon testi (regression testing; bir değişiklikten sonra mevcut özelliklerin hâlâ çalıştığını yeniden kontrol etmek) önem kazanır ve erken geri bildirim mümkün olur.\n- **Agile ve DevOps:** sürekli entegrasyon ve sürekli teslimat (CI/CD), sürekli test, test otomasyonu ve sola kaydırma (shift-left) testi. Test mühendisleri çapraz fonksiyonlu ekiplerin (cross-functional teams; geliştirici, test uzmanı ve diğer rolleri bir araya getiren ekipler) bütünleşik üyeleri olur.\n\nSlaytlardaki gruplamaya göre modern sorumluluklar:\n- Teknik: testleri farklı seviyelerde tasarlayıp yürütmek, otomasyon çerçevelerini geliştirip sürdürmek, risk tabanlı test ve etki analizi, test ortamları ve test verisi, keşif (exploratory) ve oturum tabanlı (session-based) test.\n- Günlük: gece çalışan CI/CD sonuçlarını incelemek, engelleyici sorunları konuşmak, sprint testlerini planlamak, yürütme durumunu ve kapsamı (coverage) güncellemek.\n- İş birliği: gereksinim incelemeleri ve tasarım tartışmaları, geliştiricilerle test edilebilirliği iyileştirmek, kullanıcı deneyimi ve ürün stratejisine katkı, teknik ve iş ekipleri arasında bağlantı kurmak.\n- Kalite Güvencesi odağı: kalite kapıları (quality gates) ve çıkış kriterleri (exit criteria) belirlemek, kalite metriklerini ve raporlamayı izlemek, sürekli iyileştirmeyi desteklemek, kalite standartlarına uyumu sağlamak.\n\n**Etik:** dürüst raporla, belirsizliği ve riski sayıyla ifade et; gizliliğe ve kişisel olarak tanımlanabilir bilgilere (Personally Identifiable Information, PII) saygı göster — mümkün olduğunda maskelenmiş veya sentetik veri kullan; kalan riski (residual risk) ve varsayımları açıkça belgele."
+      },
+      "source": "slides 15–19, 25"
+    },
+    {
+      "id": "pyramid-unit-testing",
+      "title": {
+        "en": "Testing pyramid and unit testing",
+        "tr": "Test piramidi ve birim testi"
+      },
+      "body": {
+        "en": "Testing levels are phases based on the scope and integration level of the system under test. The four levels are unit, integration, system and acceptance.\n\nThe testing pyramid shows how many tests of each kind to have:\n- Base — unit tests: many tests, fast execution, low cost\n- Middle — integration tests: moderate number, medium speed/cost\n- Top — system/E2E (end-to-end) tests: fewer tests, slower execution, higher cost\n\n**Unit testing** (the base of the pyramid):\n- Scope: individual components, functions or modules — the smallest testable parts.\n- Performed by: developers.\n- Environment: development, with mocked dependencies (a mock is a fake stand-in for a real part the unit talks to, such as a database).\n- Techniques: primarily white-box (the tester knows the code).\n- Characteristics: fast execution and fully automated, high code coverage achievable, independent tests that can run in any order.\n- Slide example: testing a calculator's add() function with various input combinations.\n\n**Textbook:** structural (white-box) testing fits the unit level best, and functional (black-box) testing fits the system level.",
+        "tr": "Test seviyeleri (testing levels), test edilen sistemin kapsamına ve entegrasyon düzeyine göre belirlenen aşamalardır. Dört seviye birim, entegrasyon, sistem ve kabuldür.\n\nTest piramidi (testing pyramid) her türden ne kadar test olması gerektiğini gösterir:\n- Taban — birim testleri: çok sayıda test, hızlı çalışma, düşük maliyet\n- Orta — entegrasyon testleri: orta sayıda, orta hız/maliyet\n- Tepe — sistem/E2E (uçtan uca, end-to-end) testleri: daha az test, daha yavaş çalışma, daha yüksek maliyet\n\n**Birim testi (unit testing)** (piramidin tabanı):\n- Kapsam: tek tek bileşenler, fonksiyonlar veya modüller — test edilebilir en küçük parçalar.\n- Yapan: geliştiriciler.\n- Ortam: geliştirme ortamı, mock'lanmış bağımlılıklarla (mock, birimin konuştuğu veritabanı gibi gerçek bir parçanın yerine geçen sahte nesnedir).\n- Teknikler: ağırlıklı olarak beyaz kutu (white-box; test eden kodu bilir).\n- Özellikler: hızlı çalışır ve tamamen otomatiktir, yüksek kod kapsamına ulaşılabilir, testler bağımsızdır ve herhangi bir sırayla çalışabilir.\n- Slayt örneği: bir hesap makinesinin add() fonksiyonunu çeşitli girdi kombinasyonlarıyla test etmek.\n\n**Ders kitabı:** yapısal (structural, beyaz kutu) test en çok birim seviyesine, fonksiyonel (functional, kara kutu) test ise sistem seviyesine uygundur."
+      },
+      "source": "slides 20–21; textbook ch. 1 p. 13"
+    },
+    {
+      "id": "integration-system-acceptance",
+      "title": {
+        "en": "Integration, system and acceptance testing",
+        "tr": "Entegrasyon, sistem ve kabul testi"
+      },
+      "body": {
+        "en": "Above the unit level, tests look at larger and larger pieces of the product.\n\n**Integration testing** — interactions between integrated components/modules:\n- Component integration: between software components. System integration: between different systems.\n- Big Bang: all modules integrated simultaneously.\n- Incremental, top-down: start with top-level modules and use **stubs** (simple placeholders for lower modules that are not ready yet).\n- Incremental, bottom-up: start with low-level modules and use **drivers** (small pieces of code that call the module under test).\n- Sandwich/Hybrid: combines both approaches.\n- Slide example: the authentication and profile modules passing data correctly after login.\n\n**System testing** — the complete integrated application, in a production-like environment, performed by an independent test team. Types:\n- Functional: features work as specified\n- Performance: response times, throughput, scalability\n- Security: authentication, authorization, data protection\n- Usability: user experience and interface design\n- Compatibility: different browsers, operating systems\n\n**Acceptance testing** — validation against business requirements and user needs:\n- Alpha testing: internal testing by the organization\n- Beta testing: external users in a real environment\n- User Acceptance Testing (UAT): final validation by business users\n- Example acceptance criteria: the system processes 1,000 transactions per minute; 95% of users complete checkout within 3 minutes; all regulatory compliance requirements are met.",
+        "tr": "Birim seviyesinin üstünde testler ürünün giderek daha büyük parçalarına bakar.\n\n**Entegrasyon testi (integration testing)** — entegre edilmiş bileşenler/modüller arasındaki etkileşimler:\n- Bileşen entegrasyonu (component integration): yazılım bileşenleri arasında. Sistem entegrasyonu (system integration): farklı sistemler arasında.\n- Big Bang: tüm modüller aynı anda entegre edilir.\n- Artımlı, yukarıdan aşağı (top-down): üst seviye modüllerle başlanır ve **saplamalar (stubs)** kullanılır (henüz hazır olmayan alt modüllerin yerini tutan basit yer tutucular).\n- Artımlı, aşağıdan yukarı (bottom-up): alt seviye modüllerle başlanır ve **sürücüler (drivers)** kullanılır (test edilen modülü çağıran küçük kod parçaları).\n- Sandviç/Hibrit (sandwich/hybrid): iki yaklaşımı birleştirir.\n- Slayt örneği: girişten sonra kimlik doğrulama ve profil modüllerinin veriyi doğru aktarması.\n\n**Sistem testi (system testing)** — tamamen entegre uygulama, üretim ortamına (production) benzer bir ortamda, bağımsız bir test ekibi tarafından. Türleri:\n- Fonksiyonel: özellikler belirtildiği gibi çalışır\n- Performans: yanıt süreleri, iş hacmi (throughput), ölçeklenebilirlik\n- Güvenlik: kimlik doğrulama, yetkilendirme, veri koruma\n- Kullanılabilirlik (usability): kullanıcı deneyimi ve arayüz tasarımı\n- Uyumluluk (compatibility): farklı tarayıcılar, işletim sistemleri\n\n**Kabul testi (acceptance testing)** — iş gereksinimlerine ve kullanıcı ihtiyaçlarına karşı geçerleme:\n- Alfa testi: kuruluşun kendi içinde yaptığı test\n- Beta testi: gerçek ortamda harici kullanıcılar\n- Kullanıcı Kabul Testi (User Acceptance Testing, UAT): iş kullanıcılarının yaptığı son geçerleme\n- Örnek kabul kriterleri: sistem dakikada 1.000 işlem yapar; kullanıcıların %95'i ödemeyi 3 dakika içinde tamamlar; tüm yasal uyum gereksinimleri karşılanır."
+      },
+      "source": "slides 22–24"
+    }
+  ],
+  "questions": {
+    "1": {
+      "concept": "quality-terminology",
+      "explanation_tr": "Slaytlar Test Mühendisliğini, tüm yaşam döngüsünü kapsayan ve hataları önlemeye odaklanan proaktif bir kalite güvencesi disiplini olarak tanımlar; testin akışın sonunda ayrı bir aşama (downstream phase) olması eski şelale (waterfall) modelindeki rolü anlatır. Ders kitabının testin ürün odaklı olduğu yönündeki notu bu daha geniş disiplinle değil, testin kendisiyle ilgilidir."
+    },
+    "2": {
+      "concept": "quality-terminology",
+      "explanation_tr": "QA süreç odaklıdır ve politikalar, standartlar, denetimler ve iyileştirme döngüleri aracılığıyla kalitenin sağlanacağına dair güven oluşturur; belirli bir teslimatın gereksinimleri karşılayıp karşılamadığını değerlendirmek ise Kalite Kontrolüdür (QC). Ders kitabı da aynı görüştedir: SQA süreci iyileştirerek ürünü iyileştirir, test ise ürün odaklıdır."
+    },
+    "3": {
+      "concept": "quality-terminology",
+      "explanation_tr": "Test, ürünü belirlenmiş koşullar altında çalıştırır ve sonuçları gözlemler; bu da risk ve kalite hakkında bilgi sağlar ama garanti vermez. Sürece güven oluşturmak QA'nın yaptığı iştir. Ders kitabı da bir programın hatasız olduğunu kanıtlamanın imkânsız olduğunu belirtir (bu, durma problemine (halting problem) denktir)."
+    },
+    "4": {
+      "concept": "vv-quality-model",
+      "explanation_tr": "Geçerleme (validation) 'Doğru ürünü mü geliştiriyoruz?' sorusunu sorar ve paydaşlarla birlikte amaca uygunluğu kontrol eder; doğrulama (verification) ise yalnızca spesifikasyonlara uygunluğu kontrol eder."
+    },
+    "5": {
+      "concept": "quality-terminology",
+      "explanation_tr": "QA/QC karşılaştırması QA'yı proaktif/önleyici ve süreç odaklı (tüm ekibin sorumluluğu), QC'yi ise reaktif/tespit edici ve ürün odaklı (QC personeli tarafından yapılır) olarak listeler."
+    },
+    "6": {
+      "concept": "vv-quality-model",
+      "explanation_tr": "ISO/IEC 25010, test edilebilirliği (testability) modülerlik, yeniden kullanılabilirlik, analiz edilebilirlik ve değiştirilebilirlik ile birlikte Bakım Kolaylığı (Maintainability) altında listeler."
+    },
+    "7": {
+      "concept": "static-vs-dynamic",
+      "explanation_tr": "Statik test yapıtları kodu çalıştırmadan değerlendirir; linter'lar ve SAST listelenen statik örneklerdendir. Birim, performans, UAT ve API/entegrasyon testleri sistemi çalıştırır, bu yüzden dinamiktir. Ders kitabı da gözden geçirmelerin (reviews) hiçbir şey çalıştırmadan, eksiklik kusurları (faults of omission) dahil, kusurları bulabileceğini belirtir."
+    },
+    "8": {
+      "concept": "equivalence-partitioning",
+      "explanation_tr": "EP girdileri benzer davranması beklenen sınıflara ayırır ve her sınıftan bir temsilciyi test eder (ders kitabındaki eşdeğerlik sınıfı testi de her sınıftan bir eleman alır); minimumu, maksimumu ve bunların komşularını test etmek ise sınır değer analizidir."
+    },
+    "9": {
+      "concept": "decision-tables",
+      "explanation_tr": "Karar tabloları, koşul kombinasyonlarını ve her birinin beklenen sonucunu listeleyerek birden çok koşul içeren mantığı ele alır; ders kitabının terimleriyle her sütun (kural) bir test durumu olur ve üç ikili (binary) koşul 2^3 = 8 kural verir."
+    },
+    "10": {
+      "concept": "equivalence-partitioning",
+      "explanation_tr": "Çözümlü örnek uzunluğu <8 (geçersiz), 8–20 (geçerli) ve >20 (geçersiz) olarak bölümler; 5, 14 ve 25 her sınıftan birer değer alır. 8, 14, 20'nin hepsi geçerli sınıftadır; 7, 8, 20, 21 ise sınır değerleridir ve ikisi geçerli sınıftandır. Ders kitabının terimleriyle bu, tek değişkenli zayıf sağlam eşdeğerlik sınıfı testidir (weak robust equivalence class testing): bir geçerli durum artı her geçersiz sınıf için bir durum."
+    },
+    "11": {
+      "concept": "boundary-value-analysis",
+      "explanation_tr": "Her sınırın hemen altı, kendisi ve hemen üstü kuralı minimum çevresinde 0, 1, 2 ve maksimum çevresinde 99, 100, 101 değerlerini verir. Ders kitabının sınır değer analizi farklıdır: min, min+, nom, max-, max (1, 2, bir nominal değer, 99, 100) kullanır ve 0 ile 101'i sağlamlık testine (robustness testing) bırakır."
+    },
+    "12": {
+      "concept": "risk-based-testing",
+      "explanation_tr": "RPN = Olasılık × Etki × Tespit edilebilirlik = 4 × 5 × 2 = 40; 20 tespit edilebilirliği yok sayar, 11 ise puanları çarpmak yerine toplar."
+    },
+    "13": {
+      "concept": "risk-based-testing",
+      "explanation_tr": "Ölçekte tespit edilebilirlik 1, sürüm öncesi kolay tespit edilir; 5 ise üretim ortamına (production) kadar zor tespit edilir anlamına gelir; dolayısıyla daha yüksek bir tespit edilebilirlik puanı riski artırır."
+    },
+    "14": {
+      "concept": "risk-based-testing",
+      "explanation_tr": "Matriste Uzak (Remote, D) ile Felaket (Catastrophic, 1) birleşimi Ciddi (Serious) olarak derecelendirilir; Felaket şiddeti ancak Ara sıra (Occasional, C) veya daha sık bir olasılıkta Yüksek (High) olur."
+    },
+    "15": {
+      "concept": "test-engineer-role",
+      "explanation_tr": "Şelalede test, akışın sonunda yer alan ayrı bir aşamadır; artımlı (incremental) geliştirmede yazılım artımlar hâlinde geliştirilip test edilir, bu yüzden test uzmanları tekrar tekrar katılır, regresyon testi önem kazanır ve erken geri bildirim mümkün olur."
+    },
+    "16": {
+      "concept": "test-engineer-role",
+      "explanation_tr": "CI/CD, sürekli test, test otomasyonu ve sola kaydırma (shift-left) testiyle, Agile ve DevOps'ta test mühendisleri akışın sonunda çalışan ayrı bir grup (downstream group) olmak yerine çapraz fonksiyonlu ekiplerin bütünleşik üyeleri olur."
+    },
+    "17": {
+      "concept": "test-engineer-role",
+      "explanation_tr": "Kalite kapıları ve çıkış kriterleri belirlemek Kalite Güvencesi odağı altında listelenir; gece çalışan CI/CD sonuçlarını incelemek günlük bir faaliyettir, otomasyon çerçeveleri, keşif testi ve test verisi/ortamları ise teknik faaliyetlerdir."
+    },
+    "18": {
+      "concept": "pyramid-unit-testing",
+      "explanation_tr": "Piramidin tabanı birim testleridir: çok sayıda test, hızlı çalışma ve düşük maliyet; daha az, daha yavaş ve daha maliyetli testler Sistem/E2E tepesine aittir, entegrasyon testleri ise ortada yer alır."
+    },
+    "19": {
+      "concept": "pyramid-unit-testing",
+      "explanation_tr": "Birim testi geliştiriciler tarafından, ağırlıklı olarak beyaz kutu yöntemiyle, mock'lanmış bağımlılıklarla bir geliştirme ortamında yapılır (ders kitabı da yapısal testin en çok birim seviyesine uygun olduğunu belirtir); üretim ortamına benzer bir ortamda bağımsız bir ekip ise sistem testini tanımlar."
+    },
+    "20": {
+      "concept": "integration-system-acceptance",
+      "explanation_tr": "Aşağıdan yukarı (bottom-up) entegrasyon alt seviye modüllerle başlar ve sürücüler (drivers) kullanır; yukarıdan aşağı (top-down) üst seviye modüllerle başlar ve saplamalar (stubs) kullanır; Big Bang ise tüm modülleri aynı anda entegre eder."
+    },
+    "21": {
+      "concept": "integration-system-acceptance",
+      "explanation_tr": "Uyumluluk testi farklı tarayıcıları ve işletim sistemlerini kapsar; performans testi yanıt sürelerini, iş hacmini (throughput) ve ölçeklenebilirliği, kullanılabilirlik testi ise kullanıcı deneyimini ve arayüz tasarımını kapsar."
+    },
+    "22": {
+      "concept": "integration-system-acceptance",
+      "explanation_tr": "Alfa testi kuruluşun kendi içinde yaptığı testtir, beta testi ise gerçek ortamda harici kullanıcılarla yapılır; iş kullanıcılarının yaptığı son geçerleme ise Kullanıcı Kabul Testidir (UAT)."
+    },
+    "23": {
+      "concept": "test-engineer-role",
+      "explanation_tr": "Etik yönergeleri, mümkün olduğunda maskelenmiş veya sentetik veri kullanarak gizliliğe ve PII'ya saygı gösterilmesini ve kalan riskin (residual risk) ve varsayımların açıkça belgelenmesini söyler."
+    },
+    "24": {
+      "concept": "decision-tables",
+      "explanation_tr": "Yalnızca length_ok = T, has_letter = T, has_digit = T, has_space = F geçerlidir. 15 geçersiz kombinasyon için başarısız olan her koşul başına bir kural gerekir (length_ok = F 8 kombinasyonu kapsar; length_ok = T, has_letter = F 4 kombinasyonu; ardından has_digit = F 2'yi ve has_space = T 1'i kapsar). Bu, kural sayımlarının (rule counts) toplamı 2^4 = 16 olan 1 + 4 = 5 kural verir. İki kural yetmez, çünkü tek bir 'fark etmez' (don't care) deseni 15 geçersiz kombinasyonun hepsini yakalayamaz."
+    },
+    "25": {
+      "concept": "boundary-value-analysis",
+      "explanation_tr": "Ders kitabı minimumun biraz altındaki ve maksimumun biraz üstündeki değerlere min- ve max+ der ve bunları BVA'nın basit bir uzantısı olan sağlamlık testinde (robustness testing) ekler; en kötü durum testi (worst-case testing) yalnızca beş normal değeri birleştirir, zayıf normal eşdeğerlik sınıfları ise yalnızca geçerli değerler içerir."
+    },
+    "26": {
+      "concept": "equivalence-partitioning",
+      "explanation_tr": "a1b2c3d4 8 karakterdir, harf ve rakam içerir ve boşluk içermez; abc1234 yalnızca 7 karakterdir, abcdefgh ve 12345678 yalnızca-harf ve yalnızca-rakam sınıflarına düşer, abc 12345 ise boşluk içerir."
+    },
+    "27": {
+      "concept": "equivalence-partitioning",
+      "explanation_tr": "Baştaki sıfır kuralı kendi geçersiz sınıfını ekler: 007'nin değeri 7'dir ama reddedilmelidir. 0 ve 1000 aralık dışı geçersiz sınıflara düşer, 7 ve 999 ise geçerli girdilerdir."
+    },
+    "28": {
+      "concept": "risk-based-testing",
+      "explanation_tr": "3–6 aylık takvim etkisi Yüksek (High, 4), %50–%90 olasılık da Yüksek (4) olarak derecelendirilir, bu yüzden hücre değeri 4 × 4 = 16'dır; 20 için Çok Yüksek etki (6 aydan fazla) ya da %90'ın üzerinde bir olasılık gerekirdi."
+    }
+  }
+}

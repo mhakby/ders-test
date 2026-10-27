@@ -891,6 +891,154 @@ h2 {
   color: var(--yellow);
 }
 
+/* Lessons */
+.lesson-btn {
+  flex: 0 0 52px;
+  display: grid;
+  place-items: center;
+  border-left: 1px solid var(--border);
+  font-size: 1.35rem;
+  text-decoration: none;
+}
+
+.link-reset {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.eyebrow {
+  margin: 0 0 2px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.8rem;
+}
+
+.small-seg button {
+  min-height: 34px;
+  min-width: 0;
+  padding: 2px 12px;
+  font-size: 0.9rem;
+}
+
+.lesson-intro {
+  margin-top: 14px;
+  font-size: 1.05rem;
+  border-left: 4px solid var(--yellow);
+  padding: 2px 0 2px 12px;
+}
+
+.lesson-intro p,
+.concept-body p {
+  margin: 0 0 10px;
+}
+
+.toc {
+  margin-top: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+}
+
+.toc ol {
+  margin: 0;
+  padding-left: 1.4em;
+}
+
+.toc .link {
+  display: block;
+  width: 100%;
+  min-height: 0;
+  padding: 6px 0;
+  text-align: left;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.concept {
+  margin-top: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px 6px;
+  scroll-margin-top: 12px;
+}
+
+.concept h3 {
+  margin: 0 0 10px;
+  font-family: var(--font-cond);
+  font-size: 1.3rem;
+  line-height: 1.2;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.concept-num {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  min-width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: var(--yellow);
+  color: var(--black);
+  font-size: 1rem;
+}
+
+.concept-body ul {
+  margin: 0 0 10px;
+  padding-left: 1.2em;
+}
+
+.concept-body li {
+  margin-bottom: 4px;
+}
+
+.concept-body code,
+.explanation code {
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--surface-2);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.lesson-actions {
+  margin-top: 20px;
+}
+
+.sheet .concept {
+  margin-top: 8px;
+  border: 0;
+  padding: 4px 0 0;
+  background: transparent;
+}
+
+.sheet-head {
+  margin-top: 4px;
+}
+
+.btn.wide {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.result-lang {
+  margin: -2px 0 10px;
+}
+
+.btn.concept-link {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+  margin: 2px 0 10px;
+  background: var(--surface-2);
+}
+
 @keyframes slide-up {
   from {
     transform: translateY(40px);

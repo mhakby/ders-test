@@ -31,6 +31,10 @@ export interface CourseProgress {
   scope?: string[];
   /** Question count for mixed tests; 0 means all questions in scope. */
   mixSize: number;
+  /** Sets whose lesson has been opened (the first tap on such a set goes straight to the quiz). */
+  lessonSeen?: Record<string, number>;
+  /** Language chosen for lessons and explanations. */
+  helpLang?: string;
   updatedAt: number;
 }
 

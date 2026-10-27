@@ -1,0 +1,206 @@
+{
+  "intro": {
+    "en": "This set is about writing test cases that other testers can actually run: what a test case is, which documents to collect first, how test writing grows from basic cases to automation, which fields and statement format to use, and the tips, tricks and mistakes the article highlights. It ends with a full login-screen example and with reusing standard test cases across web projects. Well-written test cases validate an application's test coverage and bring standardization instead of ad hoc testing.",
+    "tr": "Bu set, diğer testçilerin gerçekten çalıştırabileceği test durumları yazmakla ilgilidir: test durumunun ne olduğu, önce hangi belgelerin toplanacağı, test yazımının temel durumlardan otomasyona nasıl ilerlediği, hangi alanların ve ifade biçiminin kullanılacağı ve makalenin vurguladığı ipuçları, püf noktaları ve hatalar. Set, eksiksiz bir giriş ekranı örneği ve standart test durumlarının web projeleri arasında yeniden kullanılmasıyla biter. İyi yazılmış test durumları bir uygulamanın test kapsamını doğrular ve plansız (ad hoc) test yerine standartlaşma getirir."
+  },
+  "concepts": [
+    {
+      "id": "test-case-basics",
+      "title": {
+        "en": "What a test case is and why we write it",
+        "tr": "Test durumu nedir ve neden yazılır?"
+      },
+      "body": {
+        "en": "A **test case** is the basic unit of a tester's work: it tells someone exactly how to check one thing in an application. The article defines it by its components: they describe an **input**, an **action** and an **expected response**, in order to determine whether a feature of the application works correctly. In short, a test case is a set of instructions on HOW to validate a particular test objective (target).\n\nWhy write test cases at all?\n\n- The **basic objective** of writing cases is to **validate the test coverage** of an application (coverage = how much of the application the tests actually check).\n- Writing cases brings **standardization** and **minimizes the ad hoc approach** (\"ad hoc\" = testing by improvising, without a plan).\n- In CMMI organizations, test standards are followed more closely.\n\nA test case is not the same as a **test procedure**, which is a group of several small test cases (see the card on the levels of test writing).\n\n**Example:** Input: the word `pen` in a search box. Action: click Search. Expected response: a list of products containing \"pen\" is shown.",
+        "tr": "**Test durumu (test case)**, bir testçinin işinin temel birimidir: uygulamadaki tek bir şeyin tam olarak nasıl kontrol edileceğini anlatır. Makale onu bileşenleriyle tanımlar: bu bileşenler, uygulamanın bir özelliğinin doğru çalışıp çalışmadığını belirlemek için bir **girdi (input)**, bir **eylem (action)** ve bir **beklenen yanıt (expected response)** tanımlar. Kısacası test durumu, belirli bir test hedefinin NASIL doğrulanacağına dair talimatlar kümesidir.\n\nPeki neden test durumu yazarız?\n\n- Test durumu yazmanın **temel amacı**, bir uygulamanın **test kapsamını (test coverage) doğrulamaktır** (kapsam = testlerin uygulamanın ne kadarını gerçekten kontrol ettiği).\n- Test durumu yazmak **standartlaşma (standardization)** getirir ve **plansız (ad hoc) yaklaşımı en aza indirir** (\"ad hoc\" = plan olmadan, doğaçlama test yapmak).\n- CMMI kuruluşlarında test standartlarına daha sıkı uyulur.\n\nTest durumu, birkaç küçük test durumundan oluşan bir grup olan **test prosedürü (test procedure)** ile aynı şey değildir (test yazım seviyeleri kartına bakın).\n\n**Örnek:** Girdi: arama kutusuna `pen` kelimesi. Eylem: Search (Ara) butonuna tıklamak. Beklenen yanıt: içinde \"pen\" geçen ürünlerin listesi gösterilir."
+      },
+      "source": "article: What is a Test Case; Why do we Write Tests?"
+    },
+    {
+      "id": "document-collection",
+      "title": {
+        "en": "Documents to collect before writing tests",
+        "tr": "Test yazmadan önce toplanacak belgeler"
+      },
+      "body": {
+        "en": "Test cases are only as good as the information behind them. Before writing tests, the article recommends collecting these five documents:\n\n- **User Requirements Document** – business processes, user profiles, user environment, interaction with other systems, and functional, non-functional, licensing, performance, security and usability requirements.\n- **Business Use Case Document** – describes the functional requirements as use-case scenarios from a business perspective: actors, goals, pre- and post-conditions, basic flow, alternate flow, options and exceptions.\n- **Functional Requirements Document** – details the functional requirements of each feature of the system; a common reference for development, testing and stakeholders (including customers) on the committed requirements.\n- **Software Project Plan (Optional)** – objectives, priorities, milestones, activities, organization, strategy, progress monitoring, risks, assumptions, dependencies, constraints, schedule and client responsibilities.\n- **QA/Test Plan** – quality management system, documentation standards, change control, critical modules, configuration management, testing approach, defect tracking and acceptance criteria; also features to be tested or not, team allocation, resources, schedule, test coverage, deliverables and test metrics.\n\nTerms: an **actor** is a user or system that interacts with the application; a **pre-condition** must hold before a scenario starts, a **post-condition** after it ends.",
+        "tr": "Test durumları, arkalarındaki bilgi kadar iyidir. Makale, test yazmadan önce şu beş belgenin toplanmasını önerir:\n\n- **Kullanıcı Gereksinimleri Belgesi (User Requirements Document)** – iş süreçleri, kullanıcı profilleri, kullanıcı ortamı, diğer sistemlerle etkileşim; ayrıca işlevsel (functional), işlevsel olmayan (non-functional), lisanslama, performans, güvenlik ve kullanılabilirlik gereksinimleri.\n- **İş Kullanım Durumu Belgesi (Business Use Case Document)** – işlevsel gereksinimleri iş perspektifinden kullanım senaryoları olarak anlatır: aktörler, hedefler, ön ve son koşullar, temel akış, alternatif akış, seçenekler ve istisnalar.\n- **İşlevsel Gereksinimler Belgesi (Functional Requirements Document)** – sistemin her özelliğinin işlevsel gereksinimlerini ayrıntılandırır; taahhüt edilen gereksinimler için geliştirme, test ve paydaşların (müşteriler dahil) ortak referansıdır.\n- **Yazılım Proje Planı (Software Project Plan) (İsteğe bağlı / Optional)** – hedefler, öncelikler, kilometre taşları, faaliyetler, organizasyon, strateji, ilerleme takibi, riskler, varsayımlar, bağımlılıklar, kısıtlar, takvim ve müşteri sorumlulukları.\n- **QA/Test Planı (QA/Test Plan)** – kalite yönetim sistemi, dokümantasyon standartları, değişiklik kontrolü, kritik modüller, konfigürasyon yönetimi, test yaklaşımı, hata takibi ve kabul kriterleri; ayrıca test edilecek ve edilmeyecek özellikler, ekip dağılımı, kaynaklar, takvim, test kapsamı, teslim edilecekler ve test metrikleri.\n\nTerimler: **aktör (actor)**, uygulamayla etkileşen bir kullanıcı veya sistemdir; **ön koşul (pre-condition)** bir senaryo başlamadan önce, **son koşul (post-condition)** ise senaryo bittikten sonra sağlanmış olmalıdır."
+      },
+      "source": "article: Document Collection for Test Writing"
+    },
+    {
+      "id": "writing-levels",
+      "title": {
+        "en": "The four levels of test writing",
+        "tr": "Test yazımının dört seviyesi"
+      },
+      "body": {
+        "en": "The article describes test writing as a process that grows in **four levels**, from simple cases up to automation:\n\n- **Level 1** – write the **basic cases** from the available specification and user documentation.\n- **Level 2** – the **practical stage**: writing cases depends on the actual functional and system flow of the application.\n- **Level 3** – group some cases and write a **test procedure**. A test procedure is nothing but a group of small cases, maybe a maximum of 10.\n- **Level 4** – **automation** of the project. Automation minimizes human interaction with the system, so QA can focus on the currently updated functionality instead of staying busy with **regression testing** (re-running earlier tests to make sure old features still work).\n\nThe process stops at Level 4; there is no further level.\n\n**Example:** For a shopping cart, Level 1 gives a case from the spec (\"the cart icon shows the item count\"); Level 2 follows the real flow (add an item → open the cart → change the quantity); Level 3 groups about eight cart cases into one procedure; Level 4 automates them.",
+        "tr": "Makale test yazımını, basit durumlardan otomasyona kadar **dört seviyede** büyüyen bir süreç olarak anlatır:\n\n- **Seviye 1** – mevcut spesifikasyondan (specification) ve kullanıcı belgelerinden **temel durumları** yazmak.\n- **Seviye 2** – **pratik aşama**: durum yazımı, uygulamanın gerçek işlevsel ve sistem akışına bağlıdır.\n- **Seviye 3** – bazı durumları gruplayıp bir **test prosedürü (test procedure)** yazmak. Test prosedürü, en fazla belki 10 küçük durumdan oluşan bir gruptan başka bir şey değildir.\n- **Seviye 4** – projenin **otomasyonu (automation)**. Otomasyon insanın sistemle etkileşimini en aza indirir; böylece QA, **regresyon testi (regression testing)** ile meşgul olmak yerine güncellenen işlevselliğe odaklanabilir (regresyon testi = eski özelliklerin hâlâ çalıştığından emin olmak için önceki testleri yeniden çalıştırmak).\n\nSüreç Seviye 4'te biter; daha ileri bir seviye yoktur.\n\n**Örnek:** Bir alışveriş sepeti için Seviye 1, spesifikasyondan bir durum verir (\"sepet simgesi ürün sayısını gösterir\"); Seviye 2 gerçek akışı izler (ürün ekle → sepeti aç → miktarı değiştir); Seviye 3 yaklaşık sekiz sepet durumunu tek bir prosedürde toplar; Seviye 4 bunları otomatikleştirir."
+      },
+      "source": "article: How to Write Test Cases (Levels 1–4)"
+    },
+    {
+      "id": "fields-and-format",
+      "title": {
+        "en": "Test case fields and the statement format",
+        "tr": "Test durumu alanları ve ifade biçimi"
+      },
+      "body": {
+        "en": "A written test case is like a small form with fixed **fields** (columns), so that every tester records the same information in the same place. The article's list of fields:\n\n- **Test case id**\n- **Unit to test** – what is to be verified\n- **Assumptions**\n- **Test data** – variables and their values\n- **Steps to be executed**\n- **Expected result**\n- **Actual result**\n- **Pass/Fail**\n- **Comments**\n\nFor the test statement itself, the article gives a basic format: **Verify – Using – With – To**.\n\n- **Verify** – used as the first word of the test statement.\n- **Using** – identifies what is being tested: [tool name, tag name, dialog, etc.]. Depending on the situation, \"entering\" or \"selecting\" can be used instead of \"using\".\n- **With** – [conditions].\n- **To** – [what is returned, shown, demonstrated].\n\n**Example:** \"Verify using the search box with a three-letter product name to show the matching products.\" Its test data field could hold `Search text = pen`.",
+        "tr": "Yazılı bir test durumu, sabit **alanları (fields)** (sütunları) olan küçük bir form gibidir; böylece her testçi aynı bilgiyi aynı yere yazar. Makalenin alan listesi:\n\n- **Test durumu kimliği (Test case id)**\n- **Test edilecek birim (Unit to test)** – neyin doğrulanacağı\n- **Varsayımlar (Assumptions)**\n- **Test verisi (Test data)** – değişkenler ve değerleri\n- **Yürütülecek adımlar (Steps to be executed)**\n- **Beklenen sonuç (Expected result)**\n- **Gerçek sonuç (Actual result)**\n- **Geçti/Kaldı (Pass/Fail)**\n- **Yorumlar (Comments)**\n\nTest ifadesinin kendisi için makale temel bir biçim verir: **Verify – Using – With – To**.\n\n- **Verify** (doğrula) – test ifadesinin ilk kelimesi olarak kullanılır.\n- **Using** (kullanarak) – neyin test edildiğini belirtir: [araç adı, etiket adı, diyalog vb.]. Duruma göre \"using\" yerine \"entering\" (girerek) veya \"selecting\" (seçerek) kullanılabilir.\n- **With** (ile) – [koşullar].\n- **To** (için) – [döndürülen, gösterilen, ortaya konan şey].\n\n**Örnek:** \"Verify using the search box with a three-letter product name to show the matching products.\" (Arama kutusunu üç harfli bir ürün adıyla kullanarak eşleşen ürünlerin gösterildiğini doğrula.) Test verisi alanında `Search text = pen` bulunabilir."
+      },
+      "source": "article: How to Write Test Cases (fields); Basic Format of Test Case Statement"
+    },
+    {
+      "id": "writing-tips",
+      "title": {
+        "en": "Five tips for writing tests",
+        "tr": "Test yazmak için beş ipucu"
+      },
+      "body": {
+        "en": "The article's tips aim to make test cases easy and safe for the people who execute them:\n\n- **Tip #1 – Keep it simple but not too simple; make it complex but not too complex:** steps atomic, precise and in the right order, with matching expected results; do not make the tester flip through many documents.\n- **Tip #2 – Review the test cases once as a tester:** after writing, think like a tester and **dry run** the cases (walk through them step by step). Check that steps are clear, expected results match, test data is feasible in a real environment, there are no **dependency conflicts** between cases, and references are accurate.\n- **Tip #3 – Bound as well as ease the testers:** do not leave testers to pick test data themselves; give them a **range of inputs**, especially where calculations are performed. For choosing such values the article points to **boundary value analysis**, a black-box test design strategy.\n- **Tip #4 – Be a contributor:** do not accept the spec or design as-is; suggest improvements (e.g. a dropdown or calendar control, clearer messages).\n- **Tip #5 – Never forget the end user:** the most important stakeholder; never skip the scenarios users use most, or business-critical ones even if they are used less often.\n\n**Example:** For a shipping-fee calculation, give a range of parcel weights instead of \"enter any weight\".",
+        "tr": "Makalenin ipuçları, test durumlarını onları çalıştıracak kişiler için kolay ve güvenli hale getirmeyi amaçlar:\n\n- **İpucu #1 – Basit tutun ama fazla basit değil; karmaşık olsun ama fazla karmaşık değil:** adımlar atomik, kesin ve doğru sırada olmalı, beklenen sonuçlar adımlarla uyuşmalı; testçiyi birçok belge arasında gezdirmeyin.\n- **İpucu #2 – Test durumlarını bir kez de testçi gözüyle gözden geçirin (Review the test cases once as a tester):** yazdıktan sonra testçi gibi düşünün ve durumları **kuru çalıştırın (dry run)** (adım adım zihinden yürütün). Adımların açık olduğunu, beklenen sonuçların uyduğunu, test verisinin gerçek ortamda uygulanabilir olduğunu, durumlar arasında **bağımlılık çakışması (dependency conflict)** olmadığını ve atıfların doğru olduğunu kontrol edin.\n- **İpucu #3 – Testçileri hem sınırlayın hem de işlerini kolaylaştırın (Bound as well as ease the testers):** test verisini seçmeyi testçilere bırakmayın; özellikle hesaplama yapılan yerlerde onlara bir **girdi aralığı (range of inputs)** verin. Bu değerleri seçmek için makale, bir kara kutu (black-box) test tasarım stratejisi olan **sınır değer analizine (boundary value analysis)** işaret eder.\n- **İpucu #4 – Katkıda bulunun (Be a contributor):** spesifikasyonu veya tasarımı olduğu gibi kabul etmeyin; iyileştirmeler önerin (ör. açılır liste veya takvim kontrolü, daha açık mesajlar).\n- **İpucu #5 – Son kullanıcıyı asla unutmayın (Never forget the end user):** en önemli paydaştır; kullanıcıların en çok kullandığı senaryoları ve daha az kullanılsalar bile iş açısından kritik olanları asla atlamayın.\n\n**Örnek:** Bir kargo ücreti hesaplamasında \"herhangi bir ağırlık girin\" demek yerine bir paket ağırlığı aralığı verin."
+      },
+      "source": "article: Tips for Writing Tests"
+    },
+    {
+      "id": "documentation-tricks",
+      "title": {
+        "en": "Tricks for excellent test documentation",
+        "tr": "Mükemmel test dokümantasyonu için püf noktaları"
+      },
+      "body": {
+        "en": "Besides the tips, the article lists tricks that make a test document easy to run and maintain:\n\n- **Organize the document:** split testing into scenarios, then tests, then steps.\n- **Do not forget the negative cases:** for each scenario write **two** test cases – a **positive** one for the intended or normal flow and a **negative** one for the unintended or exceptional flow. A negative case is as important as a positive case.\n- **Have atomic test steps:** each step is atomic, with no further sub-steps.\n- **Prioritize the tests:** tag each test High, Medium or Low (or with numbers such as 1, 50, 100). Under a strict deadline, complete all high-priority tests first. The article's shopping-website examples: **High** – access is denied after an invalid login attempt; **Medium** – relevant products are displayed on the user screen; **Low** – the color of the text on buttons.\n- **Sequence matters:** steps in the right order, ideally the full flow from opening to exiting the application.\n- Record the **timestamp and tester name** (or an \"Executed Date\" column), the **browser name and version** for web applications, and make **Summary** and **Bugs** the first two sheets of the workbook.\n\n**Example:** Scenario \"change password\": positive – a valid new password is saved; negative – a too-short password is rejected with a message.",
+        "tr": "Makale, ipuçlarının yanı sıra bir test belgesini çalıştırmayı ve bakımını kolaylaştıran püf noktaları da listeler:\n\n- **Belgeyi düzenleyin:** testi önce senaryolara, sonra testlere, sonra adımlara bölün.\n- **Negatif durumları unutmayın:** her senaryo için **iki** test durumu yazın – amaçlanan veya normal akış için bir **pozitif durum (positive case)** ve amaçlanmayan veya istisnai akış için bir **negatif durum (negative case)**. Negatif bir durum, pozitif bir durum kadar önemlidir.\n- **Atomik test adımları kullanın:** her adım atomiktir (atomic), başka alt adımı yoktur.\n- **Testlere öncelik verin (prioritize):** her testi Yüksek, Orta veya Düşük olarak etiketleyin (ya da 1, 50, 100 gibi sayılarla). Sıkı bir teslim tarihinde önce tüm yüksek öncelikli testleri tamamlayın. Makalenin alışveriş sitesi örnekleri: **Yüksek** – geçersiz bir giriş denemesinden sonra erişimin reddedilmesi; **Orta** – kullanıcı ekranında ilgili ürünlerin gösterilmesi; **Düşük** – butonlardaki metnin rengi.\n- **Sıra önemlidir:** adımlar doğru sırada olmalı, ideal olarak uygulamayı açmaktan çıkmaya kadar tüm akışı kapsamalı.\n- **Zaman damgası ve testçi adını** (veya bir \"Executed Date\" sütununu), web uygulamaları için **tarayıcı adı ve sürümünü** kaydedin; çalışma kitabının ilk iki sayfası **Summary** (Özet) ve **Bugs** (Hatalar) olsun.\n\n**Örnek:** \"Şifre değiştirme\" senaryosu: pozitif – geçerli yeni şifre kaydedilir; negatif – çok kısa bir şifre bir mesajla reddedilir."
+      },
+      "source": "article: Useful Tricks for Excellence"
+    },
+    {
+      "id": "how-not-to-write",
+      "title": {
+        "en": "How NOT to write tests",
+        "tr": "Test nasıl YAZILMAZ?"
+      },
+      "body": {
+        "en": "Knowing the common mistakes helps you avoid them. The article names three:\n\n- **Composite steps:** a single step that packs several actions together. Split it into simple, separate steps. Example: \"Register and log in\" becomes: open the registration page; fill in the form; click Register; enter the new user name and password; click Login.\n- **Application behavior taken as expected behavior:** writing the expected result by copying what the application currently shows. The application itself may be wrong, so this shortcut has its perils. Use the application **only as a guide**, research further, and write the correct **intended** behavior.\n- **Multiple conditions in one case:** several scenarios (e.g. valid details, empty user name, empty password) inside one test. Two problems: if one condition fails, the whole test is marked failed even though the others may pass; and the **flow breaks**, because an earlier step changes the application's state – in the article's login example, once a valid login succeeds, the login option is no longer available for the next step. Fix: write **modular tests** with one condition per test case, copying the shared steps (Ctrl+C, Ctrl+V) where needed.\n\n**Example:** if a product page currently shows \"Price: TBD\", the expected result should still state the price the requirements define.",
+        "tr": "Yaygın hataları bilmek onlardan kaçınmayı sağlar. Makale üç hata sayar:\n\n- **Birleşik adımlar (composite steps):** birkaç eylemi bir araya sıkıştıran tek bir adım. Bunu basit, ayrı adımlara bölün. Örnek: \"Kayıt ol ve giriş yap\" adımı şunlara dönüşür: kayıt sayfasını aç; formu doldur; Register'a tıkla; yeni kullanıcı adını ve şifreyi gir; Login'e tıkla.\n- **Uygulama davranışını beklenen davranış olarak almak (application behavior taken as expected behavior):** beklenen sonucu, uygulamanın şu anda gösterdiğini kopyalayarak yazmak. Uygulamanın kendisi hatalı olabilir; bu yüzden bu kısayolun tehlikeleri vardır. Uygulamayı **yalnızca bir rehber** olarak kullanın, daha fazla araştırın ve doğru **amaçlanan (intended)** davranışı yazın.\n- **Tek durumda birden fazla koşul (multiple conditions in one case):** tek bir testin içinde birkaç senaryo (ör. geçerli bilgiler, boş kullanıcı adı, boş şifre). İki sorun vardır: bir koşul başarısız olursa, diğerleri geçse bile testin tamamı başarısız sayılır; ve **akış bozulur**, çünkü önceki bir adım uygulamanın durumunu değiştirir – makalenin giriş örneğinde, geçerli bir giriş başarılı olunca sonraki adım için giriş seçeneği artık mevcut değildir. Çözüm: her test durumunda tek koşul olan **modüler testler (modular tests)** yazmak; gerektiğinde ortak adımları kopyalamak (Ctrl+C, Ctrl+V).\n\n**Örnek:** bir ürün sayfası şu anda \"Price: TBD\" gösteriyorsa, beklenen sonuç yine de gereksinimlerin tanımladığı fiyatı belirtmelidir."
+      },
+      "source": "article: How NOT to Write Tests"
+    },
+    {
+      "id": "login-example-baoe",
+      "title": {
+        "en": "Login screen example: test categories and BAOE",
+        "tr": "Giriş ekranı örneği: test kategorileri ve BAOE"
+      },
+      "body": {
+        "en": "The article shows how to test a simple **login screen** (User Name and Password boxes, a Login button, and Forgot Password and Registration links); the approach is almost the same for complex screens. First, the cases are sorted into categories:\n\n- **UI tests** – the visible fields; static fields such as the User Name and Password labels need no interaction, only correct display.\n- **Functional cases** – dynamic controls that trigger an action: clicking the Login button, the Forgot Password link or the Registration link.\n- **Database cases** – entered credentials are checked against the right database table, together with the user's login permission.\n- **Process tests** – the processes associated with a feature, beyond the control's own action. Example: Forgot Password may send the user an email, so that email must be tested for the proper process and confirmation.\n\nThen comes the **BAOE mantra** – **B**asic flow, **A**lternate flow, **O**ptions, **E**xceptions – each applied to positive and negative tests:\n\n- **Basic flow** – open the login URL in a browser, enter the details, log in.\n- **Alternate flow** – install the app on a mobile device and log in there.\n- **Options** – other ways to reach the login screen: clicking Logout after logging in, or a session timeout/expiry.\n- **Exceptions** – negative cases such as wrong credentials, which give an error message or no action.",
+        "tr": "Makale basit bir **giriş ekranının (login screen)** nasıl test edileceğini gösterir (User Name ve Password kutuları, bir Login butonu, Forgot Password ve Registration bağlantıları); yaklaşım karmaşık ekranlar için de hemen hemen aynıdır. Önce durumlar kategorilere ayrılır:\n\n- **Kullanıcı arayüzü testleri (UI tests)** – görünen alanlar; User Name ve Password etiketleri gibi statik alanlar etkileşim gerektirmez, yalnızca doğru görünmeleri gerekir.\n- **İşlevsel durumlar (functional cases)** – bir eylemi tetikleyen dinamik kontroller: Login butonuna, Forgot Password bağlantısına veya Registration bağlantısına tıklamak.\n- **Veritabanı durumları (database cases)** – girilen kimlik bilgileri, kullanıcının giriş izniyle birlikte doğru veritabanı tablosuna göre kontrol edilir.\n- **Süreç testleri (process tests)** – kontrolün kendi eyleminin ötesinde, bir özellikle ilişkili süreçler. Örnek: Forgot Password kullanıcıya bir e-posta gönderebilir; bu yüzden o e-posta doğru süreç ve onay açısından test edilmelidir.\n\nArdından **BAOE mantrası** gelir – **B**asic flow (temel akış), **A**lternate flow (alternatif akış), **O**ptions (seçenekler), **E**xceptions (istisnalar) – her biri pozitif ve negatif testlere uygulanır:\n\n- **Temel akış** – giriş URL'sini bir tarayıcıda açmak, bilgileri girmek, giriş yapmak.\n- **Alternatif akış** – uygulamayı bir mobil cihaza kurup orada giriş yapmak.\n- **Seçenekler** – giriş ekranına ulaşmanın diğer yolları: giriş yaptıktan sonra Logout'a (çıkış) tıklamak veya oturumun zaman aşımına uğraması/süresinin dolması.\n- **İstisnalar** – yanlış kimlik bilgileri gibi negatif durumlar; bunlarda bir hata mesajı gelir ya da hiçbir eylem gerçekleşmez."
+      },
+      "source": "article: Real Example (login screen)"
+    },
+    {
+      "id": "login-test-document",
+      "title": {
+        "en": "The login test case document",
+        "tr": "Giriş ekranının test durumu belgesi"
+      },
+      "body": {
+        "en": "Finally the article writes the login tests as a **test case document**: a table in which each row has a description, test data and an expected result. Rows worth knowing:\n\n- Both boxes empty, click Login → alert \"User Name and Password are Mandatory\"; only one box filled → \"User Name is Mandatory\" or \"Password is Mandatory\".\n- Maximum allowed text entered in User Name and Password → the boxes accept the maximum allowed **30 characters**.\n- Input starting with special characters, or with blank spaces → refused, as it is not allowed in Registration.\n- Typing the password → it is masked with asterisks.\n- Page left idle for **10 minutes** → a \"Session Expired\" alert appears and both boxes are cleared.\n- Chrome, Firefox and Internet Explorer → same look, alignment and Login behavior; Android phones, tablets and iPhones → login works like the web version.\n- Concurrent users → each gets the login screen within 5–10 seconds.\n\nNotice how one small screen produces many single-condition rows covering UI, function, database, browsers, devices and load.\n\n**Example (another field):** if a Phone box allowed at most 15 digits, a row would enter 15 digits and expect all of them to be accepted.",
+        "tr": "Son olarak makale giriş testlerini bir **test durumu belgesi (test case document)** olarak yazar: her satırında bir açıklama, test verisi ve beklenen sonuç bulunan bir tablo. Bilinmesi gereken satırlar:\n\n- İki kutu boş, Login'e tıkla → \"User Name and Password are Mandatory\" uyarısı; yalnızca bir kutu dolu → \"User Name is Mandatory\" veya \"Password is Mandatory\".\n- User Name ve Password kutularına izin verilen en uzun metin girilir → kutular izin verilen en fazla **30 karakteri** kabul eder.\n- Özel karakterlerle veya boşluklarla başlayan girdi → Registration'da (kayıt) izin verilmediği için reddedilir.\n- Şifre yazılırken → yıldız işaretleriyle maskelenir.\n- Sayfa **10 dakika** boşta bırakılır → \"Session Expired\" (oturum süresi doldu) uyarısı çıkar ve iki kutu da temizlenir.\n- Chrome, Firefox ve Internet Explorer → aynı görünüm, hizalama ve Login davranışı; Android telefonlar, tabletler ve iPhone'lar → giriş web sürümündeki gibi çalışır.\n- Eşzamanlı kullanıcılar (concurrent users) → her biri giriş ekranını 5–10 saniye içinde alır.\n\nKüçük bir ekranın bile kullanıcı arayüzü, işlev, veritabanı, tarayıcılar, cihazlar ve yükü kapsayan, her biri tek koşullu pek çok satır ürettiğine dikkat edin.\n\n**Örnek (başka bir alan):** bir Phone (telefon) kutusu en fazla 15 rakama izin veriyorsa, bir satır 15 rakam girer ve hepsinin kabul edilmesini bekler."
+      },
+      "source": "article: Real Example (Test Case Document)"
+    },
+    {
+      "id": "reusing-standard-tests",
+      "title": {
+        "en": "Reusing test cases and standard tests",
+        "tr": "Test durumlarını yeniden kullanma ve standart testler"
+      },
+      "body": {
+        "en": "Many websites share the same features, so the article suggests building a set of **standard test cases** for each common functionality and reusing them with small changes, instead of writing everything from scratch.\n\nReasons to reuse test cases:\n\n- Most functional areas of a website are similar: login, registration, add to cart, wish list, checkout, shipping, payment, product pages, promo codes.\n- Most projects are enhancements or changes to existing functionality.\n- Content management image-upload slots, customer service (CSR) systems and backend/warehouse applications are common across retail sites.\n- Cookies, timeouts and security concepts are shared.\n- Web-based projects are frequently subject to requirement changes.\n- The needed types of testing are common: browser compatibility, performance and security testing.\n\nGuidelines for a standard test:\n\n- Write complete tests (steps, data, variables) so non-similar data can be replaced; define entrance and exit criteria clearly.\n- **Highlight modifiable steps in a different color** for quick find-and-replace.\n- Use generic language, cover all features, name each test after its functionality, and attach a sample GUI file or screenshot to the relevant steps.\n\nThe author also used **color-coding** to show the changes made, so the reviewer only needs to focus on the changed part.",
+        "tr": "Birçok web sitesi aynı özellikleri paylaşır; bu yüzden makale, her ortak işlevsellik için bir dizi **standart test durumu (standard test cases)** hazırlamayı ve her şeyi sıfırdan yazmak yerine bunları küçük değişikliklerle yeniden kullanmayı önerir.\n\nTest durumlarını yeniden kullanmanın gerekçeleri:\n\n- Bir web sitesinin işlevsel alanlarının çoğu benzerdir: giriş, kayıt, sepete ekleme, istek listesi, ödeme adımı (checkout), kargo, ödeme, ürün sayfaları, promosyon kodları.\n- Projelerin çoğu, mevcut işlevselliğin geliştirilmesi (enhancement) veya değiştirilmesidir.\n- İçerik yönetimi görsel yükleme alanları, müşteri hizmetleri (CSR) sistemleri ve arka uç/depo uygulamaları perakende sitelerinde ortaktır.\n- Çerezler, zaman aşımları ve güvenlik kavramları ortaktır.\n- Web tabanlı projeler sık sık gereksinim değişikliklerine uğrar.\n- Gerekli test türleri ortaktır: tarayıcı uyumluluğu (browser compatibility), performans ve güvenlik testi.\n\nStandart bir test için yönergeler:\n\n- Benzer olmayan verilerin değiştirilebilmesi için eksiksiz testler (adımlar, veri, değişkenler) yazın; giriş ve çıkış kriterlerini (entrance and exit criteria) açıkça tanımlayın.\n- Hızlı bul-ve-değiştir için **değiştirilebilir adımları farklı bir renkle vurgulayın**.\n- Genel (generic) bir dil kullanın, tüm özellikleri kapsayın, her testi kapsadığı işlevselliğe göre adlandırın ve ilgili adımlara örnek bir GUI dosyası veya ekran görüntüsü ekleyin.\n\nYazar ayrıca yapılan değişiklikleri göstermek için **renk kodlaması (color-coding)** kullanmıştır; böylece gözden geçiren kişi yalnızca değiştirilen kısma odaklanır."
+      },
+      "source": "article: Reasons to Reuse Test Cases; What is a Standard Test in Web Testing?"
+    }
+  ],
+  "questions": {
+    "1": {
+      "concept": "test-case-basics",
+      "explanation_tr": "Makale, bir test durumunun (test case) bir özelliğin doğru çalışıp çalışmadığını belirlemek için girdi, eylem ve beklenen yanıtı tanımlayan bileşenlere sahip olduğunu söyler; yani belirli bir test hedefinin NASIL doğrulanacağına dair bir talimatlar kümesidir. En fazla yaklaşık 10 küçük durumdan oluşan bir grup ise makalenin test prosedürü (test procedure) tanımıdır."
+    },
+    "2": {
+      "concept": "test-case-basics",
+      "explanation_tr": "Makale, test durumu yazmanın temel amacının bir uygulamanın test kapsamını (test coverage) doğrulamak olduğunu belirtir. Ayrıca durum yazmanın standartlaşma getirdiğini ve plansız (ad hoc) yaklaşımı teşvik etmek yerine en aza indirdiğini ekler."
+    },
+    "3": {
+      "concept": "writing-levels",
+      "explanation_tr": "Makale Seviye 2'yi, durum yazımının uygulamanın gerçek işlevsel ve sistem akışına bağlı olduğu pratik aşama olarak adlandırır. Seviye 1 spesifikasyondan ve kullanıcı belgelerinden temel durumları yazar, Seviye 3 durumları prosedürler halinde gruplar, Seviye 4 otomasyondur ve Seviye 5 diye bir seviye yoktur."
+    },
+    "4": {
+      "concept": "writing-levels",
+      "explanation_tr": "Makale test prosedürünü (test procedure), test yazım sürecinin 3. Seviyesinde yazılan, en fazla belki 10 küçük durumdan oluşan bir gruptan başka bir şey olmadığı şeklinde tanımlar. Otomasyon Seviye 4'tür; değişkenler ve değerlerinin listesi ise test verisi (test data) alanıdır."
+    },
+    "5": {
+      "concept": "fields-and-format",
+      "explanation_tr": "Makalenin alan listesi Test verisini (Test data) \"değişkenler ve değerleri\" olarak tanımlar; bu girdi de tam olarak budur. Test edilecek birim (Unit to test) neyin doğrulanacağını açıklar, Beklenen Sonuç (Expected Result) ise testin üretmesi gereken yanıtı tutar."
+    },
+    "6": {
+      "concept": "fields-and-format",
+      "explanation_tr": "Verify ifadenin ilk kelimesidir ve Using neyin test edildiğini adlandırır ([araç adı, etiket adı, diyalog vb.]); makale duruma göre bunun yerine \"entering\" (girerek) veya \"selecting\" (seçerek) kullanılabileceğini belirtir. Koşullar With kısmına, döndürülen veya gösterilen şey ise To kısmına aittir."
+    },
+    "7": {
+      "concept": "writing-tips",
+      "explanation_tr": "İpucu #3, testçilerin test verisi öğelerini kendilerinin seçmesi yerine, özellikle hesaplama yapılan yerlerde onlara bir girdi aralığı verilmesi gerektiğini söyler ve sınır değer analizine (boundary value analysis) işaret eder. Gözden geçirme ipucu ise girdi aralığı sağlamakla değil, tamamlanmış durumların kuru çalıştırılmasıyla (dry run) ilgilidir."
+    },
+    "8": {
+      "concept": "documentation-tricks",
+      "explanation_tr": "\"Negatif durumları kapsamayı unutmayın\" (Do not forget to cover the negative cases) püf noktası her senaryo için iki test durumu ister: amaçlanan veya normal akış için pozitif bir durum ve amaçlanmayan veya istisnai akış için negatif bir durum; çünkü negatif bir durum, pozitif bir durum kadar önemlidir."
+    },
+    "9": {
+      "concept": "documentation-tricks",
+      "explanation_tr": "Makalenin örnekleri şunlardır: geçersiz bir giriş denemesinden sonra erişimin reddedilmesi Yüksek (High), kullanıcı ekranında ilgili ürünlerin gösterilmesi Orta (Medium) ve buton metninin renginin kontrolü Düşük (Low) önceliklidir; sıkı teslim tarihlerinde önce yüksek öncelikli testler çalıştırılır."
+    },
+    "10": {
+      "concept": "how-not-to-write",
+      "explanation_tr": "\"Checkout and pay\" (ödemeye geç ve öde) birkaç eylemi tek bir adıma sıkıştırır; makale buna birleşik adım (composite step) der. Bu adım; Checkout'a tıklama, kart, kargo ve fatura bilgilerini girme, Checkout'a tıklama ve onay sayfasını kontrol etme gibi adımlara bölünmelidir. Tek durumda birden fazla koşul (multiple conditions in one case) ise tek bir akışın birkaç eylemini değil, birkaç senaryoyu bir araya getirmek demektir."
+    },
+    "11": {
+      "concept": "how-not-to-write",
+      "explanation_tr": "Uygulama davranışını beklenen davranış olarak almak risklidir, çünkü uygulamanın kendisi hatalı olabilir; makale uygulamayı yalnızca bir rehber olarak kullanmayı ve doğru, amaçlanan davranışı yazmayı söyler; örneğin bir sipariş numarası girildikten sonra siparişin kargo ve iade ayrıntılarının görüntülenmesi."
+    },
+    "12": {
+      "concept": "how-not-to-write",
+      "explanation_tr": "Tek bir durumda birden fazla koşul olduğunda akış bozulur: (a) adımı kullanıcının girişini yaptıktan sonra, (b) adımı için giriş seçeneği artık mevcut değildir. Makalenin çözümü modüler testlerdir: her test durumunda tek bir koşul olur ve gerektiğinde ortak adımlar kopyalanır."
+    },
+    "13": {
+      "concept": "document-collection",
+      "explanation_tr": "Makale beş belge listeler: Kullanıcı Gereksinimleri Belgesi (User Requirements Document), İş Kullanım Durumu Belgesi (Business Use Case Document), İşlevsel Gereksinimler Belgesi (Functional Requirements Document), Yazılım Proje Planı (İsteğe bağlı / Optional) ve QA/Test Planı. Yalnızca hedefleri, öncelikleri, kilometre taşlarını, takvimi, riskleri ve bağımlılıkları kapsayan proje planı isteğe bağlı olarak işaretlenmiştir."
+    },
+    "14": {
+      "concept": "document-collection",
+      "explanation_tr": "Makale İş Kullanım Durumu Belgesini (Business Use Case Document), kullanım senaryolarını iş perspektifinden aktörler, hedefler, koşullar, akışlar, seçenekler ve istisnalarla ayrıntılandıran belge olarak tanımlar. Kullanıcı Gereksinimleri Belgesi (User Requirements Document) ise iş süreçlerini, kullanıcı profillerini ve işlevsel ile işlevsel olmayan gereksinimleri kapsar; QA/Test Planı da standartları, değişiklik kontrolünü ve kabul kriterlerini kapsar."
+    },
+    "15": {
+      "concept": "login-example-baoe",
+      "explanation_tr": "Süreç testleri (process tests), görünen kontrollerin eylemlerini değil, bir özellikle ilişkili süreçleri kapsar ve makale örnek olarak Forgot Password (Şifremi Unuttum) e-postasını kullanır. İşlevsel durumlar (functional cases), bağlantının kendisi gibi dinamik kontrollere tıklamayı; kullanıcı arayüzü testleri (UI tests) ise görünen alanları kapsar."
+    },
+    "16": {
+      "concept": "login-example-baoe",
+      "explanation_tr": "BAOE; Temel Akış (Basic Flow), Alternatif Akış (Alternate Flow), Seçenekler (Options) ve İstisnalar (Exceptions) anlamına gelir ve her biri pozitif ve negatif testlere uygulanır. Giriş için temel akış bir tarayıcı üzerinden giriş yapmak, alternatif akış bir mobil cihazda giriş yapmak, seçenekler çıkış yapma (logout) veya oturum zaman aşımı, istisnalar ise hata mesajı veren yanlış kimlik bilgileridir."
+    },
+    "17": {
+      "concept": "login-test-document",
+      "explanation_tr": "Maksimum uzunluk satırı, alanların izin verilen en fazla 30 karakteri kabul etmesini bekler. Metnin Registration'da (kayıt) izin verilmediği için reddedilmesi, özel karakterlerle veya boşluklarla başlayan girdi için beklenen sonuçtur; Session Expired (oturum süresi doldu) uyarısı ise 10 dakikalık boşta kalma testine aittir."
+    },
+    "18": {
+      "concept": "reusing-standard-tests",
+      "explanation_tr": "Makalenin gerekçeleri arasında tekrar eden işlevsel alanlar (giriş, kayıt, sepet, ödeme adımı), projelerin çoğunun mevcut işlevselliğin geliştirilmesi olması, web projelerinde sık gereksinim değişiklikleri ve tarayıcı uyumluluğu, performans ve güvenlik testi gibi tekrar eden test türleri bulunur; yanlış seçenekler bu noktalarla çelişir."
+    },
+    "19": {
+      "concept": "reusing-standard-tests",
+      "explanation_tr": "Makale, standart bir test için verdiği yönergeler arasında, değiştirilebilir adımların hızlıca bulunup değiştirilebilmesi için farklı bir renkle vurgulanmasını söyler; yazar ayrıca gözden geçirenlerin değiştirilen kısımlara odaklanabilmesi için renk kodlaması (color-coding) kullanmıştır."
+    }
+  }
+}

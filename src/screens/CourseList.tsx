@@ -1,5 +1,5 @@
 import { HazardStripe, percent, stats } from '../components';
-import { courses } from '../data';
+import { courses, scopedIds } from '../data';
 import { href } from '../router';
 import { getProgress, useProgress } from '../store';
 import type { CourseIndex } from '../data';
@@ -7,6 +7,7 @@ import type { CourseIndex } from '../data';
 function CourseCard({ ci }: { ci: CourseIndex }) {
   const p = useProgress(ci.course.id);
   const s = stats(ci.ids, p);
+  const presets = (ci.course.presets ?? []).map(preset => `${preset.title}: ${scopedIds(ci, preset.sets).length}`);
   return (
     <a className="card course-card" href={href({ name: 'course', courseId: ci.course.id })}>
       <div className="course-card-title">
@@ -14,7 +15,8 @@ function CourseCard({ ci }: { ci: CourseIndex }) {
         {ci.course.origin === 'generated' && <span className="badge">Üretilmiş</span>}
       </div>
       <div className="muted">
-        {s.total} soru · {s.solved} çözüldü{s.solved > 0 && ` · %${percent(s.correct, s.solved)} doğru`}
+        {s.total} soru{presets.length > 0 && ` (${presets.join(', ')})`} · {s.solved} çözüldü
+        {s.solved > 0 && ` · %${percent(s.correct, s.solved)} doğru`}
       </div>
       <div className="bar">
         <span style={{ width: `${percent(s.solved, s.total)}%` }} />

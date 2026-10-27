@@ -1,0 +1,250 @@
+{
+  "intro": {
+    "en": "This set covers advanced unit testing and test automation. You will learn how Test-Driven Development (TDD) uses tests to drive the design, how test doubles such as stubs, fakes and mocks isolate a unit, and how a CI/CD pipeline runs the tests automatically on every change. For a tester, these practices give fast, reliable feedback and catch defects early.",
+    "tr": "Bu set ileri birim testini ve test otomasyonunu kapsar. Test güdümlü geliştirmenin (Test-Driven Development, TDD) tasarımı testlerle nasıl yönlendirdiğini, saplama (stub), fake ve mock gibi test ikizlerinin (test double) bir birimi nasıl yalıttığını ve bir CI/CD işlem hattının (pipeline) her değişiklikte testleri nasıl otomatik çalıştırdığını öğreneceksin. Bir test uzmanı için bu uygulamalar hızlı ve güvenilir geri bildirim sağlar ve hataları erken yakalar."
+  },
+  "concepts": [
+    {
+      "id": "unit-test-aaa",
+      "title": {
+        "en": "Unit tests and the Arrange–Act–Assert structure",
+        "tr": "Birim testleri ve Arrange–Act–Assert yapısı"
+      },
+      "body": {
+        "en": "A unit test is the smallest kind of automated test. Because it is small and fast, it is the foundation for TDD and for CI pipelines.\n\n- **Unit test:** tests a single unit (one function or class) in isolation, i.e. without real databases, networks or other services.\n- It is fast, deterministic (gives the same result on every run) and repeatable.\n- It follows a clear **Arrange – Act – Assert (AAA)** structure.\n\nThe three AAA phases:\n- **Arrange:** prepare the inputs, the test doubles (stand-ins for collaborators) and the system under test (SUT, the code being tested).\n- **Act:** invoke exactly one behavior.\n- **Assert:** check the outcome or the interaction.\n\nAim for one assertion concept per behavior, so that each test has one clear reason to fail.\n\nPractical tips: one behavior per test with a clear name (Given/When/Then or `Should_DoX_When_Y`); fast local runs (under 1 s per test suite segment); keep test code quality as high as production code.\n\n**Example:** Arrange a `Cart` with two items worth 10 and 20; Act: call `cart.total()`; Assert: the result is 30.",
+        "tr": "Birim testi (unit test), otomatik testlerin en küçük türüdür. Küçük ve hızlı olduğu için TDD'nin ve CI işlem hatlarının temelidir.\n\n- **Birim testi:** tek bir birimi (bir fonksiyon ya da sınıf) yalıtılmış (isolation) olarak, yani gerçek veritabanı, ağ ya da başka servisler olmadan test eder.\n- Hızlıdır, deterministiktir (her çalıştırmada aynı sonucu verir) ve tekrarlanabilirdir.\n- Açık bir **Arrange – Act – Assert (AAA)** (Hazırla – Çalıştır – Kontrol et) yapısını izler.\n\nAAA'nın üç aşaması:\n- **Arrange (Hazırla):** girdileri, test ikizlerini (test double; iş birlikçilerin yerine geçen nesneler) ve test edilen sistemi (system under test, SUT) hazırla.\n- **Act (Çalıştır):** tam olarak tek bir davranışı çağır.\n- **Assert (Kontrol et):** sonucu ya da etkileşimi kontrol et.\n\nHer davranış için tek bir assertion (kontrol ifadesi) fikri hedeflenir; böylece her testin başarısız olması için tek ve açık bir nedeni olur.\n\nPratik ipuçları: her testte tek davranış ve açık bir ad (Given/When/Then ya da `Should_DoX_When_Y`); hızlı yerel çalıştırma (test paketinin her bölümü için 1 sn'nin altında); test kodunun kalitesini üretim kodu kadar yüksek tutmak.\n\n**Örnek:** Arrange: değeri 10 ve 20 olan iki ürünlü bir `Cart` oluştur; Act: `cart.total()` çağır; Assert: sonucun 30 olduğunu kontrol et."
+      },
+      "source": "slides 3, 14, 19"
+    },
+    {
+      "id": "tdd-cycle",
+      "title": {
+        "en": "TDD: the Red → Green → Refactor cycle",
+        "tr": "TDD: Kırmızı → Yeşil → Yeniden düzenleme döngüsü"
+      },
+      "body": {
+        "en": "Test-Driven Development (TDD) means writing a test *before* the code. The test acts as a specification, so tests shape the design instead of only catching bugs.\n\nThe cycle:\n- **Red:** write a minimal failing test that specifies the next behavior.\n- **Green:** write the minimal code needed to make that test pass.\n- **Refactor:** clean up the code and tests, using the tests as a safety net.\n\nWorkflow: pick a tiny behavior or user story → RED → GREEN → REFACTOR → repeat. Keep each cycle short (2–10 min) to maintain momentum and reduce complexity.\n\n**Example:** Red: a test expects `isEven(4)` to be true, but `isEven` is not implemented yet, so it fails. Green: return `n % 2 == 0`. Refactor: tidy the names; the test still passes.\n\nTextbook view (Jorgensen, Fig. 1.4; the slides do not use it): a behavior can be specified (S), programmed (P) and tested (T). Regions: 1 = in S, P and T; 2 = S and P, not T; 3 = P and T, not S; 4 = S and T, not P; 5 = S only; 6 = P only; 7 = T only. The goal is to make region 1 as large as possible. To place a behavior, ask: is it required (S)? does code for it exist (P)? does a test for it exist (T)?",
+        "tr": "Test güdümlü geliştirme (Test-Driven Development, TDD), kodu yazmadan *önce* testi yazmak demektir. Test bir belirtim (specification) görevi görür; böylece testler yalnızca hata yakalamaz, tasarımı da şekillendirir.\n\nDöngü:\n- **Kırmızı (Red):** bir sonraki davranışı belirten, başarısız olan küçük bir test yaz.\n- **Yeşil (Green):** o testi geçirmek için gereken en az kodu yaz.\n- **Yeniden düzenleme (Refactor):** testleri güvenlik ağı olarak kullanarak kodu ve testleri temizle.\n\nİş akışı: küçük bir davranış ya da kullanıcı hikâyesi (user story) seç → KIRMIZI → YEŞİL → YENİDEN DÜZENLEME → tekrarla. Tempoyu korumak ve karmaşıklığı azaltmak için her döngüyü kısa tut (2–10 dk).\n\n**Örnek:** Kırmızı: bir test `isEven(4)` sonucunun true olmasını bekler, ama `isEven` henüz yazılmadığı için test başarısız olur. Yeşil: `n % 2 == 0` döndür. Yeniden düzenleme: adları düzelt; test hâlâ geçer.\n\nDers kitabının görüşü (Jorgensen, Şekil 1.4; slaytlar bunu kullanmaz): bir davranış belirtilmiş (specified, S), programlanmış (programmed, P) ve test edilmiş (tested, T) olabilir. Bölgeler: 1 = S, P ve T'de; 2 = S ve P'de, T'de değil; 3 = P ve T'de, S'de değil; 4 = S ve T'de, P'de değil; 5 = yalnız S; 6 = yalnız P; 7 = yalnız T. Amaç 1. bölgeyi olabildiğince büyütmektir. Bir davranışı yerleştirmek için sor: istenmiş mi (S)? onun kodu var mı (P)? onun testi var mı (T)?"
+      },
+      "source": "slides 4–5; textbook ch. 1, Fig. 1.4 (pp. 6–7)"
+    },
+    {
+      "id": "tdd-scope-benefits",
+      "title": {
+        "en": "What TDD is not, its benefits, and emergent design",
+        "tr": "TDD ne değildir, faydaları ve gelişen tasarım"
+      },
+      "body": {
+        "en": "To use TDD well you must know its scope: it is a way of developing units, not a replacement for every other kind of test.\n\nTDD is **not**:\n- writing tests after coding,\n- full design up front,\n- end-to-end (E2E) testing. It complements, rather than replaces, higher-level tests such as integration or E2E tests.\nIt works with small units; large units entangled with I/O (input/output such as files, network, databases) slow the cycles down.\n\nBenefits (when TDD shines):\n- Emergent design and better cohesion: cohesive, decoupled code.\n- Fewer regressions (old features breaking again) and safer refactoring.\n- Self-documenting examples/specs: the tests are living examples that document the expected behavior.\nThe slide image also lists modular code, effortless code maintenance, tight team collaboration, bug prevention and quick changes.\n\nTwo design styles are compared:\n- **Big Design Up Front:** think before you code; supports governance; requires abstract thinking.\n- **Emergent Design:** assumes change is cheap; handles ambiguity; requires detail thinking.\n\n**Example:** after renaming a method, the whole TDD suite still passes, so the developer knows nothing broke: this is safer refactoring.",
+        "tr": "TDD'yi iyi kullanmak için kapsamını bilmek gerekir: TDD birimleri geliştirmenin bir yoludur, diğer tüm test türlerinin yerine geçmez.\n\nTDD şunlar **değildir**:\n- kodlamadan sonra test yazmak,\n- baştan eksiksiz tasarım yapmak,\n- uçtan uca (end-to-end, E2E) test. TDD, entegrasyon (integration) ya da E2E gibi daha üst düzey testlerin yerini almaz, onları tamamlar.\nTDD küçük birimlerle çalışır; G/Ç (I/O; dosya, ağ, veritabanı gibi girdi/çıktı) ile iç içe geçmiş büyük birimler döngüleri yavaşlatır.\n\nFaydaları (TDD'nin parladığı durumlar):\n- Gelişen tasarım (emergent design) ve daha iyi bağdaşıklık (cohesion): bağdaşık ve birbirinden ayrışık (decoupled) kod.\n- Daha az gerileme (regression; eski özelliklerin yeniden bozulması) ve daha güvenli yeniden düzenleme (refactoring).\n- Kendini belgeleyen örnekler/belirtimler: testler, beklenen davranışı belgeleyen canlı örneklerdir.\nSlayttaki görsel ayrıca modüler kodu, zahmetsiz kod bakımını, sıkı ekip iş birliğini, hata önlemeyi ve hızlı değişiklik yapabilmeyi listeler.\n\nİki tasarım yaklaşımı karşılaştırılır:\n- **Baştan Büyük Tasarım (Big Design Up Front):** kodlamadan önce düşün; yönetişimi (governance) destekler; soyut düşünme gerektirir.\n- **Gelişen Tasarım (Emergent Design):** değişikliğin ucuz olduğunu varsayar; belirsizlikle başa çıkar; ayrıntılı düşünme gerektirir.\n\n**Örnek:** bir metodun adı değiştirildikten sonra TDD test paketinin tamamı hâlâ geçer; geliştirici hiçbir şeyin bozulmadığını bilir. Bu, daha güvenli yeniden düzenlemedir."
+      },
+      "source": "slides 6–9"
+    },
+    {
+      "id": "tdd-pitfalls-smells",
+      "title": {
+        "en": "TDD pitfalls and test smells",
+        "tr": "TDD tuzakları ve test kokuları"
+      },
+      "body": {
+        "en": "Tests can be bad too: slow, breaking for the wrong reasons, or giving false confidence. A tester must recognise these warning signs.\n\nLimits and pitfalls of TDD:\n- Over-specifying internals → brittle tests (they break when the implementation changes even though the behavior is still correct).\n- Slow cycles with large units, or units entangled with I/O.\n- Mocking everything → fragile tests.\n- **\"Test theater\":** coverage without value — the tests raise the coverage number but check little.\n\nTest smells and anti-patterns (signs of a poor test suite):\n- Over-mocking and brittle verifications of implementation details.\n- Testing private internals.\n- Copy-pasted fixtures and giant setups.\n- Slow \"unit\" tests touching real I/O.\nThese slow down feedback and mask issues.\n\nDo not confuse these with **flaky tests**, which pass or fail randomly because of time, randomness, concurrency or networks.\n\nThe recommended practices are the opposite: one behavior per test, clear names, AAA structure, deterministic tests with seeded randomness, and fakes to keep tests realistic and fast.\n\n**Example:** a test that checks that a private helper method was called exactly twice breaks after a harmless refactor: a brittle verification.",
+        "tr": "Testler de kötü olabilir: yavaş olabilir, yanlış nedenlerle bozulabilir ya da sahte bir güven verebilir. Bir test uzmanı bu uyarı işaretlerini tanımalıdır.\n\nTDD'nin sınırları ve tuzakları:\n- İç ayrıntıları aşırı belirtmek → kırılgan (brittle) testler (davranış hâlâ doğru olsa bile gerçekleştirim değişince bozulurlar).\n- Büyük birimlerle ya da G/Ç (I/O) ile iç içe geçmiş birimlerle yavaş döngüler.\n- Her şeyi mock'lamak → kırılgan testler.\n- **\"Test tiyatrosu\" (test theater):** değer katmayan kapsam (coverage) — testler kapsam sayısını yükseltir ama pek az şeyi kontrol eder.\n\nTest kokuları (test smells) ve anti-kalıplar (anti-patterns), yani zayıf bir test paketinin işaretleri:\n- Aşırı mock kullanımı ve gerçekleştirim ayrıntılarının kırılgan doğrulamaları.\n- Özel (private) iç ayrıntıları test etmek.\n- Kopyala-yapıştır fikstürler (fixture) ve dev hazırlık (setup) kodları.\n- Gerçek G/Ç'ye dokunan yavaş \"birim\" testleri.\nBunlar geri bildirimi yavaşlatır ve sorunları gizler.\n\nBunları **kararsız testlerle (flaky tests)** karıştırma: kararsız testler zaman, rastgelelik, eşzamanlılık (concurrency) ya da ağ yüzünden rastgele geçer veya başarısız olur.\n\nÖnerilen uygulamalar bunların tersidir: her testte tek davranış, açık adlar, AAA yapısı, rastgeleliği tohumlanmış (seeded) deterministik testler ve testleri gerçekçi ve hızlı tutmak için fake'ler.\n\n**Örnek:** özel bir yardımcı metodun tam iki kez çağrıldığını kontrol eden bir test, zararsız bir yeniden düzenlemeden sonra bozulur: bu kırılgan bir doğrulamadır."
+      },
+      "source": "slides 9, 12, 16, 18–19, 36"
+    },
+    {
+      "id": "testability-doubles",
+      "title": {
+        "en": "Designing for testability and the test double family",
+        "tr": "Test edilebilirlik için tasarım ve test ikizi ailesi"
+      },
+      "body": {
+        "en": "A unit can only be tested in isolation if its collaborators (the objects it depends on) can be swapped out. Designing for testability makes this possible; test doubles are the stand-ins you swap in.\n\nDesigning for testability:\n- Dependency inversion: depend on interfaces/abstractions, not on concrete classes.\n- Small, pure functions where possible.\n- Clear seams: places where a dependency can be substituted.\n- Avoid global state and static singletons: they hide dependencies.\n\nThe test double family (different fidelity levels):\n- **Dummy:** passed but never used (it only fills a parameter).\n- **Stub:** returns canned (pre-set) values.\n- **Fake:** a lightweight working implementation, e.g. an in-memory DB.\n- **Spy:** records interactions (which calls were made).\n- **Mock:** verifies behavior/interaction (checks that the expected calls happened).\n\nChoose the lightest double that proves the behavior you care about.\n\n**Example:** a `PriceConverter` normally asks a currency web service for the rate. If the rate source is passed in through an interface, a test can pass a stub that always returns 1.1, so the result is predictable.",
+        "tr": "Bir birim, ancak iş birlikçileri (bağımlı olduğu nesneler) değiştirilebiliyorsa yalıtılmış olarak test edilebilir. Test edilebilirlik için tasarım (design for testability) bunu mümkün kılar; test ikizleri (test doubles) de yerine takılan vekil nesnelerdir.\n\nTest edilebilirlik için tasarım:\n- Bağımlılığın tersine çevrilmesi (dependency inversion): somut sınıflara değil, arayüzlere/soyutlamalara bağımlı ol.\n- Mümkün olduğunda küçük, saf (pure) fonksiyonlar.\n- Açık ek yerleri (seams): bir bağımlılığın değiştirilebildiği noktalar.\n- Global durumdan (global state) ve statik singleton'lardan kaçın: bunlar bağımlılıkları gizler.\n\nTest ikizi ailesi (farklı gerçeklik düzeyleri):\n- **Kukla (dummy):** parametre olarak geçirilir ama hiç kullanılmaz (yalnızca bir parametreyi doldurur).\n- **Saplama (stub):** önceden hazırlanmış (canned) değerler döndürür.\n- **Fake:** hafif ama çalışan bir gerçekleştirim; örn. bellek içi (in-memory) veritabanı.\n- **Casus (spy):** etkileşimleri (hangi çağrıların yapıldığını) kaydeder.\n- **Mock:** davranışı/etkileşimi doğrular (beklenen çağrıların gerçekleştiğini kontrol eder).\n\nİlgilendiğin davranışı kanıtlayan en hafif ikizi seç.\n\n**Örnek:** bir `PriceConverter` normalde döviz kurunu bir web servisinden ister. Kur kaynağı bir arayüz üzerinden içeri verilirse, test her zaman 1.1 döndüren bir saplama verebilir; böylece sonuç öngörülebilir olur."
+      },
+      "source": "slides 10–11"
+    },
+    {
+      "id": "mocking-practice",
+      "title": {
+        "en": "When to mock, and mocking framework patterns",
+        "tr": "Ne zaman mock kullanılır ve mock çatısı kalıpları"
+      },
+      "body": {
+        "en": "Mocking frameworks (for example Moq or Mockito) make test doubles easy to create, but mocking the wrong things makes tests fragile.\n\nWhen to mock and when not to:\n- Mock external or difficult dependencies: I/O, time, network/HTTP, file systems.\n- Don't mock your own data models or algorithms: test them for real.\n- Prefer fakes to keep tests realistic, fast and less brittle.\n- The system under test itself is exercised, never replaced.\n\nMocking framework patterns:\n- Arrange expectations (given/when): define what a call should return.\n- Verify calls: how many times (times) and with which arguments.\n- Argument matchers and stubbing exceptions (making a call throw an error).\n- Resetting/teardown between tests to avoid leakage: state from one test must not leak into the next.\n\n**Example:** in a weather-alert test, the HTTP weather client is mocked to return \"storm\", and the test verifies that `sendAlert` was called once. After the test, the mock is reset so the next test starts clean.",
+        "tr": "Mock çatıları (mocking frameworks; örneğin Moq ya da Mockito) test ikizi oluşturmayı kolaylaştırır, ama yanlış şeyleri mock'lamak testleri kırılgan yapar.\n\nNe zaman mock kullanmalı, ne zaman kullanmamalı:\n- Dış ya da kontrolü zor bağımlılıkları mock'la: G/Ç (I/O), zaman, ağ/HTTP, dosya sistemleri.\n- Kendi veri modellerini ya da algoritmalarını mock'lama: onları gerçekten test et.\n- Testleri gerçekçi, hızlı ve daha az kırılgan tutmak için fake'leri tercih et.\n- Test edilen sistemin kendisi her zaman çalıştırılır, asla değiştirilmez.\n\nMock çatısı kalıpları:\n- Beklentileri hazırla (given/when): bir çağrının ne döndüreceğini tanımla.\n- Çağrıları doğrula: kaç kez (times) ve hangi argümanlarla yapıldığını.\n- Argüman eşleştiriciler (argument matchers) ve istisna saplama (stubbing exceptions; bir çağrının hata fırlatmasını sağlamak).\n- Sızıntıyı önlemek için testler arasında sıfırlama/temizleme (resetting/teardown): bir testin durumu sonraki teste sızmamalıdır.\n\n**Örnek:** bir hava durumu uyarısı testinde HTTP hava durumu istemcisi \"storm\" döndürecek şekilde mock'lanır ve test `sendAlert` metodunun bir kez çağrıldığını doğrular. Testten sonra mock sıfırlanır; böylece sonraki test temiz başlar."
+      },
+      "source": "slides 12–13, 35"
+    },
+    {
+      "id": "test-data-flaky-quality",
+      "title": {
+        "en": "Parameterized tests, flaky tests and quality beyond coverage",
+        "tr": "Parametreli testler, kararsız testler ve kapsamın ötesinde kalite"
+      },
+      "body": {
+        "en": "Good unit tests cover many inputs, give the same result every time, and really check the results. Three slides deal with these goals.\n\nParameterized and edge-case testing:\n- Parameterized tests run the same test logic over many data sets, so the test is not copied.\n- Focus the data on boundary values and equivalence classes (groups of inputs that behave the same).\n- Property-based tests check invariants (rules that always hold) and can reveal hidden edge cases.\n\nFlaky tests (tests that pass or fail randomly):\n- Causes: time, randomness, concurrency, real networks.\n- Fixes: control time and randomness (fixed clocks, seeded random number generators), isolate and fake external systems, stabilize setup/teardown.\n\nMeasuring quality beyond coverage:\n- Statement/branch/condition coverage is useful, not a goal: weak assertions can still yield high coverage, because coverage only shows which code ran.\n- Mutation testing catches weak assertions by measuring how strong the tests are; test review checks readability, intent and maintenance cost.\n\n**Example:** a test of `isWeekend()` reads the real current date, so its result depends on the day it runs. Passing in a fixed clock makes it deterministic.",
+        "tr": "İyi birim testleri birçok girdiyi kapsar, her seferinde aynı sonucu verir ve sonuçları gerçekten kontrol eder. Üç slayt bu hedefleri ele alır.\n\nParametreli ve uç durum (edge-case) testleri:\n- Parametreli testler (parameterized tests) aynı test mantığını birçok veri kümesi üzerinde çalıştırır; böylece test kopyalanmaz.\n- Verileri sınır değerlere (boundary values) ve eşdeğerlik sınıflarına (equivalence classes; aynı davranan girdi grupları) odakla.\n- Özellik tabanlı testler (property-based tests) değişmezleri (invariant; her zaman geçerli kurallar) kontrol eder ve gizli uç durumları ortaya çıkarabilir.\n\nKararsız testler (flaky tests; rastgele geçen ya da başarısız olan testler):\n- Nedenleri: zaman, rastgelelik, eşzamanlılık (concurrency), gerçek ağlar.\n- Çözümleri: zamanı ve rastgeleliği kontrol et (sabit saatler, tohumlanmış/seeded rastgele sayı üreteçleri), dış sistemleri yalıt ve yerlerine fake koy, hazırlık/temizlik (setup/teardown) adımlarını kararlı hâle getir.\n\nKapsamın ötesinde kaliteyi ölçmek:\n- Deyim/dal/koşul kapsamı (statement/branch/condition coverage) yararlıdır ama bir hedef değildir: kapsam yalnızca hangi kodun çalıştığını gösterdiği için zayıf doğrulamalar (assertion) da yüksek kapsam verebilir.\n- Mutasyon testi (mutation testing), testlerin ne kadar güçlü olduğunu ölçerek zayıf doğrulamaları yakalar; test incelemesi (test review) ise okunabilirliği, amacı ve bakım maliyetini kontrol eder.\n\n**Örnek:** `isWeekend()` için yazılmış bir test gerçek güncel tarihi okur; bu yüzden sonucu çalıştırıldığı güne bağlıdır. Sabit bir saat (clock) içeri vermek testi deterministik yapar."
+      },
+      "source": "slides 15–17"
+    },
+    {
+      "id": "automation-pyramid",
+      "title": {
+        "en": "Why automate, the testing pyramid, and test types in CI",
+        "tr": "Neden otomasyon, test piramidi ve CI'daki test türleri"
+      },
+      "body": {
+        "en": "Automated tests run by a machine on every change, so problems are found quickly and in the same way on every machine.\n\nWhy automate?\n- Catch issues early (**shift-left**: testing moves earlier in the development process).\n- Consistency across environments.\n- Faster feedback for developers, which raises productivity and release confidence.\n\nTesting pyramid:\n- Many unit tests → fewer service/integration tests → few end-to-end (E2E) tests.\n- Keep unit tests fast and cheap.\n- Use integration/E2E tests for cross-service confidence; they are still needed, just fewer.\nThis shape keeps feedback quick and costs manageable; \"everything E2E\" creates bottlenecks.\n\nTest types in CI (when each one runs):\n- Fast unit tests: on every push.\n- Contract/integration tests: on PRs (pull requests) or nightly.\n- E2E/UI tests: on staging or nightly.\n- Performance and load tests: on a schedule or pre-release.\nThis balances speed and depth.\n\n**Example:** a suite of 2,000 unit tests, 150 integration tests and 15 E2E tests follows the pyramid; the unit tests give feedback within minutes on every push.",
+        "tr": "Otomatik testler her değişiklikte bir makine tarafından çalıştırılır; böylece sorunlar hızlıca ve her makinede aynı şekilde bulunur.\n\nNeden otomasyon?\n- Sorunları erken yakala (**sola kaydırma, shift-left**: test, geliştirme sürecinde daha erkene taşınır).\n- Ortamlar arasında tutarlılık.\n- Geliştiriciler için daha hızlı geri bildirim; bu da verimliliği ve sürüme olan güveni artırır.\n\nTest piramidi (testing pyramid):\n- Çok sayıda birim testi → daha az servis/entegrasyon testi → az sayıda uçtan uca (end-to-end, E2E) test.\n- Birim testlerini hızlı ve ucuz tut.\n- Servisler arası güven için entegrasyon/E2E testlerini kullan; bunlara yine ihtiyaç vardır, yalnızca sayıları daha azdır.\nBu şekil geri bildirimi hızlı, maliyetleri yönetilebilir tutar; \"her şey E2E\" yaklaşımı darboğaz yaratır.\n\nCI'daki test türleri (her biri ne zaman çalışır):\n- Hızlı birim testleri: her push'ta.\n- Sözleşme/entegrasyon (contract/integration) testleri: PR'larda (pull request) ya da gecelik.\n- E2E/UI testleri: hazırlık (staging) ortamında ya da gecelik.\n- Performans ve yük (load) testleri: bir zamanlamaya göre ya da sürüm öncesinde.\nBu, hız ile derinliği dengeler.\n\n**Örnek:** 2.000 birim, 150 entegrasyon ve 15 E2E testinden oluşan bir paket piramide uyar; birim testleri her push'ta dakikalar içinde geri bildirim verir."
+      },
+      "source": "slides 20–21, 29, 33"
+    },
+    {
+      "id": "pipeline-stages",
+      "title": {
+        "en": "Pipeline anatomy, CI/CD stages and deployment strategies",
+        "tr": "İşlem hattı yapısı, CI/CD aşamaları ve dağıtım stratejileri"
+      },
+      "body": {
+        "en": "A CI/CD pipeline is the automated sequence that turns a code change into a tested, deployable product. CI (continuous integration) builds and tests every change; CD (continuous delivery/deployment) carries the tested build toward production.\n\nPipeline anatomy (high level):\n- Trigger: push, pull request (PR) or schedule.\n- Build → Test → Analyze → Package → Deploy.\n- Feedback: status checks, artifacts, notifications.\n\nTypical CI stages: checkout and dependency restore/cache; linting and static analysis (style, SAST); unit tests (parallel/matrix); integration tests with services (DB, API); artifact build and publish (packages, images).\n\nTypical CD stages: promote the build to staging; smoke tests and health checks; manual/auto approvals and gates; deploy to production; post-deploy verification and rollback strategy.\n\nDeployment strategies:\n- **Blue/green:** instant switch, easy rollback.\n- **Canary:** gradual rollout, metrics-driven.\n- **Rolling:** updates instances (running copies of the application) in batches with health checks.\n- **Feature flags:** decouple deploy from release.\n\n**Example (conceptual, on main):** build → unit+integration → package → push image → deploy to staging → smoke → gate → prod.",
+        "tr": "CI/CD işlem hattı (pipeline), bir kod değişikliğini test edilmiş ve dağıtılabilir bir ürüne dönüştüren otomatik adımlar dizisidir. CI (continuous integration, sürekli entegrasyon) her değişikliği derler ve test eder; CD (continuous delivery/deployment, sürekli teslim/dağıtım) test edilmiş derlemeyi üretim ortamına (production) doğru taşır.\n\nİşlem hattının yapısı (genel bakış):\n- Tetikleyici (trigger): push, pull request (PR) ya da zamanlama (schedule).\n- Build → Test → Analyze → Package → Deploy (Derle → Test et → Analiz et → Paketle → Dağıt).\n- Geri bildirim: durum kontrolleri (status checks), yapıtlar (artifacts), bildirimler.\n\nTipik CI aşamaları: kodu çekme (checkout) ve bağımlılıkları geri yükleme/önbellekleme; lint ve statik analiz (stil, SAST); birim testleri (paralel/matris); servislerle (DB, API) entegrasyon testleri; yapıt derleme ve yayımlama (paketler, imajlar).\n\nTipik CD aşamaları: derlemeyi hazırlık (staging) ortamına yükselt; duman testleri (smoke tests) ve sağlık kontrolleri (health checks); elle/otomatik onaylar ve kapılar (gates); üretim ortamına dağıtım; dağıtım sonrası doğrulama ve geri alma (rollback) stratejisi.\n\nDağıtım stratejileri:\n- **Mavi/yeşil (blue/green):** anında geçiş, kolay geri alma.\n- **Kanarya (canary):** kademeli, metriklere dayalı yayılım.\n- **Sıralı güncelleme (rolling):** örnekleri (instance; uygulamanın çalışan kopyaları) sağlık kontrolleriyle gruplar hâlinde günceller.\n- **Özellik bayrakları (feature flags):** dağıtımı (deploy) sürümden (release) ayırır.\n\n**Örnek (kavramsal, main dalında):** build → unit+integration → package → push image → staging'e dağıt → smoke → gate → prod."
+      },
+      "source": "slides 22–24, 31, 34"
+    },
+    {
+      "id": "ci-practices",
+      "title": {
+        "en": "Branching, CI infrastructure, quality gates, artifacts and best practices",
+        "tr": "Dal modelleri, CI altyapısı, kalite kapıları, yapıtlar ve en iyi uygulamalar"
+      },
+      "body": {
+        "en": "Besides the stages, a team decides how code is merged, where jobs run and which rules block a merge.\n\n- **Branching & triggers:** trunk-based development enables rapid integration; GitFlow offers stricter release control (a trade-off between branching models). PR checks act as quality gates; tag/release triggers produce versioned artifacts; feature flags make releases safer.\n- **CI infrastructure:** runners/agents (hosted vs self-hosted); build matrices run the same jobs across OS/SDK versions; caching (dependencies, Docker layers) for speed; secrets management (never hard-code; scan repos and images for secrets).\n- **Quality gates & policy:** minimum coverage and mutation thresholds; lint/format must pass; security checks: SAST and dependency scanning (SBOM); license compliance and artifact signing.\n- **Artifacts & reproducibility:** versioned artifacts (SemVer); package and container registries; immutable builds; provenance (SLSA basics).\n- **Observability:** logs, metrics and traces for builds/tests; flaky test tracking and quarantine lists; trend charts (build time, pass rate).\n- **Common pitfalls:** slow pipelines, flaky tests blocking merges, \"everything E2E\" bottlenecks, drift between dev/staging/prod.\n- **Best practices:** keep PR pipelines under ~10 min (under 1 s is the target only for a local test suite segment); fail fast with clear, actionable messages; seed randomness so tests are deterministic; document the pipeline in the repo (README + YAML).\n\n**Example:** a matrix of 2 operating systems × 3 SDK versions runs the same job 6 times in parallel.",
+        "tr": "Aşamaların yanında bir ekip; kodun nasıl birleştirileceğine, işlerin nerede çalışacağına ve hangi kuralların birleştirmeyi engelleyeceğine karar verir.\n\n- **Dal modelleri ve tetikleyiciler:** gövde tabanlı geliştirme (trunk-based development) hızlı entegrasyon sağlar; GitFlow daha sıkı sürüm kontrolü sunar (dal modelleri arasında bir ödünleşim/trade-off). PR kontrolleri kalite kapısı (quality gate) görevi görür; etiket/sürüm (tag/release) tetikleyicileri sürümlü yapıtlar üretir; özellik bayrakları sürümleri daha güvenli yapar.\n- **CI altyapısı:** çalıştırıcılar/ajanlar (runners/agents; barındırılan ya da kendi sunucunda); derleme matrisleri (build matrix) aynı işleri farklı işletim sistemi/SDK sürümlerinde çalıştırır; hız için önbellekleme (bağımlılıklar, Docker katmanları); gizli bilgi yönetimi (secrets management; asla koda gömme; depoları ve imajları gizli bilgi için tara).\n- **Kalite kapıları ve politika:** asgari kapsam ve mutasyon eşikleri; lint/format geçmeli; güvenlik kontrolleri: SAST ve bağımlılık taraması (SBOM); lisans uyumu ve yapıt imzalama.\n- **Yapıtlar ve tekrarlanabilirlik:** sürümlü yapıtlar (SemVer); paket ve konteyner kayıt depoları (registries); değişmez (immutable) derlemeler; köken bilgisi (provenance; SLSA temelleri).\n- **Gözlemlenebilirlik (observability):** derlemeler/testler için loglar, metrikler ve izler (traces); kararsız test takibi ve karantina listeleri; eğilim grafikleri (derleme süresi, geçme oranı).\n- **Yaygın tuzaklar:** yavaş işlem hatları, birleştirmeleri (merge) engelleyen kararsız testler, \"her şey E2E\" darboğazları, dev/staging/prod ortamları arasındaki sapma (drift).\n- **En iyi uygulamalar:** PR işlem hatlarını ~10 dakikanın altında tut (1 sn'nin altı yalnızca test paketinin yerel bir bölümü için hedeftir); açık, harekete geçirilebilir mesajlarla hızlı başarısız ol (fail fast); testlerin deterministik olması için rastgeleliği tohumla (seed); işlem hattını depoda belgele (README + YAML).\n\n**Örnek:** 2 işletim sistemi × 3 SDK sürümünden oluşan bir matris, aynı işi paralel olarak 6 kez çalıştırır."
+      },
+      "source": "slides 25–28, 30, 32–33, 36"
+    }
+  ],
+  "questions": {
+    "1": {
+      "concept": "unit-test-aaa",
+      "explanation_tr": "Birim testi, tek bir birimi (fonksiyon/sınıf) yalıtılmış olarak; hızlı, deterministik ve tekrarlanabilir kontrollerle doğrular. Birden fazla servise, kullanıcı arayüzüne ya da gerçek bir veritabanına uzanmak yalıtımı bozar; her çalıştırmada değişen sonuçlar ise \"deterministik\" olma özelliğiyle çelişir."
+    },
+    "2": {
+      "concept": "tdd-cycle",
+      "explanation_tr": "Yeşil adım, başarısız olan testi en az kodla geçirmek demektir. Önce başarısız testi yazmak kırmızı adımdır; testleri güvenlik ağı olarak kullanarak kodu temizlemek ise yeniden düzenleme (refactor) adımıdır."
+    },
+    "3": {
+      "concept": "tdd-cycle",
+      "explanation_tr": "İş akışı, döngüyü tekrarlamayı ve tempoyu korumak için döngüleri kısa (2–10 dk) tutmayı söyler. 1 saniyenin altı, bir TDD döngüsü için değil, test paketinin bir bölümünü yerelde çalıştırmak için hedeflenen süredir."
+    },
+    "4": {
+      "concept": "tdd-scope-benefits",
+      "explanation_tr": "TDD; kodlamadan sonra test yazmak, baştan eksiksiz tasarım yapmak ya da uçtan uca (end-to-end) test değildir; daha üst düzey testleri tamamlar. G/Ç (I/O) ile iç içe geçmiş büyük birimler, döngüleri yavaşlattıkları için bir tuzak olarak listelenir."
+    },
+    "5": {
+      "concept": "tdd-scope-benefits",
+      "explanation_tr": "Gelişen Tasarım (Emergent Design) değişikliğin ucuz olduğunu varsayar, belirsizlikle başa çıkar ve ayrıntılı düşünmeyi gerektirir. Kodlamadan önce düşünmek, yönetişimi (governance) desteklemek ve soyut düşünme gerektirmek ise Baştan Büyük Tasarım (Big Design Up Front) için listelenmiştir."
+    },
+    "6": {
+      "concept": "tdd-pitfalls-smells",
+      "explanation_tr": "\"Test tiyatrosu\" (test theater), değer katmayan kapsam (coverage without value) olarak listelenir. İç ayrıntıları aşırı belirtmek, her şeyi mock'lamak ve aşırı büyük birimler ayrı tuzaklardır; zaman ya da eşzamanlılık (concurrency) yüzünden rastgele başarısız olma ise kararsız (flaky) testleri tanımlar."
+    },
+    "7": {
+      "concept": "testability-doubles",
+      "explanation_tr": "Test edilebilirlik için tasarım, arayüzler/soyutlamalarla bağımlılığın tersine çevrilmesini (dependency inversion) ve bağımlılıkların değiştirilebileceği açık ek yerlerini (seams) tercih eder; bağımlılıkları gizleyen global durumdan ve statik singleton'lardan kaçınmayı söyler."
+    },
+    "8": {
+      "concept": "testability-doubles",
+      "explanation_tr": "Kukla (dummy) parametre olarak geçirilir ama hiç kullanılmaz. Saplamalar (stub) önceden hazırlanmış değerler döndürür, fake'ler hafif ama çalışan gerçekleştirimlerdir, casuslar (spy) etkileşimleri kaydeder, mock'lar ise etkileşimleri doğrular; burada bunların hiçbirine gerek yoktur."
+    },
+    "9": {
+      "concept": "testability-doubles",
+      "explanation_tr": "Mock davranışı/etkileşimi doğrular, saplama (stub) ise önceden hazırlanmış değerler döndürür. Geçirilip hiç kullanılmamak kuklayı (dummy), hafif ama çalışan bir gerçekleştirim fake'i, etkileşimleri kaydetmek ise casusu (spy) tanımlar."
+    },
+    "10": {
+      "concept": "mocking-practice",
+      "explanation_tr": "Mock kullanımı; G/Ç (I/O), zaman ve HTTP gibi dış ya da kontrolü zor bağımlılıklar için önerilir. Ders, kendi veri modellerinizi ya da algoritmalarınızı mock'lamamanızı söyler; test edilen sistem ise değiştirilmez, çalıştırılır."
+    },
+    "11": {
+      "concept": "mocking-practice",
+      "explanation_tr": "Sıfırlama/temizleme (resetting/teardown), sızıntıyı önlemek için testler arasındaki durumu yalıtır. Çağrı sayılarını doğrulamak, istisna saplamak (stubbing exceptions) ve given/when beklentileri kurmak ise ayrı mock çatısı (mocking framework) kalıplarıdır."
+    },
+    "12": {
+      "concept": "unit-test-aaa",
+      "explanation_tr": "Act tek bir davranışı çağırır; girdileri, test ikizlerini ve test edilen sistemi hazırlamak Arrange, sonucu ya da etkileşimi kontrol etmek ise Assert aşamasıdır. Birkaç davranışı art arda çağırmak \"her testte tek davranış\" kuralıyla çelişir."
+    },
+    "13": {
+      "concept": "test-data-flaky-quality",
+      "explanation_tr": "Parametreli testler (parameterized tests) veri kümeleriyle birden çok durumu kapsar ve sınır değerlere ve eşdeğerlik sınıflarına odaklanır. Mutasyon testi ise girdi durumu eklemez, testlerin ne kadar güçlü olduğunu ölçer."
+    },
+    "14": {
+      "concept": "test-data-flaky-quality",
+      "explanation_tr": "Zaman ve rastgelelikten kaynaklanan kararsızlık (flakiness), saatleri ve rastgele sayı üreteçlerini (RNG) kontrol ederek (tohumlar/saatler; seeds/clocks) giderilir. Gerçek ağlar ve eşzamanlılık ise çözüm değil, kararsız testlerin nedenleri olarak listelenir."
+    },
+    "15": {
+      "concept": "test-data-flaky-quality",
+      "explanation_tr": "Deyim/dal/koşul kapsamı (statement/branch/condition coverage) yararlıdır ama bir hedef değildir, çünkü zayıf doğrulamalar (assertion) da yüksek kapsam verebilir; bunları yakalamanın yolu olarak mutasyon testi gösterilir. Koşul kapsamı gibi başka bir kapsam ölçütünü ölçmek yalnızca daha fazla kodun çalıştığını gösterir, sonuçların kontrol edildiğini göstermez."
+    },
+    "16": {
+      "concept": "tdd-pitfalls-smells",
+      "explanation_tr": "Gerçek G/Ç'ye (I/O) dokunan yavaş \"birim\" testleri; aşırı mock kullanımı, özel (private) iç ayrıntıları test etmek ve kopyala-yapıştır dev hazırlık kodlarıyla birlikte bir test kokusu (test smell) olarak listelenir. Diğer seçenekler dersin önerdiği uygulamalardır."
+    },
+    "17": {
+      "concept": "automation-pyramid",
+      "explanation_tr": "Otomasyon sorunları erken yakalar; \"sola kaydırma\" (shift-left) bu demektir. Testi sürüme ya da üretim ortamına doğru ertelemek bunun tersidir; birim testlerini E2E testleriyle değiştirmek ise test piramidiyle çelişir."
+    },
+    "18": {
+      "concept": "automation-pyramid",
+      "explanation_tr": "Piramit, geri bildirimi hızlı tutmak için çok sayıda hızlı ve ucuz birim testi, daha az servis/entegrasyon testi ve az sayıda uçtan uca test ister. Entegrasyon/E2E testleri servisler arası güven için yine de kullanılır, bu yüzden hepsini kaldırmak yanlıştır."
+    },
+    "19": {
+      "concept": "pipeline-stages",
+      "explanation_tr": "Bir işlem hattı (pipeline) push/PR/zamanlama ile tetiklenir, ardından Build → Test → Analyze → Package → Deploy (Derle → Test et → Analiz et → Paketle → Dağıt) sırasını çalıştırır; bunu durum kontrolleri, yapıtlar (artifacts) ve bildirimler gibi geri bildirimler izler."
+    },
+    "20": {
+      "concept": "pipeline-stages",
+      "explanation_tr": "CD, derlemeyi hazırlık (staging) ortamına yükseltir, duman testlerini (smoke tests) ve sağlık kontrollerini çalıştırır ve üretim ortamına geçişi bir kapıyla (gate) denetler. Kodu çekme (checkout), bağımlılık önbelleği, lint/statik analiz, birim testleri ve entegrasyon testleri ise CI aşamaları olarak listelenir."
+    },
+    "21": {
+      "concept": "ci-practices",
+      "explanation_tr": "Gövde tabanlı geliştirme (trunk-based development) hızlı entegrasyon sağlar, GitFlow ise daha sıkı sürüm kontrolü sunar. Bunlar ödünleşimleri (trade-off) olan dal (branching) modelleridir, dağıtım stratejisi değildir; PR kontrolleri de kalite kapısı (quality gate) olarak kullanılmaya devam eder."
+    },
+    "22": {
+      "concept": "ci-practices",
+      "explanation_tr": "SLSA temelleri, derlemenin köken bilgisi (provenance) ile birlikte anılır. SemVer sürümlü yapıtlar (versioned artifacts) içindir, SBOM bağımlılık taramasına, SAST statik analiz/güvenlik kontrollerine, AAA (Arrange–Act–Assert) ise birim testi yapısına aittir."
+    },
+    "23": {
+      "concept": "automation-pyramid",
+      "explanation_tr": "Hız ile derinliği dengelemek için hızlı birim testleri her push'ta, sözleşme/entegrasyon testleri PR'larda ya da gecelik, E2E/UI testleri hazırlık (staging) ortamında ya da gecelik, performans/yük testleri ise bir zamanlamaya göre ya da sürüm öncesinde çalışır."
+    },
+    "24": {
+      "concept": "pipeline-stages",
+      "explanation_tr": "Sıralı (rolling) güncellemeler, örnekleri (instance) sağlık kontrolleriyle gruplar hâlinde değiştirir. Mavi/yeşil (blue/green) anında geçiş ve kolay geri alma sağlar, kanarya (canary) metriklere dayalı kademeli bir yayılımdır, özellik bayrakları (feature flags) ise dağıtımı (deploy) sürümden (release) ayırır."
+    },
+    "25": {
+      "concept": "ci-practices",
+      "explanation_tr": "En iyi uygulamalar, PR işlem hatlarını yaklaşık 10 dakikanın altında tutmayı ve açık, harekete geçirilebilir mesajlarla hızlı başarısız olmayı (fail fast) söyler. 1 saniyenin altı, bütün bir işlem hattı için değil, test paketinin yerel bir bölümü için hedeftir."
+    },
+    "26": {
+      "concept": "tdd-cycle",
+      "explanation_tr": "Yeni test davranışı hem belirtir hem de test eder, ancak onu gerçekleştiren kod henüz yoktur; bu yüzden davranış S ve T'de, P'nin dışında yer alır (kitabın Şekil 1.4'ündeki 4. bölge) ve test bu nedenle başarısız olur. Yeşil adım en az kodu ekler ve davranışı S, P ve T'nin hepsine (1. bölge) taşır."
+    },
+    "27": {
+      "concept": "tdd-scope-benefits",
+      "explanation_tr": "TDD, beklenen davranışı belgeleyen canlı örnekler bırakır (kendini belgeleyen örnekler/belirtimler). Gelişen tasarım ve daha güvenli yeniden düzenleme, bu senaryonun göstermediği başka faydalardır; baştan sabitlenmiş bir tasarım ve değer katmayan kapsam (test tiyatrosu) ise TDD'nin faydaları değildir."
+    },
+    "28": {
+      "concept": "testability-doubles",
+      "explanation_tr": "Fake, bellek içi (in-memory) veritabanı gibi hafif ama çalışan bir gerçekleştirimdir ve ders, testleri gerçekçi ve hızlı tutmak için fake'leri tercih eder. Saplama (stub) yalnızca hazır değerler döndürür, casus (spy) etkileşimleri kaydeder, mock onları doğrular, kukla (dummy) ise hiç kullanılmaz."
+    },
+    "29": {
+      "concept": "ci-practices",
+      "explanation_tr": "Derleme matrisleri (build matrices) aynı işleri farklı işletim sistemi/SDK sürümlerinde çalıştırır (burada 3 × 2 = 6 kombinasyon); paralel işler ve matrisler geri bildirimi hızlandırır. Önbellekleme (caching) yalnızca derlemeleri hızlandırır; kanarya yayılımları ve özellik bayrakları ise dağıtım ve sürüm teknikleridir."
+    },
+    "30": {
+      "concept": "ci-practices",
+      "explanation_tr": "İşlem hatlarında gözlemlenebilirlik (observability), kararsız testlerin takibini ve karantina listelerini içerir, çünkü birleştirmeleri (merge) engelleyen kararsız testler yaygın bir CI/CD tuzağıdır. Nedeni daha sonra ayrıca düzeltilir; örneğin zaman ve rastgelelik kontrol altına alınarak."
+    }
+  }
+}

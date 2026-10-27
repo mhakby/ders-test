@@ -17,6 +17,7 @@ import {
 import { navigate } from '../router';
 import { useProgress } from '../store';
 import { LETTERS } from '../types';
+import { ConceptSheet, HelpLangToggle, pick, useHelpLang } from '../lesson';
 import { MapSheet } from './MapSheet';
 
 export function Quiz({ ci, deckId }: { ci: CourseIndex; deckId: string }) {
@@ -25,7 +26,9 @@ export function Quiz({ ci, deckId }: { ci: CourseIndex; deckId: string }) {
   const deck = p.decks[deckId];
   const [langFor, setLangFor] = useState<{ id: string; lang: string }>();
   const [mapOpen, setMapOpen] = useState(false);
+  const [conceptOpen, setConceptOpen] = useState(false);
   const [toast, setToast] = useState<string>();
+  const [helpLang] = useHelpLang(ci);
   const touch = useRef<{ x: number; y: number }>(undefined);
 
   useEffect(() => {
@@ -69,15 +72,16 @@ export function Quiz({ ci, deckId }: { ci: CourseIndex; deckId: string }) {
     setToast(p.saved[q.id] ? 'Kaydedilenlerden çıkarıldı.' : 'Kaydedildi.');
   };
 
-  const handlers = useRef({ go, choose, toggleLang, save, pos, optionCount: 0, mapOpen });
-  handlers.current = { go, choose, toggleLang, save, pos, optionCount: q?.options[primary].length ?? 0, mapOpen };
+  const sheetOpen = mapOpen || conceptOpen;
+  const handlers = useRef({ go, choose, toggleLang, save, pos, optionCount: 0, sheetOpen });
+  handlers.current = { go, choose, toggleLang, save, pos, optionCount: q?.options[primary].length ?? 0, sheetOpen };
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       if ((e.target as HTMLElement)?.tagName === 'INPUT') return;
       const h = handlers.current;
-      if (h.mapOpen) return;
+      if (h.sheetOpen) return;
       const key = e.key.toUpperCase();
       if (/^[1-5]$/.test(key)) h.choose(LETTERS[Number(key) - 1]);
       else if (key === 'E' && h.optionCount < 5) h.toggleLang();
@@ -109,7 +113,16 @@ export function Quiz({ ci, deckId }: { ci: CourseIndex; deckId: string }) {
   const options = q.options[lang] ?? q.options[primary];
   const correctLetters = q.answer;
   const wrongTimes = p.wrongCount[q.id] ?? 0;
-  const explanation = q.explanation?.[lang] ?? q.explanation?.[primary];
+  // A course with a help language shows explanations in the viewer's chosen language;
+  // otherwise the explanation follows the question's language toggle.
+  const explanationLang = course.languages.help && q.explanation?.[helpLang] ? helpLang : lang;
+  const explanation = q.explanation?.[explanationLang] ?? q.explanation?.[primary];
+  const concept = q.concept ? hit.set.lesson?.concepts.find(c => c.id === q.concept) : undefined;
+  const conceptTitle = concept ? pick(concept.title, helpLang, primary) : undefined;
+  const openLesson = () => {
+    setConceptOpen(false);
+    navigate({ name: 'lesson', courseId: course.id, setId: hit.set.id });
+  };
   const src = q.source;
   const sourceLabel = src
     ? [
@@ -163,6 +176,11 @@ export function Quiz({ ci, deckId }: { ci: CourseIndex; deckId: string }) {
             </span>
           </div>
           <div className="q-tools">
+            {concept && (
+              <button type="button" className="icon-btn" aria-label="Konu kartını aç" title="Konu kartı" onClick={() => setConceptOpen(true)}>
+                📖
+              </button>
+            )}
             <button
               type="button"
               className={`icon-btn save ${p.saved[q.id] ? 'on' : ''}`}
@@ -217,7 +235,21 @@ export function Quiz({ ci, deckId }: { ci: CourseIndex; deckId: string }) {
                 ? 'Doğru.'
                 : `Yanlış. Doğru cevap ${correctLetters.join(' / ')}: ${options[LETTERS.indexOf(correctLetters[0])]}`}
             </p>
-            {explanation && <p className="explanation">{explanation}</p>}
+            {explanation && (
+              <p className="explanation" lang={explanationLang}>
+                {explanation}
+              </p>
+            )}
+            {course.languages.help && q.explanation?.[course.languages.help] && (
+              <div className="result-lang">
+                <HelpLangToggle ci={ci} />
+              </div>
+            )}
+            {concept && (
+              <button type="button" className="btn concept-link" onClick={() => setConceptOpen(true)}>
+                📖 Konuyu oku: {conceptTitle}
+              </button>
+            )}
             {q.note && <p className="note">{q.note}</p>}
             {sourceLabel && <p className="muted small">Kaynak: {sourceLabel}</p>}
             {wrongTimes > 0 && <p className="muted small">Bu soruyu toplam {wrongTimes} kez yanlış cevapladın.</p>}
@@ -252,6 +284,9 @@ export function Quiz({ ci, deckId }: { ci: CourseIndex; deckId: string }) {
       </nav>
 
       {toast && <div className="toast">{toast}</div>}
+      {conceptOpen && concept && (
+        <ConceptSheet ci={ci} concept={concept} onOpenLesson={openLesson} onClose={() => setConceptOpen(false)} />
+      )}
       {mapOpen && (
         <MapSheet
           ids={deck.order}

@@ -1,0 +1,222 @@
+{
+  "intro": {
+    "en": "This set zooms in on the smallest level of testing, the unit test. You will see where unit testing sits in the V-model and the test pyramid, how black-box and white-box testing differ, and how real unit tests are written in Java (TestNG) and C# with the Arrange–Act–Assert pattern. It ends with the benefits and limits of unit testing and how developers run unit tests through TDD and CI/CD pipelines, which is everyday work for a tester in a modern team.",
+    "tr": "Bu set, testin en küçük seviyesine, birim testine yakından bakar. Birim testinin V-modelinde ve test piramidinde nerede durduğunu, kara kutu ve beyaz kutu testin nasıl ayrıldığını ve gerçek birim testlerinin Java (TestNG) ve C# ile Arrange–Act–Assert kalıbı kullanılarak nasıl yazıldığını göreceksiniz. Son olarak birim testinin faydalarını ve sınırlarını, geliştiricilerin birim testlerini TDD ve CI/CD işlem hatları üzerinden nasıl çalıştırdığını ele alır; bunlar modern bir ekipteki test uzmanının günlük işidir."
+  },
+  "concepts": [
+    {
+      "id": "v-model-vv",
+      "title": {
+        "en": "The V-model and verification vs validation",
+        "tr": "V-modeli ile doğrulama ve geçerleme"
+      },
+      "body": {
+        "en": "The V-model draws development and testing as the two arms of a 'V'. The left arm goes down through the development steps (labelled the verification phase), Coding sits at the bottom, and the right arm goes up through the testing levels (the validation phase). Arrows pair each development step with the test level opposite it.\n\nLecture pairs (left ↔ right):\n- Requirement Gathering ↔ Acceptance Testing\n- System Analysis ↔ System Testing\n- Software Design ↔ Integration Testing\n- Module Design ↔ Unit Testing\n- Coding at the bottom of the V\n\n**Verification vs validation:**\n- Verification: 'Are we building the product right?' It checks conformance to specs.\n- Validation: 'Are we building the right product?' It checks fitness for purpose with stakeholders (the people who use or pay for the product).\n\n**Example:** checking that a sorting function returns the order the design document specifies is verification; checking with librarians that this order is the one they actually need is validation.\n\n**Textbook difference:** the book's levels figure (Fig. 1.10) has only three test levels and no acceptance level: Requirements Specification ↔ System testing, Preliminary Design ↔ Integration testing, Detailed Design ↔ Unit testing, with Coding at the bottom.",
+        "tr": "V-modeli geliştirme ve testi bir 'V' harfinin iki kolu olarak çizer. Sol kol geliştirme adımlarından aşağı iner (doğrulama aşaması, verification phase, olarak etiketlenmiştir), en altta Kodlama (Coding) vardır ve sağ kol test seviyelerinden yukarı çıkar (geçerleme aşaması, validation phase). Oklar her geliştirme adımını karşısındaki test seviyesiyle eşleştirir.\n\nDersteki eşleşmeler (sol ↔ sağ):\n- Gereksinim Toplama (Requirement Gathering) ↔ Kabul Testi (Acceptance Testing)\n- Sistem Analizi (System Analysis) ↔ Sistem Testi (System Testing)\n- Yazılım Tasarımı (Software Design) ↔ Entegrasyon Testi (Integration Testing)\n- Modül Tasarımı (Module Design) ↔ Birim Testi (Unit Testing)\n- V'nin en altında Kodlama\n\n**Doğrulama ve geçerleme:**\n- Doğrulama (verification): 'Ürünü doğru mu geliştiriyoruz?' Spesifikasyonlara uygunluğu kontrol eder.\n- Geçerleme (validation): 'Doğru ürünü mü geliştiriyoruz?' Amaca uygunluğu paydaşlarla (stakeholders; ürünü kullanan veya parasını ödeyen kişiler) birlikte kontrol eder.\n\n**Örnek:** bir sıralama fonksiyonunun tasarım belgesinde belirtilen sırayı döndürdüğünü kontrol etmek doğrulamadır; kütüphanecilerle bu sıranın gerçekten ihtiyaç duydukları sıra olup olmadığını kontrol etmek geçerlemedir.\n\n**Ders kitabındaki fark:** kitabın seviyeler şekli (Şekil 1.10) yalnızca üç test seviyesi içerir, kabul seviyesi yoktur: Gereksinim Spesifikasyonu ↔ Sistem testi, Ön Tasarım ↔ Entegrasyon testi, Ayrıntılı Tasarım ↔ Birim testi; en altta Kodlama."
+      },
+      "source": "slides 2–3; textbook ch. 1 p. 13"
+    },
+    {
+      "id": "black-white-box",
+      "title": {
+        "en": "Black-box vs white-box testing",
+        "tr": "Kara kutu ve beyaz kutu testi"
+      },
+      "body": {
+        "en": "Test design starts from one of two sources: what the product should do, or how its code is built.\n\n- **Black-box testing:** the internal structure, program or code is hidden and nothing is known about it. Tests come from the specified behavior. The textbook calls this **functional testing**: the program is seen as a function from inputs to outputs, and only the specification is used.\n- **White-box testing:** the tester has knowledge of the internal structure, code or program. The textbook calls this **structural testing**.\n\nThe slides sort kinds of testing by four questions:\n- Static or dynamic: does it execute the code?\n- White or black box: does it look at the code?\n- Functional or random\n- Spec or use\n\n**Example:** a reviewer who reads source code without running it works static and white-box; a tester who runs the app from its user manual without seeing any code works dynamic and black-box.\n\n**V-lifecycle diagram:** Specification and SW Integration are grouped as black-box; Design, Implementation and Unit Test as white-box; Analysis and System Test as random test. The textbook agrees that white-box testing fits the unit level best, but it links black-box (functional) testing to the system level.\n\n**What each misses (textbook):** structural tests cannot detect specified behavior that was never implemented, and functional tests cannot detect implemented behavior that was never specified. Neither alone is enough.",
+        "tr": "Test tasarımı iki kaynaktan birinden başlar: ürünün ne yapması gerektiği ya da kodunun nasıl yazıldığı.\n\n- **Kara kutu testi (black-box testing):** iç yapı, program veya kod gizlidir ve onlar hakkında hiçbir şey bilinmez. Testler belirtilen davranıştan türetilir. Ders kitabı buna **fonksiyonel test (functional testing)** der: program girdilerden çıktılara bir fonksiyon olarak görülür ve yalnızca spesifikasyon kullanılır.\n- **Beyaz kutu testi (white-box testing):** test eden iç yapı, kod veya program hakkında bilgi sahibidir. Ders kitabı buna **yapısal test (structural testing)** der.\n\nSlaytlar test türlerini dört soruyla sınıflar:\n- Statik mi dinamik mi: kodu çalıştırıyor mu?\n- Beyaz kutu mu kara kutu mu: koda bakıyor mu?\n- Fonksiyonel mi rastgele (random) mi\n- Spesifikasyona mı kullanıma mı dayalı (spec or use)\n\n**Örnek:** kaynak kodu çalıştırmadan okuyan bir inceleyici statik ve beyaz kutu çalışır; hiç kod görmeden, kullanım kılavuzuna bakarak uygulamayı çalıştıran bir test uzmanı ise dinamik ve kara kutu çalışır.\n\n**V-yaşam döngüsü (V-lifecycle) diyagramı:** Spesifikasyon ve Yazılım Entegrasyonu (SW Integration) kara kutu; Tasarım, Gerçekleştirim (Implementation) ve Birim Testi beyaz kutu; Analiz ve Sistem Testi rastgele test (random test) olarak gruplanır. Ders kitabı beyaz kutu testin en çok birim seviyesine uyduğu konusunda hemfikirdir, ancak kara kutu (fonksiyonel) testi sistem seviyesiyle ilişkilendirir.\n\n**Her birinin kaçırdığı (ders kitabı):** yapısal testler belirtilmiş ama hiç gerçekleştirilmemiş davranışı tespit edemez; fonksiyonel testler ise gerçekleştirilmiş ama hiç belirtilmemiş davranışı tespit edemez. Hiçbiri tek başına yeterli değildir."
+      },
+      "source": "slides 4–6; textbook ch. 1 pp. 7–10, 13"
+    },
+    {
+      "id": "pyramid-and-units",
+      "title": {
+        "en": "Test pyramid, testing percentages and what a unit is",
+        "tr": "Test piramidi, test yüzdeleri ve birimin ne olduğu"
+      },
+      "body": {
+        "en": "A unit test checks one small piece of code on its own. The slides use three pictures to show where it fits.\n\n**Testing percentages:**\n- Unit tests verify the behavior of a single class: 70% of your tests.\n- System tests verify class interactions: 20% of your tests.\n- GUI tests verify end-to-end journeys: 10% of your tests.\n\nNote: this slide calls tests of class interactions 'system tests', while the week 1 level definitions put interactions between components under integration testing.\n\n**The test pyramid** (bottom to top): Unit Tests, Integration Tests, UI Tests, with Manual Tests above the tip. Two arrows run beside it:\n- Toward the top: more integration and slower tests.\n- Toward the bottom: more isolation (each test checks a piece on its own) and faster tests.\n\n**Units diagram:**\n- E2E (end-to-end) scope: spans the User Interface and several Micro Services.\n- Service scope: one whole service — its Func() boxes and its database.\n- Unit scope: a single Func(), or a small group of Func()s inside the service.\n\n**Example:** in an online shop, testing only the function that computes a cart total is a unit test; buying a product through the web page, across all services, is an E2E test.",
+        "tr": "Birim testi (unit test), küçük bir kod parçasını tek başına kontrol eder. Slaytlar nereye oturduğunu göstermek için üç resim kullanır.\n\n**Test yüzdeleri:**\n- Birim testleri tek bir sınıfın davranışını doğrular: testlerinizin %70'i.\n- Sistem testleri sınıf etkileşimlerini doğrular: testlerinizin %20'si.\n- GUI testleri uçtan uca kullanıcı yolculuklarını (end-to-end journeys) doğrular: testlerinizin %10'u.\n\nNot: bu slayt sınıf etkileşimi testlerine 'sistem testleri' der; 1. haftanın seviye tanımları ise bileşenler arası etkileşimleri entegrasyon testine koyar.\n\n**Test piramidi** (alttan üste): Birim Testleri, Entegrasyon Testleri, UI (kullanıcı arayüzü) Testleri; tepenin üstünde Manuel Testler. Yanında iki ok vardır:\n- Tepeye doğru: daha fazla entegrasyon ve daha yavaş testler.\n- Tabana doğru: daha fazla yalıtım (isolation; her test bir parçayı tek başına kontrol eder) ve daha hızlı testler.\n\n**Birimler (Units) diyagramı:**\n- E2E (uçtan uca) kapsamı: Kullanıcı Arayüzü'nü ve birkaç Mikroservisi kapsar.\n- Servis (Service) kapsamı: bütün bir servis — içindeki Func() kutuları ve veritabanı.\n- Birim (Unit) kapsamı: tek bir Func() veya servisin içindeki küçük bir Func() grubu.\n\n**Örnek:** bir çevrimiçi mağazada yalnızca sepet toplamını hesaplayan fonksiyonu test etmek birim testidir; ürünü web sayfasından, tüm servislerden geçerek satın almak ise E2E testtir."
+      },
+      "source": "slides 8–9"
+    },
+    {
+      "id": "xunit-testng",
+      "title": {
+        "en": "Unit testing frameworks and the TestNG example",
+        "tr": "Birim testi çerçeveleri ve TestNG örneği"
+      },
+      "body": {
+        "en": "Unit testing frameworks such as JUnit and NUnit give developers a standard way to write and run unit tests.\n\n- **Problem they address:** testing is not closely integrated with development. This prevents you from measuring the progress of development — you can't tell when something starts or stops working. With unit tests you can cheaply and incrementally build a test suite that helps you measure progress, spot unintended side effects and focus development.\n- **Philosophy:** develop tests in parallel with the application code, or before it.\n\nJava example with TestNG: class `Calculator` has `add(a, b)` returning `a + b` and `subtract(a, b)` returning `a - b`. The test class `CalculatorTest` uses annotations (tags such as `@Test` that tell the framework what a method is):\n- `@BeforeMethod` on `setUp()`: runs before each test method and assigns a new `Calculator`, so every test starts with a fresh object. It is setup code, not a test.\n- `@Test` on `testAdd()` and `testSubtract()`: these are the tests. Each calls one method and checks the result with `Assert.assertEquals(result, expected, message)`.\n\nThe run report counts only the `@Test` methods, in the form 'Tests run: X, Failures: Y, Skips: Z'.\n\n**Example:** a test class with three `@Test` methods, one of which fails its assertion, reports Tests run: 3, Failures: 1, Skips: 0.",
+        "tr": "JUnit ve NUnit gibi birim testi çerçeveleri (frameworks), geliştiricilere birim testlerini yazmak ve çalıştırmak için standart bir yol sunar.\n\n- **Çözdükleri sorun:** test, geliştirmeyle yakından bütünleşik değildir. Bu, geliştirmenin ilerlemesini ölçmeyi engeller — bir şeyin ne zaman çalışmaya başladığını veya ne zaman bozulduğunu anlayamazsınız. Birim testleriyle ucuz ve adım adım bir test takımı (test suite) kurarak ilerlemeyi ölçebilir, istenmeyen yan etkileri yakalayabilir ve geliştirme çabasını odaklayabilirsiniz.\n- **Felsefe:** testleri uygulama koduyla paralel olarak, hatta ondan önce geliştir.\n\nTestNG ile Java örneği: `Calculator` sınıfında `a + b` döndüren `add(a, b)` ve `a - b` döndüren `subtract(a, b)` vardır. Test sınıfı `CalculatorTest`, anotasyonlar (annotations; çerçeveye bir metodun ne olduğunu söyleyen `@Test` gibi etiketler) kullanır:\n- `setUp()` üzerindeki `@BeforeMethod`: her test metodundan önce çalışır ve yeni bir `Calculator` atar; böylece her test taze bir nesneyle başlar. Bu bir hazırlık (setup) kodudur, test değildir.\n- `testAdd()` ve `testSubtract()` üzerindeki `@Test`: bunlar testlerdir. Her biri bir metodu çağırır ve sonucu `Assert.assertEquals(result, expected, message)` ile kontrol eder.\n\nÇalıştırma raporu yalnızca `@Test` metotlarını sayar ve 'Tests run: X, Failures: Y, Skips: Z' biçimindedir.\n\n**Örnek:** biri assertion (beklenen sonucu kontrol eden ifade) kontrolünde başarısız olan üç `@Test` metotlu bir test sınıfı Tests run: 3, Failures: 1, Skips: 0 raporlar."
+      },
+      "source": "slides 7, 10–13"
+    },
+    {
+      "id": "csharp-bankaccount",
+      "title": {
+        "en": "C# example: testing BankAccount.Debit",
+        "tr": "C# örneği: BankAccount.Debit'i test etmek"
+      },
+      "body": {
+        "en": "The C# walkthrough shows a unit test catching a bug.\n\n**Code under test:** class `BankAccount` stores `m_balance`. `Debit(amount)` has two guards: if `amount > m_balance` or `amount < 0` it throws `ArgumentOutOfRangeException`. Otherwise it changes the balance with `m_balance += amount; // intentionally incorrect code` — a debit should take money out, but this line adds it.\n\n**Test project:** it uses `Microsoft.VisualStudio.TestTools.UnitTesting`. The test class (`BankAccountTests` in namespace `BankTests`) is marked `[TestClass]` and each test method `[TestMethod]`; the Java example used TestNG's `@BeforeMethod` and `@Test` instead.\n\n**The test** `Debit_WithValidAmount_UpdatesBalance` starts from a balance of 11.99, debits 4.55 and expects 7.44. It ends with `Assert.AreEqual(expected, actual, 0.001, \"Account not debited correctly\")`: the assertion passes only if actual and expected differ by at most 0.001; otherwise the test fails and shows the message.\n\nThe walkthrough then corrects that one line so that Debit subtracts the amount; after the fix the test passes (Test Explorer: 1 Passed).\n\n**Textbook terms:** an error is a human mistake; a fault (also called defect or bug) is the result of an error, such as a wrong line of code; a failure occurs when a fault executes. The test's assertion is what makes the failure visible.\n\n**Example:** with balance 20.00 and debit 5.00, an adding Debit leaves 25.00 instead of 15.00, so an equality assertion expecting 15.00 fails.",
+        "tr": "C# adım adım örneği (walkthrough), bir birim testinin bir hatayı yakalamasını gösterir.\n\n**Test edilen kod:** `BankAccount` sınıfı `m_balance` alanını tutar. `Debit(amount)` iki koruma koşulu (guard) içerir: `amount > m_balance` veya `amount < 0` ise `ArgumentOutOfRangeException` fırlatır. Aksi hâlde bakiyeyi `m_balance += amount; // intentionally incorrect code` satırıyla değiştirir — borçlandırma (debit) parayı hesaptan çıkarmalıdır, ama bu satır parayı ekler.\n\n**Test projesi:** `Microsoft.VisualStudio.TestTools.UnitTesting` kullanır. Test sınıfı (`BankTests` ad alanındaki `BankAccountTests`) `[TestClass]`, her test metodu ise `[TestMethod]` ile işaretlenir; Java örneği bunların yerine TestNG'nin `@BeforeMethod` ve `@Test` anotasyonlarını kullanıyordu.\n\n**Test** `Debit_WithValidAmount_UpdatesBalance` 11.99 bakiyeden başlar, 4.55 borçlandırır ve 7.44 bekler. Sonunda `Assert.AreEqual(expected, actual, 0.001, \"Account not debited correctly\")` çalışır: assertion (beklenen sonucu kontrol eden ifade) yalnızca gerçek ve beklenen değer arasındaki fark en fazla 0.001 ise geçer; aksi hâlde test başarısız olur ve mesajı gösterir.\n\nArdından örnek o tek satırı düzeltir, böylece Debit tutarı çıkarır; düzeltmeden sonra test geçer (Test Explorer: 1 Passed).\n\n**Ders kitabı terimleri:** insan hatası (error) bir kişinin yaptığı yanlıştır; kusur (fault; defect veya bug da denir) bu hatanın sonucudur, örneğin yanlış yazılmış bir kod satırı; arıza (failure) bir kusur çalıştırıldığında ortaya çıkar. Arızayı görünür kılan şey testin assertion'ıdır.\n\n**Örnek:** bakiye 20.00 ve borç 5.00 iken, ekleme yapan bir Debit bakiyeyi 15.00 yerine 25.00 bırakır; bu yüzden 15.00 bekleyen bir eşitlik assertion'ı başarısız olur."
+      },
+      "source": "slides 14–16, 18–19; textbook ch. 1 pp. 3–4"
+    },
+    {
+      "id": "aaa-assertions",
+      "title": {
+        "en": "Arrange–Act–Assert and the role of assertions",
+        "tr": "Arrange–Act–Assert ve assertion'ların rolü"
+      },
+      "body": {
+        "en": "Most unit tests follow a three-part pattern, Arrange–Act–Assert (AAA). The course's C# test `Debit_WithValidAmount_UpdatesBalance` marks the parts with comments:\n- **Arrange:** set up what the test needs. There: `beginningBalance = 11.99`, `debitAmount = 4.55`, `expected = 7.44`, and a new `BankAccount` created with the beginning balance.\n- **Act:** call the method under test. There: `account.Debit(debitAmount)`.\n- **Assert:** compare the actual result with the expected one. There: read `account.Balance` into `actual` and call `Assert.AreEqual`.\n\n**Assertions** are the checks in the Assert part. They ensure that the code behaves as expected: assertions replace us humans in checking that the software does what it should, and they express requirements that the unit under test is expected to meet. Often slightly different assertions can capture the same requirement.\n\n**Textbook view of a test case:** it has an identity and is linked to a program behavior. Its fields include preconditions (the state before the test), inputs (the actual inputs) and expected outputs, plus an ID, purpose, postconditions and execution history. AAA maps onto it: Arrange creates the preconditions, Act applies the actual input, Assert checks the expected output.\n\n**Example:** a shopping cart already holds 2 items (precondition); the test adds 1 item (input); expected output: 3 items in the cart.",
+        "tr": "Çoğu birim testi Arrange–Act–Assert (AAA; hazırla–çalıştır–kontrol et) adlı üç parçalı bir kalıbı izler. Dersin C# testi `Debit_WithValidAmount_UpdatesBalance` bu parçaları yorum satırlarıyla işaretler:\n- **Arrange (hazırla):** testin ihtiyaç duyduğunu kur. Orada: `beginningBalance = 11.99`, `debitAmount = 4.55`, `expected = 7.44` ve başlangıç bakiyesiyle oluşturulan yeni bir `BankAccount`.\n- **Act (çalıştır):** test edilen metodu çağır. Orada: `account.Debit(debitAmount)`.\n- **Assert (kontrol et):** gerçek sonucu beklenenle karşılaştır. Orada: `account.Balance` değerini `actual` içine oku ve `Assert.AreEqual` çağır.\n\n**Assertion'lar** (beklenen sonucu kontrol eden ifadeler) Assert bölümündeki kontrollerdir. Kodun beklendiği gibi davrandığından emin olmamızı sağlarlar: yazılımın yapması gerekeni yapıp yapmadığını kontrol etmede biz insanların yerini alırlar ve test edilen birimin karşılaması beklenen gereksinimleri ifade ederler. Çoğu zaman aynı gereksinim biraz farklı assertion'larla da yakalanabilir.\n\n**Ders kitabına göre test durumu (test case):** bir kimliği vardır ve bir program davranışına bağlıdır. Alanları arasında ön koşullar (preconditions; testten önceki durum), girdiler (inputs; asıl girdiler) ve beklenen çıktılar (expected outputs) ile birlikte kimlik (ID), amaç, son koşullar ve yürütme geçmişi bulunur. AAA buna şöyle karşılık gelir: Arrange ön koşulları oluşturur, Act asıl girdiyi uygular, Assert beklenen çıktıyı kontrol eder.\n\n**Örnek:** bir alışveriş sepetinde zaten 2 ürün vardır (ön koşul); test 1 ürün ekler (girdi); beklenen çıktı: sepette 3 ürün."
+      },
+      "source": "slides 12, 17–18; textbook ch. 1 pp. 4–5"
+    },
+    {
+      "id": "unit-testing-pros-cons",
+      "title": {
+        "en": "Benefits and disadvantages of unit testing",
+        "tr": "Birim testinin faydaları ve dezavantajları"
+      },
+      "body": {
+        "en": "Unit tests are powerful but not enough on their own, so know both lists.\n\n**Seven benefits:** early detection of issues, improved code quality, increased confidence, faster development, better documentation, facilitation of refactoring (restructuring code without changing what it does), reduced time and cost.\n\n**Disadvantages:**\n- **Time and effort:** creating and maintaining test cases needs a significant investment, especially for complex systems.\n- **Dependence on developers:** success depends on developers writing clear, concise and comprehensive test cases.\n- **Difficulty in testing complex units:** complex units are hard to isolate and test apart from the rest of the system.\n- **Difficulty in testing interactions:** unit testing only focuses on individual units, so it may not be sufficient for testing interactions between units.\n- **Difficulty in testing user interfaces:** unit testing typically focuses on the functionality of individual units, so it may not suit user interfaces.\n- **Over-reliance on automation:** can lead to a false sense of security, because automated tests may not uncover all possible issues or bugs.\n- **Maintenance overhead:** code and test cases must be kept up to date with changes to the software.\n\n**Example:** a team renames a method that 50 tests call and must update all of them — that is maintenance overhead.",
+        "tr": "Birim testleri güçlüdür ama tek başına yeterli değildir; bu yüzden iki listeyi de bilin.\n\n**Yedi fayda:** sorunların erken tespiti, daha iyi kod kalitesi, artan güven, daha hızlı geliştirme, daha iyi dokümantasyon, yeniden düzenlemeyi (refactoring; kodun yaptığı işi değiştirmeden yapısını düzenlemek) kolaylaştırma, azalan zaman ve maliyet.\n\n**Dezavantajlar:**\n- **Zaman ve emek (time and effort):** test durumlarını oluşturmak ve sürdürmek, özellikle karmaşık sistemlerde, ciddi bir yatırım gerektirir.\n- **Geliştiricilere bağımlılık (dependence on developers):** başarı, geliştiricilerin açık, öz ve kapsamlı test durumları yazmasına bağlıdır.\n- **Karmaşık birimleri test etme zorluğu (difficulty in testing complex units):** karmaşık birimleri sistemin geri kalanından yalıtmak ve ayrı test etmek zordur.\n- **Etkileşimleri test etme zorluğu (difficulty in testing interactions):** birim testi yalnızca tek tek birimlere odaklanır, bu yüzden birimler arası etkileşimleri test etmeye yetmeyebilir.\n- **Kullanıcı arayüzlerini test etme zorluğu (difficulty in testing user interfaces):** birim testi genellikle tek tek birimlerin işlevselliğine odaklanır, bu yüzden kullanıcı arayüzlerine uygun olmayabilir.\n- **Otomasyona aşırı güven (over-reliance on automation):** yanıltıcı bir güven duygusuna yol açabilir, çünkü otomatik testler olası tüm sorunları veya hataları ortaya çıkaramayabilir.\n- **Bakım yükü (maintenance overhead):** yazılım değiştikçe kod ve test durumları güncel tutulmalıdır.\n\n**Örnek:** bir ekip 50 testin çağırdığı bir metodun adını değiştirir ve hepsini güncellemek zorunda kalır — bu bakım yüküdür."
+      },
+      "source": "slides 20–23"
+    },
+    {
+      "id": "unit-tests-in-practice",
+      "title": {
+        "en": "How developers use unit tests: TDD and CI/CD",
+        "tr": "Geliştiriciler birim testlerini nasıl kullanır: TDD ve CI/CD"
+      },
+      "body": {
+        "en": "Unit testing plays a role throughout development. The slides name three moments:\n- **Test-Driven Development (TDD):** developers write tests before writing the actual code. Once the code is completed it instantly meets the functional requirements when tested, saving time on debugging.\n- **After completing code blocks:** when a section of code is finished, unit tests are created (if not already written through TDD) and run to verify the code works as expected.\n- **DevOps and CI/CD:** continuous integration/continuous delivery automatically runs unit tests whenever new code is added, so changes are integrated smoothly, tested thoroughly and deployed efficiently.\n\n**Example setup:** a Git user pushes code to a GitHub repository with unit tests; a Git webhook (an automatic notification sent when the push happens) triggers AWS CodeBuild in the AWS Cloud, so the unit tests run automatically and nobody has to start them by hand.\n\n**CI/CD pipeline in eight steps:**\n- Step 1: Commit changes\n- Step 2: Trigger the build\n- Step 3: Build the code\n- Step 4: Notify the build outcome\n- Step 5: Run the tests\n- Step 6: Notify the test outcome\n- Step 7: Deliver the build to staging (a pre-production environment)\n- Step 8: Deploy changes to production",
+        "tr": "Birim testi geliştirmenin her aşamasında rol oynar. Slaytlar üç anı sayar:\n- **Test Güdümlü Geliştirme (Test-Driven Development, TDD):** geliştiriciler testleri asıl kodu yazmadan önce yazar. Kod tamamlandığında, test edildiği anda fonksiyonel gereksinimleri karşılar; bu da hata ayıklamada zaman kazandırır.\n- **Kod blokları tamamlandıktan sonra:** bir kod bölümü bittiğinde birim testleri oluşturulur (TDD ile zaten yazılmadıysa) ve kodun beklendiği gibi çalıştığını doğrulamak için çalıştırılır.\n- **DevOps ve CI/CD:** sürekli entegrasyon/sürekli teslimat (continuous integration/continuous delivery), yeni kod eklendiğinde birim testlerini otomatik olarak çalıştırır; böylece değişiklikler sorunsuz entegre edilir, iyice test edilir ve verimli biçimde dağıtılır.\n\n**Örnek kurulum:** bir Git kullanıcısı kodu, birim testleri içeren bir GitHub deposuna push eder; bir Git webhook'u (push olduğunda otomatik gönderilen bildirim) AWS Cloud'daki AWS CodeBuild'i tetikler; böylece birim testleri otomatik çalışır ve kimsenin onları elle başlatması gerekmez.\n\n**Sekiz adımlı CI/CD işlem hattı (pipeline):**\n- Adım 1: Değişiklikleri commit et\n- Adım 2: Derlemeyi tetikle (trigger)\n- Adım 3: Kodu derle (build)\n- Adım 4: Derleme sonucunu bildir\n- Adım 5: Testleri çalıştır\n- Adım 6: Test sonucunu bildir\n- Adım 7: Derlemeyi hazırlık ortamına (staging; üretim öncesi ortam) teslim et\n- Adım 8: Değişiklikleri üretim ortamına (production) dağıt"
+      },
+      "source": "slides 24–25, 27"
+    },
+    {
+      "id": "manual-vs-automated",
+      "title": {
+        "en": "Manual vs automated unit testing",
+        "tr": "Manuel ve otomatik birim testi"
+      },
+      "body": {
+        "en": "Manual unit testing is like checking each part of a project by hand, without using any special tools: people, such as developers, do each step of the testing themselves. Developers often test their own code this way to see whether it works correctly.\n\nManual unit testing is not used much, because there are better ways and it has problems:\n- **It costs more:** workers have to be paid for the time they spend testing, especially if they are not permanent staff.\n- **It takes a lot of time:** the tests have to be done again every time the code changes.\n- **Problems are hard to find and fix:** it is tricky to test each part separately.\n\nAutomated unit testing — tests written with a framework such as TestNG and run by tools such as a CI/CD pipeline — removes this repeated manual work; it is the topic of the next week.\n\n**Example:** a developer who checks a discount function by typing values into the app after every change is doing manual unit testing; writing those checks as `@Test` methods that run on every push automates them.",
+        "tr": "Manuel birim testi (manual unit testing), bir projenin her parçasını hiçbir özel araç kullanmadan elle kontrol etmeye benzer: geliştiriciler gibi kişiler test adımlarının her birini kendileri yapar. Geliştiriciler kodlarının doğru çalışıp çalışmadığını görmek için çoğu zaman kendi kodlarını bu şekilde test eder.\n\nManuel birim testi çok kullanılmaz, çünkü daha iyi yollar vardır ve bazı sorunları vardır:\n- **Daha maliyetlidir:** çalışanlara test için harcadıkları zamanın ücreti ödenmelidir, özellikle kadrolu değillerse.\n- **Çok zaman alır:** kod her değiştiğinde testlerin yeniden yapılması gerekir.\n- **Sorunları bulmak ve düzeltmek zordur:** her parçayı ayrı ayrı test etmek zahmetlidir.\n\nOtomatik birim testi (automated unit testing) — TestNG gibi bir çerçeveyle yazılan ve CI/CD işlem hattı gibi araçlarla çalıştırılan testler — bu tekrarlanan elle yapılan işi ortadan kaldırır; gelecek haftanın konusudur.\n\n**Örnek:** her değişiklikten sonra uygulamaya değerler yazarak bir indirim fonksiyonunu kontrol eden geliştirici manuel birim testi yapmaktadır; bu kontrolleri her push'ta çalışan `@Test` metotları olarak yazmak onları otomatikleştirir."
+      },
+      "source": "slides 26–27"
+    }
+  ],
+  "questions": {
+    "1": {
+      "concept": "v-model-vv",
+      "explanation_tr": "Dersteki V-modelinde Gereksinim Toplama (Requirement Gathering) Kabul Testi ile eşleşir; Sistem Analizi Sistem Testi ile, Yazılım Tasarımı Entegrasyon Testi ile, Modül Tasarımı ise Birim Testi ile eşleşir. Ders kitabının seviyeler şekli (Şekil 1.10) kabul seviyesi içermez ve gereksinim spesifikasyonunu sistem testiyle eşleştirir; dolayısıyla bu eşleşme dersin diyagramına aittir."
+    },
+    "2": {
+      "concept": "v-model-vv",
+      "explanation_tr": "Doğrulama (verification) 'Ürünü doğru mu geliştiriyoruz?' sorusunu sorar ve spesifikasyonlara uygunluğu kontrol eder; 'Doğru ürünü mü geliştiriyoruz?' ise paydaşlarla birlikte amaca uygunluğu kontrol eden geçerlemedir (validation)."
+    },
+    "3": {
+      "concept": "black-white-box",
+      "explanation_tr": "V-yaşam döngüsü diyagramı Spesifikasyon ve Yazılım Entegrasyonunu (SW Integration) kara kutu; Tasarım, Gerçekleştirim (Implementation) ve Birim Testini beyaz kutu; Analiz ve Sistem Testini ise rastgele test (random test) olarak gruplar. Birim testinin beyaz kutu altında yer alması ders kitabıyla uyumludur; kitap yapısal (beyaz kutu) testin en çok birim seviyesine uygun olduğunu belirtir."
+    },
+    "4": {
+      "concept": "black-white-box",
+      "explanation_tr": "Kara kutu testinde iç yapı, program veya kod gizlidir ve onlar hakkında hiçbir şey bilinmez; ders kitabındaki fonksiyonel test de programı girdilerden çıktılara bir fonksiyon olarak ele alır ve yalnızca spesifikasyonu kullanır. İç yapıyı bilmek beyaz kutu (ders kitabındaki adıyla yapısal) testtir."
+    },
+    "5": {
+      "concept": "black-white-box",
+      "explanation_tr": "Testleri çalıştırmak kodu yürütür, bu yüzden test dinamiktir; testleri kaynak koddan tasarlamak test uzmanının koda baktığı anlamına gelir, bu yüzden beyaz kutudur (ders kitabının terimleriyle yapısal test)."
+    },
+    "6": {
+      "concept": "xunit-testng",
+      "explanation_tr": "JUnit/NUnit, testin geliştirmeyle yakından bütünleşik olmaması sorununu ele alır; bu sorun ilerlemenin ölçülmesini engeller. Felsefeleri, testleri uygulama koduyla paralel olarak veya ondan önce geliştirmektir."
+    },
+    "7": {
+      "concept": "pyramid-and-units",
+      "explanation_tr": "Slayt tüm testlerin %70'ini birim testlerine (tek bir sınıfın davranışı), %20'sini sistem testlerine (sınıf etkileşimleri) ve %10'unu GUI testlerine (uçtan uca yolculuklar) ayırır. Bu slaytın sınıf etkileşimleri için 'sistem testleri' terimini kullandığına dikkat edin; 1. haftanın seviye tanımları ise bileşenler arası etkileşimleri entegrasyon testine verir."
+    },
+    "8": {
+      "concept": "pyramid-and-units",
+      "explanation_tr": "Piramidin okları tepeye (UI ve manuel testler) doğru daha fazla entegrasyonu ve daha yavaş testleri, tabandaki birim testlerine doğru ise daha fazla yalıtımı (isolation) ve daha hızlı testleri gösterir."
+    },
+    "9": {
+      "concept": "pyramid-and-units",
+      "explanation_tr": "Diyagram bir Birim (Unit) parantezini tek bir Func() etrafında, diğerini ise servisin içindeki küçük bir Func() grubu etrafında gösterir; kullanıcı arayüzünü ve mikroservisleri kapsayan ise E2E kapsamıdır."
+    },
+    "10": {
+      "concept": "xunit-testng",
+      "explanation_tr": "@BeforeMethod ile işaretli setUp() her test metodundan önce çalışır ve yeni bir Calculator atar, böylece her test taze bir nesneyle başlar; bu bir hazırlık (setup) kodudur, kendisi bir test değildir."
+    },
+    "11": {
+      "concept": "xunit-testng",
+      "explanation_tr": "testAdd ve testSubtract @Test metotlarının ikisi de geçer, çünkü add ve subtract doğru gerçekleştirilmiştir; bu yüzden TestNG 0 başarısızlık (failure) ve 0 atlama (skip) ile 2 test çalıştırıldığını raporlar; setUp() test olarak sayılmaz."
+    },
+    "12": {
+      "concept": "aaa-assertions",
+      "explanation_tr": "Assertion'lar kodun beklendiği gibi davrandığından emin olmayı sağlar: test edilen birimin karşılaması gereken gereksinimleri ifade eder ve yazılımın yapması gerekeni yapıp yapmadığını kontrol etmede insanların yerini alırlar; nesneleri oluşturmak Arrange, metodu çağırmak ise Act adımıdır."
+    },
+    "13": {
+      "concept": "csharp-bankaccount",
+      "explanation_tr": "BankAccountTests sınıfı [TestClass], test metotları ise [TestMethod] ile işaretlenir; @BeforeMethod ve @Test, Java örneğindeki TestNG anotasyonlarıdır."
+    },
+    "14": {
+      "concept": "aaa-assertions",
+      "explanation_tr": "Arrange; beginningBalance, debitAmount ve expected değerlerini ayarlar ve BankAccount nesnesini oluşturur; Debit'i çağırmak Act adımı, actual ile expected'ı karşılaştırmak ise Assert adımıdır."
+    },
+    "15": {
+      "concept": "csharp-bankaccount",
+      "explanation_tr": "Debit tutarı yanlışlıkla bakiyeye ekler (m_balance += amount, kasıtlı olarak hatalı diye işaretlenmiştir); düzeltme bu satırı m_balance -= amount ile değiştirir, bundan sonra test geçer."
+    },
+    "16": {
+      "concept": "unit-testing-pros-cons",
+      "explanation_tr": "Yeniden düzenlemeyi (refactoring) kolaylaştırma, listelenen yedi faydadan biridir; bakım yükü, geliştiricilere bağımlılık ve kullanıcı arayüzlerini ve etkileşimleri test etmenin zorluğu ise dezavantajlar olarak listelenir."
+    },
+    "17": {
+      "concept": "unit-testing-pros-cons",
+      "explanation_tr": "Otomasyona aşırı güvenmek yanıltıcı bir güven duygusuna yol açabilir, çünkü otomatik testler olası tüm sorunları veya hataları ortaya çıkaramayabilir."
+    },
+    "18": {
+      "concept": "unit-testing-pros-cons",
+      "explanation_tr": "Birim testi yalnızca tek tek birimlere odaklanır, bu yüzden birimler arasındaki etkileşimleri test etmek için yeterli olmayabilir."
+    },
+    "19": {
+      "concept": "unit-tests-in-practice",
+      "explanation_tr": "Test Güdümlü Geliştirme'de (TDD) geliştiriciler testleri asıl kodu yazmadan önce yazar; manuel birim testi ise her parçayı özel araçlar olmadan elle kontrol etmek demektir."
+    },
+    "20": {
+      "concept": "unit-tests-in-practice",
+      "explanation_tr": "Depoya yapılan push, AWS CodeBuild'e bir Git webhook'u gönderir; CI/CD'de birim testleri elle çalıştırılmak yerine yeni kod eklendiğinde otomatik olarak çalışır."
+    },
+    "21": {
+      "concept": "manual-vs-automated",
+      "explanation_tr": "Manuel birim testi daha maliyetlidir, çünkü insanlara test için harcadıkları zamanın ücreti ödenir; ayrıca çok zaman alır, çünkü kod her değiştiğinde testlerin yeniden yapılması gerekir. Özel araç gerektirmez ve geliştiriciler çoğu zaman bunu kendileri yapar."
+    },
+    "22": {
+      "concept": "unit-tests-in-practice",
+      "explanation_tr": "İşlem hattının sırası şöyledir: Commit, Trigger (tetikleme), Build (derleme), derleme sonucunu bildirme, testleri çalıştırma, test sonucunu bildirme, derlemeyi hazırlık ortamına (staging) teslim etme ve ardından değişiklikleri üretim ortamına (production) dağıtma."
+    },
+    "23": {
+      "concept": "csharp-bankaccount",
+      "explanation_tr": "Koruma koşullarının hiçbiri istisna fırlatmaz (4.55 negatif değildir ve 11.99'dan büyük değildir), bu yüzden += bakiyeyi 11.99 + 4.55 = 16.54'e çıkarır; bu değer beklenen 7.44'ten çok uzaktır ve Assert.AreEqual başarısız olur. Ders kitabının terimleriyle += satırı bir kusurdur (fault) ve bu testte çalıştırılması, assertion'ın ortaya çıkardığı bir arızaya (failure) yol açar."
+    },
+    "24": {
+      "concept": "aaa-assertions",
+      "explanation_tr": "Arrange bölümü bakiyesi 11.99 olan bir hesap oluşturur (ön koşul), Act Debit'i 4.55 ile çağırır (asıl girdi), Assert ise hesabın bakiyesini beklenen çıktı olan 7.44 ile karşılaştırır."
+    },
+    "25": {
+      "concept": "black-white-box",
+      "explanation_tr": "Kara kutu testleri kod bilgisi olmadan, ürünün ne yapması gerektiğinden yola çıkılarak tasarlanır; bu yüzden eksik bir özellik başarısız bir test olarak ortaya çıkar. Ders kitabı da aynı noktayı vurgular: yapısal (beyaz kutu) testler hiç gerçekleştirilmemiş belirtilmiş davranışı tespit edemez, fonksiyonel testler ise hiç belirtilmemiş gerçekleştirilmiş davranışı tespit edemez."
+    },
+    "26": {
+      "concept": "unit-testing-pros-cons",
+      "explanation_tr": "Karmaşık birimleri sistemin geri kalanından yalıtmak zordur, bu da onları yalıtılmış olarak test etmeyi zorlaştırır; etkileşimleri test etmenin zorluğu ise birim testlerinin birimlerin birlikte nasıl çalıştığını kapsamamasıyla ilgilidir."
+    }
+  }
+}

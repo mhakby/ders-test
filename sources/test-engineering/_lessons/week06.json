@@ -1,0 +1,286 @@
+{
+  "intro": {
+    "en": "This set teaches three ways to derive tests from a model of the software: the control flow graph of the code, the flow of values through its variables, and decision tables for complex business logic. Many questions ask you to compute something (coverage percentages, prime paths, du-pairs, rule counts, cyclomatic complexity), so the cards show each procedure step by step on a small example. The last cards help you decide when a decision table fits and when another technique fits better.",
+    "tr": "Bu set, yazılımın bir modelinden test türetmenin üç yolunu öğretir: kodun kontrol akış grafı, değerlerin değişkenler üzerinden akışı ve karmaşık iş mantığı için karar tabloları. Soruların çoğu bir şey hesaplamanı ister (kapsam yüzdeleri, asal yollar, du-çiftleri, kural sayıları, döngüsel karmaşıklık); bu yüzden kartlar her yöntemi küçük bir örnek üzerinde adım adım gösterir. Son kartlar, bir karar tablosunun ne zaman uygun olduğuna ve ne zaman başka bir tekniğin daha iyi olduğuna karar vermene yardım eder."
+  },
+  "concepts": [
+    {
+      "id": "cfg-and-complexity",
+      "title": {
+        "en": "Control flow graphs and cyclomatic complexity",
+        "tr": "Kontrol akış grafları ve döngüsel karmaşıklık"
+      },
+      "body": {
+        "en": "A **control flow graph (CFG)** is a model of a piece of code; all graph coverage is measured on it.\n\n- **Node:** a statement, or a block of statements that always run one after another.\n- **Edge:** a possible transfer of control from one node to the next. A decision such as `if (x > 0)` has a T edge and an F edge; a loop adds an edge back to an earlier node.\n- A **test path** starts at an initial node (where execution starts) and ends at a final node.\n\nJorgensen's textbook calls this a **program graph**: statements or statement fragments as nodes, flow of control as edges.\n\n**Example**, one node per line plus one exit node:\n\n- line 1: `def sign(n):`\n- line 2: `if n < 0:`\n- line 3: `return \"neg\"` (inside the if)\n- line 4: `return \"non-neg\"`\n\nNodes: 1, 2, 3, 4, exit, so n = 5. Edges: 1→2, 2→3, 2→4, 3→exit, 4→exit, so e = 5.\n\n**Cyclomatic complexity** (McCabe) comes from the book, not the slides. For a graph with one entry and one exit, V(G) = e − n + 2p (p = number of connected components, here 1). Here V(G) = 5 − 5 + 2 = 2, the number of independent (basis) paths: 1-2-3-exit and 1-2-4-exit. Chapter 4 writes V(G) = e − n + p; that form is right only after you add an edge from the exit back to the entry (6 − 5 + 1 = 2). On the plain graph it gives one less.",
+        "tr": "**Kontrol akış grafı (control flow graph, CFG)** bir kod parçasının modelidir; tüm graf kapsamı (graph coverage) bunun üzerinde ölçülür.\n\n- **Düğüm (node):** bir deyim (statement) ya da her zaman art arda çalışan bir deyim bloğu.\n- **Kenar (edge):** bir düğümden sonrakine olası bir kontrol geçişi. `if (x > 0)` gibi bir kararın (decision) bir T kenarı ve bir F kenarı vardır; bir döngü, daha önceki bir düğüme geri giden bir kenar ekler.\n- Bir **test yolu (test path)** bir başlangıç düğümünde (initial node; çalışmanın başladığı yer) başlar ve bir bitiş düğümünde (final node) biter.\n\nJorgensen'in ders kitabı buna **program grafı (program graph)** der: düğümler deyimler veya deyim parçaları, kenarlar kontrol akışıdır.\n\n**Örnek**, her satır için bir düğüm artı bir çıkış (exit) düğümü:\n\n- satır 1: `def sign(n):`\n- satır 2: `if n < 0:`\n- satır 3: `return \"neg\"` (if'in içinde)\n- satır 4: `return \"non-neg\"`\n\nDüğümler: 1, 2, 3, 4, exit, yani n = 5. Kenarlar: 1→2, 2→3, 2→4, 3→exit, 4→exit, yani e = 5.\n\n**Döngüsel karmaşıklık (cyclomatic complexity)** (McCabe) slaytlardan değil, kitaptan gelir. Bir girişi ve bir çıkışı olan graf için V(G) = e − n + 2p (p = bağlı bileşen sayısı, burada 1). Burada V(G) = 5 − 5 + 2 = 2; bu, bağımsız (temel, basis) yolların sayısıdır: 1-2-3-exit ve 1-2-4-exit. Kitabın 4. bölümü V(G) = e − n + p yazar; bu biçim ancak çıkıştan girişe geri giden bir kenar ekledikten sonra doğrudur (6 − 5 + 1 = 2). Düz grafta bir eksik verir."
+      },
+      "source": "slides 5–6; Jorgensen Ch. 4 (cyclomatic number) and Ch. 9 (pp. 137, 147)"
+    },
+    {
+      "id": "node-edge-coverage",
+      "title": {
+        "en": "Node and edge coverage (statement and branch coverage)",
+        "tr": "Düğüm ve kenar kapsamı (deyim ve dal kapsamı)"
+      },
+      "body": {
+        "en": "Coverage tells you how much of the graph your tests actually ran. Ammann and Offutt define these criteria on the graph; ISTQB gives them other names.\n\n- **Node coverage:** every reachable node runs at least once. ISTQB calls it **statement coverage**.\n- **Edge coverage:** every reachable edge is taken at least once. ISTQB calls it **branch coverage** and measures it as branches exercised ÷ all branches.\n\nProcedure: count all nodes and edges, trace each test's path, then coverage = visited ÷ total.\n\n**Example** (the `sign` graph: 5 nodes, 5 edges). The test `sign(4)` runs 1 → 2 → 4 → exit: 4 of 5 nodes (80%) and 3 of 5 edges (60%). For 100% edge coverage, add a test that takes the missing edges 2→3 and 3→exit, e.g. `sign(-1)`. Read the condition exactly: with `n < 0`, `sign(0)` takes the F edge.\n\nA **coverage tool** such as coverage.py run with `--branch` colours the lines: red lines never ran; a yellow line is a **partial branch**: it ran, but one of its jumps never happened (shown e.g. as `2 ↛ 3`). The tool counts only the T and F outcomes of each decision, so `sign(4)` scores 1 of 2 branches, while the CFG counts every edge, including the entry edge and the edges into exit.\n\nBook names (Jorgensen, Table 9.2): C0 = every statement; C1 = every DD-Path (decision-to-decision path), i.e. every edge of the DD-Path graph; C1p = every predicate to each outcome, which is what the tool counts.",
+        "tr": "Kapsam (coverage), testlerinin grafın ne kadarını gerçekten çalıştırdığını söyler. Ammann ve Offutt bu ölçütleri (criteria) graf üzerinde tanımlar; ISTQB onlara başka adlar verir.\n\n- **Düğüm kapsamı (node coverage):** erişilebilir her düğüm en az bir kez çalışır. ISTQB buna **deyim kapsamı (statement coverage)** der.\n- **Kenar kapsamı (edge coverage):** erişilebilir her kenardan en az bir kez geçilir. ISTQB buna **dal kapsamı (branch coverage)** der ve çalıştırılan dallar ÷ tüm dallar olarak ölçer.\n\nYöntem: tüm düğümleri ve kenarları say, her testin yolunu izle, sonra kapsam = ziyaret edilen ÷ toplam.\n\n**Örnek** (`sign` grafı: 5 düğüm, 5 kenar). `sign(4)` testi 1 → 2 → 4 → exit yolunu çalıştırır: 5 düğümden 4'ü (%80) ve 5 kenardan 3'ü (%60). %100 kenar kapsamı için eksik 2→3 ve 3→exit kenarlarından geçen bir test ekle, ör. `sign(-1)`. Koşulu tam oku: `n < 0` ile `sign(0)` F kenarından gider.\n\n`--branch` ile çalıştırılan coverage.py gibi bir **kapsam aracı (coverage tool)** satırları renklendirir: kırmızı satırlar hiç çalışmadı; sarı satır bir **kısmi daldır (partial branch)**: çalıştı ama sıçramalarından biri hiç olmadı (ör. `2 ↛ 3` olarak gösterilir). Araç yalnızca her kararın T ve F sonuçlarını sayar; bu yüzden `sign(4)` 2 daldan 1'ini alır. CFG ise giriş kenarı ve exit'e giden kenarlar dahil her kenarı sayar.\n\nKitaptaki adlar (Jorgensen, Tablo 9.2): C0 = her deyim; C1 = her DD-Path (karardan karara yol, decision-to-decision path), yani DD-Path grafının her kenarı; C1p = her yüklemin (predicate) her sonuca gitmesi; aracın saydığı budur."
+      },
+      "source": "slides 7–9; Jorgensen Ch. 9 (Table 9.2)"
+    },
+    {
+      "id": "paths-and-loops",
+      "title": {
+        "en": "Edge pairs, prime paths and complete paths",
+        "tr": "Kenar çiftleri, asal yollar ve tam yollar"
+      },
+      "body": {
+        "en": "Stronger criteria look at longer pieces of paths.\n\n**Edge-pair coverage:** every reachable path of up to two edges. A join node with i in-edges and o out-edges has i × o pairs through it; e.g. 3 in and 2 out give 6 pairs. Tests can take every edge and still miss some pairs.\n\nA **simple path** repeats no node, except that it may start and end at the same node (a loop). A **prime path** is a simple path that is not part of any longer simple path. Prime path coverage is how loops get tested.\n\nHow to list prime paths: from each node, extend a simple path until it reaches a final node or the next node would repeat (if that node is the start, close the loop and stop). Then drop every path that sits inside a longer one.\n\n**Example:** edges 1→2, 2→3, 3→2, 2→4 (4 is the exit). Prime paths: [1, 2, 3], [1, 2, 4], [2, 3, 2], [3, 2, 3], [3, 2, 4]. [1, 2, 4] needs the loop skipped and [3, 2, 3] needs two iterations, so two tests suffice: 1-2-4 and 1-2-3-2-3-2-4.\n\n**Complete path coverage:** every path. One loop already gives infinitely many paths, so it cannot be reached in practice. Jorgensen agrees: All-Paths is typically unattainable (his \"trillions of paths\" example comes from one loop), and a loop should be tested both when it is skipped and when it is traversed.",
+        "tr": "Daha güçlü ölçütler (criteria) yolların daha uzun parçalarına bakar.\n\n**Kenar çifti kapsamı (edge-pair coverage):** en fazla iki kenarlı her erişilebilir yol. i giren ve o çıkan kenarı olan bir birleşme düğümünden (join node) i × o çift geçer; ör. 3 giren ve 2 çıkan kenar 6 çift verir. Testler her kenardan geçip yine de bazı çiftleri kaçırabilir.\n\n**Basit yol (simple path)** hiçbir düğümü tekrar etmez; tek istisna, aynı düğümde başlayıp bitebilmesidir (bir döngü). **Asal yol (prime path)**, daha uzun hiçbir basit yolun parçası olmayan basit yoldur. Döngüler asal yol kapsamıyla test edilir.\n\nAsal yollar nasıl listelenir: her düğümden başlayarak basit yolu, bir bitiş düğümüne ulaşana ya da sıradaki düğüm tekrar edene kadar uzat (tekrar eden düğüm başlangıç düğümüyse döngüyü kapat ve dur). Sonra daha uzun bir yolun içinde kalan her yolu at.\n\n**Örnek:** kenarlar 1→2, 2→3, 3→2, 2→4 (4 çıkış). Asal yollar: [1, 2, 3], [1, 2, 4], [2, 3, 2], [3, 2, 3], [3, 2, 4]. [1, 2, 4] döngünün atlanmasını, [3, 2, 3] ise iki yinelemeyi gerektirir; bu yüzden iki test yeter: 1-2-4 ve 1-2-3-2-3-2-4.\n\n**Tam yol kapsamı (complete path coverage):** her yol. Tek bir döngü bile sonsuz sayıda yol verir, bu yüzden pratikte ulaşılamaz. Jorgensen de aynı fikirde: All-Paths genellikle ulaşılamazdır (onun \"trilyonlarca yol\" örneği tek bir döngüden gelir) ve bir döngü hem atlandığında hem de içinden geçildiğinde test edilmelidir."
+      },
+      "source": "slides 10–12; Jorgensen Ch. 9 (Fig. 9.2, loop testing), Ch. 10 (p. 167)"
+    },
+    {
+      "id": "subsumption",
+      "title": {
+        "en": "Subsumption: which criterion is stronger?",
+        "tr": "Subsumption: hangi ölçüt daha güçlü?"
+      },
+      "body": {
+        "en": "Coverage criteria are compared by **subsumption**: criterion A subsumes criterion B when every test set that satisfies A also satisfies B. A is then at least as strong as B.\n\n**Example:** edge coverage subsumes node coverage, because a test set that takes every edge has also visited every node. The reverse fails: for `if (n < 0) { n = -n; }` with no else, the single test n = −3 visits every node but never takes the false edge.\n\nThe slides draw two ladders; an arrow from A to B means A subsumes B:\n\n- Graph coverage: complete path → prime path → edge-pair → edge (ISTQB: branch coverage) → node (ISTQB: statement coverage). One arrow is dashed: it holds only on graphs without self-loops.\n- Data flow coverage: all-du-paths → all-uses → all-defs (see the data flow cards).\n\nSubsumption is about which test sets satisfy what, not about needing fewer tests: all-du-paths, for instance, can need many more tests than all-uses.\n\nJorgensen's hierarchy (Ch. 10) agrees at both ends: All-Paths at the top, All-Edges above All-Nodes at the bottom, with All-DU-Paths and All-Uses in between. He calls All-Edges the generally accepted minimum and All-Paths typically unattainable.",
+        "tr": "Kapsam ölçütleri (coverage criteria) **içerme (subsumption)** ile karşılaştırılır: A'yı sağlayan her test kümesi B'yi de sağlıyorsa A ölçütü B ölçütünü içerir (subsumes). Bu durumda A en az B kadar güçlüdür.\n\n**Örnek:** kenar kapsamı düğüm kapsamını içerir, çünkü her kenardan geçen bir test kümesi her düğümü de ziyaret etmiştir. Tersi geçerli değildir: else'i olmayan `if (n < 0) { n = -n; }` için tek test n = −3 her düğümü ziyaret eder ama false kenarından hiç geçmez.\n\nSlaytlar iki merdiven çizer; A'dan B'ye bir ok, A'nın B'yi içerdiği anlamına gelir:\n\n- Graf kapsamı: tam yol → asal yol → kenar çifti → kenar (ISTQB: dal kapsamı) → düğüm (ISTQB: deyim kapsamı). Bir ok kesiklidir: yalnızca kendine dönen kenarı (self-loop) olmayan graflarda geçerlidir.\n- Veri akışı kapsamı: all-du-paths → all-uses → all-defs (veri akışı kartlarına bak).\n\nSubsumption, hangi test kümesinin neyi sağladığıyla ilgilidir, daha az test gerektirmekle değil: ör. all-du-paths, all-uses'tan çok daha fazla test isteyebilir.\n\nJorgensen'in hiyerarşisi (Böl. 10) iki uçta aynıdır: en üstte All-Paths, en altta All-Nodes'un üstünde All-Edges, aralarında da All-DU-Paths ve All-Uses. All-Edges'i genel kabul gören en düşük seviye, All-Paths'i ise genellikle ulaşılamaz olarak görür."
+      },
+      "source": "slides 13, 21; Jorgensen Ch. 10 (Fig. 10.3)"
+    },
+    {
+      "id": "defs-and-uses",
+      "title": {
+        "en": "Definitions, uses, du-pairs and anomalies",
+        "tr": "Tanımlar, kullanımlar, du-çiftleri ve anomaliler"
+      },
+      "body": {
+        "en": "**Data flow testing** follows the values of variables along the CFG.\n\n- **Def (definition):** the variable gets a value (assignment, input, or a parameter passed in).\n- **Use:** the value is read: a **c-use** in a computation, a **p-use** in a decision such as `if (total > 200)`. In `n = n + 1`, n has a c-use, then a def.\n- **Def-clear path:** from a def to a use with no other def of that variable on the way.\n- **du-pair:** a def and a use joined by at least one def-clear path.\n\n**Example:** 1 `x = read()`, 2 `y = x * 2`, 3 `if y > 10:`, 4 `x = 5` (inside the if), 5 `print(x)`. For x: defs 1, 4; c-uses 2, 5; du-pairs (1, 2), (1, 5), (4, 5). (1, 5) counts because 1-2-3-5 is def-clear, although 1-2-3-4-5 is not; line 4 only assigns, so it is no use. A test covers a pair only if its run is def-clear between them, so a def before a loop that redefines the variable reaches a use after the loop only when the body never runs.\n\nJorgensen: a **du-path** runs from a defining node to a use; a **dc-path** is a du-path with no other defining node of the variable. A use in a predicate is a P-use, any other a C-use.\n\n**Anomalies** (Jorgensen lists the same three): defined but never used; defined twice with no use in between; used before any definition (the program then reads a default or leftover value if the language does not stop it at compile time).",
+        "tr": "**Veri akışı testi (data flow testing)** değişkenlerin değerlerini CFG boyunca izler.\n\n- **Tanım (definition, def):** değişken bir değer alır (atama, girdi ya da dışarıdan geçirilen bir parametre).\n- **Kullanım (use):** değer okunur: bir hesaplamada **c-use**, `if (total > 200)` gibi bir kararda **p-use**. `n = n + 1` içinde n'nin önce bir c-use'u, sonra bir tanımı vardır.\n- **Def-clear yol (def-clear path):** bir tanımdan bir kullanıma giden ve yolda o değişkenin başka tanımı olmayan yol.\n- **du-çifti (du-pair):** en az bir def-clear yolla bağlanan bir tanım ve bir kullanım.\n\n**Örnek:** 1 `x = read()`, 2 `y = x * 2`, 3 `if y > 10:`, 4 `x = 5` (if'in içinde), 5 `print(x)`. x için: tanımlar 1, 4; c-use'lar 2, 5; du-çiftleri (1, 2), (1, 5), (4, 5). (1, 5) sayılır, çünkü 1-2-3-4-5 def-clear olmasa da 1-2-3-5 def-clear'dır; 4. satır yalnızca atama yapar, yani kullanım değildir. Bir test bir çifti ancak çalışması aralarında def-clear ise kapsar; bu yüzden değişkeni yeniden tanımlayan bir döngüden önceki tanım, döngüden sonraki bir kullanıma ancak gövde hiç çalışmazsa ulaşır.\n\nJorgensen: **du-path** bir tanım düğümünden bir kullanıma gider; **dc-path** ise değişkenin başka tanım düğümünü içermeyen bir du-path'tir. Bir yüklemdeki (predicate) kullanım P-use, diğer her kullanım C-use'tur.\n\n**Anomaliler (anomalies)** (Jorgensen de aynı üçünü sayar): tanımlanıp hiç kullanılmamak; arada kullanım olmadan iki kez tanımlanmak; hiç tanımlanmadan kullanılmak (dil bunu derleme zamanında engellemiyorsa program varsayılan ya da önceden kalmış bir değeri okur)."
+      },
+      "source": "slides 15–17, 20; Jorgensen Ch. 10 (pp. 157–159)"
+    },
+    {
+      "id": "data-flow-criteria",
+      "title": {
+        "en": "All-defs, all-uses and all-du-paths",
+        "tr": "All-defs, all-uses ve all-du-paths"
+      },
+      "body": {
+        "en": "Data flow criteria say which du-pairs or paths the tests must run.\n\n- **All-defs:** for every def, one def-clear path to at least one of its uses. So every def must run and reach some use.\n- **All-uses:** for every def, a def-clear path to every use it can reach (every du-pair).\n- **All-du-paths:** every simple def-clear path from each def to each of its uses.\n\nEach criterion subsumes the one before. All-du-paths can need many more tests: two independent `if`s between a def and its use give 2 × 2 = 4 def-clear paths, but each run takes only one of them.\n\nProcedure: list the du-pairs; trace each test's path and tick the pairs it runs def-clear; leave out infeasible pairs (no input can run them).\n\n**Example** (limit and step are parameters, step > 0):\n\n- 1 `s = 0`\n- 2 `while s < limit:`\n- 3 `s = s + step` (loop body)\n- 4 `print(s)`\n\ns: defs 1 and 3; uses 2 (p-use), 3 (c-use), 4 (c-use). du-pairs: (1, 2), (1, 3), (1, 4), (3, 2), (3, 3), (3, 4). (3, 3) means the def in one iteration reaches the use in the next. One iteration (1-2-3-2-4) already gives all-defs. All-uses also needs limit ≤ 0 for (1, 4) and two iterations for (3, 3).\n\nJorgensen's versions differ slightly: his All-Uses also needs a path to the successor node of each use (so both outcomes of a p-use), his All-DU-Paths allows only cycle-free paths or single loop traversals, and he does not count a pair from a statement to itself like (3, 3).",
+        "tr": "Veri akışı ölçütleri, testlerin hangi du-çiftlerini ya da yolları çalıştırması gerektiğini söyler.\n\n- **All-defs:** her tanım için, kullanımlarından en az birine giden bir def-clear yol. Yani her tanım çalışmalı ve bir kullanıma ulaşmalıdır.\n- **All-uses:** her tanım için, ulaşabildiği her kullanıma giden bir def-clear yol (her du-çifti).\n- **All-du-paths:** her tanımdan her kullanımına giden her basit def-clear yol.\n\nHer ölçüt bir öncekini içerir (subsumes). All-du-paths çok daha fazla test isteyebilir: bir tanım ile kullanımı arasındaki iki bağımsız `if`, 2 × 2 = 4 def-clear yol verir, ama her çalıştırma bunlardan yalnızca birinden geçer.\n\nYöntem: du-çiftlerini listele; her testin yolunu izle ve def-clear olarak çalıştırdığı çiftleri işaretle; uygulanamaz (infeasible) çiftleri, yani hiçbir girdinin çalıştıramayacağı çiftleri dışarıda bırak.\n\n**Örnek** (limit ve step parametredir, step > 0):\n\n- 1 `s = 0`\n- 2 `while s < limit:`\n- 3 `s = s + step` (döngü gövdesi)\n- 4 `print(s)`\n\ns: tanımlar 1 ve 3; kullanımlar 2 (p-use), 3 (c-use), 4 (c-use). du-çiftleri: (1, 2), (1, 3), (1, 4), (3, 2), (3, 3), (3, 4). (3, 3), bir yinelemedeki tanımın bir sonraki yinelemedeki kullanıma ulaşması demektir. Tek bir yineleme (1-2-3-2-4) all-defs'i zaten sağlar. All-uses ayrıca (1, 4) için limit ≤ 0 ve (3, 3) için iki yineleme ister.\n\nJorgensen'in tanımları biraz farklıdır: onun All-Uses'u her kullanımın ardıl (successor) düğümüne de bir yol ister (yani bir p-use'un iki sonucunu da), All-DU-Paths'i yalnızca döngüsüz yollara ya da döngüden tek geçişe izin verir ve (3, 3) gibi bir deyimden kendisine giden çifti saymaz."
+      },
+      "source": "slides 17–19; Jorgensen Ch. 10 (pp. 164–167)"
+    },
+    {
+      "id": "decision-table-basics",
+      "title": {
+        "en": "Decision tables: parts, notation and the tutorial table",
+        "tr": "Karar tabloları: parçalar, gösterim ve öğreticideki tablo"
+      },
+      "body": {
+        "en": "A **decision table** lists combinations of business rules so that complex logic can be tested systematically.\n\nISTQB (Foundation syllabus v4.0.1):\n\n- Rows hold the **conditions** (inputs) and the **actions** (outputs); each column is a **rule**: one combination of conditions plus the resulting actions.\n- Conditions: T (satisfied), F (not satisfied), `-` (does not affect the outcome), N/A (infeasible combination). Actions: X (happens), blank (does not).\n- A full table has one column per combination: n true/false conditions give 2^n columns (4 conditions → 16). Minimization (merging columns) comes only afterwards.\n\nJorgensen also gets 2^n rules for a limited entry table (all conditions binary), but his \"don't care\" covers both \"irrelevant\" and \"does not apply\" (n/a), and he marks impossible rules with an extra \"impossible\" action.\n\nThe tutorial starts from a logical flow diagram: name the branches (a, b, c) and the leaves (results 1, 2, 3), then write one row per rule with the validations, the expected result and a **Combinations** column. Rules: each validation in a decision box becomes a column, every leaf (result) is covered, all input combinations for a result are listed, and finally you verify that all branches and leaves are covered. Login table Combinations: \"Both blank / Either of them blank\" (non-blank alert), \"Both invalid / Either of them invalid\" (\"Enter valid credentials to login\"), NA (Login). This NA means \"does not matter\", which ISTQB writes as `-`.",
+        "tr": "Bir **karar tablosu (decision table)**, karmaşık mantığın sistemli biçimde test edilebilmesi için iş kurallarının kombinasyonlarını listeler.\n\nISTQB (Foundation müfredatı v4.0.1):\n\n- Satırlarda **koşullar (conditions)** (girdiler) ve **eylemler (actions)** (çıktılar) bulunur; her sütun bir **kuraldır (rule)**: koşulların bir kombinasyonu ve ondan çıkan eylemler.\n- Koşullar: T (sağlanıyor), F (sağlanmıyor), `-` (sonucu etkilemiyor), N/A (imkânsız kombinasyon, infeasible). Eylemler: X (gerçekleşir), boş (gerçekleşmez).\n- Tam bir tabloda her kombinasyon için bir sütun vardır: n doğru/yanlış koşul 2^n sütun verir (4 koşul → 16). Minimizasyon (sütunları birleştirmek) ancak sonra gelir.\n\nJorgensen de sınırlı girdili (limited entry, tüm koşullar ikili) bir tablo için 2^n kural bulur; ama onun \"don't care\" (önemsiz) girdisi hem \"ilgisiz\" hem de \"uygulanmaz\" (n/a) anlamını kapsar ve imkânsız kuralları ek bir \"impossible\" (imkânsız) eylemiyle işaretler.\n\nÖğretici (tutorial) mantıksal bir akış diyagramından başlar: dalları (a, b, c) ve yaprakları (sonuçlar 1, 2, 3) adlandır, sonra her kural için doğrulamaları (validations), beklenen sonucu ve bir **Combinations** (kombinasyonlar) sütununu içeren bir satır yaz. Kurallar: karar kutularındaki her doğrulama bir sütun olur, her yaprak (sonuç) kapsanır, bir sonuca götüren tüm girdi kombinasyonları listelenir ve sonunda tüm dalların ve yaprakların kapsandığı doğrulanır. Giriş (login) tablosundaki Combinations: \"Both blank / Either of them blank\" (boş olmayan kimlik bilgisi isteyen uyarı), \"Both invalid / Either of them invalid\" (\"Enter valid credentials to login\"), NA (Login). Bu NA \"fark etmez\" demektir; ISTQB bunu `-` ile yazar."
+      },
+      "source": "slides 26–29, 32 (tutorial images on slides 27–28); Jorgensen Ch. 7 (pp. 111–113)"
+    },
+    {
+      "id": "decision-table-minimize",
+      "title": {
+        "en": "Minimizing a decision table and checking it with rule counts",
+        "tr": "Karar tablosunu küçültmek ve kural sayısıyla kontrol etmek"
+      },
+      "body": {
+        "en": "**Minimization** merges columns in which some condition does not change the outcome. Merge two columns only if they have the same actions and differ in exactly one condition; that condition becomes `-`. Repeat until nothing merges. A `-` means \"does not matter\", not \"infeasible\".\n\n**Example** (parking exit): C1 ticket?, C2 paid?, C3 within 15 minutes?. No ticket → call staff; paid → open the gate; not paid but within 15 minutes → open the gate; otherwise → ask to pay.\n\n- C1 = F: all 4 columns call staff → one rule (F, -, -).\n- (T, T, T) and (T, T, F) both open → (T, T, -).\n- (T, F, T) opens and (T, F, F) asks to pay: different actions, both stay.\n- (T, T, -) and (T, F, T) have the same action but differ in two conditions, so they cannot merge.\n\nThe 8 columns become 4 rules, so 4 tests give 100% decision table coverage.\n\n**Rule count check** (Jorgensen): a rule with no `-` counts 1, and each `-` doubles it (count = 2^(number of dashes)). The counts must add up to 2^n. Above: 4 + 2 + 1 + 1 = 8 = 2^3. A smaller sum means a missing rule, i.e. an empty column: e.g. the rules (F, -, -), (T, T, -), (T, F, F) count 4 + 2 + 1 = 7, so (T, F, T) has no rule. A larger sum means overlapping rules: redundant if their actions agree, inconsistent if they differ.",
+        "tr": "**Minimizasyon (minimization)**, bazı koşulların sonucu değiştirmediği sütunları birleştirir. İki sütunu yalnızca eylemleri aynıysa ve tam olarak bir koşulda farklıysa birleştir; o koşul `-` olur. Birleşecek bir şey kalmayana kadar tekrarla. `-` \"imkânsız\" değil, \"fark etmez\" demektir.\n\n**Örnek** (otopark çıkışı): C1 bilet var mı?, C2 ödendi mi?, C3 15 dakika içinde mi?. Bilet yok → görevli çağır; ödendi → bariyeri aç; ödenmedi ama 15 dakika içinde → bariyeri aç; aksi halde → ödeme iste.\n\n- C1 = F: 4 sütunun hepsi görevli çağırır → tek kural (F, -, -).\n- (T, T, T) ve (T, T, F) ikisi de açar → (T, T, -).\n- (T, F, T) açar, (T, F, F) ödeme ister: eylemler farklı, ikisi de kalır.\n- (T, T, -) ve (T, F, T) aynı eyleme sahip ama iki koşulda farklılar, bu yüzden birleşemezler.\n\n8 sütun 4 kurala iner; bu yüzden 4 test %100 karar tablosu kapsamı verir.\n\n**Kural sayısı kontrolü (rule count)** (Jorgensen): `-` içermeyen bir kural 1 sayılır, her `-` sayıyı ikiye katlar (sayı = 2^(tire sayısı)). Sayıların toplamı 2^n olmalıdır. Yukarıda: 4 + 2 + 1 + 1 = 8 = 2^3. Daha küçük bir toplam eksik bir kural, yani boş bir sütun demektir: ör. (F, -, -), (T, T, -), (T, F, F) kuralları 4 + 2 + 1 = 7 eder, yani (T, F, T) için kural yoktur. Daha büyük bir toplam çakışan kurallar demektir: eylemleri aynıysa gereksiz (redundant), farklıysa tutarsız (inconsistent)."
+      },
+      "source": "slides 26, 30–31, 33; Jorgensen Ch. 7 (pp. 113–115)"
+    },
+    {
+      "id": "decision-table-coverage",
+      "title": {
+        "en": "Decision table coverage, strengths and limits",
+        "tr": "Karar tablosu kapsamı, güçlü ve zayıf yönleri"
+      },
+      "body": {
+        "en": "In decision table testing the coverage items are the columns with **feasible** combinations of conditions:\n\n- decision table coverage = columns exercised ÷ feasible columns\n\n**Example:** 4 columns, 1 of them infeasible (N/A), and the tests exercise 2 → 2 / 3 = 67%, not 2 / 4. Jorgensen still lists impossible rules in his test case tables, marked as impossible, but ISTQB coverage leaves them out.\n\n100% decision table coverage tests every rule once. It does not test the values inside a condition (which field is blank, which password is wrong, how long a user id may be); equivalence partitioning and boundary value analysis cover that part.\n\nAdvantages:\n\n- Any complex business flow drawn as a diagram can be covered, and missing or contradictory rules show up as empty or conflicting columns.\n- The result can be measured: every feasible column becomes at least one test case.\n- Easy to understand, and less rework, because missing combinations are found before tests are written. The table itself still needs a review: a wrong rule in the table gives a wrong test.\n\nDisadvantages:\n\n- BVA and EP do not fit directly into the template (note them in the combinations column).\n- The table grows fast: 10 conditions give 1,024 columns.\n- It describes combinations at one moment. When the result depends on the order of events, state transition testing fits better. Jorgensen calls decision tables declarative: their conditions imply no order.",
+        "tr": "Karar tablosu testinde kapsam öğeleri (coverage items), koşulların **uygulanabilir (feasible)** kombinasyonlarını içeren sütunlardır:\n\n- karar tablosu kapsamı = çalıştırılan sütunlar ÷ uygulanabilir sütunlar\n\n**Örnek:** 4 sütun var, biri uygulanamaz (N/A) ve testler 2 sütunu çalıştırıyor → 2 / 4 değil, 2 / 3 = %67. Jorgensen imkânsız kuralları test durumu (test case) tablolarında \"impossible\" olarak işaretleyip yine de listeler, ama ISTQB kapsamı onları dışarıda bırakır.\n\n%100 karar tablosu kapsamı her kuralı bir kez test eder. Bir koşulun içindeki değerleri test etmez (hangi alanın boş olduğu, hangi parolanın yanlış olduğu, bir kullanıcı adının ne kadar uzun olabileceği); o kısmı denklik bölümlemesi (equivalence partitioning) ve sınır değer analizi (boundary value analysis) kapsar.\n\nAvantajlar:\n\n- Diyagram olarak çizilmiş her karmaşık iş akışı kapsanabilir; eksik veya çelişkili kurallar boş veya çatışan sütunlar olarak ortaya çıkar.\n- Sonuç ölçülebilir: her uygulanabilir sütun en az bir test durumu olur.\n- Anlaşılması kolaydır ve eksik kombinasyonlar testler yazılmadan önce bulunduğu için daha az yeniden iş gerekir. Tablonun kendisi yine de gözden geçirilmelidir: tablodaki yanlış bir kural yanlış bir test verir.\n\nDezavantajlar:\n\n- BVA ve EP şablona doğrudan sığmaz (combinations sütununa not edilir).\n- Tablo hızla büyür: 10 koşul 1024 sütun verir.\n- Tek bir andaki kombinasyonları anlatır. Sonuç olayların sırasına bağlıysa durum geçiş testi (state transition testing) daha uygundur. Jorgensen karar tablolarını bildirimsel (declarative) olarak niteler: koşulları hiçbir sıra ima etmez."
+      },
+      "source": "slides 33–36; Jorgensen Ch. 7 (pp. 112, 116)"
+    },
+    {
+      "id": "other-techniques",
+      "title": {
+        "en": "Choosing a technique: EP, BVA, state transitions, experience",
+        "tr": "Teknik seçimi: EP, BVA, durum geçişleri, deneyim"
+      },
+      "body": {
+        "en": "Decision tables test combinations of rules; other techniques fit other kinds of requirements.\n\n- **Equivalence partitioning (EP):** split an input into partitions and test one value from each. Fits any input: numbers, text, options.\n- **Boundary value analysis (BVA):** needs values with an order, so an unordered list of options has no boundaries. Boundary values are the smallest and largest value of every partition, invalid ones included. ISTQB **2-value BVA** tests each boundary and its closest neighbour, **3-value BVA** each boundary and both neighbours.\n\n**Example:** a user name has 3 to 10 characters; partitions 0–2, 3–10, 11 and up. EP: e.g. 1, 6, 15. 2-value: 0, 2, 3, 10, 11. 3-value: 0, 1, 2, 3, 4, 9, 10, 11, 12 (0 has no lower neighbour). Jorgensen's BVA instead takes min, min+, nom, max−, max of the valid range (3, 4, e.g. 6, 9, 10); his robustness testing adds min− and max+ (2, 11).\n\n- **State transition testing:** for systems with a finite number of states that change on events. Coverage: all states, all valid transitions, or all transitions including attempts at invalid ones.\n- **Error guessing:** the tester's experience, often lists of faults seen before.\n- **Exploratory testing:** designs, runs and evaluates tests at the same time, often in a fixed time box with a short written charter.\n- **Checklist-based testing:** works through a prepared list of conditions to check.\n\nRecommended order for business logic: decision table → BVA and EP for input ranges → combinations for field-level validations → error guessing as a final touch.",
+        "tr": "Karar tabloları kuralların kombinasyonlarını test eder; diğer teknikler başka tür gereksinimlere uyar.\n\n- **Denklik bölümlemesi (equivalence partitioning, EP):** bir girdiyi bölümlere (partitions) ayır ve her bölümden bir değer test et. Her girdiye uyar: sayılar, metin, seçenekler.\n- **Sınır değer analizi (boundary value analysis, BVA):** sıralanabilen değerler ister; bu yüzden sırasız bir seçenek listesinin sınırı yoktur. Sınır değerleri, geçersizler dahil her bölümün en küçük ve en büyük değeridir. ISTQB **2 değerli BVA** her sınırı ve en yakın komşusunu, **3 değerli BVA** her sınırı ve iki komşusunu test eder.\n\n**Örnek:** kullanıcı adı 3 ile 10 karakter arasında; bölümler 0–2, 3–10, 11 ve üstü. EP: ör. 1, 6, 15. 2 değerli: 0, 2, 3, 10, 11. 3 değerli: 0, 1, 2, 3, 4, 9, 10, 11, 12 (0'ın alt komşusu yoktur). Jorgensen'in BVA'sı ise geçerli aralığın min, min+, nom, max−, max değerlerini alır (3, 4, ör. 6, 9, 10); sağlamlık testi (robustness testing) buna min− ve max+ ekler (2, 11).\n\n- **Durum geçiş testi (state transition testing):** sonlu sayıda durumu olan ve olaylarla durum değiştiren sistemler için. Kapsam: tüm durumlar, tüm geçerli geçişler veya geçersiz geçiş denemeleri dahil tüm geçişler.\n- **Hata tahmini (error guessing):** test uzmanının deneyimi, çoğu zaman daha önce görülmüş hataların listeleri.\n- **Keşif testi (exploratory testing):** testleri aynı anda tasarlar, çalıştırır ve değerlendirir; çoğu zaman sabit bir zaman kutusu (time box) içinde ve kısa yazılı bir görev tanımıyla (charter).\n- **Kontrol listesi tabanlı test (checklist-based testing):** kontrol edilecek koşulların hazırlanmış bir listesini adım adım uygular.\n\nİş mantığı için önerilen sıra: karar tablosu → girdi aralıkları için BVA ve EP → alan seviyesindeki doğrulamalar için kombinasyonlar → son dokunuş olarak hata tahmini."
+      },
+      "source": "slides 38–46; Jorgensen Ch. 5 (boundary value analysis conventions)"
+    }
+  ],
+  "questions": {
+    "1": {
+      "concept": "cfg-and-complexity",
+      "explanation_tr": "Bir CFG düğümü tek bir deyim ya da her zaman art arda çalışan bir deyim bloğudur; düğümler arasındaki olası bir kontrol geçişi düğüm değil, kenardır. Jorgensen'in program grafı da aynı fikirdir: düğümler deyimler veya deyim parçaları, kenarlar kontrol akışıdır."
+    },
+    "2": {
+      "concept": "node-edge-coverage",
+      "explanation_tr": "ISTQB kenar kapsamına dal kapsamı (branch coverage) der ve onu çalıştırılan dallar ÷ tüm dallar olarak ölçer; deyim kapsamı (statement coverage) ise düğüm kapsamının ISTQB adıdır. Jorgensen'in Tablo 9.2'sinde karşılık gelen ölçütler C0 (her deyim) ve DD-Path grafının her kenarını isteyen C1'dir."
+    },
+    "3": {
+      "concept": "node-edge-coverage",
+      "explanation_tr": "Grafın 7 düğümü (1-6. satırlar ve exit) ve 8 kenarı vardır; 1 → 2 → 6 → exit yolu 7 düğümden 4'ünü ziyaret eder (%57) ve 8 kenardan 3'ünden geçer (%37.5); yani aynı test iki farklı sayı verir."
+    },
+    "4": {
+      "concept": "node-edge-coverage",
+      "explanation_tr": "classify(-5, 3) 3. satıra hiç ulaşmaz; bu yüzden eklenen testler iç kararın iki kenarından da geçmelidir: classify(5, 3) 3. satırdan 4. satıra, classify(5, -2) ise 3. satırdan 5. satıra gider. Diğer her çift ya 4. satıra ya da 5. satıra giden kenarı kaçırır (x = 0 ve y = 0 pozitif olmayan sayılır)."
+    },
+    "5": {
+      "concept": "node-edge-coverage",
+      "explanation_tr": "x = -5 ile 2. satır çalışır ve 6. satıra atlar, ama 2 → 3 sıçraması hiç olmaz; bu yüzden araç 2. satırı kısmi dal (partial branch) olarak işaretler. Hiç çalışmamış satırlar ise kırmızı gösterilir."
+    },
+    "6": {
+      "concept": "paths-and-loops",
+      "explanation_tr": "D'nin 2 giren ve 2 çıkan kenarı vardır, yani içinden 2 × 2 = 4 çift geçer; testler yalnızca B → D → E ve C → D → F'yi izler, B → D → F ve C → D → E kapsanmadan kalır. Kenar çifti kapsamı dördünü de ister; böylece ilk kararın ikinciyle nasıl birleştiğini de test eder."
+    },
+    "7": {
+      "concept": "paths-and-loops",
+      "explanation_tr": "Asal yol (prime path), daha uzun hiçbir basit yolun içermediği basit bir yoldur (hiçbir düğüm tekrar etmez; yalnızca aynı düğümde başlayıp bitebilir). Bir başlangıç düğümünden bir bitiş düğümüne giden yol ise bir test yoludur."
+    },
+    "8": {
+      "concept": "paths-and-loops",
+      "explanation_tr": "[2, 3, 4, 2] basittir, çünkü yalnızca ilk ve son düğümü aynıdır ve daha uzun hiçbir basit yol onu içermez. [1, 2, 3] ve [2, 3, 4], [1, 2, 3, 4]'ün içinde kalır; [4, 2, 5], [3, 4, 2, 5]'in içinde kalır; [1, 2, 3, 4, 2] ise basit değildir, çünkü 2 düğümü başlangıç düğümü olmadığı halde tekrar eder."
+    },
+    "9": {
+      "concept": "subsumption",
+      "explanation_tr": "Subsumption, A'yı sağlamanın B'yi garanti etmesi demektir; tıpkı kenar kapsamının düğüm kapsamını garanti etmesi gibi. Ters yön genel olarak geçerli değildir."
+    },
+    "10": {
+      "concept": "paths-and-loops",
+      "explanation_tr": "Tam yol kapsamı her yolu ister ve tek bir döngü bile sonsuz sayıda yol verir; bu yüzden pratikte ulaşılamaz. Asal yol kapsamı ise döngüleri sonlu bir basit yol kümesiyle test eder. Jorgensen de aynı noktayı vurgular: All-Paths genellikle ulaşılamazdır ve onun \"trilyonlarca yol\" örneği tek bir döngüden gelir."
+    },
+    "11": {
+      "concept": "defs-and-uses",
+      "explanation_tr": "Def-clear bir yolda tanım ile kullanım arasında değişkenin başka bir tanımı yoktur; en az bir böyle yolla bağlanan bir tanım ve bir kullanım bir du-çifti (du-pair) oluşturur. Jorgensen bir tanım düğümünden bir kullanıma giden her yola du-path, değişkenin başka tanım düğümünü içermeyen bir du-path'e ise dc-path (definition-clear path) der."
+    },
+    "12": {
+      "concept": "defs-and-uses",
+      "explanation_tr": "price 1. ve 3. satırlarda tanımlanır, 2. satırda (p-use) ve 4. satırda (c-use) kullanılır. (1, 4) sayılır çünkü 1 → 2 → 3 → 4 def-clear olmasa da 1 → 2 → 4 def-clear'dır; 3. satır ise price'a yalnızca atama yapar, yani bir kullanım değil, bir tanımdır. Jorgensen'in terimleriyle 1 → 2 → 3 → 4 dc-path olmayan bir du-path'tir, 1 → 2 → 4 ise bir dc-path'tir."
+    },
+    "13": {
+      "concept": "defs-and-uses",
+      "explanation_tr": "p-use değişkeni bir kararın içinde okur, 4. satırın yaptığı gibi; 3, 5 ve 6. satırlar total'ı bir hesaplamada okur, bunlar c-use'tur; 1. satır ise yalnızca bir tanımdır. Jorgensen de aynı ayrımı yapar: bir yüklem (predicate) deyimindeki kullanım P-use, diğer her kullanım C-use'tur."
+    },
+    "14": {
+      "concept": "defs-and-uses",
+      "explanation_tr": "Herhangi bir ürün, total'ı yeniden tanımlayan 3. satırı çalıştırır; bu yüzden def-clear 1 → 2 → 4 → 6 yolunu yalnızca boş bir sipariş verir (total = 0 olduğu için 5. satırdaki indirim de atlanır)."
+    },
+    "15": {
+      "concept": "data-flow-criteria",
+      "explanation_tr": "total 1, 3 ve 5. satırlarda tanımlanır ve 1 → 2 → 3 → 2 → 4 → 5 → 6 çalıştırması her tanımı def-clear olarak bir kullanıma taşır (1'den 3'e, 3'ten 4'e, 5'ten 6'ya). Diğer her test 5. satırdaki tanımı atlar, çünkü 150, 180 ve tam 200 TL, 200'ün üstünde değildir; boş sipariş ise ayrıca 3. satırı da atlar."
+    },
+    "16": {
+      "concept": "data-flow-criteria",
+      "explanation_tr": "x'in tek bir du-çifti vardır, (1, 6), ve bunu herhangi bir çalıştırma kapsar; ama iki bağımsız karar 1. satırdan 6. satıra 2 × 2 = 4 basit def-clear yol verir ve her çalıştırma bunlardan yalnızca birinden geçer. All-uses'u içeren all-du-paths'in çok daha fazla test isteyebilmesinin nedeni budur. Kitabın All-DU-Paths'i bu yolları ayrıca döngüsüz yollarla veya döngüden tek geçişle sınırlar; buradaki dört yolun hepsi döngüsüzdür."
+    },
+    "17": {
+      "concept": "data-flow-criteria",
+      "explanation_tr": "price = 150, 1 → 2 → 3 → 4 yolunu çalıştırır ve (1, 2) ile (3, 4)'ü kapsar; bu all-defs için zaten yeterlidir. All-uses ayrıca (1, 4)'ü ister; bunu 100 veya daha küçük bir değer, ör. price = 50, 1 → 2 → 4 üzerinden kapsar. İki test 2. satırdaki p-use'un iki sonucundan da geçer; Jorgensen'in All-Uses'u bunu ayrıca ister."
+    },
+    "18": {
+      "concept": "defs-and-uses",
+      "explanation_tr": "İlk yinelemede total + item.price, total'a henüz hiçbir şey atanmadan onu okur; dil bunu derleme zamanında engellemiyorsa program varsayılan ya da önceden kalmış bir değeri okur. total'ın her tanımını bir kullanım izler; item ise döngü tarafından tanımlanır ve item.price içinde kullanılır. Jorgensen'in tanım/referans anomalileri aynı üç sorundur: tanımlanıp hiç kullanılmamak, kullanılıp hiç tanımlanmamak ve kullanılmadan önce iki kez tanımlanmak."
+    },
+    "19": {
+      "concept": "subsumption",
+      "explanation_tr": "Merdivende her ölçüt altındakini içerir: tam yoldan aşağıya, kenar kapsamına (ISTQB dal kapsamı) ve en sonda düğüm kapsamına (ISTQB deyim kapsamı) kadar; tek kesikli ok yalnızca kendine dönen kenarı (self-loop) olmayan graflarda geçerlidir. Jorgensen'in hiyerarşisi iki uçta aynıdır: en üstte All-Paths, en altta All-Nodes'un üstünde All-Edges."
+    },
+    "20": {
+      "concept": "decision-table-basics",
+      "explanation_tr": "Tam bir karar tablosunda her kombinasyon için bir sütun vardır, yani n doğru/yanlış koşul 2^n sütun verir: 2^3 = 8. Jorgensen de sınırlı girdili (limited entry) tablo için aynısını söyler (n koşul, 2^n kural). Sütunları birleştirmek ancak sonra, minimizasyon sırasında gelir."
+    },
+    "21": {
+      "concept": "decision-table-basics",
+      "explanation_tr": "O satırda \"Both invalid\" ve \"Either of them invalid\" yazar; \"Both blank\" ve \"Either of them blank\", boş olmayan kimlik bilgisi isteyen kurala aittir; Login kuralında ise NA görünür."
+    },
+    "22": {
+      "concept": "decision-table-basics",
+      "explanation_tr": "ISTQB önemli olmayan bir koşul için \"-\" yazar, N/A'yı ise gerçekleşemeyecek kombinasyonlara ayırır; öğreticideki NA \"fark etmez\" demektir, yani ISTQB tiresine karşılık gelir. Jorgensen farklıdır: hem \"ilgisiz\" hem de \"uygulanmaz\" (n/a) girdilerini önemsiz (don't care) sayar ve imkânsız kuralları ek bir \"impossible\" eylemiyle işaretler."
+    },
+    "23": {
+      "concept": "decision-table-minimize",
+      "explanation_tr": "Bir alan boşken sistem, C2 ne olursa olsun boş olmayan kimlik bilgisi ister; bu yüzden 1. ve 2. sütunlar C2 = \"-\" ile R1'de birleşir. Kombinasyon imkânsız değildir; yalnızca C2'nin değeri önemli değildir. Jorgensen'in kural sayımında R1 2, R2 ve R3 birer sayılır; böylece toplam yine 2^2 = 4 eder."
+    },
+    "24": {
+      "concept": "decision-table-basics",
+      "explanation_tr": "Karar kutularındaki doğrulamalar tablonun sütunları olur ve akış diyagramının her sonucu (yaprağı) kapsanmalıdır; tablo tamamlandıktan sonra mantık ağacının tüm dallarının ve yapraklarının kapsandığı doğrulanır."
+    },
+    "25": {
+      "concept": "decision-table-coverage",
+      "explanation_tr": "Kapsam öğeleri yalnızca uygulanabilir sütunlardır, yani kapsam 3 / 6 = %50'dir; 8 sütunun hepsine bölmek (%37.5) uygulanamaz sütunları yanlışlıkla sayar. Jorgensen imkânsız kuralları test durumu tablolarında \"impossible\" olarak işaretleyip yine de listeler, ama ISTQB kapsamı onları dışarıda bırakır."
+    },
+    "26": {
+      "concept": "decision-table-coverage",
+      "explanation_tr": "%100 karar tablosu kapsamı her kuralı bir kez test eder, ama bir koşulun içindeki değerleri test etmez: hangi alanın boş olduğu, hangi parolanın yanlış olduğu veya bir kullanıcı adının ne kadar uzun olabileceği gibi. O kısmı denklik bölümlemesi ve sınır değer analizi kapsar."
+    },
+    "27": {
+      "concept": "decision-table-coverage",
+      "explanation_tr": "Kurallardaki boşluklar ve çelişkiler boş veya çatışan sütunlar olarak görünür. Tablonun kendisi yine de gözden geçirilmelidir, çünkü tablodaki yanlış bir kural doğrudan yanlış bir test üretir."
+    },
+    "28": {
+      "concept": "decision-table-coverage",
+      "explanation_tr": "Bir karar tablosu tek bir andaki koşul kombinasyonlarını anlatır; sonuç olayların sırasına bağlıysa durum geçiş testi daha uygundur. Jorgensen de karar tablolarını bildirimsel (declarative) olarak niteleyerek aynı noktayı vurgular: koşulları hiçbir sıra ima etmez."
+    },
+    "29": {
+      "concept": "other-techniques",
+      "explanation_tr": "Sınırlar her bölümün en küçük ve en büyük değeridir (0, 7, 8, 16, 17) ve 3 değerli BVA her birinin iki komşusunu ekler; 0'ın ise alt komşusu yoktur. Yalnızca 0, 7, 8, 16, 17 kümesi 2 değerli kümedir. Jorgensen'in sınır değer analizi farklı bir kural izler (geçerli aralığın min, min+, nom, max−, max değerleri; min− ve max+ sağlamlık testiyle eklenir)."
+    },
+    "30": {
+      "concept": "other-techniques",
+      "explanation_tr": "Durum geçiş kapsamı tüm durumları, tüm geçerli geçişleri veya geçersiz geçiş denemeleri dahil tüm geçişleri hedefleyebilir; kargoya verilmiş (shipped) bir siparişi iptal etmeyi deneyen bir testi yalnızca son seviye ister."
+    },
+    "31": {
+      "concept": "other-techniques",
+      "explanation_tr": "Bu tanım keşif testini (exploratory testing) anlatır; hata tahmini test uzmanının deneyimine ve daha önce görülmüş hataların listelerine dayanır, kontrol listesi tabanlı test ise hazırlanmış bir koşul listesini adım adım uygular."
+    },
+    "32": {
+      "concept": "other-techniques",
+      "explanation_tr": "Denklik bölümlemesi seçenekler dahil her tür girdiye uyar; sınır değer analizi ise sıralanabilen değerler gerektirir, bu yüzden sırasız bir seçenek listesinde test edilecek sınır yoktur."
+    },
+    "33": {
+      "concept": "other-techniques",
+      "explanation_tr": "Adımlar şöyledir: önce bir karar tablosu, sonra girdi aralıkları için sınır değer analizi ve denklik bölümlemesi, sonra alan seviyesindeki doğrulamalar için kombinasyonlar ve en sonda son dokunuş olarak deneyimle hata tahmini."
+    },
+    "34": {
+      "concept": "decision-table-minimize",
+      "explanation_tr": "Her tire, bir kuralın temsil ettiği tam tablo sütunu sayısını ikiye katlar (Jorgensen'in kural sayımı); bu yüzden kurallar 2^4 = 16 sütunun 8 + 4 + 2 + 1 = 15'ini karşılar ve yalnızca (T, T, T, T) hiçbir kurala uymaz; (F, F, F, F) zaten R1'in içindedir. Eksik bir kural boş bir sütun olarak işte böyle ortaya çıkar."
+    },
+    "35": {
+      "concept": "decision-table-minimize",
+      "explanation_tr": "C3 F iken C1 ve C2 ne olursa olsun hiçbir teklif geçerli olmaz; bu yüzden bu 4 sütun tek bir kuralda (-, -, F) birleşir. C3 = T olan 4 sütunun ise hepsinin eylemleri farklıdır (iki teklif birden, yalnızca indirim, yalnızca tatlı, hiçbiri); böylece 1 + 4 = 5 sütun kalır. Kural sayısı kontrolü olarak: 4 + 1 + 1 + 1 + 1 = 8 = 2^3."
+    },
+    "36": {
+      "concept": "cfg-and-complexity",
+      "explanation_tr": "Grafın 7 düğümü ve 8 kenarı vardır (1→2, 2→3, 2→6, 3→4, 3→5 ve exit'e giden üç kenar); yani V(G) = 8 − 7 + 2 × 1 = 3'tür ve bir temel (basis) küme üç yoldan oluşur, ör. 1-2-6-exit, 1-2-3-4-exit ve 1-2-3-5-exit. Bu grafta, önce exit'ten girişe geri bir kenar eklemeden 4. bölümün e − n + p formülünü kullanmak yanlış değer olan 2'yi verir."
+    },
+    "37": {
+      "concept": "node-edge-coverage",
+      "explanation_tr": "2. ve 3. satırlardaki kararların her birinin bir T ve bir F sonucu vardır; bu 4 dal eder ve test bunlardan yalnızca 2 → 6'yı izlemiştir. 8 CFG kenarı ayrıca 1 → 2'yi ve exit'e giden üç kenarı da içerir; test bunlardan da ikisinden geçmiştir. Aracın sayımı Jorgensen'in C1p'sine, yani her yüklemin her sonuca gitmesine karşılık gelir."
+    },
+    "38": {
+      "concept": "data-flow-criteria",
+      "explanation_tr": "Boş sipariş (1, 4) ve (1, 6)'yı; 150 + 150 TL (1, 3)'ü, döngü etrafındaki (3, 3)'ü, (3, 4)'ü, (3, 5)'i ve (5, 6)'yı; 50 TL ise indirim olmadan (3, 6)'yı kapsar. (1, 5) uygulanamazdır (infeasible), çünkü 4. satırda total hâlâ 0'dır. Diğer her küme en az bir çifti kaçırır; (3, 3) gibi bir deyimden kendisine giden çifti saymayan Jorgensen'in kuralıyla bile."
+    },
+    "39": {
+      "concept": "paths-and-loops",
+      "explanation_tr": "Asal yollar [1, 2, 3, 4], [1, 2, 5], [2, 3, 4, 2], [3, 4, 2, 3], [4, 2, 3, 4] ve [3, 4, 2, 5]'tir: [1, 2, 5] boş bir liste, [3, 4, 2, 3] ve [4, 2, 3, 4] ise en az iki yineleme ister. Yani küme boş bir liste artı iki veya daha fazla elemanlı bir liste gerektirir; bu da kitabın bir döngüyü hem atlandığında hem de içinden geçildiğinde test etme tavsiyesine uyar."
+    }
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "intro": {
+    "en": "Equivalence class testing splits the inputs (or outputs) of a program into groups whose members the program should \"treat the same\", and tests one value from each group. This set covers how such classes are built, the four forms (weak/strong normal, weak/strong robust) and how many test cases each produces, and the book's classes for the triangle, NextDate and commission problems. Counting test cases and placing a value in the right class are typical exam tasks.",
+    "tr": "Denklik sınıfı testi (equivalence class testing), bir programın girdilerini (veya çıktılarını) programın \"aynı şekilde ele alması\" gereken gruplara ayırır ve her gruptan bir değer test eder. Bu set; bu sınıfların nasıl kurulduğunu, dört biçimi (zayıf/güçlü normal, zayıf/güçlü sağlam) ve her birinin kaç test durumu ürettiğini, ayrıca kitabın üçgen, NextDate ve komisyon problemleri için tanımladığı sınıfları kapsar. Test durumu sayısını hesaplamak ve bir değeri doğru sınıfa yerleştirmek tipik sınav görevleridir."
+  },
+  "concepts": [
+    {
+      "id": "equivalence-classes",
+      "title": {
+        "en": "Equivalence classes and partitions",
+        "tr": "Denklik sınıfları ve bölümleme"
+      },
+      "body": {
+        "en": "Equivalence class testing groups input values that the program should handle in the same way, so one test per group is enough. It aims at two things boundary value testing does not deliver: a sense of complete testing and avoiding redundancy.\n\n- A **partition** of a set is a collection of mutually disjoint subsets whose union is the entire set. These subsets are the **equivalence classes**.\n- Union = entire set → a form of **completeness** (nothing is left out).\n- Disjoint subsets → a form of **nonredundancy** (no value is covered twice).\n- Idea: use **one element from each class** in the test cases. Elements of a class are \"treated the same\"; in structural testing this maps onto \"traversing the same execution path\".\n- The **key (and the craft!)** of the method is the choice of the **equivalence relation** that determines the classes. It is often made by second-guessing the likely implementation, and several tries may be needed to find the \"right\" one.\n\n**Example:** in the triangle problem, (5, 5, 5) tests an equilateral triangle. (6, 6, 6) or (100, 100, 100) would be treated the same, so they would be redundant.",
+        "tr": "Denklik sınıfı testi (equivalence class testing), programın aynı şekilde işlemesi gereken girdi değerlerini gruplar; böylece her gruptan bir test yeterli olur. Sınır değer testinin (boundary value testing) sağlayamadığı iki şeyi hedefler: tam test edilmişlik duygusu ve gereksiz tekrardan kaçınma.\n\n- Bir kümenin **bölümlemesi (partition)**, birleşimi kümenin tamamı olan ve birbiriyle kesişmeyen (ayrık) alt kümelerden oluşan bir topluluktur. Bu alt kümeler **denklik sınıflarıdır (equivalence classes)**.\n- Birleşim = kümenin tamamı → bir tür **tamlık (completeness)**: hiçbir şey dışarıda kalmaz.\n- Ayrık alt kümeler → bir tür **tekrarsızlık (nonredundancy)**: hiçbir değer iki kez kapsanmaz.\n- Fikir: test durumlarında **her sınıftan bir eleman** kullanmak. Bir sınıfın elemanları \"aynı şekilde ele alınır\"; yapısal testte (structural testing) bu, \"aynı yürütme yolunu izlemek\" anlamına gelir.\n- Yöntemin **anahtarı (ve ustalığı!)**, sınıfları belirleyen **denklik bağıntısının (equivalence relation)** seçimidir. Bu seçim çoğu zaman olası gerçekleştirimi (implementation) tahmin ederek yapılır ve \"doğru\" bağıntıyı bulmak için birkaç deneme gerekebilir.\n\n**Örnek:** Üçgen probleminde (5, 5, 5) eşkenar üçgeni test eder. (6, 6, 6) veya (100, 100, 100) aynı şekilde ele alınacağı için gereksiz tekrar olurdu."
+      },
+      "source": "pp. 97–98, 109"
+    },
+    {
+      "id": "four-forms",
+      "title": {
+        "en": "The four forms and the fault assumptions",
+        "tr": "Dört biçim ve hata varsayımları"
+      },
+      "body": {
+        "en": "The 2nd edition of the book uses two independent distinctions, which give four forms of equivalence class testing (ECT). The 1st edition had only three.\n\n- **Weak vs strong** = the fault assumption. **Weak** forms rely on the **single fault assumption** (failures rarely come from two faults occurring at the same time), so it is enough that every class appears in some test case. **Strong** forms rely on the **multiple fault assumption**, so every combination of classes is tested (Cartesian product).\n- **Normal vs robust** = which values are used. **Normal** forms use only valid values; **robust** forms also use invalid values. \"Robust\" says nothing about the fault assumption.\n- The four forms: weak normal, strong normal, weak robust, strong robust. Weak robust was called \"traditional equivalence class testing\" in the 1st edition; the book calls its name \"counterintuitive and oxymoronic\". Strong robust is \"just redundant\".\n\nThe same split exists in boundary value testing (Chapter 5): **boundary value analysis (BVA)** and **robustness testing** vary one variable at a time → single fault; **worst-case** and **robust worst-case testing** take Cartesian products of values → multiple fault.",
+        "tr": "Kitabın 2. baskısı iki bağımsız ayrım kullanır; bunlar denklik sınıfı testinin (equivalence class testing, ECT) dört biçimini verir. 1. baskıda yalnızca üç biçim vardı.\n\n- **Zayıf ve güçlü (weak vs strong)** = hata varsayımı. **Zayıf** biçimler **tek hata varsayımına (single fault assumption)** dayanır (arızalar nadiren iki hatanın aynı anda oluşmasından kaynaklanır); bu yüzden her sınıfın bir test durumunda yer alması yeterlidir. **Güçlü** biçimler **çoklu hata varsayımına (multiple fault assumption)** dayanır; bu yüzden sınıfların her kombinasyonu test edilir (Kartezyen çarpım).\n- **Normal ve sağlam (normal vs robust)** = hangi değerlerin kullanıldığı. **Normal** biçimler yalnızca geçerli değerleri kullanır; **sağlam** biçimler geçersiz değerleri de kullanır. \"Sağlam\" sözcüğü hata varsayımı hakkında hiçbir şey söylemez.\n- Dört biçim: zayıf normal, güçlü normal, zayıf sağlam, güçlü sağlam. Zayıf sağlam biçim 1. baskıda \"geleneksel denklik sınıfı testi\" olarak adlandırılıyordu; kitap bu adı \"sezgiye aykırı ve kendi içinde çelişkili\" bulur. Güçlü sağlam biçim ise \"sadece gereksiz tekrarlıdır\".\n\nAynı ayrım sınır değer testinde (Bölüm 5) de vardır: **sınır değer analizi (boundary value analysis, BVA)** ve **sağlamlık testi (robustness testing)** her seferinde tek bir değişkeni değiştirir → tek hata; **en kötü durum (worst-case)** ve **sağlam en kötü durum (robust worst-case) testi** değerlerin Kartezyen çarpımını alır → çoklu hata."
+      },
+      "source": "pp. 80–84, 97–101"
+    },
+    {
+      "id": "counting-forms",
+      "title": {
+        "en": "Counting test cases for the four forms",
+        "tr": "Dört biçim için test durumu sayma"
+      },
+      "body": {
+        "en": "Many questions ask how many test cases a form produces. Each variable has some valid classes and some invalid classes.\n\n- **Weak normal:** use one value from each valid class, filling the classes of several variables in the same test case. Number of cases = the class count of the variable with the **most** valid classes (\"the partition with the largest number of subsets\").\n- **Strong normal:** one case for each element of the **Cartesian product** of the valid classes → **multiply** the valid class counts. Like a truth table, every combination appears.\n- **Weak robust:** the weak normal cases (all valid) **plus one case per invalid class**. Each added case has exactly one invalid value and all other values valid.\n- **Strong robust:** Cartesian product of **all** classes, valid and invalid → multiply (valid + invalid) per variable.\n- If every variable has exactly one valid class, weak normal and strong normal give the same single case.\n\n**Worked example:** x1 has 4 valid classes, x2 has 3, and each variable has 2 invalid classes (below and above its range).\n- Weak normal: max(4, 3) = 4\n- Strong normal: 4 x 3 = 12\n- Weak robust: 4 + (2 + 2) = 8\n- Strong robust: (4 + 2) x (3 + 2) = 6 x 5 = 30",
+        "tr": "Birçok soru, bir biçimin kaç test durumu (test case) ürettiğini sorar. Her değişkenin bazı geçerli ve bazı geçersiz sınıfları vardır.\n\n- **Zayıf normal (weak normal):** her geçerli sınıftan bir değer kullanılır; birden çok değişkenin sınıfları aynı test durumunda birlikte doldurulur. Test durumu sayısı = **en çok** geçerli sınıfa sahip değişkenin sınıf sayısı (\"en çok alt kümeye sahip bölümleme\").\n- **Güçlü normal (strong normal):** geçerli sınıfların **Kartezyen çarpımının** her elemanı için bir durum → geçerli sınıf sayıları **çarpılır**. Bir doğruluk tablosu gibi her kombinasyon yer alır.\n- **Zayıf sağlam (weak robust):** zayıf normal durumlar (hepsi geçerli) **artı her geçersiz sınıf için bir durum**. Eklenen her durumda tam olarak bir geçersiz değer vardır, diğer tüm değerler geçerlidir.\n- **Güçlü sağlam (strong robust):** geçerli ve geçersiz **tüm** sınıfların Kartezyen çarpımı → her değişken için (geçerli + geçersiz) sayıları çarpılır.\n- Her değişkenin tam olarak bir geçerli sınıfı varsa, zayıf normal ve güçlü normal aynı tek durumu verir.\n\n**Çözümlü örnek:** x1'in 4, x2'nin 3 geçerli sınıfı var; her değişkenin 2 geçersiz sınıfı var (aralığın altı ve üstü).\n- Zayıf normal: max(4, 3) = 4\n- Güçlü normal: 4 x 3 = 12\n- Zayıf sağlam: 4 + (2 + 2) = 8\n- Güçlü sağlam: (4 + 2) x (3 + 2) = 6 x 5 = 30"
+      },
+      "source": "pp. 98–101"
+    },
+    {
+      "id": "robust-forms-problems",
+      "title": {
+        "en": "Problems with the robust forms",
+        "tr": "Sağlam biçimlerin sorunları"
+      },
+      "body": {
+        "en": "Robust forms add test cases with invalid values (for example a side of −1). The book names two problems with them:\n\n- **Undefined expected outputs:** the specification often does not define what the expected output for an invalid test case should be, so testers spend a lot of time defining these outputs.\n- **Strongly typed languages** eliminate the need to consider invalid inputs. Traditional ECT is a product of the FORTRAN and COBOL era, when this type of error was common; the high incidence of such errors led to strongly typed languages.\n\nRelated guidelines (Section 6.5):\n- If the implementation language is strongly typed (invalid values cause **run-time errors**), it **makes no sense** to use the robust forms.\n- If **error conditions are a high priority**, the robust forms are appropriate.\n- The weak forms (normal or robust) are not as comprehensive as the corresponding strong forms.\n\n**Example:** if the language rejects an out-of-range value with a run-time error, a robust test such as month = 13 stops at that error and never exercises the function's own logic.",
+        "tr": "Sağlam (robust) biçimler geçersiz değerli test durumları ekler (örneğin bir kenarın −1 olması). Kitap bunlarla ilgili iki sorun belirtir:\n\n- **Tanımsız beklenen çıktılar:** belirtim (specification) çoğu zaman geçersiz bir test durumu için beklenen çıktının ne olması gerektiğini tanımlamaz; bu yüzden test uzmanları bu çıktıları tanımlamak için çok zaman harcar.\n- **Güçlü tipli diller (strongly typed languages)** geçersiz girdileri dikkate alma ihtiyacını ortadan kaldırır. Geleneksel ECT, bu tür hataların yaygın olduğu FORTRAN ve COBOL döneminin ürünüdür; bu hataların sıklığı güçlü tipli dillerin geliştirilmesine yol açmıştır.\n\nİlgili yönergeler (Bölüm 6.5):\n- Gerçekleştirim dili güçlü tipliyse (geçersiz değerler **çalışma zamanı hatalarına (run-time errors)** yol açıyorsa), sağlam biçimleri kullanmak **anlamsızdır**.\n- **Hata koşulları yüksek öncelikliyse**, sağlam biçimler uygundur.\n- Zayıf biçimler (normal veya sağlam), karşılık gelen güçlü biçimler kadar kapsamlı değildir.\n\n**Örnek:** Dil aralık dışı bir değeri çalışma zamanı hatasıyla reddediyorsa, month = 13 gibi sağlam bir test bu hatada durur ve fonksiyonun kendi mantığını hiç çalıştırmaz."
+      },
+      "source": "pp. 100, 108"
+    },
+    {
+      "id": "triangle-output-classes",
+      "title": {
+        "en": "Triangle problem: output range classes",
+        "tr": "Üçgen problemi: çıktı aralığı sınıfları"
+      },
+      "body": {
+        "en": "Classes can also be defined on the **output range**; for the triangle problem this is the simplest approach. The program reads integer sides a, b, c (valid range 1 to 200) and gives one of four outputs, so there are four classes:\n\n- R1: equilateral, R2: isosceles, R3: scalene, R4: not a triangle.\n- **Weak normal:** one case per output class → 4 cases: (5, 5, 5), (2, 2, 3), (3, 4, 5), (4, 1, 2).\n- **Strong normal = weak normal**, because no valid subintervals of a, b and c exist (each side has one valid interval, so the Cartesian product adds nothing).\n- **Weak robust:** keep the valid cases and add one case per invalid value of one side, with the other sides valid. The book uses −1 and 201 for each side; expected output e.g. \"Value of a is not in the range of permitted values\".\n- **Strong robust:** combinations of invalid values; the book shows only one \"corner\" (SR1–SR7, combinations of −1 for a, b, c).\n\n**Adding an output type:** if right triangles (c² = a² + b², sides ordered a ≤ b ≤ c) become a fifth, mutually exclusive output, a fifth class and a fifth weak normal case are needed. Re-check the old representatives: (6, 8, 10) is right (36 + 64 = 100); (4, 5, 6) is not (16 + 25 ≠ 36).",
+        "tr": "Sınıflar **çıktı aralığı (output range)** üzerinde de tanımlanabilir; üçgen problemi için en basit yaklaşım budur. Program a, b, c tamsayı kenarlarını okur (geçerli aralık 1–200) ve dört çıktıdan birini verir; yani dört sınıf vardır:\n\n- R1: eşkenar (equilateral), R2: ikizkenar (isosceles), R3: çeşitkenar (scalene), R4: üçgen değil (not a triangle).\n- **Zayıf normal:** her çıktı sınıfı için bir durum → 4 durum: (5, 5, 5), (2, 2, 3), (3, 4, 5), (4, 1, 2).\n- **Güçlü normal = zayıf normal**, çünkü a, b ve c için geçerli alt aralıklar yoktur (her kenarın tek bir geçerli aralığı vardır, bu yüzden Kartezyen çarpım yeni bir şey eklemez).\n- **Zayıf sağlam:** geçerli durumlar korunur ve tek bir kenarın her geçersiz değeri için, diğer kenarlar geçerliyken, bir durum eklenir. Kitap her kenar için −1 ve 201 kullanır; beklenen çıktı örneğin \"Value of a is not in the range of permitted values\".\n- **Güçlü sağlam:** geçersiz değerlerin kombinasyonları; kitap yalnızca bir \"köşe\"yi gösterir (SR1–SR7, a, b, c için −1 kombinasyonları).\n\n**Çıktı türü eklemek:** Dik üçgenler (right triangles; c² = a² + b², kenarlar a ≤ b ≤ c sıralı) beşinci ve diğerleriyle örtüşmeyen bir çıktı olursa, beşinci bir sınıf ve beşinci bir zayıf normal durum gerekir. Eski temsilciler yeniden kontrol edilmelidir: (6, 8, 10) diktir (36 + 64 = 100); (4, 5, 6) değildir (16 + 25 ≠ 36)."
+      },
+      "source": "pp. 17, 99, 101–102, 109"
+    },
+    {
+      "id": "triangle-input-classes",
+      "title": {
+        "en": "Triangle problem: input domain classes",
+        "tr": "Üçgen problemi: girdi alanı sınıfları"
+      },
+      "body": {
+        "en": "Instead of the outputs, the triangle classes can be built on the **input domain**, which gives a richer set. Two questions define them.\n\nWhich sides are equal?\n- D1: a = b = c\n- D2: a = b, a ≠ c\n- D3: a = c, a ≠ b\n- D4: b = c, a ≠ b\n- D5: a ≠ b, a ≠ c, b ≠ c\n\nDoes the triangle property fail? (Each side must be strictly smaller than the sum of the other two.)\n- D6: a ≥ b + c\n- D7: b ≥ a + c\n- D8: c ≥ a + b\n- For more detail each can be split, e.g. D6' a = b + c and D6'' a > b + c.\n\nA triplet can belong to a class of each group at the same time. Having exactly one pair of equal sides does **not** guarantee a triangle.\n\n**Example:** (2, 2, 5): a = b and a ≠ c → D2; c = 5 ≥ a + b = 4 → D8. It has a pair of equal sides but is not a triangle. (3, 3, 4) is in D2 but in none of D6–D8, so it is an isosceles triangle.",
+        "tr": "Üçgen sınıfları çıktılar yerine **girdi alanı (input domain)** üzerinde de kurulabilir; bu daha zengin bir küme verir. Sınıfları iki soru belirler.\n\nHangi kenarlar eşit?\n- D1: a = b = c\n- D2: a = b, a ≠ c\n- D3: a = c, a ≠ b\n- D4: b = c, a ≠ b\n- D5: a ≠ b, a ≠ c, b ≠ c\n\nÜçgen özelliği (triangle property) bozuluyor mu? (Her kenar, diğer ikisinin toplamından kesinlikle küçük olmalıdır.)\n- D6: a ≥ b + c\n- D7: b ≥ a + c\n- D8: c ≥ a + b\n- Daha ayrıntılı sınıflar için her biri bölünebilir, örneğin D6' a = b + c ve D6'' a > b + c.\n\nBir üçlü aynı anda her gruptan birer sınıfa ait olabilir. Tam olarak bir çift eşit kenara sahip olmak üçgen olmayı **garanti etmez**.\n\n**Örnek:** (2, 2, 5): a = b ve a ≠ c → D2; c = 5 ≥ a + b = 4 → D8. Bir çift eşit kenarı vardır ama üçgen değildir. (3, 3, 4) D2'dedir ama D6–D8'in hiçbirinde değildir; yani ikizkenar üçgendir."
+      },
+      "source": "pp. 17–18, 102"
+    },
+    {
+      "id": "nextdate-classes",
+      "title": {
+        "en": "NextDate: first and revised classes",
+        "tr": "NextDate: ilk ve gözden geçirilmiş sınıflar"
+      },
+      "body": {
+        "en": "NextDate takes month, day and year (1812 to 2012) and returns the date of the next day.\n\n**First version** (one valid and two invalid classes per variable):\n- Valid: M1 1 ≤ month ≤ 12, D1 1 ≤ day ≤ 31, Y1 1812 ≤ year ≤ 2012.\n- Invalid: M2 month < 1, M3 month > 12, D2 day < 1, D3 day > 31, Y2 year < 1812, Y3 year > 2012.\n- Because the number of valid classes equals the number of independent variables, weak normal and strong normal give the same single case, (6, 15, 1912). Weak robust adds one case per invalid class (month −1 or 13, day −1 or 32, year 1811 or 2013).\n\n**Revised classes** (elements \"treated the same way\" at a finer level):\n- M1: 30-day months, M2: 31-day months, M3: February\n- D1: 1 ≤ day ≤ 28, D2: day = 29, D3: day = 30, D4: day = 31\n- Y1: year = 2000, Y2: leap year, Y3: common year\n- Leap year: divisible by 4, but century years only if they are multiples of 400 (Chapter 2).\n- Why: separate 30/31-day months simplify the last-day question; February gets leap-year attention; D1 days are (nearly) always incremented; D4 matters only for M2.\n\n**Example:** September 30, 2001 → M1 (30-day month), D3 (day 30), Y3 (common year).",
+        "tr": "NextDate; ay, gün ve yılı (1812–2012) alır ve bir sonraki günün tarihini döndürür.\n\n**İlk sürüm** (her değişken için bir geçerli ve iki geçersiz sınıf):\n- Geçerli: M1 1 ≤ month ≤ 12, D1 1 ≤ day ≤ 31, Y1 1812 ≤ year ≤ 2012.\n- Geçersiz: M2 month < 1, M3 month > 12, D2 day < 1, D3 day > 31, Y2 year < 1812, Y3 year > 2012.\n- Geçerli sınıf sayısı bağımsız değişken sayısına eşit olduğu için zayıf normal ve güçlü normal aynı tek durumu verir: (6, 15, 1912). Zayıf sağlam, her geçersiz sınıf için bir durum ekler (month −1 veya 13, day −1 veya 32, year 1811 veya 2013).\n\n**Gözden geçirilmiş sınıflar** (elemanlar daha ince bir düzeyde \"aynı şekilde ele alınır\"):\n- M1: 30 günlük aylar, M2: 31 günlük aylar, M3: Şubat\n- D1: 1 ≤ day ≤ 28, D2: day = 29, D3: day = 30, D4: day = 31\n- Y1: year = 2000, Y2: artık yıl (leap year), Y3: normal yıl (common year)\n- Artık yıl: 4'e bölünebilen yıl; ancak yüzyıl yılları yalnızca 400'ün katıysa artık yıldır (Bölüm 2).\n- Neden: 30 ve 31 günlük ayları ayırmak ayın son günü sorusunu basitleştirir; Şubat artık yıl açısından ayrıca ele alınır; D1 günleri (neredeyse) her zaman bir artırılır; D4 yalnızca M2 için anlamlıdır.\n\n**Örnek:** 30 Eylül 2001 → M1 (30 günlük ay), D3 (30. gün), Y3 (normal yıl)."
+      },
+      "source": "pp. 22, 103–104"
+    },
+    {
+      "id": "nextdate-counts",
+      "title": {
+        "en": "NextDate: test case counts and impossible dates",
+        "tr": "NextDate: test durumu sayıları ve imkânsız tarihler"
+      },
+      "body": {
+        "en": "With the revised classes (3 month, 4 day and 3 year classes):\n\n- **Weak normal:** 4 cases; the values are mechanically selected from the approximate middle of each class. Two of them are impossible dates, because **mechanical selection makes no use of domain knowledge** (that knowledge is not captured in the choice of classes). This is always a problem with \"automatic\" test case generation.\n- **Strong normal:** 3 x 4 x 3 = 36 (SN1–SN36).\n- **Strong robust:** add two invalid classes per variable, then multiply (valid + invalid) per variable; \"too many to show\".\n- Moving from weak to strong always presumes **independent** variables (cross product). NextDate's variables are dependent, so impossible combinations appear; decision tables (Chapter 7) resolve this.\n\n**Changing the classes:** strong counts change by multiplication. Splitting one class adds one case for every combination of the other variables' classes; merging two classes into one removes one case for every such combination. Merging Y1 (year 2000) and Y3 into one class of common years suppresses special attention to 2000 and adds complexity to deciding which years are leap years.\n\n**Worked example:** 2 x 3 x 5 = 30 cases. Splitting one of the 3 classes gives 2 x 4 x 5 = 40, i.e. 2 x 5 = 10 new cases. Merging two of the 3 classes instead gives 2 x 2 x 5 = 20.",
+        "tr": "Gözden geçirilmiş sınıflarla (3 ay, 4 gün ve 3 yıl sınıfı):\n\n- **Zayıf normal:** 4 durum; değerler her sınıfın yaklaşık ortasından mekanik olarak seçilir. Bunlardan ikisi imkânsız tarihtir, çünkü **mekanik seçim alan bilgisini (domain knowledge) hiç kullanmaz** (bu bilgi sınıfların seçimine yansımamıştır). Bu, \"otomatik\" test durumu üretiminde her zaman bir sorundur.\n- **Güçlü normal:** 3 x 4 x 3 = 36 (SN1–SN36).\n- **Güçlü sağlam:** her değişkene iki geçersiz sınıf eklenir, sonra her değişken için (geçerli + geçersiz) sayıları çarpılır; \"gösterilemeyecek kadar çok\".\n- Zayıftan güçlüye geçiş her zaman değişkenlerin **bağımsız** olduğunu varsayar (çapraz çarpım). NextDate'in değişkenleri bağımlıdır, bu yüzden imkânsız kombinasyonlar ortaya çıkar; karar tabloları (Bölüm 7) bu sorunu çözer.\n\n**Sınıfları değiştirmek:** güçlü sayılar çarpma yoluyla değişir. Bir sınıfı bölmek, diğer değişkenlerin sınıflarının her kombinasyonu için bir durum ekler; iki sınıfı tek sınıfta birleştirmek ise bu kombinasyonların her biri için bir durumu kaldırır. Y1'i (2000 yılı) ve Y3'ü tek bir normal yıllar sınıfında birleştirmek 2000 yılına özel dikkati bastırır ve hangi yılların artık yıl olduğuna karar vermeyi karmaşıklaştırır.\n\n**Çözümlü örnek:** 2 x 3 x 5 = 30 durum. 3 sınıftan biri bölünürse 2 x 4 x 5 = 40 olur, yani 2 x 5 = 10 yeni durum. Bunun yerine 3 sınıftan ikisi birleştirilirse 2 x 2 x 5 = 20 olur."
+      },
+      "source": "pp. 105–106, 109"
+    },
+    {
+      "id": "commission-classes",
+      "title": {
+        "en": "Commission problem: input and output range classes",
+        "tr": "Komisyon problemi: girdi ve çıktı aralığı sınıfları"
+      },
+      "body": {
+        "en": "A salesperson sells rifle parts: locks ($45), stocks ($30) and barrels ($25), at most 70 locks, 80 stocks and 90 barrels a month. Sales = 45 x locks + 30 x stocks + 25 x barrels.\n\n**Input domain classes:**\n- Valid: L1 1 ≤ locks ≤ 70, **L2 locks = −1**, S1 1 ≤ stocks ≤ 80, B1 1 ≤ barrels ≤ 90.\n- L2 is valid because locks is also a **sentinel**: when −1 is entered the While loop terminates, and totalLocks, totalStocks and totalBarrels are used to compute sales and then commission.\n- Invalid: L3 locks = 0 or locks < −1, L4 locks > 70, S2 stocks < 1, S3 stocks > 80, B2 barrels < 1, B3 barrels > 90.\n- These give very unsatisfactory test cases: of the strong cases, only one is a legitimate input.\n\n**Output range classes** (an improvement):\n- S1: sales ≤ 1000, S2: 1000 < sales ≤ 1800, S3: sales > 1800 (the book reuses the names S1–S3 here).\n- The test cases OR1–OR3 use \"nice\" triplets (equal numbers of each part). Together with the weak robust cases this is \"a pretty good test\"; boundary checks at $1000 and $1800 can be added.\n\n**Example:** (10, 10, 10) → 450 + 300 + 250 = $1000 → S1 (1000 belongs to S1). (20, 20, 20) → $2000 → S3.",
+        "tr": "Bir satış temsilcisi tüfek parçaları satar: kilit (locks, $45), kundak (stocks, $30) ve namlu (barrels, $25); ayda en fazla 70 kilit, 80 kundak ve 90 namlu. Satış = 45 x locks + 30 x stocks + 25 x barrels.\n\n**Girdi alanı sınıfları:**\n- Geçerli: L1 1 ≤ locks ≤ 70, **L2 locks = −1**, S1 1 ≤ stocks ≤ 80, B1 1 ≤ barrels ≤ 90.\n- L2 geçerlidir, çünkü locks aynı zamanda bir **gözcü değerdir (sentinel)**: −1 girildiğinde While döngüsü sona erer ve totalLocks, totalStocks ve totalBarrels önce satışı, sonra komisyonu hesaplamak için kullanılır.\n- Geçersiz: L3 locks = 0 veya locks < −1, L4 locks > 70, S2 stocks < 1, S3 stocks > 80, B2 barrels < 1, B3 barrels > 90.\n- Bu sınıflar hiç tatmin edici olmayan test durumları verir: güçlü durumlardan yalnızca biri meşru bir girdidir.\n\n**Çıktı aralığı sınıfları** (bir iyileştirme):\n- S1: sales ≤ 1000, S2: 1000 < sales ≤ 1800, S3: sales > 1800 (kitap S1–S3 adlarını burada yeniden kullanır).\n- OR1–OR3 test durumları \"güzel\" üçlüler kullanır (her parçadan eşit sayıda). Zayıf sağlam durumlarla birlikte bu \"oldukça iyi bir test\"tir; $1000 ve $1800'deki geçişler için sınır kontrolleri eklenebilir.\n\n**Örnek:** (10, 10, 10) → 450 + 300 + 250 = $1000 → S1 (1000, S1'e aittir). (20, 20, 20) → $2000 → S3."
+      },
+      "source": "pp. 25, 106–108"
+    },
+    {
+      "id": "billing-exercise",
+      "title": {
+        "en": "Classes from a rate structure (telephone billing exercise)",
+        "tr": "Ücret yapısından sınıflar (telefon faturası alıştırması)"
+      },
+      "body": {
+        "en": "Exercise 5 asks for equivalence classes for a long-distance telephone billing function. A general recipe:\n\n- Put a class border where the **treatment changes** (a new rate or formula). Check whether the border value belongs to the lower or the upper class (≤ vs >).\n- Apply the **rounding rule**: if fractions are rounded up, the variable takes only whole values.\n- Use the **stated limit**, converted to the same unit, as the top of the last valid class; values above it form an **invalid** class.\n\nThe exercise's rules: calls of 20 minutes or less cost $0.05 per minute or fraction of a minute; longer calls cost $1.00 plus $0.10 per minute or fraction beyond 20 minutes; seconds are rounded up to the next larger minute; no call lasts more than 30 hours. The exercise also asks about calls that span the spring change between standard and daylight saving time (2:00 a.m. → 3:00 a.m.) and the fall change (2:59:59 → 2:00:00).\n\n**Worked example (different numbers):** parking costs one rate up to 3 hours and another rate above 3 hours, parts of an hour are rounded up, and no stay lasts more than 2 days. Valid classes: {1 ≤ h ≤ 3} and {4 ≤ h ≤ 48}; invalid: h > 48.",
+        "tr": "Alıştırma 5, şehirlerarası telefon faturalandırma fonksiyonu için denklik sınıfları ister. Genel bir yöntem:\n\n- **İşlemin değiştiği** yere (yeni bir ücret veya formül) bir sınıf sınırı koyun. Sınır değerinin alt sınıfa mı üst sınıfa mı ait olduğunu kontrol edin (≤ veya >).\n- **Yuvarlama kuralını** uygulayın: kesirler yukarı yuvarlanıyorsa değişken yalnızca tam değerler alır.\n- **Belirtilen üst sınırı**, aynı birime çevirerek, son geçerli sınıfın tepesi olarak kullanın; bunun üzerindeki değerler **geçersiz** bir sınıf oluşturur.\n\nAlıştırmanın kuralları: 20 dakika veya daha kısa çağrılar dakika veya dakika kesri başına $0.05; daha uzun çağrılar $1.00 artı 20 dakikayı aşan her dakika veya dakika kesri için $0.10; saniyeler bir sonraki tam dakikaya yukarı yuvarlanır; hiçbir çağrı 30 saatten uzun sürmez. Alıştırma ayrıca standart saat ile yaz saati arasındaki ilkbahar geçişini (02:00 → 03:00) ve sonbahar geçişini (2:59:59 → 2:00:00) kapsayan çağrıları da sorar.\n\n**Çözümlü örnek (farklı sayılar):** Otopark 3 saate kadar bir ücret, 3 saatin üzerinde başka bir ücret alır; saat kesirleri yukarı yuvarlanır ve hiçbir kalış 2 günden uzun sürmez. Geçerli sınıflar: {1 ≤ h ≤ 3} ve {4 ≤ h ≤ 48}; geçersiz: h > 48."
+      },
+      "source": "pp. 109–110"
+    }
+  ],
+  "questions": {
+    "1": {
+      "concept": "equivalence-classes",
+      "explanation_tr": "Bölümleme, birleşimi kümenin tamamı olan ve birbiriyle kesişmeyen alt kümelerden oluşan bir topluluktur: kümenin tamamının temsil edilmesi bir tür tamlık (completeness), ayrıklık ise bir tür tekrarsızlık (nonredundancy) sağlar. Örtüşen sınıflar bölümleme tanımıyla çelişirdi."
+    },
+    "2": {
+      "concept": "equivalence-classes",
+      "explanation_tr": "Anahtar ve ustalık, denklik bağıntısını seçmektir; bu seçim çoğu zaman olası gerçekleştirimi tahmin ederek yapılır. Bir sınıfın elemanları \"aynı şekilde ele alınmalıdır\"; yapısal testte bu, aynı yürütme yolunu izlemek anlamına gelir. Min, min+, nom, max- ve max değerleri sınır değer testine aittir."
+    },
+    "3": {
+      "concept": "counting-forms",
+      "explanation_tr": "Zayıf normal test, bir test durumunda her sınıftan bir değer kullanır; bu yüzden en çok alt kümeye sahip bölümlemenin sınıf sayısı kadar durum gerekir (3). Güçlü normal test, sınıfların Kartezyen çarpımını alır: 3 x 2 = 6 (Şekil 6.1 ve 6.2). 20 = 5 x 4 ise geçersiz sınıflar eklendiğinde güçlü sağlam testin sonucu olurdu."
+    },
+    "4": {
+      "concept": "robust-forms-problems",
+      "explanation_tr": "Belirtimler çoğu zaman geçersiz bir test durumu için beklenen çıktının ne olması gerektiğini söylemez; bu yüzden test uzmanları bu çıktıları tanımlamak için çok zaman harcar. Diğer sorun, güçlü tipli dillerin geçersiz girdileri dikkate alma ihtiyacını ortadan kaldırmasıdır. Sağlam biçimler geçerli durumlara geçersiz değerli durumlar ekler; yani daha az değil, daha çok test durumu üretir."
+    },
+    "5": {
+      "concept": "triangle-output-classes",
+      "explanation_tr": "Her kenarın tek bir geçerli aralığı vardır; bu yüzden Kartezyen çarpım yeni bir şey eklemez ve dört zayıf normal durum (5, 5, 5), (2, 2, 3), (3, 4, 5) ve (4, 1, 2) aynı zamanda güçlü normal durumlardır. Güçlü normal test tek hata değil çoklu hata varsayımına dayanır; ayrıca -1 veya 201 gibi geçersiz girdiler de vardır."
+    },
+    "6": {
+      "concept": "triangle-output-classes",
+      "explanation_tr": "Zayıf sağlam test dört geçerli durumu korur ve diğer kenarlar geçerliyken her geçersiz değer için bir durum ekler: a, b veya c'nin -1 (WR1-WR3) ya da 201 (WR4-WR6) olması; böylece 4 + 6 = 10. İlk NextDate sürümündeki gibi yalnızca bir geçerli durum olsaydı yedi durum çıkardı."
+    },
+    "7": {
+      "concept": "triangle-input-classes",
+      "explanation_tr": "<1, 4, 1> üçlüsünde yalnızca a ve c çifti eşittir ve b = 4 >= a + c = 2 olduğundan kenarlar bir üçgen oluşturmaz. Kitap bu üçlüyü, bir çift eşit kenara sahip olmanın üçgen olmayı garanti etmediğini göstermek için kullanır."
+    },
+    "8": {
+      "concept": "nextdate-classes",
+      "explanation_tr": "Geçerli sınıf sayısı bağımsız değişken sayısına eşit olduğu için yalnızca bir zayıf normal durum vardır: (6, 15, 1912); bu, güçlü normal durumla aynıdır. Zayıf sağlam test, bu geçerli duruma her geçersiz sınıf için bir durum ekler (month -1 veya 13, day -1 veya 32, year 1811 veya 2013): WR1-WR7."
+    },
+    "9": {
+      "concept": "nextdate-classes",
+      "explanation_tr": "Şubat M3'tür, 29. gün D2'dir ve 1996, 2000 dışında bir artık yıl olduğu için Y2'dedir. Y1 yalnızca 2000 yılını, Y3 ise yalnızca normal yılları içerir."
+    },
+    "10": {
+      "concept": "nextdate-counts",
+      "explanation_tr": "Girdiler her sınıfın yaklaşık ortasından mekanik olarak alınır ve mekanik seçim, sınıfların seçimine yansımamış olan alan bilgisini hiç kullanmaz. Zayıf biçimler çoklu değil tek hata varsayımına dayanır ve sınıfların Kartezyen çarpımını yalnızca güçlü biçimler alır."
+    },
+    "11": {
+      "concept": "nextdate-counts",
+      "explanation_tr": "İki yıl sınıfıyla çarpım 3 ay x 4 gün x 2 yıl sınıfı = 24 olur. Kitap bunun 2000 yılına özel dikkati bastırdığını ve hangi yılların artık yıl olduğuna karar vermeyi karmaşıklaştırdığını belirtir."
+    },
+    "12": {
+      "concept": "nextdate-counts",
+      "explanation_tr": "Güçlü sağlam test, geçerli ve geçersiz tüm sınıfların Kartezyen çarpımını alır: (3 + 2) x (4 + 2) x (3 + 2) = 5 x 6 x 5 = 150. 36 güçlü normal sayıdır; 42 = 36 + 6 ise geçersiz sınıfları çarpmak yerine yanlışlıkla toplar."
+    },
+    "13": {
+      "concept": "commission-classes",
+      "explanation_tr": "Locks aynı zamanda bir gözcü değer (sentinel) olarak kullanılır: -1 girildiğinde While döngüsü sona erer ve totalLocks, totalStocks ve totalBarrels önce satışı, sonra komisyonu hesaplamak için kullanılır. Geçersiz sınıf L3, locks = 0 veya locks < -1'dir."
+    },
+    "14": {
+      "concept": "commission-classes",
+      "explanation_tr": "45 x 15 + 30 x 15 + 25 x 15 = 1500; bu değer 1000 < sales <= 1800 aralığındadır (test durumu OR2, komisyon $175). (5, 5, 5) S1'de $500, (25, 25, 25) ise S3'te $2500 verir."
+    },
+    "15": {
+      "concept": "nextdate-counts",
+      "explanation_tr": "Beş gün sınıfıyla Kartezyen çarpım 3 x 5 x 3 = 45 olur; yani yeni gün-28 sınıfı, 3 x 3 ay/yıl sınıfı kombinasyonunun her biri için bir durum ekler: alıştırmadaki \"diğer dokuz test durumu\"."
+    },
+    "16": {
+      "concept": "robust-forms-problems",
+      "explanation_tr": "Yönerge 2'ye göre gerçekleştirim dili güçlü tipliyse ve geçersiz değerler çalışma zamanı hatalarına yol açıyorsa sağlam biçimleri kullanmak anlamsızdır; güçlü tipli diller geçersiz girdileri dikkate alma ihtiyacını ortadan kaldırır. Sağlam biçimler, hata koşulları yüksek öncelikli olduğunda önerilir."
+    },
+    "17": {
+      "concept": "triangle-output-classes",
+      "explanation_tr": "Beş çıktı sınıfıyla zayıf normal test, her sınıf için bir tane olmak üzere beş durum gerektirir. (3, 4, 5), 3^2 + 4^2 = 5^2 eşitliğini sağlar; yani dik üçgendir ve başka bir çeşitkenar üçlü gerekir. (2, 2, 3) dik üçgen değildir, çünkü 2^2 + 2^2 = 8'dir, 9 değil."
+    },
+    "18": {
+      "concept": "four-forms",
+      "explanation_tr": "BVA her seferinde bir değişkeni değiştirir (tek hata), en kötü durum testi ise Kartezyen çarpım alır (çoklu hata); benzer şekilde zayıf ECT her test durumunda her sınıftan bir değer kullanır, güçlü ECT ise sınıfların Kartezyen çarpımını alır. \"Sağlam\" (robust) sözcüğü hata varsayımını değil, geçersiz değerleri ifade eder."
+    },
+    "19": {
+      "concept": "billing-exercise",
+      "explanation_tr": "Ücret 20 dakikadan sonra değişir ve 20 dakikalık bir çağrı hâlâ $0.05 ücretine tabidir; yukarı yuvarlama süreleri tam dakikaya çevirir ve 30 saatlik sınır, üst sınır olarak 30 x 60 = 1800 dakika verir (d > 1800 geçersizdir). Alıştırma ayrıca ilkbahar ve sonbahar saat değişimlerini kapsayan çağrıların da dikkate alınmasını ister."
+    }
+  }
+}

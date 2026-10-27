@@ -1,0 +1,190 @@
+{
+  "intro": {
+    "en": "Chapter 2 introduces the example problems that the rest of the book tests again and again: the triangle problem, NextDate, the commission problem, the SATM (simple ATM) system, the currency converter and the Saturn windshield wiper. Later chapters derive test cases directly from these exact rules (ranges, outputs, messages), so it pays to know each specification precisely. The chapter also shows sample implementations, and its exercises ask where an implementation and its specification disagree.",
+    "tr": "Bölüm 2, kitabın geri kalanında tekrar tekrar test edilen örnek problemleri tanıtır: üçgen problemi, NextDate, komisyon problemi, SATM (basit ATM) sistemi, döviz çevirici ve Saturn cam sileceği. Sonraki bölümler test durumlarını doğrudan bu kesin kurallardan (aralıklar, çıktılar, mesajlar) türetir; bu yüzden her belirtimi tam olarak bilmek çok işe yarar. Bölüm ayrıca örnek gerçekleştirimler gösterir ve alıştırmaları, bir gerçekleştirimin belirtimiyle nerede çeliştiğini sorar."
+  },
+  "concepts": [
+    {
+      "id": "examples-overview",
+      "title": {
+        "en": "The running examples and their kinds of complexity",
+        "tr": "Sürekli kullanılan örnekler ve karmaşıklık türleri"
+      },
+      "body": {
+        "en": "The book reuses a small set of examples. Each one was chosen to show a different kind of complexity:\n\n- **Triangle problem** (unit level): its complexity is due to relationships between inputs and correct outputs. It is the most widely used example in software testing literature.\n- **NextDate** (unit level): a logically complex function; its complexity comes from logical relationships among the input variables.\n- **Commission problem** (unit level): more typical of commercial computing (the book says it typifies MIS testing); it contains a mix of computation and decision making.\n- **SATM system** (integration and system level): functionality and interactions that typify the client side of client–server systems.\n- **Currency converter** (integration and system level): an event-driven program that emphasizes code associated with a graphical user interface (GUI).\n- **Saturn windshield wiper** (integration and system level): used in the discussion of interaction testing (Chapter 15).\n\nThe implementations are written in a language-neutral generalized pseudocode (Table 2.1). Constructs you will meet: `If … Then … Else … EndIf`, `Case … EndCase`, `For … EndFor` (counter-controlled repetition), `Do While … EndWhile` (pretest repetition) and `Do … Until` (posttest repetition).",
+        "tr": "Kitap az sayıda örneği tekrar tekrar kullanır. Her biri farklı bir karmaşıklık türünü göstermek için seçilmiştir:\n\n- **Üçgen problemi (triangle problem)** (birim seviyesi, unit level): karmaşıklığı girdiler ile doğru çıktılar arasındaki ilişkilerden gelir. Yazılım testi literatüründe en yaygın kullanılan örnektir.\n- **NextDate** (birim seviyesi): mantıksal olarak karmaşık bir fonksiyon; karmaşıklığı girdi değişkenleri arasındaki mantıksal ilişkilerden gelir.\n- **Komisyon problemi (commission problem)** (birim seviyesi): ticari (commercial) hesaplamayı daha iyi temsil eder (kitaba göre MIS testinin tipik bir örneğidir); hesaplama ve karar vermenin bir karışımını içerir.\n- **SATM sistemi** (entegrasyon ve sistem seviyesi): istemci–sunucu (client–server) sistemlerin istemci tarafına özgü işlevsellik ve etkileşimler.\n- **Döviz çevirici (currency converter)** (entegrasyon ve sistem seviyesi): grafik kullanıcı arayüzüyle (GUI) ilişkili kodu öne çıkaran, olay güdümlü (event-driven) bir program.\n- **Saturn cam sileceği (windshield wiper)** (entegrasyon ve sistem seviyesi): etkileşim testi (interaction testing) anlatılırken kullanılır (Bölüm 15).\n\nGerçekleştirimler dilden bağımsız, genelleştirilmiş bir sözde kodla (pseudocode, Tablo 2.1) yazılır. Karşılaşacağınız yapılar: `If … Then … Else … EndIf`, `Case … EndCase`, `For … EndFor` (sayaç kontrollü tekrar), `Do While … EndWhile` (koşulun başta sınandığı tekrar) ve `Do … Until` (koşulun sonda sınandığı tekrar)."
+      },
+      "source": "pp. 15–17, 22, 25–26, 29–30"
+    },
+    {
+      "id": "triangle-spec",
+      "title": {
+        "en": "Triangle problem: the specification",
+        "tr": "Üçgen problemi: belirtim"
+      },
+      "body": {
+        "en": "The triangle program accepts three integers a, b and c as the sides of a triangle and outputs the type of triangle they determine.\n\n**Simple version:** the output is Equilateral, Isosceles, Scalene, or NotATriangle.\n\n**Improved version:** the integers must satisfy\n- c1: `1 ≤ a ≤ 200`, c2: `1 ≤ b ≤ 200`, c3: `1 ≤ c ≤ 200`\n- c4: `a < b + c`, c5: `b < a + c`, c6: `c < a + b`\n\nIf an input value fails c1–c3, the program says so, e.g. \"Value of b is not in the range of permitted values.\" If c1, c2 and c3 hold, one of four mutually exclusive outputs is given:\n- all three sides equal → Equilateral\n- exactly one pair of sides equal → Isosceles\n- no pair of sides equal → Scalene\n- any of c4, c5, c6 fails → NotATriangle\n\nc4–c6 express the **Triangle Property**: the sum of any pair of sides must be strictly greater than the third side. The upper limit 200 is both arbitrary and convenient (boundary value test cases, Chapter 5).\n\n**Right triangle extension (used in exercises):** a fifth type. Three sides form a right triangle if the Pythagorean relationship `c² = a² + b²` holds; it is convenient to require the sides in increasing order, `a ≤ b ≤ c`.\n\n**Example:** (5, 5, 9) is Isosceles, since 9 < 5 + 5. (1, 2, 3) is NotATriangle, since 3 < 1 + 2 is false. (5, 12, 13) is a right triangle: 25 + 144 = 169.",
+        "tr": "Üçgen programı üç tam sayı a, b ve c'yi bir üçgenin kenarları olarak alır ve bunların belirlediği üçgen türünü çıktı olarak verir.\n\n**Basit sürüm:** çıktı Equilateral (eşkenar), Isosceles (ikizkenar), Scalene (çeşitkenar) veya NotATriangle (üçgen değil) olur.\n\n**Geliştirilmiş sürüm:** tam sayılar şu koşulları sağlamalıdır:\n- c1: `1 ≤ a ≤ 200`, c2: `1 ≤ b ≤ 200`, c3: `1 ≤ c ≤ 200`\n- c4: `a < b + c`, c5: `b < a + c`, c6: `c < a + b`\n\nBir girdi değeri c1–c3'ü sağlamazsa program bunu belirtir, ör. \"Value of b is not in the range of permitted values.\" c1, c2 ve c3 sağlanırsa, birbirini dışlayan dört çıktıdan biri verilir:\n- üç kenar da eşit → Equilateral\n- tam olarak bir kenar çifti eşit → Isosceles\n- hiçbir kenar çifti eşit değil → Scalene\n- c4, c5, c6'dan herhangi biri sağlanmıyor → NotATriangle\n\nc4–c6 **Üçgen Özelliği**'ni (Triangle Property) ifade eder: herhangi iki kenarın toplamı üçüncü kenardan kesinlikle büyük olmalıdır. Üst sınır 200 hem keyfi hem de kullanışlıdır (sınır değer test durumları / boundary value test cases, Bölüm 5).\n\n**Dik üçgen uzantısı (alıştırmalarda kullanılır):** beşinci bir tür. Pisagor bağıntısı `c² = a² + b²` sağlanıyorsa üç kenar bir dik üçgen (right triangle) oluşturur; kenarların artan sırada verilmesini, yani `a ≤ b ≤ c` olmasını şart koşmak kolaylık sağlar.\n\n**Örnek:** (5, 5, 9) Isosceles'tir, çünkü 9 < 5 + 5. (1, 2, 3) NotATriangle'dır, çünkü 3 < 1 + 2 yanlıştır. (5, 12, 13) bir dik üçgendir: 25 + 144 = 169."
+      },
+      "source": "pp. 17–18, 31"
+    },
+    {
+      "id": "triangle-traditional",
+      "title": {
+        "en": "Triangle problem: the traditional implementation",
+        "tr": "Üçgen problemi: geleneksel gerçekleştirim"
+      },
+      "body": {
+        "en": "The \"traditional\" triangle implementation (Figure 2.1, program triangle1) has a FORTRAN-like style; its flowchart box numbers come from Pressman (1982). The author keeps it only because it is useful later (Part III) for discussing infeasible program execution paths.\n\nA variable `match` records equality among pairs of sides:\n- `match = 0` at the start\n- if `a = b`, add 1 (boxes 1–2)\n- if `a = c`, add 2 (boxes 3–4)\n- if `b = c`, add 3 (boxes 5–6)\n\nThen:\n- `match = 0` (no equal pair): all three Triangle Property tests (boxes 8, 9, 10) → NotATriangle or Scalene (box 11).\n- `match = 1`, `2` or `3`: only one comparison is needed. If two sides are equal, say a and c, only a + c must be compared with b (b is greater than zero, so a + b is automatically greater than c) → NotATriangle or Isosceles.\n- any other value → Equilateral (box 20).\n\n**Watch out:** if any two of the three equalities hold, the third must hold as well. So some values of `match`, and some sequences of boxes, can never occur; such paths are infeasible.\n\nThe efficiency is obtained at the expense of clarity (and ease of testing). Six ways lead to the NotATriangle box (12.1–12.6) and three to the Isosceles box (15.1–15.3).\n\n**Example:** sides (4, 7, 4): only a = c holds, so `match = 2`; then 4 + 4 ≤ 7 is false, so the output is Isosceles.",
+        "tr": "\"Geleneksel\" üçgen gerçekleştirimi (implementation; Şekil 2.1, triangle1 programı) FORTRAN benzeri bir tarza sahiptir; akış şemasındaki (flowchart) kutu numaraları Pressman'dan (1982) gelir. Yazar onu yalnızca, ileride (Kısım III) gerçekleşemez (infeasible) program yürütme yollarını tartışmak için yararlı olduğu için korur.\n\n`match` adlı bir değişken, kenar çiftleri arasındaki eşitliği kaydeder:\n- başlangıçta `match = 0`\n- `a = b` ise 1 eklenir (kutu 1–2)\n- `a = c` ise 2 eklenir (kutu 3–4)\n- `b = c` ise 3 eklenir (kutu 5–6)\n\nSonra:\n- `match = 0` (eşit çift yok): Üçgen Özelliği'nin üç testi de yapılır (kutu 8, 9, 10) → NotATriangle veya Scalene (kutu 11).\n- `match = 1`, `2` veya `3`: tek bir karşılaştırma yeterlidir. İki kenar eşitse, örneğin a ve c, yalnızca a + c'yi b ile karşılaştırmak gerekir (b sıfırdan büyük olduğundan a + b kendiliğinden c'den büyüktür) → NotATriangle veya Isosceles.\n- başka herhangi bir değer → Equilateral (kutu 20).\n\n**Dikkat:** üç eşitlikten herhangi ikisi sağlanıyorsa üçüncüsü de sağlanmak zorundadır. Bu yüzden `match` değişkeninin bazı değerleri ve bazı kutu dizileri asla oluşamaz; bu tür yollar gerçekleşemezdir.\n\nBu verimlilik, açıklık (ve test kolaylığı) pahasına elde edilir. NotATriangle kutusuna altı yol (12.1–12.6), Isosceles kutusuna üç yol (15.1–15.3) ulaşır.\n\n**Örnek:** (4, 7, 4) kenarları: yalnızca a = c sağlanır, bu yüzden `match = 2` olur; ardından 4 + 4 ≤ 7 yanlıştır, dolayısıyla çıktı Isosceles'tir."
+      },
+      "source": "pp. 18–20"
+    },
+    {
+      "id": "triangle-structured",
+      "title": {
+        "en": "Triangle problem: structured implementations",
+        "tr": "Üçgen problemi: yapısal programlama gerçekleştirimleri"
+      },
+      "body": {
+        "en": "The structured implementations follow a dataflow diagram (Figure 2.2) with three steps: 1 Get Input → 2 Is_A_Triangle → 3 Triangle Type.\n\n**triangle2** implements the simple specification, so it performs no range checks:\n- `IsATriangle` = `(a < b + c) AND (b < a + c) AND (c < a + b)`\n- if IsATriangle: `(a = b) AND (b = c)` → \"Equilateral\"; else `(a ≠ b) AND (a ≠ c) AND (b ≠ c)` → \"Scalene\"; else → \"Isosceles\"\n- if not IsATriangle → \"Not a Triangle\"\n\nSo triangle2 accepts any integers, including zero and negative values; the simple specification never says what should happen to them (recall from Chapter 1 that correctness is relative to a specification).\n\n**triangle3** implements the improved specification: a `Do … Until c1 AND c2 AND c3` loop reads a, b and c and prints a message such as \"Value of a is not in the range of permitted values\" until all three are in 1..200. Then the same Is_A_Triangle and Triangle Type logic runs.\n\n**Example:** triangle2 with (0, 4, 4): 0 < 8 is true but 4 < 0 + 4 is false, so IsATriangle is False and it prints \"Not a Triangle\". triangle3 would instead reject a = 0 with its range message and ask again.",
+        "tr": "Yapısal programlama gerçekleştirimleri (structured implementations) üç adımlı bir veri akış şemasını (dataflow diagram, Şekil 2.2) izler: 1 Get Input (girdi al) → 2 Is_A_Triangle (üçgen mi?) → 3 Triangle Type (üçgen türü).\n\n**triangle2**, basit belirtimi gerçekleştirir; bu yüzden aralık kontrolü yapmaz:\n- `IsATriangle` = `(a < b + c) AND (b < a + c) AND (c < a + b)`\n- IsATriangle ise: `(a = b) AND (b = c)` → \"Equilateral\"; değilse `(a ≠ b) AND (a ≠ c) AND (b ≠ c)` → \"Scalene\"; değilse → \"Isosceles\"\n- IsATriangle değilse → \"Not a Triangle\"\n\nYani triangle2 sıfır ve negatif değerler dâhil her tam sayıyı kabul eder; basit belirtim bunlara ne olması gerektiğini hiç söylemez (1. bölümden hatırlayın: doğruluk bir belirtime göredir).\n\n**triangle3**, geliştirilmiş belirtimi gerçekleştirir: bir `Do … Until c1 AND c2 AND c3` döngüsü a, b ve c'yi okur ve üçü de 1..200 aralığına girene kadar \"Value of a is not in the range of permitted values\" gibi bir mesaj yazdırır. Ardından aynı Is_A_Triangle ve Triangle Type mantığı çalışır.\n\n**Örnek:** triangle2'ye (0, 4, 4) verilirse: 0 < 8 doğrudur ama 4 < 0 + 4 yanlıştır; bu yüzden IsATriangle False olur ve program \"Not a Triangle\" yazdırır. triangle3 ise a = 0 değerini aralık mesajıyla reddeder ve yeniden girdi ister."
+      },
+      "source": "pp. 20–21"
+    },
+    {
+      "id": "nextdate-spec",
+      "title": {
+        "en": "NextDate: the specification and leap years",
+        "tr": "NextDate: belirtim ve artık yıllar"
+      },
+      "body": {
+        "en": "NextDate is a function of three variables, month, day and year. It returns the date of the day after the input date. Its two sources of complexity are the input domain and the leap-year rule.\n\n**Range conditions** (integer values):\n- c1: `1 ≤ month ≤ 12`\n- c2: `1 ≤ day ≤ 31`\n- c3: `1812 ≤ year ≤ 2012`\n\nIf c1, c2 or c3 fails, NextDate reports the variable with the out-of-range value, e.g. \"Value of month not in the range 1..12\". Each value can be in range while the combination is invalid, such as June 31 of any year. Because numerous invalid day–month–year combinations exist, NextDate collapses them into one message: **\"Invalid Input Date.\"**\n\n**Leap years:** a year is 365.2422 days long, so leap years fix the \"extra day\" problem. In the Gregorian calendar a year is a leap year if it is divisible by 4, unless it is a century year; century years are leap years only if they are multiples of 400. So 1992, 1996 and 2000 are leap years, while 1900 is not. In a leap year the day after February 28 is February 29; otherwise it is March 1.\n\n**YesterDate** (exercise 6) is the inverse of NextDate: given a month, day and year, it returns the date of the day before, under the same rules.\n\nNextDate also illustrates **Zipf's Law**: 80% of the activity occurs in 20% of the space (much of the code handles leap years and input validation).\n\n**Example:** April 31, 2005 → \"Invalid Input Date.\" YesterDate of March 1, 1996 is February 29, 1996, because 1996 is a leap year.",
+        "tr": "NextDate üç değişkenli bir fonksiyondur: month (ay), day (gün) ve year (yıl). Girdi tarihinden sonraki günün tarihini döndürür. İki karmaşıklık kaynağı vardır: girdi tanım kümesi ve artık yıl kuralı.\n\n**Aralık koşulları** (tam sayı değerler):\n- c1: `1 ≤ month ≤ 12`\n- c2: `1 ≤ day ≤ 31`\n- c3: `1812 ≤ year ≤ 2012`\n\nc1, c2 veya c3 sağlanmazsa NextDate aralık dışı değere sahip değişkeni bildirir, ör. \"Value of month not in the range 1..12\". Her değer kendi aralığında olduğu hâlde birleşim geçersiz olabilir; örneğin herhangi bir yılın 31 Haziran'ı. Çok sayıda geçersiz gün–ay–yıl birleşimi olduğu için NextDate bunları tek bir mesajda toplar: **\"Invalid Input Date.\"**\n\n**Artık yıllar (leap year):** bir yıl 365.2422 gün uzunluğundadır; artık yıllar bu \"fazla gün\" sorununu çözer. Gregoryen takviminde bir yıl 4'e bölünüyorsa artık yıldır, ancak yüzyıl yılıysa durum farklıdır; yüzyıl yılları yalnızca 400'ün katıysa artık yıldır. Bu yüzden 1992, 1996 ve 2000 artık yıldır, 1900 ise değildir. Artık yılda 28 Şubat'tan sonraki gün 29 Şubat'tır; değilse 1 Mart'tır.\n\n**YesterDate** (alıştırma 6), NextDate'in tersidir: bir ay, gün ve yıl verildiğinde aynı kurallarla bir önceki günün tarihini döndürür.\n\nNextDate ayrıca **Zipf Yasası**'nı (Zipf's Law) gösterir: etkinliğin %80'i alanın %20'sinde gerçekleşir (kodun büyük kısmı artık yıllar ve girdi doğrulamasıyla uğraşır).\n\n**Örnek:** 31 Nisan 2005 → \"Invalid Input Date.\" 1 Mart 1996'nın YesterDate sonucu 29 Şubat 1996'dır, çünkü 1996 artık yıldır."
+      },
+      "source": "p. 22, p. 31"
+    },
+    {
+      "id": "nextdate-implementations",
+      "title": {
+        "en": "NextDate: the two implementations",
+        "tr": "NextDate: iki gerçekleştirim"
+      },
+      "body": {
+        "en": "The book gives two implementations; comparing them with the specification shows that correctness is relative to a specification (Chapter 1).\n\n**NextDate1 (simple version)** is a `Case month Of` statement:\n- 31-day months except December (1, 3, 5, 7, 8, 10): if `day < 31`, day + 1; else day 1 of month + 1.\n- 30-day months (4, 6, 9, 11): if `day < 30`, day + 1; else day 1 of month + 1. There is no special action for day = 31.\n- December: if `day < 31`, day + 1; else January 1 of the next year, except that for year 2012 it prints \"2012 is over\".\n- February: if `day < 28`, day + 1; if `day = 28`, February 29 in a leap year, else March 1; if `day = 29`, March 1, with no check whether the year is a leap year; any other day prints \"Cannot have Feb.\"\n\n**NextDate2 (improved version)** first repeats input in a `Do … Until` loop until all values are in range, printing \"Value of day not in the range 1..31\", \"Value of month not in the range 1..12\" or \"Value of year not in the range 1812..2012\". It also handles invalid combinations: in a 30-day month, day 30 goes to the 1st of the next month and any later day prints \"Invalid Input Date\"; December 31, 2012 prints \"Invalid Input Date\"; February 29 goes to March 1 when the year is a leap year.\n\n**Example:** NextDate1 on February 30 prints \"Cannot have Feb.\"",
+        "tr": "Kitap iki gerçekleştirim (implementation) verir; bunları belirtimle karşılaştırmak doğruluğun bir belirtime göre olduğunu gösterir (Bölüm 1).\n\n**NextDate1 (basit sürüm)** bir `Case month Of` ifadesidir:\n- Aralık hariç 31 günlük aylar (1, 3, 5, 7, 8, 10): `day < 31` ise gün + 1; değilse sonraki ayın (month + 1) 1. günü.\n- 30 günlük aylar (4, 6, 9, 11): `day < 30` ise gün + 1; değilse sonraki ayın (month + 1) 1. günü. day = 31 için özel bir işlem yoktur.\n- Aralık: `day < 31` ise gün + 1; değilse sonraki yılın 1 Ocak'ı; ancak yıl 2012 ise \"2012 is over\" yazdırır.\n- Şubat: `day < 28` ise gün + 1; `day = 28` ise artık yılda 29 Şubat, değilse 1 Mart; `day = 29` ise yılın artık yıl olup olmadığı kontrol edilmeden 1 Mart; diğer her gün için \"Cannot have Feb.\" yazdırır.\n\n**NextDate2 (geliştirilmiş sürüm)** önce, tüm değerler aralığa girene kadar girdiyi bir `Do … Until` döngüsünde tekrarlar ve \"Value of day not in the range 1..31\", \"Value of month not in the range 1..12\" veya \"Value of year not in the range 1812..2012\" mesajlarını yazdırır. Ayrıca geçersiz birleşimleri de ele alır: 30 günlük bir ayda 30. gün sonraki ayın 1'ine gider, daha büyük her gün \"Invalid Input Date\" yazdırır; 31 Aralık 2012 \"Invalid Input Date\" yazdırır; 29 Şubat, yıl artık yılsa 1 Mart'a gider.\n\n**Örnek:** NextDate1, 30 Şubat için \"Cannot have Feb.\" yazdırır."
+      },
+      "source": "pp. 22–25"
+    },
+    {
+      "id": "commission-problem",
+      "title": {
+        "en": "The commission problem",
+        "tr": "Komisyon problemi"
+      },
+      "body": {
+        "en": "The commission problem is more typical of commercial computing: it contains a mix of computation and decision making.\n\n**Problem statement:** a rifle salesperson in the former Arizona Territory sold rifle locks, stocks and barrels made by a gunsmith in Missouri.\n- Prices: **locks $45, stocks $30, barrels $25**.\n- The salesperson had to sell at least one complete rifle per month.\n- Production limits: the most the salesperson could sell in a month was **70 locks, 80 stocks and 90 barrels**.\n- After each town visit, the salesperson sent a telegram with the number of locks, stocks and barrels sold in that town. At the end of the month, a very short telegram showing **−1 locks** sold told the gunsmith that the month's sales were complete.\n- **Commission:** 10% on sales up to (and including) $1000, 15% on the next $800, and 20% on any sales in excess of $1800.\n- The monthly report gives the total locks, stocks and barrels sold, the total dollar sales, and the commission.\n\nThe program has three pieces: input data (validation is omitted this time), sales calculation, and commission calculation. The −1 telegram becomes a sentinel-controlled `While NOT(locks = -1)` loop, typical of MIS data gathering. Sales = 45 × locks + 30 × stocks + 25 × barrels.\n\n**Example:** sales of $1500 → 0.10 × 1000 + 0.15 × 500 = $175. Sales of $2500 → 100 + 120 + 0.20 × 700 = $360.",
+        "tr": "Komisyon problemi ticari (commercial) hesaplamayı daha iyi temsil eder: hesaplama ve karar vermenin bir karışımını içerir.\n\n**Problem tanımı:** Eski Arizona Bölgesi'ndeki bir tüfek satış temsilcisi, Missouri'deki bir silah ustasının yaptığı tüfek kilitlerini (lock), dipçiklerini (stock) ve namlularını (barrel) satıyordu.\n- Fiyatlar: **kilit $45, dipçik $30, namlu $25**.\n- Satış temsilcisi ayda en az bir tam tüfek satmak zorundaydı.\n- Üretim sınırları: temsilcinin bir ayda satabileceği en fazla miktar **70 kilit, 80 dipçik ve 90 namlu** idi.\n- Her kasaba ziyaretinden sonra temsilci, o kasabada satılan kilit, dipçik ve namlu sayısını içeren bir telgraf gönderirdi. Ay sonunda **−1 kilit** satıldığını gösteren çok kısa bir telgraf, silah ustasına o ayın satışlarının tamamlandığını bildirirdi.\n- **Komisyon:** $1000'a kadar (dâhil) satışlarda %10, sonraki $800'da %15 ve $1800'ü aşan satışlarda %20.\n- Aylık rapor; satılan toplam kilit, dipçik ve namlu sayısını, toplam satış tutarını ve komisyonu verir.\n\nProgram üç parçadan oluşur: girdi verisi (bu kez doğrulama yapılmaz), satış hesabı ve komisyon hesabı. −1 telgrafı, MIS veri toplama uygulamalarına özgü, gözcü değer (sentinel) kontrollü bir `While NOT(locks = -1)` döngüsüne dönüşür. Satış = 45 × kilit + 30 × dipçik + 25 × namlu.\n\n**Örnek:** $1500 satış → 0.10 × 1000 + 0.15 × 500 = $175. $2500 satış → 100 + 120 + 0.20 × 700 = $360."
+      },
+      "source": "pp. 25–26"
+    },
+    {
+      "id": "satm-system",
+      "title": {
+        "en": "The SATM system",
+        "tr": "SATM sistemi"
+      },
+      "body": {
+        "en": "SATM (Simple Automatic Teller Machine) is a refinement of an example by Topper (1993). It has the variety of functionality and interactions that typify the client side of client–server systems, so it is used for integration and system testing.\n\n- **15 screens** (Figure 2.4); **3 transaction types**: deposits, withdrawals, balance inquiries; **2 account types**: checking and savings.\n- Screen 1 is the welcome screen. The plastic card carries a personal account number (PAN). If the PAN is found in the customer account file → screen 2 (enter PIN); if not → screen 4 (\"Invalid identification. Your card will be retained\") and the card is kept.\n- Correct PIN → screen 5; wrong PIN → screen 3 (PIN incorrect, please try again). The customer has **three chances**; after three failures screen 4 is displayed and the card is kept.\n- On entry to screen 5 (select transaction) the system records the current date and increments the number of ATM sessions; then screen 6 (select account).\n- **Balance:** → screen 14 (new balance printed on receipt; another transaction?).\n- **Deposit:** deposit slot problem → screen 12; otherwise screen 7 (enter amount) → screen 13 (insert envelope) → screen 14.\n- **Withdrawal:** chute jammed → screen 10; otherwise screen 7 (amount in increments of $10); terminal lacks the cash → screen 9; insufficient funds → screen 8; otherwise screen 11 (take cash) → screen 14.\n- **Yes** in screens 10, 12 or 14 → screen 5; **No** → screen 15 (take receipt and card) → screen 1.\n\nMuch information is \"buried\" in the text: for instance, screen 7 implies the terminal only contains $10 bills.",
+        "tr": "SATM (Simple Automatic Teller Machine, basit ATM), Topper'ın (1993) bir örneğinin geliştirilmiş hâlidir. İstemci–sunucu (client–server) sistemlerin istemci tarafına özgü çeşitli işlevsellik ve etkileşimler içerir; bu yüzden entegrasyon ve sistem testi için kullanılır.\n\n- **15 ekran** (Şekil 2.4); **3 işlem türü**: para yatırma (deposit), para çekme (withdrawal), bakiye sorgulama (balance inquiry); **2 hesap türü**: vadesiz (checking) ve tasarruf (savings).\n- Ekran 1 karşılama ekranıdır. Plastik kart bir kişisel hesap numarası (PAN) taşır. PAN müşteri hesap dosyasında bulunursa → ekran 2 (PIN girin); bulunamazsa → ekran 4 (\"Invalid identification. Your card will be retained\") ve kart alıkonur.\n- Doğru PIN → ekran 5; yanlış PIN → ekran 3 (PIN yanlış, lütfen tekrar deneyin). Müşterinin **üç hakkı** vardır; üç başarısız denemeden sonra ekran 4 gösterilir ve kart alıkonur.\n- Ekran 5'e (işlem seçimi) girildiğinde sistem güncel tarihi kaydeder ve ATM oturumu sayısını bir artırır; ardından ekran 6 (hesap seçimi) gelir.\n- **Bakiye:** → ekran 14 (yeni bakiye makbuza basılır; başka işlem?).\n- **Para yatırma:** yatırma zarfı yuvasında sorun varsa → ekran 12; yoksa ekran 7 (tutar girin) → ekran 13 (zarfı yerleştirin) → ekran 14.\n- **Para çekme:** para çıkış kanalı sıkışmışsa → ekran 10; değilse ekran 7 (tutar $10'ın katları olmalı); terminalde yeterli para yoksa → ekran 9; bakiye yetersizse → ekran 8; değilse ekran 11 (parayı alın) → ekran 14.\n- Ekran 10, 12 veya 14'te **Yes** → ekran 5; **No** → ekran 15 (makbuzu ve kartı alın) → ekran 1.\n\nMetinde pek çok bilgi \"gömülüdür\": örneğin ekran 7, terminalin yalnızca $10'lık banknot içerdiğini ima eder."
+      },
+      "source": "pp. 26–29"
+    },
+    {
+      "id": "currency-converter",
+      "title": {
+        "en": "The currency converter (event-driven GUI)",
+        "tr": "Döviz çevirici (olay güdümlü GUI)"
+      },
+      "body": {
+        "en": "The currency converter is an event-driven program that emphasizes code associated with a graphical user interface (GUI); the sample GUI is built with Visual Basic (Figure 2.5).\n\n- It converts U.S. dollars to any of **four** currencies: Brazilian reals, Canadian dollars, European Union euros, and Japanese yen.\n- Currency selection is governed by radio buttons (Visual Basic option buttons), which are **mutually exclusive**.\n- When a country is selected, the system completes the label: \"Equivalent in …\" becomes, for example, \"Equivalent in Canadian dollars\", and a small flag of that country appears.\n- Either before or after the currency selection, the user inputs an amount in U.S. dollars.\n- **Compute** converts the U.S. dollar amount to the equivalent amount in the selected currency; **Clear** resets the currency selection, the U.S. dollar amount, the equivalent currency amount and the associated label; **Quit** ends the application.\n\n**Why GUIs are tricky to test:** part of GUI design is to prevent user input errors. Event-driven applications are particularly vulnerable to input errors because events can occur in any order; the definition above does not force one step to happen before another. In an object-oriented application, this can be controlled by being careful when objects are instantiated.\n\n**Example:** nothing stops a user from clicking Clear and then immediately clicking Compute, with no amount and no currency at all.",
+        "tr": "Döviz çevirici (currency converter), grafik kullanıcı arayüzüyle (GUI) ilişkili kodu öne çıkaran, olay güdümlü (event-driven) bir programdır; örnek GUI Visual Basic ile oluşturulmuştur (Şekil 2.5).\n\n- ABD dolarını **dört** para biriminden herhangi birine çevirir: Brezilya reali, Kanada doları, Avrupa Birliği avrosu ve Japon yeni.\n- Para birimi seçimi, **birbirini dışlayan** radyo düğmeleriyle (Visual Basic option button) yapılır.\n- Bir ülke seçildiğinde sistem etiketi tamamlar: örneğin \"Equivalent in …\", \"Equivalent in Canadian dollars\" olur ve o ülkenin küçük bir bayrağı görünür.\n- Kullanıcı ABD doları tutarını para birimi seçiminden önce ya da sonra girer.\n- **Compute** dolar tutarını seçilen para birimindeki karşılığına çevirir; **Clear** para birimi seçimini, dolar tutarını, karşılık gelen tutarı ve ilgili etiketi sıfırlar; **Quit** uygulamayı sonlandırır.\n\n**GUI'leri test etmek neden zordur:** GUI tasarımının bir parçası kullanıcı girdi hatalarını önlemektir. Olay güdümlü uygulamalar girdi hatalarına özellikle açıktır, çünkü olaylar herhangi bir sırada oluşabilir; yukarıdaki tanım bir adımın diğerinden önce yapılmasını zorunlu kılmaz. Nesne yönelimli bir uygulamada bu, nesneler oluşturulurken (instantiate) dikkatli olunarak kontrol edilebilir.\n\n**Örnek:** Hiçbir şey, kullanıcının Clear'a tıklayıp hemen ardından hiç tutar ve para birimi olmadan Compute'a tıklamasını engellemez."
+      },
+      "source": "pp. 29–31"
+    },
+    {
+      "id": "windshield-wiper",
+      "title": {
+        "en": "The Saturn windshield wiper controller",
+        "tr": "Saturn cam sileceği denetleyicisi"
+      },
+      "body": {
+        "en": "The windshield wiper on some Saturn automobiles is a small controller example, used later in the discussion of interaction testing (Chapter 15).\n\n- A **lever** with four positions: OFF, INT (for intermittent), LOW, and HIGH.\n- A **dial** with three positions, numbered simply 1, 2 and 3. The dial positions indicate three intermittent speeds, so the dial position is relevant only when the lever is at INT.\n\nThe book's decision table gives the wiper speed in wipes per minute (conditions c1 Lever and c2 Dial, action a1 Wiper):\n- Lever OFF (dial n/a) → 0\n- Lever INT, dial 1 → 4\n- Lever INT, dial 2 → 6\n- Lever INT, dial 3 → 12\n- Lever LOW (dial n/a) → 30\n- Lever HIGH (dial n/a) → 60\n\n\"n/a\" (not applicable) means the dial position does not matter for that lever position.\n\n**Example:** with the lever at LOW, turning the dial from 1 to 3 does not change anything: the wiper stays at 30 wipes per minute.",
+        "tr": "Bazı Saturn otomobillerindeki cam sileceği (windshield wiper), ileride etkileşim testi (interaction testing) anlatılırken kullanılan küçük bir denetleyici örneğidir (Bölüm 15).\n\n- Dört konumlu bir **kol** (lever): OFF, INT (aralıklı / intermittent), LOW ve HIGH.\n- Basitçe 1, 2 ve 3 diye numaralanmış üç konumlu bir **kadran** (dial). Kadran konumları üç aralıklı hızı gösterir; bu yüzden kadran konumu yalnızca kol INT konumundayken önemlidir.\n\nKitaptaki karar tablosu (decision table) silecek hızını dakikadaki silme sayısı olarak verir (koşullar c1 Lever ve c2 Dial, eylem a1 Wiper):\n- Kol OFF (kadran n/a) → 0\n- Kol INT, kadran 1 → 4\n- Kol INT, kadran 2 → 6\n- Kol INT, kadran 3 → 12\n- Kol LOW (kadran n/a) → 30\n- Kol HIGH (kadran n/a) → 60\n\n\"n/a\" (uygulanamaz), o kol konumu için kadran konumunun önemli olmadığı anlamına gelir.\n\n**Örnek:** Kol LOW konumundayken kadranı 1'den 3'e çevirmek hiçbir şeyi değiştirmez: silecek dakikada 30 silmede kalır."
+      },
+      "source": "p. 30"
+    }
+  ],
+  "questions": {
+    "1": {
+      "concept": "triangle-spec",
+      "explanation_tr": "c1–c3 koşulları 1 ≤ a ≤ 200, 1 ≤ b ≤ 200 ve 1 ≤ c ≤ 200'dür; 200 üst sınırı \"hem keyfi hem de kullanışlıdır\" ve Bölüm 5'teki sınır değer test durumlarında yeniden kullanılır. c4–c6 koşulları ise üçgen eşitsizlikleri a < b + c, b < a + c ve c < a + b'dir."
+    },
+    "2": {
+      "concept": "triangle-spec",
+      "explanation_tr": "Tüm kenarlar aralık içindedir, ancak c6 koşulu (c < a + b) 4 < 4 olur ve bu yanlıştır; c4, c5, c6'dan herhangi biri sağlanmazsa çıktı NotATriangle olur. Tam olarak bir kenar çifti eşit olduğu için Isosceles cazip görünür, ama Üçgen Özelliği herhangi iki kenarın toplamının üçüncü kenardan kesinlikle büyük olmasını gerektirir."
+    },
+    "3": {
+      "concept": "triangle-traditional",
+      "explanation_tr": "Eşitliklerden herhangi ikisi sağlanırsa üçüncüsü de sağlanır; bu yüzden match 0 (eşit çift yok), 1, 2 veya 3 (tam olarak bir eşit çift) ya da 1 + 2 + 3 = 6 (hepsi eşit) olabilir; 4 ve 5 imkânsızdır. Aynı nedenle Şekil 2.1'deki 1, 2, 5, 6 kutu dizisi asla çalışamaz, çünkü a = b ve b = c, a = c'yi (kutu 4) zorunlu kılar."
+    },
+    "4": {
+      "concept": "triangle-structured",
+      "explanation_tr": "Triangle2, (a < b + c) AND (b < a + c) AND (c < a + b) ifadesini değerlendirir; son test 5 < -6'dır ve yanlıştır, bu yüzden IsATriangle False olur ve program \"Not a Triangle\" yazdırır. Aralık mesajı, geliştirilmiş belirtimi gerçekleştiren triangle3'e aittir; negatif kenarlar ise basit belirtimin hiç ele almadığı bir davranıştır."
+    },
+    "5": {
+      "concept": "examples-overview",
+      "explanation_tr": "Kitap, NextDate'teki girdi değişkenleri arasındaki mantıksal ilişkileri, karmaşıklığı girdiler ile doğru çıktılar arasındaki ilişkilerden kaynaklanan üçgen programıyla karşılaştırır. Komisyon problemi hesaplama ile karar vermeyi karıştırır; döviz çevirici ve SATM ise GUI ve istemci–sunucu örnekleridir."
+    },
+    "6": {
+      "concept": "nextdate-spec",
+      "explanation_tr": "NextDate, 1 ≤ month ≤ 12, 1 ≤ day ≤ 31 ve 1812 ≤ year ≤ 2012 koşullarını gerektirir; bu yüzden 1811 yılı aralık dışındadır. Diğer girdiler, 1812 ve 2012 yıl sınırları da dâhil olmak üzere üç koşulun hepsini sağlar."
+    },
+    "7": {
+      "concept": "nextdate-spec",
+      "explanation_tr": "Her değişken kendi aralığı içindedir (31 ≤ 31 ve 1812 alt yıl sınırıdır), ancak 31 Haziran geçersiz bir mantıksal birleşimdir. Problem tanımı, tüm geçersiz gün–ay–yıl birleşimlerini tek bir mesajda toplar: \"Invalid Input Date.\""
+    },
+    "8": {
+      "concept": "nextdate-spec",
+      "explanation_tr": "Bir yıl 4'e bölünüyorsa artık yıldır, ancak yüzyıl yılıysa bu geçerli değildir; yüzyıl yılları yalnızca 400'ün katıysa artık yıldır. Bu yüzden 1900 artık yıl değildir (2000'in aksine) ve 1 Mart 1900'den önceki gün 28 Şubat 1900'dür."
+    },
+    "9": {
+      "concept": "nextdate-implementations",
+      "explanation_tr": "day = 31 için özel bir işlem yoktur; bu yüzden Else dalı 31 Haziran'ı 30 Haziran gibi ele alır ve 1 Temmuz üretir; bu da belirtimdeki \"Invalid Input Date\" ile çelişir (geliştirilmiş NextDate2 bu kontrolü ekler). NextDate1 benzer şekilde 29 Şubat'ı, yılın artık yıl olup olmadığını kontrol etmeden 1 Mart'a eşler."
+    },
+    "10": {
+      "concept": "commission-problem",
+      "explanation_tr": "Komisyon, $1000'a kadar (dâhil) satışlarda %10 ($100), sonraki $800'da %15 ($120) ve $1800'ü aşan satışlarda %20'dir (0.20 × $200 = $40); toplam $260 eder. $1000'ın üstündeki her şeye %15 uygulamak yanlışlıkla $250 verir."
+    },
+    "11": {
+      "concept": "commission-problem",
+      "explanation_tr": "Üretim sınırları ayda 70 kilit (lock), 80 dipçik (stock) ve 90 namludur (barrel). Kilitler $45, dipçikler $30, namlular $25'tir; satış temsilcisi ayda en az bir tam tüfek satmalıdır; ay sonunu -1 kilit gösteren bir telgraf belirtir; %20 oranı ise yalnızca $1800'ün üstünde uygulanır."
+    },
+    "12": {
+      "concept": "satm-system",
+      "explanation_tr": "Müşterinin PIN'i girmek için üç hakkı vardır; üç başarısız denemeden sonra ekran 4 görünür ve kart alıkonur; PAN bulunamadığında da aynısı olur. SATM iki hesap türünde (vadesiz/checking, tasarruf/savings) üç işlem türü (para yatırma, para çekme, bakiye sorgulama) sunar ve ekran 7'deki $10'lık artışlar, terminalin yalnızca $10'lık banknot tuttuğunu ima eder."
+    },
+    "13": {
+      "concept": "windshield-wiper",
+      "explanation_tr": "Karar tablosu şunu verir: OFF = 0; INT ile kadran 1, 2, 3 = 4, 6, 12; LOW = 30 ve HIGH = 60 silme/dakika. Kadran yalnızca kol INT konumundayken önemlidir."
+    },
+    "14": {
+      "concept": "triangle-spec",
+      "explanation_tr": "Kenarlar artan sırada olduğunda c en uzun kenardır ve bir dik üçgen c² = a² + b² Pisagor bağıntısını sağlar; 9 + 16 = 25 doğrudur. Diğer üçlüler sağlamaz (örneğin 25 + 25 = 50 ≠ 49 ve 36 + 64 = 100 ≠ 81)."
+    },
+    "15": {
+      "concept": "currency-converter",
+      "explanation_tr": "Olaylar herhangi bir sırada oluşabildiği için kullanıcı, ülke seçmeden veya dolar tutarı girmeden Compute'a tıklayabilir. Gerçek tasarımda radyo düğmeleri birbirini dışlar, tutar para birimi seçiminden önce veya sonra girilebilir ve Clear; seçimi, dolar tutarını, karşılık gelen tutarı ve etiketini sıfırlar."
+    }
+  }
+}

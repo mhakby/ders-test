@@ -3,6 +3,7 @@ import { useSyncExternalStore } from 'react';
 export type Route =
   | { name: 'courses' }
   | { name: 'course'; courseId: string }
+  | { name: 'lesson'; courseId: string; setId: string }
   | { name: 'quiz'; courseId: string; deckId: string }
   | { name: 'summary'; courseId: string; deckId: string };
 
@@ -12,6 +13,7 @@ function parse(hash: string): Route {
     if (parts[2] === 'd' && parts[3]) {
       return { name: parts[4] === 'summary' ? 'summary' : 'quiz', courseId: parts[1], deckId: parts[3] };
     }
+    if (parts[2] === 'l' && parts[3]) return { name: 'lesson', courseId: parts[1], setId: parts[3] };
     return { name: 'course', courseId: parts[1] };
   }
   return { name: 'courses' };
@@ -23,6 +25,8 @@ export function href(route: Route): string {
       return '#/';
     case 'course':
       return `#/c/${encodeURIComponent(route.courseId)}`;
+    case 'lesson':
+      return `#/c/${encodeURIComponent(route.courseId)}/l/${encodeURIComponent(route.setId)}`;
     case 'quiz':
       return `#/c/${encodeURIComponent(route.courseId)}/d/${encodeURIComponent(route.deckId)}`;
     case 'summary':

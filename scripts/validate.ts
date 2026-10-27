@@ -2,7 +2,7 @@
 // Usage: npm run validate   (exits with code 1 and lists question ids on error)
 import { readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
-import { LETTERS, type Course, type Manifest, type Question } from '../src/types';
+import { LETTERS, type Course, type Manifest, type Question, type QuestionSet } from '../src/types';
 
 const dir = path.resolve(import.meta.dirname, '..', 'data', 'courses');
 const errors: string[] = [];
@@ -59,6 +59,9 @@ function checkQuestion(course: Course, q: Question, where: string) {
   }
 
   if (q.explanation !== undefined && !isText(q.explanation[primary])) err(`explanation.${primary} empty`);
+  for (const lang of Object.keys(q.explanation ?? {})) {
+    if (![primary, secondary, course.languages.help].includes(lang)) err(`unknown language "${lang}" in explanation`);
+  }
   if (q.source !== undefined && !isText(q.source.file)) err('source.file missing');
 
   if (course.origin === 'generated') {
@@ -68,6 +71,35 @@ function checkQuestion(course: Course, q: Question, where: string) {
     primaryOptions.forEach((o, i) => FORBIDDEN_OPTION.test(o) && err(`option ${LETTERS[i]} uses a forbidden pattern: "${o}"`));
     if (q.explanation && LETTER_REF.test(q.explanation[primary])) err('explanation refers to an option letter');
   }
+}
+
+/** A set's lesson: localized texts present, unique concept ids, every question linked to a concept. */
+function checkLesson(course: Course, set: QuestionSet) {
+  const err = (msg: string) => errors.push(`${course.id} / ${set.id} lesson: ${msg}`);
+  const langs = [course.languages.primary, course.languages.help].filter((l): l is string => Boolean(l));
+  const localized = (value: Record<string, string> | undefined, what: string) => {
+    for (const lang of langs) if (!isText(value?.[lang])) err(`${what}.${lang} missing`);
+  };
+  const lesson = set.lesson!;
+  if (lesson.intro) localized(lesson.intro, 'intro');
+  if (!Array.isArray(lesson.concepts) || lesson.concepts.length === 0) return err('no concepts');
+  const ids = new Set<string>();
+  for (const c of lesson.concepts) {
+    if (!isText(c.id) || ids.has(c.id)) err(`concept id "${c.id}" missing or duplicate`);
+    ids.add(c.id);
+    localized(c.title, `${c.id}.title`);
+    localized(c.body, `${c.id}.body`);
+  }
+  const used = new Set<string>();
+  for (const q of set.questions) {
+    if (!q.concept) err(`${q.id} has no concept`);
+    else if (!ids.has(q.concept)) err(`${q.id} links unknown concept "${q.concept}"`);
+    else used.add(q.concept);
+    if (course.languages.help && !isText(q.explanation?.[course.languages.help])) {
+      err(`${q.id} has no ${course.languages.help} explanation`);
+    }
+  }
+  for (const id of ids) if (!used.has(id)) warnings.push(`${course.id} / ${set.id}: concept "${id}" is not linked from any question`);
 }
 
 function checkCourse(file: string, expectedId: string) {
@@ -88,6 +120,7 @@ function checkCourse(file: string, expectedId: string) {
     if (!isText(set.id) || setIds.has(set.id)) err(`set id "${set.id}" missing or duplicate`);
     setIds.add(set.id);
     if (!Array.isArray(set.questions) || set.questions.length === 0) err(`set ${set.id} has no questions`);
+    if (set.lesson) checkLesson(course, set);
     set.questions.forEach((q, i) => {
       checkQuestion(course, q, `${set.id}[${i}]`);
       total++;

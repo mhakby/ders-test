@@ -1,0 +1,214 @@
+{
+  "intro": {
+    "en": "Path testing is the best-known form of structural (code-based) testing: the program is drawn as a graph and test cases are described as paths through it. This set covers program graphs and DD-Paths, Miller's coverage metrics (C0, C1 and beyond), McCabe's cyclomatic complexity and basis path method, essential complexity, and what path-based testing can and cannot see. Several end-of-chapter exercises ask you to count DD-Paths, compute V(G) or build basis paths, so work through the small worked examples on the cards.",
+    "tr": "Yol testi (path testing), yapısal (koda dayalı) testin en bilinen biçimidir: program bir graf olarak çizilir ve test durumları bu graftaki yollar olarak tanımlanır. Bu set program graflarını ve DD-Path'leri, Miller'ın kapsam metriklerini (C0, C1 ve ötesi), McCabe'in çevrimsel karmaşıklığını ve temel yol yöntemini, öz karmaşıklığı ve yol tabanlı testin neyi görüp neyi göremeyeceğini kapsar. Bölüm sonu alıştırmalarının birkaçı DD-Path saymanızı, V(G) hesaplamanızı ya da temel yollar kurmanızı ister; bu yüzden kartlardaki küçük çözümlü örnekleri adım adım takip edin."
+  },
+  "concepts": [
+    {
+      "id": "program-graph",
+      "title": {
+        "en": "Program graphs",
+        "tr": "Program grafları"
+      },
+      "body": {
+        "en": "Structural testing methods are based on the **source code** of the program, not on its specification, so they allow rigorous definitions, mathematical analysis and precise measurement. Both path testing techniques start from the program graph.\n\n**Program graph:** for a program in an imperative language, a directed graph in which **nodes are statement fragments** and **edges represent flow of control** (a complete statement is a \"default\" statement fragment). An edge goes from node i to node j iff fragment j can be executed immediately after fragment i. Nonexecutable statements such as declarations get no nodes here. Whether to keep a fragment as its own node is a judgment call; all such program graphs reduce to a unique DD-Path graph.\n\n- Triangle program (Fig 9.1, nodes 4–23): 4–8 are a sequence, 8–12 an if-then-else, 15–22 nested if-then-else constructs; node 4 is the source, node 23 the sink. No loops, so it is a directed acyclic graph.\n- Program executions correspond to source-to-sink paths; a test case forces the execution of one such path.\n- Paths multiply fast: in Fig 9.2 (\"Trillions of paths\", Schach 1993) five paths lead from B to F inside a loop; with up to 18 repetitions there are about 4.77 trillion paths.\n\n**Example:** `1 Input(x)`, `2 If x > 0`, `3 Then y = x`, `4 Else y = −x`, `5 EndIf`, `6 Output(y)` → edges 1→2, 2→3, 2→4, 3→5, 4→5, 5→6.",
+        "tr": "Yapısal test (structural testing) yöntemleri programın spesifikasyonuna değil **kaynak koduna** dayanır; bu yüzden kesin tanımlara, matematiksel analize ve hassas ölçüme elverişlidir. Her iki yol testi (path testing) tekniği de program grafıyla başlar.\n\n**Program grafı (program graph):** emirsel (imperative) bir dilde yazılmış bir program için, **düğümleri ifade parçaları (statement fragments)** olan ve **kenarları kontrol akışını (flow of control)** temsil eden yönlü bir graf (tam bir ifade \"varsayılan\" bir ifade parçasıdır). j parçası i parçasından hemen sonra çalışabiliyorsa ve ancak o zaman i'den j'ye bir kenar vardır. Bildirimler gibi çalıştırılmayan ifadelere burada düğüm verilmez. Bir parçayı ayrı düğüm yapıp yapmamak bir muhakeme meselesidir; bu tür program graflarının hepsi tek (benzersiz) bir DD-Path grafına indirgenir.\n\n- Üçgen programı (Şekil 9.1, düğüm 4–23): 4–8 bir ardışıklık (sequence), 8–12 bir if-then-else, 15–22 iç içe if-then-else yapılarıdır; düğüm 4 kaynak (source), düğüm 23 hedef (sink) düğümdür. Döngü yoktur; bu yüzden yönlü çevrimsiz bir graftır (directed acyclic graph).\n- Program çalıştırmaları kaynaktan hedefe giden yollara karşılık gelir; bir test durumu (test case) bu yollardan birinin çalışmasını zorlar.\n- Yollar hızla çoğalır: Şekil 9.2'de (\"Trilyonlarca yol\", Schach 1993) bir döngünün içinde B'den F'ye beş yol gider; döngü 18 kereye kadar tekrarlanabilirse yaklaşık 4.77 trilyon yol vardır.\n\n**Örnek:** `1 Input(x)`, `2 If x > 0`, `3 Then y = x`, `4 Else y = −x`, `5 EndIf`, `6 Output(y)` → kenarlar 1→2, 2→3, 2→4, 3→5, 4→5, 5→6."
+      },
+      "source": "pp. 137–139 (Figs 9.1–9.2)"
+    },
+    {
+      "id": "dd-paths",
+      "title": {
+        "en": "DD-Paths and the DD-Path graph",
+        "tr": "DD-Path'ler ve DD-Path grafı"
+      },
+      "body": {
+        "en": "A **DD-Path** (decision-to-decision path, Miller 1977) begins with the \"outway\" of a decision and ends with the \"inway\" of the next decision, with no internal branches. It is defined with **chains**: paths whose initial and terminal nodes are distinct and whose interior nodes all have indegree (indeg, edges in) = 1 and outdegree (outdeg, edges out) = 1. A chain's length is its number of edges.\n\nA DD-Path is a chain in a program graph such that:\n\n- Case 1: a single node with indeg = 0 (source, \"first\")\n- Case 2: a single node with outdeg = 0 (sink, \"last\")\n- Case 3: a single node with indeg ≥ 2 or outdeg ≥ 2 (\"complex\" nodes; no node is in two DD-Paths)\n- Case 4: a single node with indeg = 1 and outdeg = 1 (\"short branches\")\n- Case 5: a maximal chain of length ≥ 1 (the \"normal case\"; \"maximal\" fixes its final node)\n\nTriangle program (Table 9.1): node 4 is \"first\"; nodes 5–8 form DD-Path A (adding 9 would violate indeg = outdeg = 1, stopping at 7 would violate \"maximal\"); node 23 is \"last\". The **DD-Path graph** has the DD-Paths as nodes and control flow between successor DD-Paths as edges: a condensation graph (Fig 9.4).\n\n**Example:** edges 1→2, 2→3, 3→4, 4→5, 5→3, 3→6, 6→7. Node 1: Case 1; node 2: Case 4; node 3 (indeg 2, outdeg 2): Case 3; nodes 4–5: one Case 5 chain; node 6: Case 4; node 7: Case 2 → 6 DD-Paths from 7 nodes.",
+        "tr": "**DD-Path** (karardan karara yol, decision-to-decision path, Miller 1977) bir kararın \"çıkış yolu\" (outway) ile başlar ve bir sonraki kararın \"giriş yolu\" (inway) ile biter; içinde dallanma yoktur. **Zincirlerle (chains)** tanımlanır: başlangıç ve bitiş düğümleri farklı olan ve tüm iç düğümlerinde giriş derecesi (indegree, indeg: giren kenar sayısı) = 1 ve çıkış derecesi (outdegree, outdeg: çıkan kenar sayısı) = 1 olan yollar. Bir zincirin uzunluğu kenar sayısıdır.\n\nDD-Path, program grafında şu koşullardan birini sağlayan bir zincirdir:\n\n- Durum 1 (Case 1): indeg = 0 olan tek bir düğüm (kaynak, \"first\")\n- Durum 2: outdeg = 0 olan tek bir düğüm (hedef, \"last\")\n- Durum 3: indeg ≥ 2 veya outdeg ≥ 2 olan tek bir düğüm (\"karmaşık\" düğümler; hiçbir düğüm iki DD-Path'te olmaz)\n- Durum 4: indeg = 1 ve outdeg = 1 olan tek bir düğüm (\"kısa dallar\", short branches)\n- Durum 5: uzunluğu ≥ 1 olan maksimal bir zincir (\"normal durum\"; \"maksimal\" son düğümünü belirler)\n\nÜçgen programı (Tablo 9.1): düğüm 4 \"first\"tür; 5–8 düğümleri DD-Path A'yı oluşturur (9'u eklemek indeg = outdeg = 1 kuralını, 7'de durmak \"maksimal\" kuralını bozar); düğüm 23 \"last\"tır. **DD-Path grafı (DD-Path graph)**, düğümleri DD-Path'ler, kenarları ardışık DD-Path'ler arasındaki kontrol akışı olan graftır: bir yoğunlaştırma grafı (condensation graph) (Şekil 9.4).\n\n**Örnek:** kenarlar 1→2, 2→3, 3→4, 4→5, 5→3, 3→6, 6→7. Düğüm 1: Durum 1; düğüm 2: Durum 4; düğüm 3 (indeg 2, outdeg 2): Durum 3; 4–5 düğümleri: tek bir Durum 5 zinciri; düğüm 6: Durum 4; düğüm 7: Durum 2 → 7 düğümden 6 DD-Path."
+      },
+      "source": "pp. 139–142 (Fig 9.3, Table 9.1, Fig 9.4)"
+    },
+    {
+      "id": "coverage-metrics",
+      "title": {
+        "en": "Test coverage metrics (Table 9.2)",
+        "tr": "Test kapsam metrikleri (Tablo 9.2)"
+      },
+      "body": {
+        "en": "DD-Paths allow very precise descriptions of **test coverage**: how far a set of test cases covers (exercises) a program. Most metrics in Table 9.2 are due to E. F. Miller (1977):\n\n- C0: every statement\n- C1: every DD-Path (predicate outcome)\n- C1p: every predicate to each outcome\n- C2: C1 coverage + loop coverage\n- Cd: C1 coverage + every dependent pair of DD-Paths\n- CMCC: multiple condition coverage\n- Cik: every program path that contains up to k repetitions of a loop (usually k = 2)\n- Cstat: \"statistically significant\" fraction of paths\n- C∞: all possible execution paths\n\nKey facts:\n\n- Most quality organizations now expect **C1 (DD-Path coverage) as the minimum acceptable level**. C0 is still widely accepted: it is mandated by **ANSI Standard 187B** and has been used successfully at IBM since the mid-1970s.\n- The metrics form a **lattice**: some are equivalent, some are implied by others; faults revealed at one level can escape detection by inferior levels.\n- Miller (1991): when DD-Path coverage is attained, roughly **85% of all faults** are revealed.\n- The metrics tell us *what* to test, not *how*.\n- **Cd** foreshadows dataflow testing. The most common dependency is define/reference: a variable is defined (receives a value) in one DD-Path and referenced in another. Such dependencies are closely related to infeasible paths; in the triangle DD-Path graph, B and D, and C and L, are dependent pairs.",
+        "tr": "DD-Path'ler **test kapsamının (test coverage)**, yani bir test kümesinin programı ne ölçüde kapsadığının (çalıştırdığının) çok kesin tanımlanmasını sağlar. Tablo 9.2'deki metriklerin çoğu E. F. Miller'a (1977) aittir:\n\n- C0: her ifade (statement)\n- C1: her DD-Path (yüklem sonucu, predicate outcome)\n- C1p: her yüklemin her sonuca götürülmesi\n- C2: C1 kapsamı + döngü kapsamı\n- Cd: C1 kapsamı + her bağımlı DD-Path çifti\n- CMCC: çoklu koşul kapsamı (multiple condition coverage)\n- Cik: bir döngünün en fazla k tekrarını içeren her program yolu (genellikle k = 2)\n- Cstat: yolların \"istatistiksel olarak anlamlı\" bir kesri\n- C∞: tüm olası çalışma yolları\n\nTemel bilgiler:\n\n- Çoğu kalite kuruluşu artık **C1'i (DD-Path kapsamı) kabul edilebilir en düşük düzey** olarak bekler. C0 hâlâ yaygın biçimde kabul görür: **ANSI Standard 187B** onu zorunlu kılar ve IBM'de 1970'lerin ortasından beri başarıyla kullanılmaktadır.\n- Metrikler bir **kafes (lattice)** oluşturur: bazıları denktir, bazıları diğerlerince gerektirilir (implied); bir düzeyde ortaya çıkan hata türleri daha alt düzeylerde gözden kaçabilir.\n- Miller (1991): DD-Path kapsamına ulaşıldığında hataların yaklaşık **%85'i** ortaya çıkar.\n- Metrikler bize *neyi* test edeceğimizi söyler, *nasıl* test edeceğimizi değil.\n- **Cd**, veri akışı testinin (dataflow testing) habercisidir. En yaygın bağımlılık tanımla/kullan (define/reference) ilişkisidir: bir değişken bir DD-Path'te tanımlanır (değer alır), başka birinde kullanılır. Bu bağımlılıklar gerçekleştirilemez (infeasible) yollarla yakından ilişkilidir; üçgen DD-Path grafında B ile D ve C ile L bağımlı çiftlerdir."
+      },
+      "source": "pp. 142–144 (Table 9.2)"
+    },
+    {
+      "id": "dd-path-coverage",
+      "title": {
+        "en": "C0 vs. C1: every node or every edge",
+        "tr": "C0 ve C1: her düğüm mü, her kenar mı"
+      },
+      "body": {
+        "en": "**Statement coverage (C0)** requires every node to be executed at least once. **DD-Path coverage (C1)** requires every predicate outcome, which amounts to traversing **every edge** of the DD-Path graph (or program graph), as opposed to only every node.\n\n- If-then and if-then-else: both the true and the false branch are covered (C1p). CASE: every clause is covered.\n- Miller's nodes are full statements, so executing just one alternative of an if-then-else could satisfy C0. The book lets statement fragments be nodes (triangle nodes 9–12, one if-then-else, are split into fragments), so there C0 and C1 collapse into one consideration.\n- Every edge touches two nodes, so covering all edges also visits all nodes; the reverse does not hold.\n- The slides call these statement coverage and branch (decision) coverage and show the same effect: for an if without else, one test with a true condition gives 100% statement but only 50% branch coverage.\n\n**Coverage analyzers** automate the measurement: the tester runs test cases on a program **instrumented** by the analyzer. The instrumentation identifies and labels all DD-Paths; during execution the analyzer tabulates the DD-Paths traversed by each test case, so different sets of test cases can be compared.\n\n**Example:** DD-Path graph S→X, X→Y, X→Z, Y→Z, Z→T. The single path S-X-Y-Z-T visits every node (C0) but never takes X→Z, so C1 needs one more path, S-X-Z-T.",
+        "tr": "**İfade kapsamı (statement coverage, C0)** her düğümün en az bir kez çalışmasını ister. **DD-Path kapsamı (DD-Path coverage, C1)** her yüklem sonucunu (predicate outcome) ister; bu da yalnızca her düğümü değil, DD-Path grafının (veya program grafının) **her kenarını** geçmek demektir.\n\n- If-then ve if-then-else: hem doğru hem yanlış dal kapsanır (C1p). CASE: her seçenek (clause) kapsanır.\n- Miller'ın düğümleri tam ifadelerdir; bu yüzden bir if-then-else'in yalnızca bir seçeneğini çalıştırmak C0'ı sağlayabilir. Kitap ifade parçalarının (statement fragments) düğüm olmasına izin verir (tek bir if-then-else olan üçgen programının 9–12 düğümleri parçalara bölünür); bu yüzden orada C0 ve C1 tek bir değerlendirmeye indirgenir.\n- Her kenar iki düğüme değer; bu yüzden tüm kenarları kapsamak tüm düğümleri de ziyaret eder; tersi geçerli değildir.\n- Slaytlar bunlara ifade kapsamı ve dal (karar) kapsamı (branch/decision coverage) der ve aynı etkiyi gösterir: else'i olmayan bir if için koşulu doğru yapan tek bir test %100 ifade kapsamı ama yalnızca %50 dal kapsamı verir.\n\n**Kapsam analizcileri (coverage analyzers)** ölçümü otomatikleştirir: test eden, test durumlarını analizcinin **enstrümante ettiği (instrumented)** bir program üzerinde çalıştırır. Enstrümantasyon tüm DD-Path'leri belirleyip etiketler; çalışma sırasında analizci her test durumunun geçtiği DD-Path'leri tablolar; böylece farklı test kümeleri karşılaştırılabilir.\n\n**Örnek:** DD-Path grafı S→X, X→Y, X→Z, Y→Z, Z→T. Tek yol S-X-Y-Z-T her düğümü ziyaret eder (C0) ama X→Z'yi hiç almaz; bu yüzden C1 için bir yol daha gerekir: S-X-Z-T."
+      },
+      "source": "pp. 143–145; slides week 4 for the naming comparison"
+    },
+    {
+      "id": "multiple-condition-coverage",
+      "title": {
+        "en": "Compound conditions and multiple condition coverage",
+        "tr": "Bileşik koşullar ve çoklu koşul kapsamı"
+      },
+      "body": {
+        "en": "A **compound condition** joins simple conditions with AND/OR, e.g. `If (a = b) AND (b = c)`. DD-Path coverage only needs each compound predicate true once and false once; **multiple condition coverage (CMCC)** investigates the different ways each outcome can occur.\n\n- **Truth table:** every combination of the simple conditions: 3 simple conditions → 8 rows → 8 test cases.\n- **Dependencies:** an Else If is reached only when the earlier condition is false, so truth-table rows that would need it to be true can never occur there.\n- **Transitivity:** triangle line 14 does not test a = c, because a = b and b = c already imply it.\n- **Reprogramming** compound predicates as nested if-then-else with simple conditions makes each simple condition a decision → more DD-Paths and a higher cyclomatic complexity V(G) = e − n + 2p: statement complexity is traded for path complexity. CMCC keeps this complexity from being swept under the DD-Path coverage rug.\n\n**Worked examples:**\n\n- `If (p = 0) AND (q = 0) … Else If (p ≠ 0) OR (q ≠ 0)`: reaching the Else If rules out p = q = 0, so the row with both conditions false is impossible.\n- Triangle with a = 5, b = 5, c = 7: line 14 false (b ≠ c), line 16 false (a ≠ b fails), so line 18 outputs Isosceles, which is correct.\n- `If (x > 0) AND (y > 0) Then P Else Q EndIf`: 4 nodes, 4 edges, V(G) = 2. Nested `If x > 0 Then (If y > 0 Then P Else Q) Else Q`: 7 nodes, 8 edges, V(G) = 3.",
+        "tr": "**Bileşik koşul (compound condition)**, basit koşulları AND/OR ile birleştirir; örneğin `If (a = b) AND (b = c)`. DD-Path kapsamı her bileşik yüklemin bir kez doğru, bir kez yanlış olmasını yeterli sayar; **çoklu koşul kapsamı (multiple condition coverage, CMCC)** ise her sonucun hangi farklı yollarla oluşabileceğini inceler.\n\n- **Doğruluk tablosu (truth table):** basit koşulların her kombinasyonu: 3 basit koşul → 8 satır → 8 test durumu.\n- **Bağımlılıklar:** bir Else If'e yalnızca önceki koşul yanlışken ulaşılır; bu yüzden onun doğru olmasını gerektiren doğruluk tablosu satırları orada asla oluşamaz.\n- **Geçişlilik (transitivity):** üçgen programının 14. satırı a = c'yi test etmez, çünkü a = b ve b = c bunu zaten gerektirir.\n- Bileşik yüklemleri basit koşullu iç içe if-then-else olarak **yeniden programlamak**, her basit koşulu bir karar yapar → daha fazla DD-Path ve daha yüksek çevrimsel karmaşıklık (cyclomatic complexity) V(G) = e − n + 2p: ifade karmaşıklığı, yol karmaşıklığıyla takas edilir. CMCC bu karmaşıklığın DD-Path kapsamı halısının altına süpürülmesini önler.\n\n**Çözümlü örnekler:**\n\n- `If (p = 0) AND (q = 0) … Else If (p ≠ 0) OR (q ≠ 0)`: Else If'e ulaşmak p = q = 0'ı dışlar; bu yüzden iki koşulun da yanlış olduğu satır imkânsızdır.\n- a = 5, b = 5, c = 7 ile üçgen: 14. satır yanlıştır (b ≠ c), 16. satır yanlıştır (a ≠ b sağlanmaz); bu yüzden 18. satır Isosceles (ikizkenar) yazar; bu doğrudur.\n- `If (x > 0) AND (y > 0) Then P Else Q EndIf`: 4 düğüm, 4 kenar, V(G) = 2. İç içe `If x > 0 Then (If y > 0 Then P Else Q) Else Q`: 7 düğüm, 8 kenar, V(G) = 3."
+      },
+      "source": "pp. 138, 144, 155–156 (Exercises 5–7)"
+    },
+    {
+      "id": "loop-coverage",
+      "title": {
+        "en": "Loop coverage",
+        "tr": "Döngü kapsamı"
+      },
+      "body": {
+        "en": "Loops are a highly fault-prone portion of source code. Beizer's (1983) taxonomy (Fig 9.5):\n\n- **Concatenated** loops: a sequence of disjoint loops.\n- **Nested** loops: one loop is contained inside another.\n- **Horrible** loops (other sources call them knots; the figure says \"knotted\"): branches go into (or out of) the middle of a loop and are internal to other loops. They cannot occur under structured programming.\n\nHow to test loops:\n\n- Every loop involves a decision; test both outcomes: traverse the loop, and exit (or do not enter) it (Huang 1979).\n- Modified boundary value approach: give the loop index its minimum, nominal and maximum values (this can go up to full boundary value or even robustness testing). If the loop body is a DD-Path with a complex calculation, test that too.\n- Once tested, a loop is **condensed into a single node**; nested loops are handled **starting with the innermost loop and working outward**. This gives the same multiplicity of test cases as boundary value analysis, because each loop index acts like an input variable.\n- Knotted loops need careful dataflow analysis (Chapter 10): e.g. one loop tampering with the other loop's index could cause an infinite loop.\n\n**Example:** `For i = 1 To 10` containing `For j = 1 To 5`: test the inner j loop (j = 1, 3, 5), condense it into one node, then test the outer i loop (i = 1, 5, 10).",
+        "tr": "Döngüler kaynak kodun hataya çok yatkın bir kısmıdır. Beizer'ın (1983) sınıflandırması (Şekil 9.5):\n\n- **Ardışık (concatenated)** döngüler: birbirinden ayrık döngülerin sırası.\n- **İç içe (nested)** döngüler: bir döngü diğerinin içindedir.\n- **Korkunç (horrible)** döngüler (başka kaynaklar bunlara düğüm (knot) der; şekilde \"knotted\" yazar): dallar bir döngünün ortasına girer (ya da ortasından çıkar) ve başka döngülerin içindedir. Yapısal programlamada oluşamazlar.\n\nDöngüler nasıl test edilir:\n\n- Her döngü bir karar içerir; iki sonucu da test et: döngüyü geç ve döngüden çık (ya da hiç girme) (Huang 1979).\n- Değiştirilmiş sınır değer yaklaşımı (modified boundary value approach): döngü indeksine en küçük, nominal ve en büyük değerlerini ver (bu, tam sınır değer testine, hatta sağlamlık testine (robustness testing) kadar gidebilir). Döngü gövdesi karmaşık bir hesap yapan bir DD-Path ise onu da test et.\n- Test edilen döngü **tek bir düğüme yoğunlaştırılır (condense)**; iç içe döngüler **en içteki döngüden başlayıp dışa doğru** ele alınır. Bu, sınır değer analiziyle aynı çoklukta test durumu verir, çünkü her döngü indeksi bir girdi değişkeni gibi davranır.\n- Düğümlü döngüler dikkatli bir veri akışı (dataflow) analizi gerektirir (Bölüm 10): örneğin bir döngünün diğer döngünün indeksini değiştirmesi sonsuz döngüye yol açabilir.\n\n**Örnek:** `For j = 1 To 5` döngüsünü içeren `For i = 1 To 10`: içteki j döngüsünü test et (j = 1, 3, 5), onu tek bir düğüme yoğunlaştır, sonra dıştaki i döngüsünü test et (i = 1, 5, 10)."
+      },
+      "source": "pp. 144–145 (Fig 9.5)"
+    },
+    {
+      "id": "cyclomatic-complexity",
+      "title": {
+        "en": "Cyclomatic complexity V(G)",
+        "tr": "Çevrimsel karmaşıklık V(G)"
+      },
+      "body": {
+        "en": "**Cyclomatic complexity** V(G) (McCabe) rests on a graph theory result: the cyclomatic number of a **strongly connected** graph (every node reachable from every other node) is the number of **linearly independent circuits** in it (a circuit is like a chain whose initial and terminal node are the same). A single-entry, single-exit program graph becomes strongly connected when an edge is added from the sink to the source.\n\nTwo formulas appear in the literature (e = edges, n = nodes, p = connected regions):\n\n- **V(G) = e − n + 2p** on the original graph = number of linearly independent paths from source to sink.\n- **V(G) = e − n + p** on the strongly connected graph (one extra edge) = number of linearly independent circuits.\n\nBoth give the same value. Classic mistakes: e − n + p on the original graph gives one too few; e − n + 2p on the graph with the added edge gives one too many. Triangle DD-Path graph (17 nodes, 20 edges): V(G) = 20 − 17 + 2 = 5.\n\n**Worked example:** nodes S, A, B, C, D, E, T; edges S→A, A→B, A→C, A→D, B→E, C→E, D→E, E→A, E→T, so e = 9, n = 7, p = 1. V(G) = 9 − 7 + 2(1) = 4. With the added edge T→S: V(G) = 10 − 7 + 1 = 4. The wrong mixes give 9 − 7 + 1 = 3 and 10 − 7 + 2 = 5.",
+        "tr": "**Çevrimsel karmaşıklık (cyclomatic complexity)** V(G) (McCabe), graf kuramının bir sonucuna dayanır: **kuvvetli bağlı (strongly connected)** bir grafın (her düğüme diğer her düğümden ulaşılabilir) çevrimsel sayısı, içindeki **doğrusal bağımsız devrelerin (linearly independent circuits)** sayısıdır (devre, başlangıç ve bitiş düğümü aynı olan bir zincire benzer). Tek girişli, tek çıkışlı bir program grafı, hedeften (sink) kaynağa (source) bir kenar eklenince kuvvetli bağlı olur.\n\nLiteratürde iki formül görülür (e = kenar, n = düğüm, p = bağlı bölge sayısı):\n\n- Orijinal grafta **V(G) = e − n + 2p** = kaynaktan hedefe doğrusal bağımsız yol sayısı.\n- Kuvvetli bağlı grafta (bir fazla kenar) **V(G) = e − n + p** = doğrusal bağımsız devre sayısı.\n\nİkisi aynı değeri verir. Klasik hatalar: orijinal grafta e − n + p bir eksik verir; kenar eklenmiş grafta e − n + 2p bir fazla verir. Üçgen DD-Path grafı (17 düğüm, 20 kenar): V(G) = 20 − 17 + 2 = 5.\n\n**Çözümlü örnek:** düğümler S, A, B, C, D, E, T; kenarlar S→A, A→B, A→C, A→D, B→E, C→E, D→E, E→A, E→T; yani e = 9, n = 7, p = 1. V(G) = 9 − 7 + 2(1) = 4. T→S kenarı eklenince: V(G) = 10 − 7 + 1 = 4. Yanlış karışımlar 9 − 7 + 1 = 3 ve 10 − 7 + 2 = 5 verir."
+      },
+      "source": "pp. 145–147 (Figs 9.6–9.7)"
+    },
+    {
+      "id": "basis-path-method",
+      "title": {
+        "en": "McCabe's basis paths and the baseline method",
+        "tr": "McCabe'in temel yolları ve taban yol yöntemi"
+      },
+      "body": {
+        "en": "A **basis** of a vector space is a set of independent vectors that **span** it: every other vector can be expressed in terms of them. McCabe saw in the mid-1970s that if a program's paths form a vector space, its basis is a very interesting set of paths to test.\n\n- Path **addition** = one path followed by another; scalar **multiplication** = repetitions of a path. A path can then be written as, e.g., 2p2 − p1.\n- Two soft spots: testing the basis paths is **not sufficient**, and the vector view needs \"yoga-like contortions\": 2p2 means executing p2 twice, but what would −p1, the additive inverse with p1 + (−p1) = 0, mean? Executing p1 backward? Undoing its last execution? Not doing it next time? None makes sense for paths.\n\n**Baseline method:**\n\n- Choose a baseline path for \"normal case\" execution; McCabe advises **as many decision nodes as possible**.\n- Retrace it and **flip** each decision in turn: at a node with outdegree ≥ 2 take a different edge, then follow the baseline again, so the new path is minimally different.\n- Every outcome must be taken, so a decision with outdegree k yields k − 1 flipped paths. Stop at V(G) paths; a unique basis is not required.\n- Flipping traverses every decision outcome, so basis path coverage **guarantees DD-Path coverage**; flipped paths can be infeasible, though.\n\n**Worked example** (graph of the cyclomatic card, V(G) = 4): baseline S-A-B-E-T. Flip A (outdegree 3): S-A-C-E-T and S-A-D-E-T. Flip E: S-A-B-E-A-B-E-T. Total: 4 basis paths.",
+        "tr": "Bir vektör uzayının **temeli (basis)**, uzayı **geren (span)** bağımsız vektörler kümesidir: diğer her vektör onlar cinsinden yazılabilir. McCabe 1970'lerin ortasında şunu gördü: bir programın yolları bir vektör uzayı oluşturuyorsa, temeli test edilecek çok ilginç bir yol kümesidir.\n\n- Yol **toplama** = bir yolun ardından başka bir yol; skaler **çarpma** = bir yolun tekrarları. Böylece bir yol örneğin 2p2 − p1 olarak yazılabilir.\n- İki zayıf nokta: temel yolları (basis paths) test etmek **yeterli değildir** ve vektör uzayı bakışı \"yoga benzeri eğip bükmeler\" gerektirir: 2p2, p2'yi iki kez çalıştırmak demektir; ama p1 + (−p1) = 0 olmasını sağlayan toplama tersi −p1 ne anlama gelir? p1'i geriye doğru çalıştırmak mı? Son çalıştırmasını geri almak mı? Bir dahaki sefere yapmamak mı? Hiçbiri yollar için anlamlı değildir.\n\n**Taban yol yöntemi (baseline method):**\n\n- \"Normal durum\" çalışmasına karşılık gelen bir taban yol (baseline path) seç; McCabe **mümkün olduğunca çok karar düğümü** önerir.\n- Taban yolu yeniden izle ve her kararı sırayla **çevir (flip)**: çıkış derecesi (outdegree) ≥ 2 olan bir düğümde farklı bir kenar al, sonra yine taban yolu izle; böylece yeni yol en az farkla oluşur.\n- Her sonuç alınmalıdır; bu yüzden çıkış derecesi k olan bir karar k − 1 çevrilmiş yol verir. V(G) yolda dur; temelin tek (benzersiz) olması gerekmez.\n- Çevirme her karar sonucunu geçtiği için temel yol kapsamı **DD-Path kapsamını garanti eder**; ancak çevrilmiş yollar gerçekleştirilemez (infeasible) olabilir.\n\n**Çözümlü örnek** (çevrimsel karmaşıklık kartındaki graf, V(G) = 4): taban yol S-A-B-E-T. A'yı çevir (çıkış derecesi 3): S-A-C-E-T ve S-A-D-E-T. E'yi çevir: S-A-B-E-A-B-E-T. Toplam: 4 temel yol."
+      },
+      "source": "pp. 145–150"
+    },
+    {
+      "id": "feasible-paths",
+      "title": {
+        "en": "Feasible paths and what path testing cannot see",
+        "tr": "Gerçekleştirilebilir yollar ve yol testinin göremedikleri"
+      },
+      "body": {
+        "en": "A path is **topologically possible** if it exists in the graph; it is **feasible** only if some input can actually execute it. Basis paths are only topologically independent, and code-level dependencies can make them infeasible. Path formulations obscure this distinction.\n\n- Triangle DD-Path graph (V(G) = 5): baseline p1 = scalene. Flipping at B and at F gives p2 and p3, both infeasible; flipping at H and J gives equilateral and isosceles; no basis path covers Not a Triangle. Two rules explain this: if node C is traversed, H must be; if D is traversed, G must be. A feasible set: scalene, not a triangle, equilateral, isosceles.\n- The triangle graph has no loops: 2 routes through decision B times 4 routes after F (via G, I, K or L) give its topologically possible paths, yet only the four feasible paths above can execute.\n\n**Venn diagram (Fig 9.12):** S = specified behaviors, P = programmed behaviors (feasible paths), T = topologically possible paths.\n\n- Region 1 (S, P and T): the most desirable.\n- Regions 2 and 6 (P outside T): empty; every feasible path is topologically possible.\n- Region 3 (P and T, not S): feasible but unspecified; examine, then change the specification or remove the paths.\n- Region 4 (S and T, not P): specified, topologically possible, infeasible; very likely coding errors.\n- Region 5 (S only): specified, not implemented; path-based testing never recognizes it.\n- Region 7 (T only): unspecified, infeasible; a curiosity (careless maintenance could move it to region 3).",
+        "tr": "Bir yol grafta varsa **topolojik olarak mümkündür (topologically possible)**; ancak bir girdi onu gerçekten çalıştırabiliyorsa **gerçekleştirilebilirdir (feasible)**. Temel yollar (basis paths) yalnızca topolojik olarak bağımsızdır ve kod düzeyindeki bağımlılıklar onları gerçekleştirilemez (infeasible) yapabilir. Yol formülasyonları bu ayrımı gizler.\n\n- Üçgen DD-Path grafı (V(G) = 5): taban yol p1 = çeşitkenar (scalene). B'de ve F'de çevirmek p2 ve p3'ü verir, ikisi de gerçekleştirilemez; H'de ve J'de çevirmek eşkenar (equilateral) ve ikizkenarı (isosceles) verir; hiçbir temel yol Not a Triangle (üçgen değil) durumunu kapsamaz. Bunu iki kural açıklar: C düğümü geçilirse H de geçilmelidir; D geçilirse G de geçilmelidir. Gerçekleştirilebilir bir küme: çeşitkenar, üçgen değil, eşkenar, ikizkenar.\n- Üçgen grafında döngü yoktur: B kararından geçen 2 güzergâh ile F'den sonraki 4 güzergâhın (G, I, K veya L üzerinden) çarpımı topolojik olarak mümkün yollarını verir; ama yalnızca yukarıdaki dört gerçekleştirilebilir yol çalışabilir.\n\n**Venn şeması (Şekil 9.12):** S = belirtilmiş davranışlar (specified behaviors), P = programlanmış davranışlar (gerçekleştirilebilir yollar), T = topolojik olarak mümkün yollar.\n\n- Bölge 1 (S, P ve T): en arzu edilen.\n- Bölge 2 ve 6 (P'nin T dışındaki kısmı): boş; her gerçekleştirilebilir yol topolojik olarak mümkündür.\n- Bölge 3 (P ve T, S değil): gerçekleştirilebilir ama belirtilmemiş; incele, sonra spesifikasyonu değiştir ya da yolları kaldır.\n- Bölge 4 (S ve T, P değil): belirtilmiş, topolojik olarak mümkün, gerçekleştirilemez; büyük olasılıkla kodlama hataları.\n- Bölge 5 (yalnız S): belirtilmiş, gerçeklenmemiş; yol tabanlı test onu asla tanımaz.\n- Bölge 7 (yalnız T): belirtilmemiş, gerçekleştirilemez; bir merak konusu (özensiz bir bakım onu bölge 3'e taşıyabilir)."
+      },
+      "source": "pp. 149–150, 153–155 (Table 9.4, Fig 9.12)"
+    },
+    {
+      "id": "essential-complexity",
+      "title": {
+        "en": "Essential complexity and complexity guidelines",
+        "tr": "Öz karmaşıklık ve karmaşıklık yönergeleri"
+      },
+      "body": {
+        "en": "**Essential complexity** (McCabe 1982) is the cyclomatic complexity of yet another condensation graph: instead of strong components or DD-Paths, we collapse **structured programming constructs** (Fig 9.8: sequence, pre-test loop, post-test loop, if-then, if-then-else, case) into single nodes, one at a time, until none is left.\n\n- The triangle program condenses step by step (new nodes a, b, c, d, e) to a graph with V(G) = 1. A **well-structured** program (composed solely of structured constructs) can always be reduced to a graph with one path, so its essential complexity is 1.\n- McCabe's Fig 9.6 cannot be reduced, because it contains **unstructures** (McCabe 1976, Fig 9.11): branching into a loop, out of a loop, into a decision, out of a decision. Each has three distinct paths instead of two, so it raises cyclomatic complexity and the minimum number of test cases. Unstructures cannot occur alone: if one occurs there must be at least one more, so a program cannot be only slightly unstructured.\n\n**Guidelines:** high cyclomatic complexity requires more testing; **V(G) = 10** is a common maximum. Above it, simplify the unit or plan more testing; if essential complexity exceeds the guideline, often eliminate the unstructures. At least V(G) distinct paths must be traversed, so basis path testing gives a **lower boundary** on how much testing is necessary. McCabe: these are criteria that measure the quality of testing, \"not a procedure to identify test cases\".",
+        "tr": "**Öz karmaşıklık (essential complexity)** (McCabe 1982), bir başka yoğunlaştırma grafının (condensation graph) çevrimsel karmaşıklığıdır: kuvvetli bileşenleri ya da DD-Path'leri değil, **yapısal programlama yapılarını (structured programming constructs)** (Şekil 9.8: ardışıklık, ön testli döngü, son testli döngü, if-then, if-then-else, case) birer birer tek düğümlere çöktürürüz; hiç yapı kalmayana kadar.\n\n- Üçgen programı adım adım (yeni düğümler a, b, c, d, e) V(G) = 1 olan bir grafa yoğunlaşır. **İyi yapılandırılmış** (well-structured; yalnızca yapısal yapılardan oluşan) bir program her zaman tek yollu bir grafa indirgenebilir; bu yüzden öz karmaşıklığı 1'dir.\n- McCabe'in Şekil 9.6'sı indirgenemez, çünkü **yapısızlıklar (unstructures)** içerir (McCabe 1976, Şekil 9.11): döngünün içine dallanma, döngüden dışarı dallanma, kararın içine dallanma, karardan dışarı dallanma. Her birinde iki yerine üç farklı yol vardır; bu yüzden çevrimsel karmaşıklığı ve en az test durumu sayısını artırır. Yapısızlıklar tek başına oluşamaz: biri varsa en az bir tane daha olmalıdır; yani bir program yalnızca \"biraz\" yapısız olamaz.\n\n**Yönergeler:** yüksek çevrimsel karmaşıklık daha çok test gerektirir; yaygın üst sınır **V(G) = 10**'dur. Bunun üstünde birimi sadeleştir ya da daha fazla test planla; öz karmaşıklık yönergeyi aşıyorsa çoğu zaman yapısızlıkları kaldır. En az V(G) farklı yol geçilmelidir; bu yüzden temel yol testi gereken test miktarı için bir **alt sınır (lower boundary)** verir. McCabe: bunlar test kalitesini ölçen kriterlerdir, \"test durumu belirleme prosedürü değildir\"."
+      },
+      "source": "pp. 150–153 (Figs 9.8–9.11)"
+    }
+  ],
+  "questions": {
+    "1": {
+      "concept": "program-graph",
+      "explanation_tr": "Program grafı, düğümleri ifade parçaları (tam bir ifade \"varsayılan\" bir parçadır) ve kenarları kontrol akışını temsil eden yönlü bir graftır: j parçası i parçasından hemen sonra çalışabiliyorsa ve ancak o zaman i→j kenarı vardır. Düğümleri DD-Path olan graf program grafı değil, DD-Path grafıdır."
+    },
+    "2": {
+      "concept": "dd-paths",
+      "explanation_tr": "Düğüm 10'un giriş derecesi 1, çıkış derecesi 1'dir ve komşuları 9 ve 12 Durum 3 DD-Path'leridir; bu yüzden tek düğümlü bir Durum 4 DD-Path'idir (Tablo 9.1'deki DD-Path C). Durum 4 bu tür \"kısa dallar\" için gereklidir. Durum 5 ise 5–8 düğümleri (DD-Path A) gibi daha uzun zincirlere uygulanır."
+    },
+    "3": {
+      "concept": "dd-paths",
+      "explanation_tr": "Düğüm 1 Durum 1'dir (giriş derecesi = 0), 2–4 düğümleri tek bir maksimal zincir oluşturur (Durum 5), düğüm 5 (çıkış derecesi 2) ve düğüm 8 (giriş derecesi 2) Durum 3'tür, 6 ve 7 düğümleri Durum 4'tür ve düğüm 9 Durum 2'dir (çıkış derecesi = 0); toplam 7 DD-Path. Her düğümü ayrı saymak (9), bir zincirin tek bir DD-Path'e yoğunlaştırıldığını göz ardı eder; tıpkı üçgen programının 5–8 düğümlerinin DD-Path A olması gibi."
+    },
+    "4": {
+      "concept": "coverage-metrics",
+      "explanation_tr": "Çoğu kalite kuruluşu artık C1 metriğini kabul edilebilir en düşük kapsam düzeyi olarak bekler; ANSI Standard 187B ifade kapsamını (C0) zorunlu kılar ve Miller'ın hataların yaklaşık %85'i rakamı DD-Path kapsamına ulaşılmasıyla ilgilidir. Metrikler, bazılarının diğerlerince gerektirildiği bir kafes (lattice) oluşturur ve çoğu E. F. Miller'a (1977) aittir."
+    },
+    "5": {
+      "concept": "coverage-metrics",
+      "explanation_tr": "Tablo 9.2'de C1p, her yüklemin her sonuca götürülmesidir. C2, C1 + döngü kapsamıdır; Cd, C1 + her bağımlı DD-Path çiftidir; Cstat, yolların \"istatistiksel olarak anlamlı\" bir kesridir (tüm olası çalışma yolları C∞'dur); C0 her ifade, C1 ise her DD-Path'tir."
+    },
+    "6": {
+      "concept": "dd-path-coverage",
+      "explanation_tr": "Yol dokuz düğümün hepsini ziyaret eder, yani her ifade çalıştırılır (C0); ama 13 kenardan yalnızca 10'unu geçer: B→D, C→F ve E→D atlanır, bu yüzden C1'e ulaşılmaz. Her kenarı geçmek her düğümü de ziyaret etmek demektir; bu yüzden C0 olmadan C1 olamaz."
+    },
+    "7": {
+      "concept": "multiple-condition-coverage",
+      "explanation_tr": "16. satıra yalnızca (a = b) AND (b = c) yanlış olduğunda ulaşılır; bu yüzden üç kenarın hepsi birden eşit olamaz ve 16. satırın sekiz satırlık doğruluk tablosundaki hepsi-yanlış satırı oluşamaz. Listelenen diğer satırlar oluşur; örneğin hepsi doğru için (3, 4, 5), tek koşulun yanlış olduğu durumlar için (3, 3, 4), (3, 4, 3), (4, 3, 3)."
+    },
+    "8": {
+      "concept": "multiple-condition-coverage",
+      "explanation_tr": "Kenarları 14→15, 14→16, 15→20, 16→17, 16→18, 17→19, 18→19, 19→20 olan 14–20 düğümleri V(G) = 8 − 7 + 2 = 3 verir. Basit koşullu iç içe if-then-else mantığı her basit koşulu ayrı bir karar yapar ve daha fazla DD-Path üretir (örneğin dört kararlı bir iç içe sürümde V(G) = 5): ifade karmaşıklığı, yol karmaşıklığıyla takas edilir."
+    },
+    "9": {
+      "concept": "multiple-condition-coverage",
+      "explanation_tr": "(3 = 4) yanlıştır, bu yüzden kontrol 16. satıra ulaşır; orada a ≠ c yanlıştır, bileşik koşul sağlanmaz ve 18. satır Isosceles (ikizkenar) çıktısını verir; bu, iki kenarı eşit bir üçgen için doğru cevaptır. a = c'nin 14. satırdan çıkarılması sorun değildir, çünkü a = b ve b = c zaten a = c'yi gerektirir."
+    },
+    "10": {
+      "concept": "loop-coverage",
+      "explanation_tr": "Bir döngü test edildikten sonra tek bir düğüme yoğunlaştırılır; iç içe döngülerde bu işlem en içteki döngüden başlayıp dışa doğru tekrarlanır ve sınır değer analiziyle aynı çoklukta test durumu verir. Dikkatli veri akışı analizi, yapısal programlarda oluşamayan düğümlü (korkunç) döngüler için ayrılmıştır."
+    },
+    "11": {
+      "concept": "dd-path-coverage",
+      "explanation_tr": "Test eden, test durumlarını analizci tarafından \"enstrümante edilmiş\" bir program üzerinde çalıştırır; enstrümantasyon tüm DD-Path'leri belirleyip etiketler ve çalışma sırasında analizci her test durumunun geçtiği DD-Path'leri tablolar; böylece farklı test kümeleri karşılaştırılabilir."
+    },
+    "12": {
+      "concept": "cyclomatic-complexity",
+      "explanation_tr": "Kuvvetli bağlı graf için kitap V(G) = e − n + p = 11 − 7 + 1 = 5 devre kullanır; orijinal graf da A'dan G'ye aynı 5 bağımsız yolu V(G) = e − n + 2p = 10 − 7 + 2(1) ile verir. Eklenmiş kenarı zaten içeren grafa e − n + 2p uygulamak yanlışlıkla 6 verir."
+    },
+    "13": {
+      "concept": "cyclomatic-complexity",
+      "explanation_tr": "Grafta e = 13 kenar, n = 9 düğüm ve p = 1 vardır; dolayısıyla V(G) = e − n + 2p = 13 − 9 + 2 = 6 (last→first kenarı eklenip e − n + p kullanılırsa da 14 − 9 + 1 = 6 çıkar). Değiştirilmemiş grafa e − n + p uygulamak yanlışlıkla 5 verir."
+    },
+    "14": {
+      "concept": "basis-path-method",
+      "explanation_tr": "C'yi çevirmek, C→F yerine C→D'yi almak ve sonra taban yolu (F, G, last) yeniden izlemek demektir; sonuç first-A-B-C-D-F-G-last'tır. Diğer seçenekler B'yi, B ile E'yi, G'yi ya da hem C'yi hem G'yi çevirir. Taban yol ile B'deki (iki), C'deki, E'deki ve G'deki çevirmelerle temel V(G) = 6 yoldan oluşur."
+    },
+    "15": {
+      "concept": "basis-path-method",
+      "explanation_tr": "Çevirme, her karar sonucunun geçilmesini sağlamalıdır (temel yol kapsamının DD-Path kapsamını garanti etmesinin nedeni budur); bu yüzden B→D ve B→E'nin her biri kendi çevrilmiş yoluna ihtiyaç duyar ve B, V(G) = 6 temel yolun 2'sini oluşturur. B→C üzerinden geçen bir yol yalnızca taban yolun sonucunu tekrarlar."
+    },
+    "16": {
+      "concept": "basis-path-method",
+      "explanation_tr": "Bir −p1 yolu, p1 + (−p1) = 0 olacak şekilde p1'i yok etmelidir; kitap bunun p1'i geriye doğru çalıştırmak mı, son çalıştırmasını geri almak mı yoksa bir dahaki sefere yapmamak mı anlamına geldiğini sorar; hiçbiri yollar için anlamlı değildir. Buna karşılık 2p2 gibi bir kat, basitçe p2'yi iki kez çalıştırmak demektir."
+    },
+    "17": {
+      "concept": "basis-path-method",
+      "explanation_tr": "Kararları çevirme süreci her karar sonucunun geçilmesini garanti eder; bu da DD-Path kapsamıdır. Kitap şunları vurgular: temel yolları test etmek yeterli değildir, McCabe mümkün olduğunca çok karar düğümü içeren bir taban yol önerir, temelin tek (benzersiz) olması gerekmez ve çevrilmiş yollar (üçgen programının p2 ve p3'ü) gerçekleştirilemez olabilir."
+    },
+    "18": {
+      "concept": "feasible-paths",
+      "explanation_tr": "B kararındaki iki sonuç ile F'den sonraki dört güzergâh (G, I, K veya L üzerinden) çarpılınca 2 × 4 = 8 topolojik olarak mümkün yol çıkar, ama yalnızca çeşitkenar, üçgen değil, eşkenar ve ikizkenar için olan dört yol gerçekleştirilebilirdir. Beş, temel yolların sayısıdır (V(G) = 5) ve bunların ikisi gerçekleştirilemez."
+    },
+    "19": {
+      "concept": "essential-complexity",
+      "explanation_tr": "Öz karmaşıklık, yapısal programlama yapılarının tekrar tekrar tek düğümlere çöktürülmesiyle elde edilen yoğunlaştırma grafının çevrimsel karmaşıklığıdır. İyi yapılandırılmış bir program tek yollu bir grafa indirgenir; bu yüzden öz karmaşıklığı, üçgen programında olduğu gibi V(G) = 1'dir."
+    },
+    "20": {
+      "concept": "essential-complexity",
+      "explanation_tr": "Çevrimsel karmaşıklık metriği en az V(G) farklı program yolunun geçilmesini gerektirir; bu yüzden temel yol testi test miktarı için bir alt sınır verir. Yaygın yönerge V(G) = 10'dur, yapısızlıklar asla tek başına oluşmaz, McCabe metrikleri test durumu belirleme prosedürü değil test kalitesini ölçen kriterler olarak adlandırmıştır ve yol formülasyonları gerçekleştirilebilirliği gizler."
+    },
+    "21": {
+      "concept": "feasible-paths",
+      "explanation_tr": "Bölge 5'te (belirtilmiş ama gerçeklenmemiş) hiç program yolu yoktur, bu yüzden yol tabanlı test onu asla tanımaz. Bölge 3 (gerçekleştirilebilir ama belirtilmemiş) incelenmesi gereken ek işlevselliktir, bölge 4 (belirtilmiş, topolojik olarak mümkün ama gerçekleştirilemez) büyük olasılıkla kodlama hatalarına işaret eder ve bölge 7 (belirtilmemiş, gerçekleştirilemez) bir merak konusudur."
+    }
+  }
+}

@@ -1,0 +1,278 @@
+{
+  "intro": {
+    "en": "How good is a test suite? This set gives two complementary answers. Code coverage measures how much of the code the tests execute, using criteria such as statement, branch, condition, path, loop and MC/DC coverage. Mutation testing deliberately injects small faults (mutants) into the code and checks whether the tests actually detect them, which shows how strong the tests really are.",
+    "tr": "Bir test paketi (test suite) ne kadar iyi? Bu set birbirini tamamlayan iki yanıt verir. Kod kapsamı (code coverage), deyim, dal, koşul, yol, döngü ve MC/DC kapsamı gibi ölçütlerle testlerin kodun ne kadarını yürüttüğünü ölçer. Mutasyon testi (mutation testing) ise koda bilerek küçük hatalar (mutantlar) ekler ve testlerin bunları gerçekten fark edip etmediğini kontrol eder; böylece testlerin gerçekte ne kadar güçlü olduğunu gösterir."
+  },
+  "concepts": [
+    {
+      "id": "coverage-basics",
+      "title": {
+        "en": "What code coverage is, and function coverage",
+        "tr": "Kod kapsamı nedir ve fonksiyon kapsamı"
+      },
+      "body": {
+        "en": "Code coverage tells you which parts of the program your tests have run, and so which parts no test has ever touched.\n\n- **Code coverage:** a metric that quantifies how much of a program's source code is executed when the test suite runs.\n- It is a **white-box** metric: measuring it requires access to the source code. The textbook agrees: coverage metrics belong to structural (white-box) testing, where the implementation is known and used.\n- Coverage shows what was **executed**, not whether the results were **checked**. High coverage alone does not prove that the tests are good, and coverage does not count detected faults.\n\nGeneral formula: Code Coverage = (Covered items / Total items) × 100. The item depends on the criterion: statements, lines, branches, conditions, functions or paths.\n\n**Function coverage:** has each function (or method) been called at least once? Function Coverage = (Functions called / Total functions) × 100. It is the weakest criterion: a called function may still contain untested code, and that untested code does not lower the number.\n\n**Example:** a module has 10 functions and the tests call 7 of them → 7 / 10 × 100 = 70%, even if some of the called functions contain lines that never run.",
+        "tr": "Kod kapsamı (code coverage), testlerin programın hangi kısımlarını çalıştırdığını, dolayısıyla hangi kısımlara hiçbir testin dokunmadığını gösterir.\n\n- **Kod kapsamı:** test paketi (test suite) çalışırken bir programın kaynak kodunun ne kadarının yürütüldüğünü sayısal olarak ölçen bir metriktir.\n- **Beyaz kutu (white-box)** bir metriktir: ölçmek için kaynak koda erişim gerekir. Ders kitabı da aynı görüştedir: kapsam metrikleri, gerçekleştirimin bilinip kullanıldığı yapısal (structural, beyaz kutu) teste aittir.\n- Kapsam neyin **yürütüldüğünü** gösterir, sonuçların **kontrol edilip edilmediğini** göstermez. Yüksek kapsam tek başına testlerin iyi olduğunu kanıtlamaz; kapsam bulunan hataları da saymaz.\n\nGenel formül: Code Coverage = (Covered items / Total items) × 100. \"Öğe\" (item) ölçüte bağlıdır: deyimler, satırlar, dallar, koşullar, fonksiyonlar ya da yollar.\n\n**Fonksiyon kapsamı (function coverage):** her fonksiyon (ya da metot) en az bir kez çağrıldı mı? Function Coverage = (Functions called / Total functions) × 100. En zayıf ölçüttür: çağrılan bir fonksiyon yine de test edilmemiş kod içerebilir ve bu test edilmemiş kod sayıyı düşürmez.\n\n**Örnek:** bir modülde 10 fonksiyon var ve testler bunların 7'sini çağırıyor → 7 / 10 × 100 = 70%; çağrılan fonksiyonların bazılarında hiç çalışmayan satırlar olsa bile."
+      },
+      "source": "slides 2–5, 8; textbook ch. 1 (pp. 8–9)"
+    },
+    {
+      "id": "statement-branch-line",
+      "title": {
+        "en": "Statement, branch and line coverage (textbook: C0, C1, C1p)",
+        "tr": "Deyim, dal ve satır kapsamı (ders kitabında: C0, C1, C1p)"
+      },
+      "body": {
+        "en": "Statement and branch coverage are the most common criteria. Branch coverage is stricter, because it also asks about decision outcomes that were never taken.\n\n- **Statement coverage** (block coverage): has each statement been executed at least once? Statement Coverage = (Statements executed / Total statements) × 100.\n- **Branch coverage** (decision coverage): has every possible outcome (true and false) of each decision point, such as `if`, `while` or `switch`, been executed? Branch Coverage = (Branch outcomes executed / Total branch outcomes) × 100. Every two-way decision has 2 outcomes, even an `if` without an `else`: its false outcome simply skips the body.\n- **Line coverage:** Line Coverage = (Executed lines / Total executable lines) × 100. It differs from statement coverage when one line contains several statements, e.g. `if (x > 0) y = 1;`.\n\nNaming differs: the slides say statement and branch coverage; the textbook (Jorgensen) uses **C0** = every statement, **C1** = every DD-Path (decision-to-decision path), i.e. every predicate outcome, and **C1p** = every predicate to each outcome. A predicate is the condition of a decision.\n\n**Example:** `if (n < 0) n = -n;` tested only with n = 4: the condition is false, so the statement `n = -n` never runs and only 1 of 2 branch outcomes (50%) is covered.",
+        "tr": "Deyim kapsamı (statement coverage) ve dal kapsamı (branch coverage) en yaygın ölçütlerdir. Dal kapsamı daha katıdır, çünkü hiç alınmamış karar (decision) sonuçlarını da sorar.\n\n- **Deyim kapsamı (blok kapsamı/block coverage):** her deyim en az bir kez yürütüldü mü? Statement Coverage = (Statements executed / Total statements) × 100.\n- **Dal kapsamı (karar kapsamı/decision coverage):** `if`, `while` ya da `switch` gibi her karar noktasının olası her sonucu (true ve false) yürütüldü mü? Branch Coverage = (Branch outcomes executed / Total branch outcomes) × 100. İki yönlü her kararın 2 sonucu vardır; `else`'i olmayan bir `if`'in bile: false sonucu gövdeyi atlar.\n- **Satır kapsamı (line coverage):** Line Coverage = (Executed lines / Total executable lines) × 100. Bir satırda birden çok deyim olduğunda deyim kapsamından farklılaşır; örn. `if (x > 0) y = 1;`.\n\nAdlandırma farklıdır: slaytlar deyim ve dal kapsamı der; ders kitabı (Jorgensen) ise **C0** = her deyim, **C1** = her DD-Path (decision-to-decision path, karardan karara yol), yani her yüklem (predicate) sonucu ve **C1p** = her yüklemin her sonuca götürülmesi terimlerini kullanır. Yüklem, bir kararın koşuludur.\n\n**Örnek:** `if (n < 0) n = -n;` yalnızca n = 4 ile test ediliyor: koşul false olduğu için `n = -n` deyimi hiç çalışmaz ve 2 dal sonucundan yalnızca 1'i (50%) kapsanır."
+      },
+      "source": "slides 6–7, 12; textbook ch. 9, Table 9.2 (p. 143)"
+    },
+    {
+      "id": "condition-coverage",
+      "title": {
+        "en": "Condition coverage and why it differs from branch coverage",
+        "tr": "Koşul kapsamı ve dal kapsamından farkı"
+      },
+      "body": {
+        "en": "A decision can be built from several Boolean conditions joined by `&&` or `||`. Condition coverage looks inside the decision at each condition separately.\n\n- **Condition coverage:** has each Boolean condition (sub-expression) inside a decision evaluated to both true and false?\n- Formula: Condition Coverage = (Condition outcomes exercised / (2 × Number of conditions)) × 100. Each condition has 2 outcomes, so `if (A && B)` has 4 condition outcomes.\n- **Short-circuit evaluation:** `&&` stops as soon as a condition is false and `||` stops as soon as one is true, so the later conditions are not evaluated in that test and take no value. The slides' condition-vs-branch example (slide 10) assumes no short-circuit evaluation (every condition is evaluated in every test).\n- **100% condition coverage does not guarantee 100% branch coverage**, and branch coverage does not guarantee condition coverage. Condition/Decision coverage and MC/DC require both.\n\n**Example:** `if (A || B)`, no short-circuit, tests (A = true, B = false) and (A = false, B = true): each condition takes both values, so condition coverage is 100%; but the decision is true in both tests, so its false outcome is never taken and branch coverage is only 50%.\n\nTip: for each test, write down which conditions are evaluated, their values and each decision's outcome, then count.",
+        "tr": "Bir karar (decision), `&&` ya da `||` ile birleştirilmiş birkaç Boole (Boolean) koşulundan oluşabilir. Koşul kapsamı (condition coverage) kararın içine bakar ve her koşulu ayrı ayrı inceler.\n\n- **Koşul kapsamı:** bir karardaki her Boole koşulu (alt ifade) hem true hem false olarak değerlendirildi mi?\n- Formül: Condition Coverage = (Condition outcomes exercised / (2 × Number of conditions)) × 100. Her koşulun 2 sonucu vardır; bu yüzden `if (A && B)` kararında 4 koşul sonucu vardır.\n- **Kısa devre değerlendirme (short-circuit evaluation):** `&&` bir koşul false olur olmaz, `||` ise bir koşul true olur olmaz durur; bu yüzden sonraki koşullar o testte değerlendirilmez ve değer almaz. Slaytlardaki koşul-dal karşılaştırma örneği (slayt 10) kısa devre olmadığını (her testte her koşulun değerlendirildiğini) varsayar.\n- **100% koşul kapsamı 100% dal kapsamını (branch coverage) garanti etmez**; dal kapsamı da koşul kapsamını garanti etmez. Koşul/Karar kapsamı (Condition/Decision coverage) ve MC/DC ikisini birden gerektirir.\n\n**Örnek:** `if (A || B)`, kısa devre yok, testler (A = true, B = false) ve (A = false, B = true): her koşul iki değeri de alır, bu yüzden koşul kapsamı 100% olur; ama karar iki testte de true olduğu için false sonucu hiç alınmaz ve dal kapsamı yalnızca 50% olur.\n\nİpucu: her test için hangi koşulların değerlendirildiğini, değerlerini ve her kararın sonucunu yaz, sonra say."
+      },
+      "source": "slides 9–10, 14, 22"
+    },
+    {
+      "id": "path-loop-coverage",
+      "title": {
+        "en": "Path coverage, infeasible paths and loop coverage",
+        "tr": "Yol kapsamı, yürütülemez yollar ve döngü kapsamı"
+      },
+      "body": {
+        "en": "Path coverage asks whether every route through a function has been run; loop coverage asks whether each loop has run with different numbers of iterations.\n\n**Path coverage:** Path Coverage = (Paths executed / Total feasible paths) × 100, where a path is one possible execution from entry to exit.\n- n independent `if` statements can create up to 2^n paths; loops can create an unbounded number.\n- Some paths are **infeasible**: no input can execute them, e.g. because they need contradictory conditions. Only feasible paths count, and 100% path coverage is rarely practical.\n- The textbook separates **topologically possible** paths (all paths in the program graph) from **feasible** ones; its triangle program has 8 topologically possible paths but only 4 feasible.\n\n**Example:** `if (x < 0) a = 1; if (x > 100) b = 1;` gives 2^2 = 4 paths; true-then-true needs x < 0 and x > 100 at once, so it is infeasible and 3 feasible paths remain.\n\n**Loop coverage:** run each loop with zero, one and multiple iterations. With a known maximum (max), also test max − 1 and max, and try max + 1: off-by-one errors often hide at these boundaries. A `while` decision is true each time the body runs and false once when the loop exits.\n\nThe slides treat loop coverage as its own criterion; the textbook tests loops by boundary value (up to robustness) testing of the loop index and defines **C2** = C1 coverage + loop coverage.",
+        "tr": "Yol kapsamı (path coverage) bir fonksiyondaki her güzergâhın çalıştırılıp çalıştırılmadığını; döngü kapsamı (loop coverage) ise her döngünün farklı yineleme sayılarıyla çalışıp çalışmadığını sorar.\n\n**Yol kapsamı:** Path Coverage = (Paths executed / Total feasible paths) × 100; burada yol, girişten çıkışa kadar olası bir yürütmedir.\n- n bağımsız `if` deyimi en fazla 2^n yol oluşturabilir; döngüler ise sınırsız sayıda yol oluşturabilir.\n- Bazı yollar **yürütülemez (infeasible)**: hiçbir girdi onları çalıştıramaz; örneğin birbiriyle çelişen koşullar gerektirdikleri için. Yalnızca yürütülebilir (feasible) yollar sayılır ve 100% yol kapsamı nadiren pratiktir.\n- Ders kitabı **topolojik olarak olası (topologically possible)** yolları (program grafiğindeki tüm yollar) **yürütülebilir** yollardan ayırır; kitaptaki üçgen programının 8 topolojik olarak olası yolu vardır, ama yalnızca 4'ü yürütülebilirdir.\n\n**Örnek:** `if (x < 0) a = 1; if (x > 100) b = 1;` 2^2 = 4 yol verir; true-sonra-true yolu aynı anda x < 0 ve x > 100 gerektirir, bu yüzden yürütülemez ve 3 yürütülebilir yol kalır.\n\n**Döngü kapsamı:** her döngüyü sıfır, bir ve birden çok yinelemeyle çalıştır. Bilinen bir maksimum (max) varsa max − 1 ve max'ı da test et, max + 1'i de dene: bir-fazla/bir-eksik (off-by-one) hataları çoğu zaman bu sınırlarda saklanır. Bir `while` kararı, gövde her çalıştığında true, döngüden çıkılırken bir kez false olur.\n\nSlaytlar döngü kapsamını ayrı bir ölçüt olarak ele alır; ders kitabı ise döngüleri, döngü indeksine sınır değer testi (boundary value testing; sağlamlık/robustness testine kadar) uygulayarak sınar ve **C2** = C1 kapsamı + döngü kapsamı olarak tanımlar."
+      },
+      "source": "slides 11, 13–14; textbook ch. 9 (pp. 143–145, 150)"
+    },
+    {
+      "id": "subsumption-mcdc",
+      "title": {
+        "en": "Subsumption and MC/DC",
+        "tr": "İçerme ilişkisi (subsumption) ve MC/DC"
+      },
+      "body": {
+        "en": "Coverage criteria can be ranked by strength with the subsumption relation. MC/DC is a strong criterion used for safety-critical software.\n\n**Subsumption:** criterion A subsumes criterion B if every test set that satisfies A also satisfies B (arrow A → B); the converse need not hold. The stronger (subsuming) criterion needs more tests but gives more confidence.\n- Slide diagram: Path, MC/DC and Condition/Decision sit above Branch (Decision); Branch subsumes Statement, but not the other way round; Condition and Branch do not subsume each other; Function is at the bottom.\n- Textbook: in its similar lattice of metrics, C1 (every edge, i.e. every predicate outcome) implies C0 (every statement).\n\n**MC/DC (Modified Condition/Decision Coverage):** every condition and every decision takes both true and false, and each condition is shown to **independently affect** the outcome: changing only that condition changes the decision.\n- For n conditions, MC/DC can often be achieved with n + 1 tests instead of the 2^n tests needed to try every combination. The textbook calls the full truth table **multiple condition coverage (CMCC)**: 3 simple conditions → 8 rows → 8 test cases.\n- MC/DC is required for the most safety-critical avionics software (DO-178C, Level A).\n\n**Example:** `A && B && C` with n + 1 = 4 tests: (T, T, T) → true; (F, T, T), (T, F, T), (T, T, F) → false. Each false test differs from the first one in exactly one condition and flips the result. For `A || B || C` the pattern is mirrored: (F, F, F) → false; (T, F, F), (F, T, F), (F, F, T) → true.",
+        "tr": "Kapsam ölçütleri (coverage criteria), içerme ilişkisiyle (subsumption) güçlerine göre sıralanabilir. MC/DC, güvenlik açısından kritik yazılımlarda kullanılan güçlü bir ölçüttür.\n\n**İçerme (subsumption):** A'yı sağlayan her test kümesi B'yi de sağlıyorsa, A ölçütü B ölçütünü içerir (subsumes) (A → B oku); tersinin geçerli olması gerekmez. Daha güçlü (içeren) ölçüt daha fazla test gerektirir ama daha fazla güven verir.\n- Slayttaki diyagram: yol (Path), MC/DC ve koşul/karar (Condition/Decision) kapsamı, dal (Branch/Decision) kapsamının üstündedir; dal kapsamı deyim (Statement) kapsamını içerir, ama tersi geçerli değildir; koşul (Condition) kapsamı ile dal kapsamı birbirini içermez; fonksiyon (Function) kapsamı en alttadır.\n- Ders kitabı: metriklerinin benzer kafesinde (lattice) C1 (her kenar/edge, yani her yüklem/predicate sonucu) sağlanınca C0 (her deyim) de sağlanır.\n\n**MC/DC (Modified Condition/Decision Coverage, değiştirilmiş koşul/karar kapsamı):** her koşul ve her karar hem true hem false değerini alır ve her koşulun sonucu **bağımsız olarak etkilediği** gösterilir: yalnızca o koşulu değiştirmek kararı değiştirir.\n- n koşul için MC/DC çoğu zaman n + 1 testle sağlanabilir; her kombinasyonu denemek ise 2^n test gerektirir. Ders kitabı tam doğruluk tablosunu (truth table) **çoklu koşul kapsamı (multiple condition coverage, CMCC)** olarak adlandırır: 3 basit koşul → 8 satır → 8 test durumu.\n- MC/DC, güvenlik açısından en kritik aviyonik yazılımlar için zorunludur (DO-178C, Level A).\n\n**Örnek:** `A && B && C` için n + 1 = 4 test: (T, T, T) → true; (F, T, T), (T, F, T), (T, T, F) → false. Her false testi ilk testten tam olarak bir koşulda ayrılır ve sonucu tersine çevirir. `A || B || C` için desen tersine döner: (F, F, F) → false; (T, F, F), (F, T, F), (F, F, T) → true."
+      },
+      "source": "slides 15–16; textbook ch. 9 (pp. 142–144)"
+    },
+    {
+      "id": "coverage-pros-cons",
+      "title": {
+        "en": "Advantages, limits and tools of code coverage",
+        "tr": "Kod kapsamının avantajları, sınırları ve araçları"
+      },
+      "body": {
+        "en": "Coverage is a useful tool, but only if you know what it can and cannot tell you.\n\nAdvantages:\n- It reveals the code that no test executes, and exposes dead or unreachable code.\n- It guides the design of additional test cases.\n- It is an objective, quantitative measure that continuous integration (CI) can check automatically (e.g. coverage of new code must not drop); well-covered code is protected by regression tests when it changes.\n\nDisadvantages:\n- It shows what was executed, not what was verified: a test without any assertion can still reach 100%.\n- It cannot directly measure the fault-detection ability of tests; mutation testing does that.\n- It cannot detect missing code (**faults of omission**): if a requirement was never implemented, there is no code to cover. The textbook says the same: specified but not programmed behavior (S − P) is a fault of omission that structural testing cannot see.\n- 100% is often impossible because of infeasible paths and defensive code that cannot be triggered.\n- **Goodhart's law:** when coverage becomes a target, developers may write shallow tests just to raise the number.\n- Error-handling code is hard to cover; it often needs mocks, stubs or fault injection so that the error really happens.\n\nCoverage tools: JaCoCo (Java), Istanbul/nyc (JS/TS), coverage.py (Python), gcov (C/C++), Coverlet (.NET). Codecov, Coveralls and SonarQube only collect and display reports.",
+        "tr": "Kapsam (coverage) yararlı bir araçtır, ama yalnızca neyi söyleyip neyi söyleyemeyeceğini biliyorsan.\n\nAvantajları:\n- Hiçbir testin yürütmediği kodu gösterir; ölü (dead) ya da erişilemeyen (unreachable) kodu ortaya çıkarır.\n- Ek test durumlarının (test cases) tasarlanmasına yol gösterir.\n- Sürekli entegrasyonun (continuous integration, CI) otomatik olarak kontrol edebildiği nesnel, sayısal bir ölçüttür (örn. yeni kodun kapsamı düşmemeli); iyi kapsanmış kod, değiştiğinde gerileme testleriyle (regression tests) korunur.\n\nDezavantajları:\n- Neyin yürütüldüğünü gösterir, neyin doğrulandığını değil: hiç doğrulama (assertion) içermeyen bir test bile 100%'e ulaşabilir.\n- Testlerin hata bulma yeteneğini doğrudan ölçemez; bunu mutasyon testi (mutation testing) yapar.\n- Eksik kodu (**ihmal hataları, faults of omission**) tespit edemez: bir gereksinim hiç gerçekleştirilmediyse kapsanacak kod yoktur. Ders kitabı da aynısını söyler: belirtilmiş ama programlanmamış davranış (S − P), yapısal testin göremeyeceği bir ihmal hatasıdır.\n- Yürütülemez yollar ve tetiklenemeyen savunma amaçlı (defensive) kod yüzünden 100% çoğu zaman imkânsızdır.\n- **Goodhart yasası (Goodhart's law):** kapsam bir hedef hâline gelince geliştiriciler yalnızca sayıyı yükseltmek için yüzeysel testler yazabilir.\n- Hata işleme (error-handling) kodunu kapsamak zordur; hatanın gerçekten oluşması için çoğu zaman mock, saplama (stub) ya da hata enjeksiyonu (fault injection) gerekir.\n\nKapsam araçları: JaCoCo (Java), Istanbul/nyc (JS/TS), coverage.py (Python), gcov (C/C++), Coverlet (.NET). Codecov, Coveralls ve SonarQube yalnızca raporları toplar ve gösterir."
+      },
+      "source": "slides 17–21, 37; textbook ch. 1 (pp. 6, 10)"
+    },
+    {
+      "id": "mutation-basics",
+      "title": {
+        "en": "Mutation testing: key idea, history, hypotheses and tools",
+        "tr": "Mutasyon testi: temel fikir, tarihçe, hipotezler ve araçlar"
+      },
+      "body": {
+        "en": "Coverage tells you that code was run; mutation testing asks whether your tests would notice if that code were wrong.\n\n- **Mutation testing:** a fault-based, white-box technique for evaluating the quality of a test suite. Small changes (mutations) are deliberately made to the source code; each modified version of the program is a **mutant**. If the tests detect the change, the suite is effective; if not, the tests have a weakness.\n- Key idea: mutation testing **tests the tests**, not the program.\n- History: first proposed by Richard Lipton in 1971; formalised by DeMillo, Lipton and Sayward in 1978.\n\nWhy small mutations work (DeMillo, Lipton and Sayward, 1978):\n- **Competent Programmer Hypothesis:** programmers usually write code that is close to correct, so real faults are often small deviations, such as `<` instead of `<=`.\n- **Coupling Effect:** tests that detect simple faults also tend to detect more complex faults made of several simple ones.\nTogether they suggest that a suite that kills simple mutants is also good at finding real faults.\n\nMutation tools: PIT (Pitest) for Java; Stryker for JavaScript/TypeScript, C# and Scala; mutmut and Cosmic Ray for Python; Mull for C/C++. Do not mix them up with coverage tools such as JaCoCo (Java), or with Codecov, which only displays reports.\n\n**Example:** a mutant changes `total + tax` to `total - tax`; a test with total = 100 and tax = 5 now gets 95 instead of 105 and fails, so the tests noticed the change.",
+        "tr": "Kapsam (coverage), kodun çalıştırıldığını söyler; mutasyon testi (mutation testing) ise o kod yanlış olsaydı testlerin bunu fark edip etmeyeceğini sorar.\n\n- **Mutasyon testi:** bir test paketinin kalitesini değerlendirmek için kullanılan, hata tabanlı (fault-based) bir beyaz kutu tekniğidir. Kaynak kodda bilerek küçük değişiklikler (mutasyonlar) yapılır; programın değiştirilmiş her sürümüne **mutant** denir. Testler değişikliği fark ederse paket etkilidir; fark etmezse testlerin bir zayıflığı vardır.\n- Temel fikir: mutasyon testi programı değil, **testleri test eder**.\n- Tarihçe: ilk kez 1971'de Richard Lipton tarafından önerildi; 1978'de DeMillo, Lipton ve Sayward tarafından biçimselleştirildi.\n\nKüçük mutasyonlar neden işe yarar (DeMillo, Lipton ve Sayward, 1978):\n- **Yetkin Programcı Hipotezi (Competent Programmer Hypothesis):** programcılar genellikle doğruya yakın kod yazar, bu yüzden gerçek hatalar çoğu zaman `<=` yerine `<` gibi küçük sapmalardır.\n- **Bağlaşım Etkisi (Coupling Effect):** basit hataları bulan testler, birkaç basit hatadan oluşan daha karmaşık hataları da bulma eğilimindedir.\nBirlikte, basit mutantları öldüren bir paketin gerçek hataları bulmakta da iyi olduğunu düşündürürler.\n\nMutasyon araçları: Java için PIT (Pitest); JavaScript/TypeScript, C# ve Scala için Stryker; Python için mutmut ve Cosmic Ray; C/C++ için Mull. Bunları JaCoCo (Java) gibi kapsam araçlarıyla ya da yalnızca rapor gösteren Codecov ile karıştırma.\n\n**Örnek:** bir mutant `total + tax` ifadesini `total - tax` yapar; total = 100 ve tax = 5 olan bir test artık 105 yerine 95 alır ve başarısız olur, yani testler değişikliği fark etmiştir."
+      },
+      "source": "slides 17, 23–25, 36"
+    },
+    {
+      "id": "mutation-process-score",
+      "title": {
+        "en": "Mutation testing process, key terms and mutation score",
+        "tr": "Mutasyon testi süreci, temel terimler ve mutasyon skoru"
+      },
+      "body": {
+        "en": "Mutation testing follows a fixed loop, and its result is summarised in one number, the mutation score.\n\nThe process:\n- Start from the original program (all tests pass).\n- Create mutants by applying mutation operators.\n- Run the test suite on each mutant.\n- At least one test fails → the mutant is **killed**. All tests pass → the mutant **survived**.\n- Analyse each survivor: is it equivalent, or is a test missing? Add or improve tests (they must pass on the original).\n- Repeat until the mutation score is acceptable.\n\nKey terms:\n- **Mutation operator:** a rule that creates mutants, e.g. replace `<` with `<=`, or delete a statement.\n- **Survived (live) mutant:** the change went unnoticed.\n- **Equivalent mutant:** syntactically different from the original but behaves exactly the same; no test can kill it.\n- **Stillborn mutant:** a mutant that does not compile; it is discarded and not counted.\n\n**Mutation Score = Killed mutants / (Total mutants − Equivalent mutants) × 100.** Stillborn mutants are discarded before counting. Because equivalent mutants are usually unknown, many tools simply report killed / total mutants.\n\n**Example (slides):** 100 mutants, 5 do not compile → 95 remain. The tests kill 80 and 15 survive; 5 survivors are equivalent. Score = 80 / (95 − 5) × 100 ≈ 88.9%. The other 10 survivors reveal weaknesses in the tests.",
+        "tr": "Mutasyon testi (mutation testing) sabit bir döngüyü izler ve sonucu tek bir sayıyla, mutasyon skoruyla (mutation score) özetlenir.\n\nSüreç:\n- Orijinal programdan başla (tüm testler geçer).\n- Mutasyon operatörleri (mutation operators) uygulayarak mutantlar oluştur.\n- Test paketini her mutant üzerinde çalıştır.\n- En az bir test başarısız olursa → mutant **öldürülmüştür (killed)**. Tüm testler geçerse → mutant **hayatta kalmıştır (survived)**.\n- Hayatta kalan her mutantı incele: eşdeğer (equivalent) mi, yoksa eksik bir test mi var? Test ekle ya da iyileştir (eklenen ya da iyileştirilen testler orijinal programda geçmelidir).\n- Mutasyon skoru kabul edilebilir olana kadar tekrarla.\n\nTemel terimler:\n- **Mutasyon operatörü:** mutant oluşturan bir kural; örn. `<` yerine `<=` koymak ya da bir deyimi silmek.\n- **Hayatta kalan (canlı, live) mutant:** değişiklik fark edilmemiştir.\n- **Eşdeğer mutant (equivalent mutant):** sözdizimsel olarak orijinalden farklıdır ama tamamen aynı davranır; hiçbir test onu öldüremez.\n- **Ölü doğmuş mutant (stillborn mutant):** derlenmeyen mutant; atılır ve sayılmaz.\n\n**Mutation Score = Killed mutants / (Total mutants − Equivalent mutants) × 100.** Ölü doğmuş mutantlar saymadan önce atılır. Eşdeğer mutantlar genellikle bilinmediğinden, birçok araç yalnızca öldürülen / toplam mutant oranını raporlar.\n\n**Örnek (slaytlardan):** 100 mutant, 5'i derlenmiyor → 95 kalır. Testler 80'ini öldürür, 15'i hayatta kalır; hayatta kalanlardan 5'i eşdeğerdir. Skor = 80 / (95 − 5) × 100 ≈ 88.9%. Hayatta kalan diğer 10 mutant testlerdeki zayıflıkları gösterir."
+      },
+      "source": "slides 27–29"
+    },
+    {
+      "id": "mutation-operators",
+      "title": {
+        "en": "Types of mutations and equivalent mutants",
+        "tr": "Mutasyon türleri ve eşdeğer mutantlar"
+      },
+      "body": {
+        "en": "Mutation operators fall into three simple types, by the kind of change they make; each type needs different test data to be killed.\n\n- **Value mutations:** constant values are changed, typically a small value to a larger one or a larger value to a smaller one. With small test inputs both versions may still give the same result, so the mutant survives: the choice of test data matters.\n- **Decision mutations:** relational, logical or arithmetic operators in a decision are changed, e.g. `<` becomes `>`, or `&&` becomes `||`. Changing `<` to `>` is easy to kill, since almost any test with different values detects it. Changing `<` to `<=` is much harder, because the two only differ when both sides are equal. This is why boundary-value tests matter.\n- **Statement mutations:** a statement is deleted, duplicated or replaced, e.g. a method call is removed. Do the tests notice the missing behaviour?\n\n**Equivalent mutants** change the code but not the program's behaviour, so no test can kill them. Deciding whether a mutant is equivalent is undecidable in general, so surviving mutants often have to be inspected manually: one of the main costs of mutation testing. A mutant that survives only because the test data was poorly chosen is not equivalent.\n\n**Examples:** `if (score >= 50)` → `if (score > 50)` is killed only by a test with score = 50. `return a * 2;` → `return a + a;` is equivalent: the result is always the same.",
+        "tr": "Mutasyon operatörleri (mutation operators), yaptıkları değişikliğin türüne göre üç basit gruba ayrılır; her türü öldürmek için farklı test verisi gerekir.\n\n- **Değer mutasyonları (value mutations):** sabit değerler değiştirilir; genellikle küçük bir değer daha büyüğüyle ya da büyük bir değer daha küçüğüyle değiştirilir. Küçük test girdileriyle iki sürüm yine aynı sonucu verebilir ve mutant hayatta kalır: test verisinin seçimi önemlidir.\n- **Karar mutasyonları (decision mutations):** bir karardaki ilişkisel, mantıksal ya da aritmetik operatörler değiştirilir; örn. `<` yerine `>`, ya da `&&` yerine `||`. `<` işaretini `>` yapmak kolay öldürülür, çünkü farklı değerlerle yapılan hemen her test bunu fark eder. `<` işaretini `<=` yapmak ise çok daha zor fark edilir, çünkü ikisi yalnızca iki taraf eşit olduğunda farklılaşır. Sınır değer testlerinin (boundary-value tests) önemli olmasının nedeni budur.\n- **Deyim mutasyonları (statement mutations):** bir deyim silinir, çoğaltılır ya da değiştirilir; örn. bir metot çağrısı kaldırılır. Testler eksik davranışı fark ediyor mu?\n\n**Eşdeğer mutantlar (equivalent mutants)** kodu değiştirir ama programın davranışını değiştirmez; bu yüzden hiçbir test onları öldüremez. Bir mutantın eşdeğer olup olmadığına karar vermek genel olarak karar verilemez (undecidable) bir problemdir; bu yüzden hayatta kalan mutantların çoğu zaman elle incelenmesi gerekir: bu, mutasyon testinin başlıca maliyetlerinden biridir. Yalnızca test verisi kötü seçildiği için hayatta kalan bir mutant eşdeğer değildir.\n\n**Örnekler:** `if (score >= 50)` → `if (score > 50)` mutantını yalnızca score = 50 olan bir test öldürür. `return a * 2;` → `return a + a;` eşdeğerdir: sonuç her zaman aynıdır."
+      },
+      "source": "slides 31–35"
+    },
+    {
+      "id": "rip-coverage-vs-mutation",
+      "title": {
+        "en": "The RIP model: why coverage is not enough",
+        "tr": "RIP modeli: kapsam neden yetmez"
+      },
+      "body": {
+        "en": "Running a mutated line does not automatically kill the mutant. The RIP model (Ammann & Offutt) says that three conditions must hold for a test to kill it:\n- **Reachability:** the test executes the mutated statement.\n- **Infection:** after that statement, the program state differs from the state of the original program.\n- **Propagation:** the incorrect state reaches the output, and an assertion in the test checks it.\nThey build on each other: without reachability there is no infection, and without an infected state nothing can propagate.\n\nCode coverage vs mutation testing:\n- Question answered: \"Was the code executed?\" vs \"Would the tests detect a fault?\"\n- RIP: coverage guarantees reachability only; mutation testing requires all three.\n- A test with no assertions: can still reach 100% coverage, but kills almost no mutants (only those that crash or hang).\n- Cost: low (one run of the test suite) vs high (tests are run for every mutant).\n\nMutation testing pros: directly measures fault-detection ability; with suitable operators it is stronger than statement and branch coverage; empirical studies show that detecting mutants is correlated with detecting real faults. Cons: computationally expensive; equivalent mutants cannot be detected automatically in general and need manual inspection; needs the source code, so it is not applicable to black-box testing.\n\n**Example:** original `if (x > 0)`, mutant `if (x >= 0)`, test x = 7: the line runs (reachability holds), but both conditions are true, so the state is the same and infection fails.",
+        "tr": "Mutasyonlu bir satırı çalıştırmak, mutantı otomatik olarak öldürmez. RIP modeline (Ammann & Offutt) göre bir testin mutantı öldürmesi için üç koşul sağlanmalıdır:\n- **Erişilebilirlik (reachability):** test mutasyonlu deyimi yürütür.\n- **Bulaşma (infection):** o deyimden sonra program durumu, orijinal programın durumundan farklıdır.\n- **Yayılma (propagation):** yanlış durum çıktıya ulaşır ve testteki bir doğrulama (assertion) onu kontrol eder.\nKoşullar birbirinin üzerine kurulur: erişilebilirlik olmadan bulaşma olmaz, bulaşmış bir durum olmadan da hiçbir şey yayılamaz.\n\nKod kapsamı (code coverage) ile mutasyon testinin (mutation testing) karşılaştırması:\n- Yanıtladığı soru: kapsam için \"Kod yürütüldü mü?\", mutasyon testi için \"Testler bir hatayı fark eder miydi?\"\n- RIP: kapsam yalnızca erişilebilirliği garanti eder; mutasyon testi üçünü de gerektirir.\n- Hiç doğrulama içermeyen bir test: yine de 100% kapsama ulaşabilir, ama neredeyse hiç mutant öldürmez (yalnızca çöken ya da takılıp kalanları).\n- Maliyet: kapsamda düşük (test paketinin bir kez çalıştırılması), mutasyon testinde yüksek (testler her mutant için çalıştırılır).\n\nMutasyon testinin artıları: hata bulma yeteneğini doğrudan ölçer; uygun operatörlerle deyim ve dal kapsamından daha güçlü bir ölçüttür; deneysel (empirical) çalışmalar mutantları bulmanın gerçek hataları bulmayla ilişkili olduğunu gösterir. Eksileri: hesaplama açısından pahalıdır; eşdeğer mutantlar genel olarak otomatik tespit edilemez ve elle incelenmelidir; kaynak kod gerektirir, bu yüzden kara kutu (black-box) teste uygulanamaz.\n\n**Örnek:** orijinal `if (x > 0)`, mutant `if (x >= 0)`, test x = 7: satır çalışır (erişilebilirlik sağlanır), ama iki koşul da true olduğu için durum aynıdır ve bulaşma başarısız olur."
+      },
+      "source": "slides 30, 37–39"
+    }
+  ],
+  "questions": {
+    "1": {
+      "concept": "coverage-basics",
+      "explanation_tr": "Kod kapsamı (code coverage), test paketi çalışırken kaynak kodun ne kadarının yürütüldüğünü sayısal olarak ölçer; bu yüzden ölçmek için kaynak kod gerekir. Kitap da kapsam metriklerini yapısal (beyaz kutu, white-box) testle ilişkilendirir. Kapsam, sonuçların doğrulanıp doğrulanmadığını kontrol etmez ve bulunan hataları saymaz."
+    },
+    "2": {
+      "concept": "rip-coverage-vs-mutation",
+      "explanation_tr": "Kapsam neyin yürütüldüğünü gösterir, neyin doğrulandığını değil; bu yüzden hiç doğrulama (assertion) içermeyen bir paket bile 100%'e ulaşabilir. Çıktıyı hiçbir şey kontrol etmediği için neredeyse hiç mutant öldürmez (yalnızca çöken ya da takılıp kalanları)."
+    },
+    "3": {
+      "concept": "statement-branch-line",
+      "explanation_tr": "True sonucu tüm deyimleri yürütür; ancak else'i olmayan bir if'in de iki sonucu vardır ve false sonucu hiç alınmaz, bu yüzden 2 dal sonucundan yalnızca 1'i (50%) kapsanır. Kitabın terimleriyle bu test C0'ı (her deyim) sağlar, ama C1p'yi (her yüklemin her sonuca götürülmesi) sağlamaz."
+    },
+    "4": {
+      "concept": "coverage-basics",
+      "explanation_tr": "Fonksiyon kapsamı = çağrılan fonksiyonlar / toplam fonksiyonlar × 100 = 6 / 8 × 100 = 75%. Çağrılan bir metodun içindeki test edilmemiş kod bu değeri düşürmez; fonksiyon kapsamının en zayıf ölçüt olmasının nedeni budur."
+    },
+    "5": {
+      "concept": "condition-coverage",
+      "explanation_tr": "Koşul kapsamı = denenen koşul sonuçları / (2 × koşul sayısı) × 100 = 4 / (2 × 3) × 100 ≈ 66.7%. Denenen dört sonuç şunlardır: A true, A false, B true ve C false."
+    },
+    "6": {
+      "concept": "condition-coverage",
+      "explanation_tr": "A ve B'nin her biri iki değeri de alır, bu yüzden koşul kapsamı 100% olur; ama A && B iki testte de false olduğu için if gövdesi hiç çalışmaz ve yalnızca false sonucu kapsanır (50%). 100% koşul kapsamının 100% dal kapsamını, yani kitabın C1p ölçütünü (her yüklemin her sonuca götürülmesi) garanti etmemesinin nedeni budur."
+    },
+    "7": {
+      "concept": "statement-branch-line",
+      "explanation_tr": "Satır kapsamı (line coverage) yürütülebilir satırları, deyim kapsamı ise deyimleri sayar; bu yüzden bir satırda birden fazla deyim olduğunda farklılaşırlar, örn. if (x > 0) y = 1;. Bir kararda birden çok Boole koşulu bulunması ise bunun yerine koşul kapsamını dal kapsamından ayıran durumdur."
+    },
+    "8": {
+      "concept": "path-loop-coverage",
+      "explanation_tr": "Döngü kapsamı (loop coverage) sıfır, bir ve birden çok yineleme gerektirir; maksimum biliniyorsa max − 1 ve max da test edilir ve max + 1 denenir, çünkü bir-fazla/bir-eksik (off-by-one) hataları çoğu zaman bu sınırlarda saklanır. Kitap da döngüleri aynı şekilde, döngü indeksinin sınır değer (ve sağlamlık/robustness) testi olarak ele alır ve C1'e döngü kapsamını ekleyerek C2'yi oluşturur."
+    },
+    "9": {
+      "concept": "condition-coverage",
+      "explanation_tr": "T1 ilk kararı true, ikincisini false yapar; T2 tersini yapar; böylece tüm deyimler ve dört dal sonucunun hepsi yürütülür. y > 0 koşulu hiç false olmaz (T2'de x > 0 zaten false olduğundan y > 0 hiç değerlendirilmez; değerlendirilse bile y = 5 için true olurdu), bu yüzden T3 = (1, −1) gibi bir test eklenene kadar koşul kapsamı 100%'ün altında kalır."
+    },
+    "10": {
+      "concept": "path-loop-coverage",
+      "explanation_tr": "Birbirinden bağımsız iki if deyimi 2^2 = 4 yol oluşturur (kitabın topolojik olarak olası yolları); ama iki kararı da true yapan yol aynı anda x > 0 ve x == 0 gerektirir, bu yüzden hiçbir girdi onu yürütemez (yürütülemez yol, infeasible path). Yol kapsamı formülünde yalnızca 3 yürütülebilir (feasible) yol sayılır."
+    },
+    "11": {
+      "concept": "subsumption-mcdc",
+      "explanation_tr": "A'nın B'yi içermesi (subsumes), A'yı sağlayan her test kümesinin B'yi de sağlaması demektir; bu yüzden T1 B'yi sağlar, ama tersi geçerli değildir ve T2 A'yı sağlamayabilir. İçeren ölçüt daha güçlü olandır: daha fazla test gerektirir ama daha fazla güven verir. Kitabın kapsam metrikleri hiyerarşisi de aynı ilişkiyi kullanır."
+    },
+    "12": {
+      "concept": "subsumption-mcdc",
+      "explanation_tr": "Dal kapsamı deyim kapsamını içerir (subsumes); koşul kapsamı ile dal kapsamı ise birbirini içermez; yol, MC/DC ve Koşul/Karar (Condition/Decision) kapsamı da dal kapsamının üstündeki daha güçlü ölçütlerdir. Kitabın hiyerarşisi de buna uyar: All-Edges (her yüklem sonucu, C1), All-Nodes'u (her deyim, C0) içerir."
+    },
+    "13": {
+      "concept": "subsumption-mcdc",
+      "explanation_tr": "(true, true)'dan (false, true)'ya geçmek yalnızca A'yı değiştirir ve sonucu tersine çevirir; (true, false)'a geçmek yalnızca B'yi değiştirir ve yine sonucu çevirir; böylece her koşulun kararı bağımsız olarak etkilediği gösterilir. (true, false), (false, true) kümesi ise kararı hiçbir zaman true yapmaz."
+    },
+    "14": {
+      "concept": "subsumption-mcdc",
+      "explanation_tr": "MC/DC çoğu zaman n + 1 = 5 testle sağlanabilir; her kombinasyonu denemek ise 2^n = 2^4 = 16 test gerektirir. Bu tam doğruluk tablosu, kitabın çoklu koşul kapsamı (multiple condition coverage) dediği şeydir (3 basit koşul 8 satır, yani 8 test durumu verir). MC/DC, güvenlik açısından en kritik aviyonik yazılımlar için zorunludur (DO-178C, Level A)."
+    },
+    "15": {
+      "concept": "mutation-basics",
+      "explanation_tr": "PIT, Java için mutasyon testi aracıdır. JaCoCo Java kod kapsamını ölçer, Stryker ve mutmut mutasyon testi araçlarıdır; Codecov ise kapsamı kendisi ölçmeden yalnızca diğer araçların raporlarını toplar ve gösterir."
+    },
+    "16": {
+      "concept": "coverage-pros-cons",
+      "explanation_tr": "Kapsam, hiçbir testin yürütmediği kodu, ölü (dead) ya da erişilemeyen (unreachable) kod dâhil, ortaya çıkarır. Eksik kodu tespit edemez ya da sonuçların kontrol edilip edilmediğini gösteremez; hata bulma yeteneğini doğrudan ölçmek ise mutasyon testinin bir avantajıdır."
+    },
+    "17": {
+      "concept": "coverage-pros-cons",
+      "explanation_tr": "Kapsam eksik kodu (ihmal hataları, faults of omission) tespit edemez: bir gereksinim hiç gerçekleştirilmediyse kapsanacak kod da yoktur; bu yüzden özellik eksikken metrik 100% olabilir. Kitap da aynı noktayı vurgular: belirtilmiş ama programlanmamış davranış, yapısal testin ortaya çıkaramayacağı bir ihmal hatasıdır."
+    },
+    "18": {
+      "concept": "coverage-pros-cons",
+      "explanation_tr": "Ders bunu Goodhart yasası (Goodhart's law) olarak adlandırır: kapsam bir hedef hâline geldiğinde yüzeysel testler sayıyı yükseltebilir. İhmal hataları ise farklı bir sınırlamadır: kapsamın tespit edemediği eksik kod."
+    },
+    "19": {
+      "concept": "mutation-basics",
+      "explanation_tr": "Mutasyon testi kaynak kodda bilerek küçük değişiklikler (mutantlar) yapar ve test paketinin bunları fark edip etmediğini kontrol eder; yani programı değil, testleri test eder. Kodun ne kadarının yürütüldüğünü ölçmek ise kod kapsamıdır."
+    },
+    "20": {
+      "concept": "mutation-basics",
+      "explanation_tr": "Mutasyon testi ilk kez 1971'de Richard Lipton tarafından önerildi; DeMillo, Lipton ve Sayward onu daha sonra, 1978'de biçimselleştirdi."
+    },
+    "21": {
+      "concept": "mutation-basics",
+      "explanation_tr": "Bağlaşım Etkisi (Coupling Effect), basit hataları bulan testlerin karmaşık hataları da bulma eğiliminde olduğunu söyler. Yetkin Programcı Hipotezi (Competent Programmer Hypothesis) ise programcıların neredeyse doğru kod yazdığını, bu yüzden gerçek hataların <= yerine < gibi küçük sapmalar olduğunu söyler."
+    },
+    "22": {
+      "concept": "mutation-process-score",
+      "explanation_tr": "Tüm testler geçerse mutant hayatta kalmıştır (survived); bir mutant ancak en az bir test başarısız olduğunda öldürülmüş (killed) sayılır. Hayatta kalan mutant incelenir (eşdeğer mi, yoksa eksik bir test mi var?) ve orijinal programda geçmesi gereken yeni ya da iyileştirilmiş testler eklenir."
+    },
+    "23": {
+      "concept": "mutation-process-score",
+      "explanation_tr": "Derlenmeyen bir mutant ölü doğmuştur (stillborn); saymadan önce atılır ve mutasyon skoruna girmez. Eşdeğer (equivalent) mutantlar ise derlenir ama orijinalle tamamen aynı davranır."
+    },
+    "24": {
+      "concept": "mutation-process-score",
+      "explanation_tr": "20 ölü doğmuş mutant atıldıktan sonra 100 mutant kalır; skor 72 / (100 − 10) × 100 = 80% olur. 72% değeri (öldürülen / toplam) birçok aracın raporladığı değerdir, çünkü eşdeğer mutantlar genellikle bilinmez."
+    },
+    "25": {
+      "concept": "rip-coverage-vs-mutation",
+      "explanation_tr": "Erişilebilirlik (reachability: mutasyonlu deyim çalışır) ve bulaşma (infection: durum farklılaşır) koşullarının ikisi de sağlanır; ancak yayılma (propagation) ayrıca yanlış durumun çıktıya ulaşmasını ve testteki bir doğrulamanın (assertion) onu kontrol etmesini gerektirir."
+    },
+    "26": {
+      "concept": "rip-coverage-vs-mutation",
+      "explanation_tr": "Kod kapsamı yalnızca kodun yürütüldüğünü (erişilebilirlik) garanti eder. Bir mutantı öldürmek erişilebilirlik, bulaşma ve yayılmanın üçünü de gerektirir; kapsamın yetmemesinin nedeni budur."
+    },
+    "27": {
+      "concept": "mutation-operators",
+      "explanation_tr": "Bu kadar küçük girdilerle iki sürüm de c = 3 hesaplar; bu yüzden test geçer ve mutant hayatta kalır. Mutant eşdeğer değildir: daha büyük girdiler farklı sonuçlar verir; bu yüzden test verisinin seçimi önemlidir."
+    },
+    "28": {
+      "concept": "mutation-operators",
+      "explanation_tr": "İki karar yalnızca a == b olduğunda farklılaşır (a < b false, a <= b true olur); bu yüzden mutantı yalnızca böyle bir test öldürebilir; sınır değer testlerinin önemli olmasının nedeni budur. < işaretini > yapmak ise kolay öldürülürdü, çünkü a ≠ b olan hemen her test bunu fark eder."
+    },
+    "29": {
+      "concept": "mutation-operators",
+      "explanation_tr": "Deyim mutasyonları (statement mutations) bir deyimi siler, çoğaltır ya da değiştirir; örneğin bir metot çağrısını kaldırır. Değer mutasyonları sabit değerleri değiştirir; karar mutasyonları ise bir karardaki operatörleri değiştirir, örneğin < yerine > ya da && yerine ||."
+    },
+    "30": {
+      "concept": "mutation-operators",
+      "explanation_tr": "Bu bir eşdeğer mutanttır: kod değişmiştir ama davranış değişmemiştir. Eşdeğerliğe karar vermek genel olarak karar verilemez (undecidable) bir problemdir; bu yüzden hayatta kalan mutantların çoğu zaman elle incelenmesi gerekir ve bu, mutasyon testinin başlıca maliyetlerinden biridir."
+    },
+    "31": {
+      "concept": "rip-coverage-vs-mutation",
+      "explanation_tr": "Deneysel (empirical) çalışmalar, mutantları bulmanın gerçek hataları bulmayla ilişkili olduğunu gösterir. Mutasyon testi pahalıdır (testler her mutant için çalıştırılır), kaynak kod gerektirir, eşdeğer mutantların elle incelenmesini gerektirir ve uygun operatörlerle deyim ve dal kapsamından daha güçlü bir ölçüttür."
+    },
+    "32": {
+      "concept": "statement-branch-line",
+      "explanation_tr": "İki kararın toplam 4 sonucu vardır: 2000 ilk kararı true yapar, 1500 ilkini false ve ikincisini true yapar; böylece 4 sonucun 3'ü (75%) kapsanır. İkinci kararın false sonucunu yalnızca sales ≤ 1000 (örneğin 900) alır; kitabın C1p ölçütü (her yüklemin her sonuca götürülmesi) de bunu gerektirir."
+    },
+    "33": {
+      "concept": "path-loop-coverage",
+      "explanation_tr": "Her karar x = 20 için true, x = 0 için false olur; bu yüzden dal kapsamı 100% olur. 2^2 = 4 yoldan (kitabın topolojik olarak olası yolları) önce-true-sonra-false yolu x > 10 ve x ≤ 5 gerektirir ve yürütülemezdir (infeasible); bu yüzden yol kapsamı 2 yürütülen / 3 yürütülebilir ≈ 66.7% olur; eksik yol 5 < x ≤ 10 gerektirir."
+    },
+    "34": {
+      "concept": "path-loop-coverage",
+      "explanation_tr": "Döngü koşulu üç kez true, çıkışta ise bir kez false olur; böylece tüm deyimler ve while kararının iki sonucu da yürütülür. Döngü kapsamı ayrıca sıfır ve bir yinelemeyi de (n = 0 ve n = 1) gerektirir; kitap da C1'i C2'den (C1 kapsamı + döngü kapsamı) ayırır."
+    },
+    "35": {
+      "concept": "subsumption-mcdc",
+      "explanation_tr": "(false, false) için karar false olur; yalnızca A'yı ya da yalnızca B'yi değiştirmek onu true yapar; böylece n + 1 = 3 testle her koşulun sonucu bağımsız olarak etkilediği gösterilir. (true, true), (false, true), (true, false) kümesi && için işe yarar, ama || için kararı hiçbir zaman false yapmaz."
+    },
+    "36": {
+      "concept": "coverage-pros-cons",
+      "explanation_tr": "Hata işleme kodunu kapsamak zordur; hatanın test sırasında gerçekten oluşması için çoğu zaman mock, saplama (stub) ya da hata enjeksiyonu (fault injection) gerekir. Çalışan bir bağlantıyla yapılan testler catch bloğuna asla ulaşmaz; bloğu sayımdan çıkarmak ya da daha zayıf bir ölçüte geçmek ise yalnızca açığı gizler."
+    },
+    "37": {
+      "concept": "rip-coverage-vs-mutation",
+      "explanation_tr": "Erişilebilirlik sağlanır; ama y = 2 için iki sürüm de z = 4 hesaplar, bu yüzden deyimden sonraki program durumu farklılaşmaz ve bulaşma (infection) başarısız olur; bulaşmış bir durum olmadan hiçbir şey yayılamaz. Mutant eşdeğer değildir: y = 3 için orijinal 6, mutant 5 verir ve bu test mutantı öldürürdü."
+    }
+  }
+}

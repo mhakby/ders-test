@@ -1,0 +1,206 @@
+{
+  "intro": {
+    "en": "Data flow testing is structural testing that follows variables: the points where a variable receives a value (definitions) and the points where that value is used. This set covers the define/use vocabulary (DEF, USE, P-use, C-use, du-paths and definition-clear paths), the Rapps–Weyuker coverage metrics and their hierarchy, and program slices. Almost every example uses the commission program, so keep its numbered lines in mind; the end-of-chapter exercises ask you to repeat the same analyses yourself.",
+    "tr": "Veri akışı testi (data flow testing), değişkenleri izleyen bir yapısal testtir: bir değişkenin değer aldığı noktalar (tanımlar) ve bu değerin kullanıldığı noktalar. Bu set; tanım/kullanım kavramlarını (DEF, USE, P-use, C-use, du-path'ler ve tanım-temiz yollar), Rapps–Weyuker kapsam ölçütlerini ve aralarındaki hiyerarşiyi ve program dilimlerini (program slices) kapsar. Örneklerin neredeyse tamamı komisyon programını kullanır, bu yüzden numaralı satırlarını aklında tut; bölüm sonu alıştırmaları aynı analizleri senin tekrarlamanı ister."
+  },
+  "concepts": [
+    {
+      "id": "data-flow-basics",
+      "title": {
+        "en": "Definitions, uses and define/reference anomalies",
+        "tr": "Tanımlar, kullanımlar ve tanım/referans anomalileri"
+      },
+      "body": {
+        "en": "Data flow testing is structural testing that looks at the points where variables receive values and where those values are used (referenced). Despite its name, it has no connection with data flow diagrams. It has two forms: define/use testing and slice-based testing.\n\nEarly data flow analyses centered on three **define/reference anomalies**:\n\n- a variable that is defined but never used\n- a variable that is used but never defined\n- a variable that is defined twice before it is used\n\nThey can be found from the compiler-generated concordance (the statement numbers where each variable occurs) by **static analysis**: finding faults in source code without executing it.\n\n- **DEF(v, n)**: node n is a defining node of v (input, assignment, loop control, procedure call); the variable's memory location changes.\n- **USE(v, n)**: node n is a usage node of v (output, assignment, conditional, loop control, procedure call); the memory stays unchanged.\n- A use is a **P-use** (predicate use) iff statement n is a predicate (a decision); otherwise it is a **C-use** (computation use). P-use nodes have outdegree ≥ 2, C-use nodes outdegree ≤ 1.\n\n**Example:** `5 Input(x)` is DEF(x, 5); `6 y = x * 2` is a C-use of x and DEF(y, 6); `7 If (y > 10)` is a P-use of y.\n\nThe week 6 slides use the same terms (def, use, c-use, p-use) and the same three anomalies, worded slightly differently.",
+        "tr": "Veri akışı testi (data flow testing), değişkenlerin değer aldığı ve bu değerlerin kullanıldığı (referans edildiği) noktalara bakan bir yapısal testtir. Adına rağmen veri akış diyagramlarıyla ilgisi yoktur. İki biçimi vardır: tanım/kullanım testi (define/use testing) ve dilim tabanlı test (slice-based testing).\n\nİlk veri akışı analizleri üç **tanım/referans anomalisi (define/reference anomaly)** üzerinde yoğunlaşıyordu:\n\n- tanımlanan ama hiç kullanılmayan değişken\n- kullanılan ama hiç tanımlanmayan değişken\n- kullanılmadan önce iki kez tanımlanan değişken\n\nBunlar derleyicinin ürettiği konkordanstan (concordance: her değişkenin geçtiği deyim numaraları) **statik analiz (static analysis)** ile, yani kaynak kodu çalıştırmadan hata bularak tespit edilebilir.\n\n- **DEF(v, n)**: n düğümü v'nin tanımlama düğümüdür (defining node; girdi, atama, döngü kontrolü, prosedür çağrısı); değişkenin bellek konumu değişir.\n- **USE(v, n)**: n düğümü v'nin kullanım düğümüdür (usage node; çıktı, atama, koşul, döngü kontrolü, prosedür çağrısı); bellek değişmeden kalır.\n- Bir kullanım, ancak ve ancak n deyimi bir yüklem (predicate, yani karar) ise **P-use** (yüklem kullanımı) olur; değilse **C-use** (hesaplama kullanımı) olur. P-use düğümlerinin çıkış derecesi (outdegree) ≥ 2, C-use düğümlerininki ≤ 1'dir.\n\n**Örnek:** `5 Input(x)` DEF(x, 5)'tir; `6 y = x * 2` x'in bir C-use'u ve DEF(y, 6)'dır; `7 If (y > 10)` y'nin bir P-use'udur.\n\n6. hafta slaytları aynı terimleri (def, use, c-use, p-use) ve aynı üç anomaliyi biraz farklı ifadelerle kullanır."
+      },
+      "source": "pp. 157–159"
+    },
+    {
+      "id": "du-dc-paths",
+      "title": {
+        "en": "du-paths and definition-clear paths",
+        "tr": "du-path'ler ve tanım-temiz yollar"
+      },
+      "body": {
+        "en": "Du-paths connect a definition of a variable to a use of it; they are the paths data flow testing wants to exercise.\n\nThey live in a program graph G(P): nodes are statement fragments, there is one entry and one exit node, and no edge goes from a node to itself. PATHS(P) is the set of all paths in P.\n\n- **du-path** (definition-use path) for v: a path in PATHS(P) whose initial and final nodes are DEF(v, m) and USE(v, n).\n- **dc-path** (definition-clear path) for v: a du-path in which no node other than the initial DEF and the final USE is a defining node of v. Other uses of v along the way do not matter.\n\nDu-paths that are not definition-clear are **potential trouble spots**: if the value at the use is wrong, look at the intervening definition. (Whether declarations count as defining nodes is a judgment call.)\n\n**Example:** `1 Input(a)`, `2 b = a + 1`, `3 a = 0`, `4 Output(a, b)`\n\n- <1, 2> is a du-path for a and definition-clear.\n- <1, 2, 3, 4> runs from DEF(a, 1) to USE(a, 4), so it is a du-path, but node 3 redefines a: not definition-clear.\n- <3, 4> is definition-clear.\n\nThe week 6 slides call these def-clear paths, and a def and a use joined by such a path a du-pair.",
+        "tr": "Du-path'ler bir değişkenin bir tanımını onun bir kullanımına bağlar; veri akışı testinin çalıştırmak istediği yollar bunlardır.\n\nBu yollar bir program grafında (program graph) G(P) bulunur: düğümler deyim parçalarıdır (statement fragments), tek bir giriş ve tek bir çıkış düğümü vardır ve hiçbir kenar bir düğümden kendisine gitmez. PATHS(P), P'deki tüm yolların kümesidir.\n\n- v için **du-path** (tanım-kullanım yolu, definition-use path): PATHS(P) içinde başlangıç ve bitiş düğümleri DEF(v, m) ve USE(v, n) olan yol.\n- v için **dc-path** (tanım-temiz yol, definition-clear path): baştaki DEF ve sondaki USE dışında hiçbir düğümün v'nin tanımlama düğümü olmadığı du-path. Yol boyunca v'nin başka kullanımları önemli değildir.\n\nTanım-temiz olmayan du-path'ler **potansiyel sorun noktalarıdır (potential trouble spots)**: kullanımdaki değer yanlışsa aradaki tanıma bak. (Bildirimlerin tanımlama düğümü sayılıp sayılmayacağı bir takdir meselesidir.)\n\n**Örnek:** `1 Input(a)`, `2 b = a + 1`, `3 a = 0`, `4 Output(a, b)`\n\n- <1, 2>, a için bir du-path'tir ve tanım-temizdir.\n- <1, 2, 3, 4> DEF(a, 1)'den USE(a, 4)'e gider, yani bir du-path'tir; ama 3. düğüm a'yı yeniden tanımlar: tanım-temiz değildir.\n- <3, 4> tanım-temizdir.\n\n6. hafta slaytları bunlara def-clear yol, böyle bir yolla bağlanan bir tanım ile kullanıma da du-pair (du-çifti) der."
+      },
+      "source": "pp. 158–161, 164"
+    },
+    {
+      "id": "loop-du-paths",
+      "title": {
+        "en": "du-paths through a loop",
+        "tr": "Döngüden geçen du-path'ler"
+      },
+      "body": {
+        "en": "Loops make du-paths interesting: a variable can be defined before the loop and again inside it.\n\nCommission program: `13 Input(locks)` reads the priming value, `14 While NOT(locks = −1)` is a P-use of locks, `16 totalLocks = totalLocks + locks` a C-use, `19 Input(locks)` reads the next value at the end of the loop body, 20 is EndWhile and 21 the first statement after the loop. Du-paths from 13 use the first value read; du-paths from 19 occur only when the loop repeats, after the body has run. Extending such paths to node 21 shows how the loop is left. A very complete set of loop test cases covers four situations:\n\n- **bypass**: the first value already ends the loop; control goes from the predicate straight past the loop\n- **begin**: the first value enters the loop body\n- **repeat**: a value read at the end of the body enters the body again\n- **exit**: a value read at the end of the body ends the loop\n\n**Example:** `1 Input(x)`, `2 While (x > 0)`, `3 sum = sum + x`, `4 Input(x)`, `5 EndWhile`, `6 Output(sum)`. For x: bypass <1, 2, 6>, begin <1, 2, 3>, repeat <4, 5, 2, 3>, exit <4, 5, 2, 6>.\n\nAccumulators show another loop problem. totalStocks is defined at 11 (= 0) and at 17 inside the loop, so <11, 12, 13, (14, …, 20)*, 21, 22> is not definition-clear: totalStocks is redefined, possibly several times, at 17 (* is the Kleene star: zero or more repetitions).",
+        "tr": "Döngüler du-path'leri ilginç kılar: bir değişken döngüden önce ve döngünün içinde yeniden tanımlanabilir.\n\nKomisyon programı (commission program): `13 Input(locks)` ilk değeri (priming value) okur, `14 While NOT(locks = −1)` locks'un bir P-use'udur, `16 totalLocks = totalLocks + locks` bir C-use'dur, `19 Input(locks)` döngü gövdesinin sonunda sonraki değeri okur, 20 EndWhile'dır ve 21 döngüden sonraki ilk deyimdir. 13'ten başlayan du-path'ler okunan ilk değeri kullanır; 19'dan başlayanlar ise ancak gövde çalıştıktan sonra, döngü tekrarlanırken oluşur. Bu yolları 21. düğüme uzatmak döngüden nasıl çıkıldığını gösterir. Çok eksiksiz bir döngü test kümesi dört durumu kapsar:\n\n- **atlama (bypass)**: ilk değer döngüyü hemen bitirir; kontrol yüklemden doğrudan döngünün sonrasına geçer\n- **başlama (begin)**: ilk değer döngü gövdesine girer\n- **tekrarlama (repeat)**: gövdenin sonunda okunan değer gövdeye yeniden girer\n- **çıkış (exit)**: gövdenin sonunda okunan değer döngüyü bitirir\n\n**Örnek:** `1 Input(x)`, `2 While (x > 0)`, `3 sum = sum + x`, `4 Input(x)`, `5 EndWhile`, `6 Output(sum)`. x için: atlama <1, 2, 6>, başlama <1, 2, 3>, tekrarlama <4, 5, 2, 3>, çıkış <4, 5, 2, 6>.\n\nBiriktiriciler (accumulators) başka bir döngü sorununu gösterir. totalStocks 11'de (= 0) ve döngü içinde 17'de tanımlanır; bu yüzden <11, 12, 13, (14, …, 20)*, 21, 22> tanım-temiz değildir: totalStocks 17'de, belki birkaç kez, yeniden tanımlanır (* Kleene yıldızıdır (Kleene star): sıfır veya daha fazla tekrar)."
+      },
+      "source": "pp. 159, 163–165"
+    },
+    {
+      "id": "sales-du-paths",
+      "title": {
+        "en": "sales du-paths: static vs dynamic view and DD-Paths",
+        "tr": "sales du-path'leri: statik ve dinamik bakış, DD-Path'ler"
+      },
+      "body": {
+        "en": "The IF, ELSE IF part of the commission program shows a subtle choice in how du-paths are written.\n\nCode: `27 sales = lockSales + stockSales + barrelSales`, `28 Output(sales)`, `29 If (sales > 1800.0)` (THEN part 30–33), `34 Else If (sales > 1000.0)` (THEN part 35–37), `38 Else commission = 0.10 * sales`, 39–40 EndIf, `41 Output(commission)`. sales has one defining node (27), so every du-path for sales is definition-clear.\n\n**Static vs dynamic:** IF, ELSE IF logic makes the path to a use ambiguous. The static choice follows the source text in order, through the THEN statements written before the ELSE IF; the dynamic choice follows execution, from the decision directly to the ELSE IF. The book uses the dynamic view because it fits DD-Path thinking. Example: `9 Input(x)`, `10 If (x > 5)`, `11 Then y = 1`, `12 Else If (x > 0)`; to the use at 12: static <9, 10, 11, 12>, dynamic <9, 10, 12>.\n\n**DD-Paths** (Table 10.1): A = 7–13, B = 14, C = 15–19, D = 20–28, E = 29, F = 30–33, G = 34, H = 35–37, I = 38, J = 39, K = 40, L = 41–42. To find a du-path's DD-Paths, replace each node by its DD-Path and list each once, in order. A du-path ends at its use node, so later DD-Paths are not part of it. Example: <13, 14, 15, 16> lies in A, B, C.",
+        "tr": "Komisyon programının IF, ELSE IF kısmı, du-path'lerin nasıl yazılacağına dair ince bir seçimi gösterir.\n\nKod: `27 sales = lockSales + stockSales + barrelSales`, `28 Output(sales)`, `29 If (sales > 1800.0)` (THEN kısmı 30–33), `34 Else If (sales > 1000.0)` (THEN kısmı 35–37), `38 Else commission = 0.10 * sales`, 39–40 EndIf, `41 Output(commission)`. sales'in tek bir tanımlama düğümü (27) vardır, bu yüzden sales için her du-path tanım-temizdir (definition-clear).\n\n**Statik ve dinamik (static vs dynamic):** IF, ELSE IF mantığı bir kullanıma giden yolu belirsiz kılar. Statik seçim kaynak metni sırayla, ELSE IF'ten önce yazılmış THEN deyimlerinin içinden izler; dinamik seçim yürütmeyi izler ve karardan doğrudan ELSE IF'e gider. Kitap dinamik bakışı kullanır, çünkü DD-Path düşüncesine uyar. Örnek: `9 Input(x)`, `10 If (x > 5)`, `11 Then y = 1`, `12 Else If (x > 0)`; 12'deki kullanıma: statik <9, 10, 11, 12>, dinamik <9, 10, 12>.\n\n**DD-Path'ler** (karardan karara yollar, Tablo 10.1): A = 7–13, B = 14, C = 15–19, D = 20–28, E = 29, F = 30–33, G = 34, H = 35–37, I = 38, J = 39, K = 40, L = 41–42. Bir du-path'in DD-Path'lerini bulmak için her düğümü kendi DD-Path'iyle değiştir ve her birini sırayla bir kez yaz. Bir du-path kullanım düğümünde biter, bu yüzden sonraki DD-Path'ler ona dahil değildir. Örnek: <13, 14, 15, 16> A, B, C içindedir."
+      },
+      "source": "pp. 160–162, 165, 174"
+    },
+    {
+      "id": "commission-du-paths",
+      "title": {
+        "en": "commission du-paths: feasibility and “real” definitions",
+        "tr": "commission du-path'leri: gerçekleştirilebilirlik ve “gerçek” tanımlar"
+      },
+      "body": {
+        "en": "Not every DEF/USE pair gives a usable du-path, and not every definition is worth one.\n\ncommission is defined at 31, 32, 33, 36, 37, 38 and used at 32, 33, 37, 41 (Table 10.2):\n\n- THEN (sales > 1800): `31 commission = 0.10 * 1000.0`, `32 commission = commission + 0.15 * 800.0`, `33 commission = commission + 0.20 * (sales − 1800.0)`\n- ELSE IF, THEN (sales > 1000): `36 commission = 0.10 * 1000.0`, `37 commission = commission + 0.15 * (sales − 1000.0)`\n- ELSE: `38 commission = 0.10 * sales`\n- after the EndIfs: `41 Output(commission)`\n\n**Feasibility:** a (DEF, USE) pair is **infeasible** when no execution path leads from the first node to the second; two nodes in different branches of the same IF never both run, e.g. (36, 33). A pair can be feasible but not definition-clear, e.g. (31, 33): node 32 redefines commission in between. Table 10.4 marks every pair this way.\n\n**“Real” defining nodes:** building the value through intermediate values is common practice and shows how the final value is computed; one statement like `commission = 220 + 0.20 * (sales − 1800)` would be hard for a maintainer to understand. But the intermediate statements also appear as define and usage nodes, so the book disallows du-paths that begin at intermediate assignments such as 31 and 32. It considers only the “real” defining node that completes commission in each branch, and one usage node, USE(commission, 41).",
+        "tr": "Her DEF/USE çifti kullanılabilir bir du-path vermez ve her tanım bir du-path'e değmez.\n\ncommission 31, 32, 33, 36, 37, 38'de tanımlanır ve 32, 33, 37, 41'de kullanılır (Tablo 10.2):\n\n- THEN (sales > 1800): `31 commission = 0.10 * 1000.0`, `32 commission = commission + 0.15 * 800.0`, `33 commission = commission + 0.20 * (sales − 1800.0)`\n- ELSE IF, THEN (sales > 1000): `36 commission = 0.10 * 1000.0`, `37 commission = commission + 0.15 * (sales − 1000.0)`\n- ELSE: `38 commission = 0.10 * sales`\n- EndIf'lerden sonra: `41 Output(commission)`\n\n**Gerçekleştirilebilirlik (feasibility):** hiçbir yürütme yolu ilk düğümden ikincisine gitmiyorsa bir (DEF, USE) çifti **gerçekleştirilemez (infeasible)**; aynı IF'in farklı dallarındaki iki düğüm asla birlikte çalışmaz, örneğin (36, 33). Bir çift gerçekleştirilebilir olup tanım-temiz olmayabilir, örneğin (31, 33): 32. düğüm commission'ı arada yeniden tanımlar. Tablo 10.4 her çifti bu şekilde işaretler.\n\n**“Gerçek” tanımlama düğümleri:** değeri ara değerlerle adım adım oluşturmak yaygın bir uygulamadır ve son değerin nasıl hesaplandığını gösterir; `commission = 220 + 0.20 * (sales − 1800)` gibi tek bir deyimi bakımı yapan birinin anlaması zor olurdu. Ancak ara deyimler de tanım ve kullanım düğümü olarak görünür; bu yüzden kitap 31 ve 32 gibi ara atamalarla başlayan du-path'lere izin vermez. Yalnızca her dalda commission'ı tamamlayan “gerçek” tanımlama düğümünü ve tek bir kullanım düğümünü, USE(commission, 41)'i dikkate alır."
+      },
+      "source": "pp. 160, 162–166"
+    },
+    {
+      "id": "rapps-weyuker-metrics",
+      "title": {
+        "en": "Rapps–Weyuker data flow coverage metrics",
+        "tr": "Rapps–Weyuker veri akışı kapsam ölçütleri"
+      },
+      "body": {
+        "en": "The point of finding du-paths is to define test coverage metrics, the **Rapps–Weyuker data flow metrics** (Rapps, 1985). The first three, All-Paths, All-Edges and All-Nodes, are equivalent to three of E. F. Miller's metrics (Chapter 9); the others presume that define/usage nodes and du-paths have been identified, and the du-paths are assumed feasible.\n\nA set of paths T satisfies a criterion iff, for every variable v, T contains definition-clear paths:\n\n- **All-Defs**: from every defining node of v to a use of v\n- **All-Uses**: from every defining node of v to every use of v, and to the successor node of each USE(v, n)\n- **All-P-Uses/Some C-Uses**: from every defining node of v to every predicate use; if a definition has no P-uses, to at least one computation use\n- **All-C-Uses/Some P-Uses**: from every defining node of v to every computation use; if a definition has no C-uses, to at least one predicate use\n- **All-DU-Paths**: as All-Uses, and these paths are either single loop traversals or cycle free\n\n**Example:** x is defined only at 1 and used at 3 (`If (x > 0)`) and 6 (`y = x + 1`). All-Defs needs one dc-path from 1 to 3 or to 6; All-Uses needs dc-paths from 1 to 3 (and on to both successors of 3) and from 1 to 6.\n\nThe week 6 slides word them more simply: all-uses reaches every use the definition can reach; all-du-paths takes every simple def-clear path from each definition to each use.",
+        "tr": "Du-path'leri bulmanın amacı test kapsam ölçütleri (test coverage metrics) tanımlamaktır: **Rapps–Weyuker veri akışı ölçütleri** (Rapps, 1985). İlk üçü, All-Paths, All-Edges ve All-Nodes, E. F. Miller'ın ölçütlerinden üçüne denktir (Bölüm 9); diğerleri tanım/kullanım düğümlerinin ve du-path'lerin belirlenmiş olduğunu varsayar ve du-path'lerin gerçekleştirilebilir (feasible) olduğu kabul edilir.\n\nBir yollar kümesi T, bir ölçütü ancak ve ancak her v değişkeni için şu tanım-temiz yolları içeriyorsa sağlar:\n\n- **All-Defs**: v'nin her tanımlama düğümünden v'nin bir kullanımına\n- **All-Uses**: v'nin her tanımlama düğümünden v'nin her kullanımına ve her USE(v, n)'nin ardıl düğümüne (successor node)\n- **All-P-Uses/Some C-Uses**: v'nin her tanımlama düğümünden her yüklem kullanımına (predicate use); bir tanımın hiç P-use'u yoksa en az bir hesaplama kullanımına (computation use)\n- **All-C-Uses/Some P-Uses**: v'nin her tanımlama düğümünden her hesaplama kullanımına; bir tanımın hiç C-use'u yoksa en az bir yüklem kullanımına\n- **All-DU-Paths**: All-Uses gibi; ayrıca bu yollar ya tek döngü geçişidir (single loop traversal) ya da döngüsüzdür (cycle free)\n\n**Örnek:** x yalnızca 1'de tanımlanır, 3'te (`If (x > 0)`) ve 6'da (`y = x + 1`) kullanılır. All-Defs 1'den 3'e ya da 6'ya bir dc-path ister; All-Uses 1'den 3'e (ve oradan 3'ün iki ardılına) ve 1'den 6'ya dc-path'ler ister.\n\n6. hafta slaytları bunları daha basit ifade eder: all-uses, tanımın ulaşabildiği her kullanıma ulaşır; all-du-paths, her tanımdan her kullanımına giden her basit def-clear yolu alır."
+      },
+      "source": "pp. 166–167"
+    },
+    {
+      "id": "metric-hierarchy",
+      "title": {
+        "en": "The subsumption hierarchy (Figure 10.3)",
+        "tr": "Kapsama hiyerarşisi (Şekil 10.3)"
+      },
+      "body": {
+        "en": "Coverage metrics can be compared by strength. The Rapps–Weyuker metrics have set-theory-based relationships called **subsumption** (Rapps, 1985). An arrow A → B means A subsumes B: every test set that satisfies A also satisfies B (the week 6 slides define the arrow this way), so stronger metrics are higher up.\n\nFigure 10.3, from top to bottom:\n\n- All-Paths → All-DU-Paths → All-Uses\n- All-Uses → All-C-Uses/Some P-Uses, and All-Uses → All-P-Uses/Some C-Uses\n- All-C-Uses/Some P-Uses → All-Defs, and All-P-Uses/Some C-Uses → All-Defs\n- All-P-Uses/Some C-Uses → All-P-Uses → All-Edges → All-Nodes\n\nThis gives a more refined view of structural testing between two extremes: All-Paths, which is typically unattainable, and All-Edges, the generally accepted minimum. Miller's three metrics (All-Paths, All-Edges, All-Nodes) form the top and the bottom of the figure; Exercise 2 asks you to merge other DD-Path-based metrics into it.\n\n**Reading example:** a test set that satisfies All-DU-Paths also satisfies All-Uses and All-Defs (follow the arrows down). Satisfying All-Defs guarantees nothing about All-Edges, because no chain of arrows leads from All-Defs to All-Edges.\n\nThe week 6 slides show a shorter data flow ladder (All-du-paths → All-uses → All-defs) beside a separate graph coverage ladder.",
+        "tr": "Kapsam ölçütleri güçlerine göre karşılaştırılabilir. Rapps–Weyuker ölçütleri arasında **kapsama ilişkisi (subsumption)** denen, küme teorisine dayalı ilişkiler vardır (Rapps, 1985). A → B oku, A'nın B'yi kapsadığı (subsumes) anlamına gelir: A'yı sağlayan her test kümesi B'yi de sağlar (6. hafta slaytları oku böyle tanımlar); yani daha güçlü ölçütler daha yukarıdadır.\n\nŞekil 10.3, yukarıdan aşağıya:\n\n- All-Paths → All-DU-Paths → All-Uses\n- All-Uses → All-C-Uses/Some P-Uses ve All-Uses → All-P-Uses/Some C-Uses\n- All-C-Uses/Some P-Uses → All-Defs ve All-P-Uses/Some C-Uses → All-Defs\n- All-P-Uses/Some C-Uses → All-P-Uses → All-Edges → All-Nodes\n\nBu, iki uç arasında yapısal testin daha ince bir görünümünü verir: genellikle ulaşılamayan All-Paths ve genel kabul gören asgari düzey olan All-Edges. Miller'ın üç ölçütü (All-Paths, All-Edges, All-Nodes) şeklin en üstünü ve en altını oluşturur; Alıştırma 2 diğer DD-Path tabanlı ölçütleri bu şekle yerleştirmeni ister.\n\n**Okuma örneği:** All-DU-Paths'i sağlayan bir test kümesi All-Uses'u ve All-Defs'i de sağlar (okları aşağı doğru izle). All-Defs'i sağlamak All-Edges hakkında hiçbir şey garanti etmez, çünkü All-Defs'ten All-Edges'e giden bir ok zinciri yoktur.\n\n6. hafta slaytları, ayrı bir graf kapsamı merdiveninin yanında daha kısa bir veri akışı merdiveni (All-du-paths → All-uses → All-defs) gösterir."
+      },
+      "source": "pp. 166–167, 174"
+    },
+    {
+      "id": "program-slices",
+      "title": {
+        "en": "Program slices: definition and forms of use",
+        "tr": "Program dilimleri: tanım ve kullanım biçimleri"
+      },
+      "body": {
+        "en": "A **program slice** is, informally, the set of program statements that contribute to or affect a value for a variable at some point in the program (Weiser, 1985). The idea is to separate a program into components that have some useful (functional) meaning.\n\nRefined definition: for a program P with numbered statement fragments and a set V of variables, the slice **S(V, n)** is the set of node numbers of all statement fragments in P prior to n that contribute to the values of variables in V at statement fragment n. “Prior to” is meant in the dynamic sense, so a slice captures the execution-time behavior of the program with respect to V. Nonexecutable statements are excluded.\n\nForms of use: **P-use** (predicate), **C-use** (computation), **O-use** (output), **L-use** (location: pointers, subscripts), **I-use** (iteration: internal counters, loop indices). Forms of definition: **I-def** (input), **A-def** (assignment).\n\nFor a slice on one variable v:\n\n- a defining node of v at n is included\n- P-uses and C-uses of other variables are included to the extent that their execution affects the value of v\n- a fragment is excluded if v has the same value with or without it\n- as a judgment call, O-use, L-use and I-use nodes are excluded\n\nThese are **backward slices**: the parts that contribute to a variable's value at a point. **Forward slices** would hold the parts where the variable is used.",
+        "tr": "**Program dilimi (program slice)**, gayri resmî olarak, programın bir noktasında bir değişkenin değerine katkıda bulunan veya onu etkileyen program deyimlerinin kümesidir (Weiser, 1985). Amaç, programı işe yarar (işlevsel) bir anlamı olan bileşenlere ayırmaktır.\n\nGeliştirilmiş tanım: deyim parçaları numaralanmış bir P programı ve bir V değişken kümesi için **S(V, n)** dilimi, P içinde n'den önce gelen ve n deyim parçasında V'deki değişkenlerin değerlerine katkıda bulunan tüm deyim parçalarının düğüm numaralarının kümesidir. “Önce” (prior to) dinamik anlamda kastedilir; böylece dilim, programın V'ye göre çalışma zamanındaki davranışını yakalar. Çalıştırılamayan deyimler dışarıda bırakılır.\n\nKullanım biçimleri: **P-use** (yüklem), **C-use** (hesaplama), **O-use** (çıktı), **L-use** (konum: işaretçiler, indisler), **I-use** (yineleme: iç sayaçlar, döngü indisleri). Tanım biçimleri: **I-def** (girdi), **A-def** (atama).\n\nTek bir v değişkeni üzerindeki dilim için:\n\n- n'deki bir v tanımlama düğümü dahil edilir\n- diğer değişkenlerin P-use ve C-use'ları, çalışmaları v'nin değerini etkilediği ölçüde dahil edilir\n- v, bir parça olsa da olmasa da aynı değeri alıyorsa o parça çıkarılır\n- bir takdir meselesi olarak O-use, L-use ve I-use düğümleri çıkarılır\n\nBunlar **geriye doğru dilimlerdir (backward slices)**: bir değişkenin bir noktadaki değerine katkıda bulunan parçalar. **İleriye doğru dilimler (forward slices)** ise değişkenin kullanıldığı parçaları içerirdi."
+      },
+      "source": "pp. 167–169, 174"
+    },
+    {
+      "id": "computing-slices",
+      "title": {
+        "en": "Computing slices and good slice style",
+        "tr": "Dilimleri hesaplamak ve iyi dilim üslubu"
+      },
+      "body": {
+        "en": "To compute a slice S(v, n) by hand, walk backward from the statement you care about:\n\n- include the defining nodes (I-defs, A-defs) of v whose value can reach n\n- for an A-def, also include the slices of the variables it uses\n- include the predicate and loop nodes that decide whether those definitions execute\n- leave out declarations, and n itself when it only outputs v (an O-use)\n\n**Example (commission program):** 10 and 11 set totalLocks and totalStocks to 0; 13 `Input(locks)`; 14 `While NOT(locks = −1)`; 15 `Input(stocks, barrels)`; 16 `totalLocks = totalLocks + locks`; 17 `totalStocks = totalStocks + stocks`; 19 `Input(locks)`; 20 `EndWhile`; 21 and 22 output totalLocks and totalStocks. S(totalLocks, 21) = {10, 13, 14, 16, 19, 20}: A-defs 10 and 16, I-defs of locks 13 and 19, and loop nodes 14 and 20. Node 15 does not affect totalLocks and 21 is only an O-use, so this slice equals S(totalLocks, 16); when slices are equal, the corresponding paths are definition clear.\n\nStyle guidelines:\n\n- never make S(V, n) if the variables of V do not appear in fragment n: the definition permits it, but it is bad practice (e.g. a slice on locks at node 27)\n- make slices on one variable, and for all A-def nodes\n- make slices for P-use nodes; very useful in decision-intensive programs (triangle, NextDate)\n- other usage-node slices are not very interesting: an O-use slice is the union of the slices on that variable's A-defs (and I-defs)\n- consider compilable slices; tested slices can then be merged (“slice splicing”)",
+        "tr": "Bir S(v, n) dilimini elle hesaplamak için ilgilendiğin deyimden geriye doğru yürü:\n\n- v'nin, değeri n'ye ulaşabilen tanımlama düğümlerini (I-def, A-def) dahil et\n- bir A-def için, onun kullandığı değişkenlerin dilimlerini de dahil et\n- bu tanımların çalışıp çalışmayacağına karar veren yüklem ve döngü düğümlerini dahil et\n- bildirimleri ve v'yi yalnızca çıktı olarak veren (O-use) n düğümünün kendisini dışarıda bırak\n\n**Örnek (komisyon programı):** 10 ve 11 totalLocks ile totalStocks'u 0 yapar; 13 `Input(locks)`; 14 `While NOT(locks = −1)`; 15 `Input(stocks, barrels)`; 16 `totalLocks = totalLocks + locks`; 17 `totalStocks = totalStocks + stocks`; 19 `Input(locks)`; 20 `EndWhile`; 21 ve 22 totalLocks ile totalStocks'un çıktısını verir. S(totalLocks, 21) = {10, 13, 14, 16, 19, 20}: A-def'ler 10 ve 16, locks'un I-def'leri 13 ve 19 ve döngü düğümleri 14 ve 20. 15. düğüm totalLocks'u etkilemez, 21 ise yalnızca bir O-use'dur; bu yüzden bu dilim S(totalLocks, 16)'ya eşittir. Dilimler eşit olduğunda, karşılık gelen yollar tanım-temizdir.\n\nÜslup yönergeleri (style guidelines):\n\n- V'deki değişkenler n parçasında geçmiyorsa asla S(V, n) oluşturma: tanım buna izin verir ama kötü bir uygulamadır (örneğin 27. düğümde locks üzerinde bir dilim)\n- dilimleri tek bir değişken üzerinde ve tüm A-def düğümleri için oluştur\n- P-use düğümleri için dilim oluştur; karar yoğun programlarda (üçgen, NextDate) çok yararlıdır\n- diğer kullanım düğümlerinin dilimleri pek ilginç değildir: bir O-use dilimi, o değişkenin A-def'leri (ve I-def'leri) üzerindeki dilimlerin birleşimidir\n- derlenebilir dilimleri düşün; test edilmiş dilimler sonra birleştirilebilir (“slice splicing”, dilim ekleme)"
+      },
+      "source": "pp. 169–173"
+    },
+    {
+      "id": "slice-lattice",
+      "title": {
+        "en": "Lattices of slices and fault diagnosis",
+        "tr": "Dilim kafesleri ve hata teşhisi"
+      },
+      "body": {
+        "en": "Slices can be compared like sets, which helps both to understand a program and to locate faults.\n\nA **lattice of slices** is a directed acyclic graph whose nodes are slices; an edge represents the proper subset relationship (every element of the smaller slice is in the larger one, which has at least one more).\n\n- **Edge example:** S22 = S(stockSales, 25) = {8, 11, 13, 14, 15, 17, 19, 20, 25} contains S13 = S(totalStocks, 17) = {11, 13, 14, 15, 17, 19, 20} and S19 = S(stockPrice, 25) = {8}, so both are linked to S22.\n- **Unions:** a slice can be written as the union (∪) of its components: the sales slice at 27 is S24 = S10 ∪ S13 ∪ S16 ∪ S21 ∪ S22 ∪ S23, the slices on its C-use variables.\n- **Commission:** S31, S32 and S33 are the slices at nodes 31, 32 and 33 (first THEN); S34 and S35 at nodes 36 and 37 (ELSE IF); S36 at node 38 (ELSE); S37 at node 41 (output). Within a branch each slice contains the previous one; whichever computation is taken, all come together in the last slice.\n- **Diagnosis:** the relative complement A − B is the set of all elements of A that are not in B. If a value is wrong but a value it is computed from is correct, the fault lies in the complement. Example: S23 = S(barrelSales, 26) = {9, 12, 13, 14, 15, 18, 19, 20, 26}, S16 = S(totalBarrels, 18) = {12, 13, 14, 15, 18, 19, 20}; if barrelSales is wrong but totalBarrels is right, look in S23 − S16 = {9, 26}.",
+        "tr": "Dilimler kümeler gibi karşılaştırılabilir; bu hem programı anlamaya hem de hataların yerini bulmaya yardım eder.\n\n**Dilim kafesi (lattice of slices)**, düğümleri dilimler olan yönlü, döngüsüz bir graftır; bir kenar öz alt küme (proper subset) ilişkisini gösterir (küçük dilimin her elemanı büyük dilimdedir ve büyüğünde en az bir eleman daha vardır).\n\n- **Kenar örneği:** S22 = S(stockSales, 25) = {8, 11, 13, 14, 15, 17, 19, 20, 25}, S13 = S(totalStocks, 17) = {11, 13, 14, 15, 17, 19, 20} ve S19 = S(stockPrice, 25) = {8} dilimlerini içerir; bu yüzden ikisi de S22'ye bağlanır.\n- **Birleşimler:** bir dilim, bileşenlerinin birleşimi (∪, union) olarak yazılabilir: 27'deki sales dilimi, C-use değişkenlerinin dilimlerinden oluşan S24 = S10 ∪ S13 ∪ S16 ∪ S21 ∪ S22 ∪ S23'tür.\n- **Commission:** S31, S32 ve S33, ilk THEN dalındaki 31, 32 ve 33. düğümlerin dilimleridir; S34 ve S35 ELSE IF dalındaki 36 ve 37. düğümlerin, S36 ELSE dalındaki 38. düğümün, S37 ise 41. düğümün (çıktı) dilimidir. Bir dal içinde her dilim bir öncekini içerir; hangi hesaplama seçilirse seçilsin, hepsi son dilimde birleşir.\n- **Teşhis (diagnosis):** göreli tümleyen (relative complement) A − B, A'nın B'de olmayan tüm elemanlarının kümesidir. Bir değer yanlış ama hesaplandığı bir değer doğruysa hata tümleyendedir. Örnek: S23 = S(barrelSales, 26) = {9, 12, 13, 14, 15, 18, 19, 20, 26}, S16 = S(totalBarrels, 18) = {12, 13, 14, 15, 18, 19, 20}; barrelSales yanlış ama totalBarrels doğruysa S23 − S16 = {9, 26} içinde ara."
+      },
+      "source": "pp. 168, 170–173"
+    }
+  ],
+  "questions": {
+    "1": {
+      "concept": "data-flow-basics",
+      "explanation_tr": "Üç tanım/referans anomalisi şunlardır: tanımlanıp hiç kullanılmayan değişken, kullanılıp hiç tanımlanmayan değişken ve kullanılmadan önce iki kez tanımlanan değişken; bunlar derleyicinin ürettiği konkordansın statik analiziyle bulunabilir. Bir değeri birkaç kez ya da hem yüklemlerde hem hesaplamalarda kullanmak normal bir veri akışıdır."
+    },
+    "2": {
+      "concept": "data-flow-basics",
+      "explanation_tr": "Bir kullanım, ancak ve ancak deyim bir yüklem ise P-use'dur (14. düğümdeki While koşulu gibi; bu düğümlerin çıkış derecesi >= 2'dir), değilse C-use'dur (çıkış derecesi <= 1). 16. düğüm locks'u bir hesaplamada kullanır ve totalLocks'a atama yapar, bu yüzden DEF(totalLocks, 16)'dır; locks yalnızca 13. ve 19. düğümlerde tanımlanır."
+    },
+    "3": {
+      "concept": "du-dc-paths",
+      "explanation_tr": "dc-path, baştaki DEF ve sondaki USE düğümü dışında hiçbir düğümün v'nin tanımlama düğümü olmadığı bir du-path'tir; p7, totalLocks'un yeniden tanımlandığı 16. düğümü içerir. 21. düğümdeki çıktı gibi aradaki kullanımlar tanım-temizliği etkilemez."
+    },
+    "4": {
+      "concept": "loop-du-paths",
+      "explanation_tr": "p1', locks'un ilk değerini (priming value) 13. düğümde okur, 14. düğümde While yüklemini değerlendirir ve doğrudan 21. düğüme gider; böylece döngü gövdesine hiç girilmez. 19. düğümden başlayan yollar (p3, p3', p4) ancak döngü gövdesi zaten çalıştıktan sonra oluşur, p2 ise döngüye başlar."
+    },
+    "5": {
+      "concept": "commission-du-paths",
+      "explanation_tr": "31. düğüm If (sales > 1800) ifadesinin THEN dalında, 37. düğüm ise ELSE IF dalındadır; bu yüzden hiçbir yürütme yolu 31'den 37'ye gitmez. Tablo 10.4 diğer dördünü gerçekleştirilebilir (feasible) olarak işaretler (yalnızca (36, 41) tanım-temiz değildir, çünkü 37. düğüm commission'ı yeniden tanımlar)."
+    },
+    "6": {
+      "concept": "rapps-weyuker-metrics",
+      "explanation_tr": "All-Defs her değişken için her tanımlama düğümünden bir kullanıma tanım-temiz yollar ister; All-Uses ise bunları her tanımlama düğümünden v'nin her kullanımına ve her USE(v, n)'nin ardıl düğümüne ister. Dikkati yüklem ya da hesaplama kullanımlarıyla sınırlamak, All-P-Uses/Some C-Uses ve All-C-Uses/Some P-Uses ölçütlerinin yaptığı şeydir."
+    },
+    "7": {
+      "concept": "rapps-weyuker-metrics",
+      "explanation_tr": "All-DU-Paths tanımı, tanım-temiz yolların ya tek döngü geçişi ya da döngüsüz (cycle free) olması koşulunu ekler. Bu onu All-Uses'tan daha güçlü yapar; Şekil 10.3'te All-Uses'u kapsar (subsumes)."
+    },
+    "8": {
+      "concept": "metric-hierarchy",
+      "explanation_tr": "Şekil şöyle ilerler: All-Paths -> All-DU-Paths -> All-Uses -> {All-C-Uses/Some P-Uses, All-P-Uses/Some C-Uses}; bu ikisinin her biri All-Defs'i kapsar, All-P-Uses/Some C-Uses ayrıca All-P-Uses -> All-Edges -> All-Nodes zincirini de kapsar. Diğer ifadeler okları ters çevirir ya da var olmayan bağlantılar uydurur."
+    },
+    "9": {
+      "concept": "program-slices",
+      "explanation_tr": "S(V, n), P içinde n'den önce gelen ve n deyim parçasında V'deki değişkenlerin değerlerine katkıda bulunan tüm deyim parçalarının düğüm numaralarının kümesidir. “Önce” (prior to) dinamik anlamda kastedilir; bu yüzden bir dilim, programın V'deki değişkenlere göre çalışma zamanındaki davranışını yakalar."
+    },
+    "10": {
+      "concept": "program-slices",
+      "explanation_tr": "O-use (çıktı), L-use (konum: işaretçiler, indisler) ve I-use (yineleme: iç sayaçlar, döngü indisleri) düğümleri dilimlerden çıkarılır. Diğer değişkenlerin P-use ve C-use'ları, çalışmaları dilim değişkeninin değerini etkilediği ölçüde dahil edilir."
+    },
+    "11": {
+      "concept": "slice-lattice",
+      "explanation_tr": "Göreli tümleyen A - B, A'nın B'nin elemanı olmayan tüm elemanlarının kümesidir. Program, sales'in hesaplanması ve commission'ın hesaplanması olarak ikiye ayrılır; sales doğruysa sorun göreli tümleyende olmalıdır, değilse iki bölümden herhangi birinde olabilir."
+    },
+    "12": {
+      "concept": "sales-du-paths",
+      "explanation_tr": "27 ve 28. düğümler D DD-Path'inde, 29. düğüm E'de, 30-33 F'de, 34 G'de ve 35-37 H'dedir. Du-path'ler kullanım düğümlerinde bittiği için I (38), J (39) ve K (40)'a ulaşılmaz."
+    },
+    "13": {
+      "concept": "metric-hierarchy",
+      "explanation_tr": "İlk üç Rapps-Weyuker ölçütü olan All-Paths, All-Edges ve All-Nodes, Miller'ın ölçütlerine denktir; diğerleri tanım/kullanım düğümlerinin ve du-path'lerin belirlenmiş olduğunu varsayar. Şekil 10.3'te bunlar en üstte (All-Paths, genellikle ulaşılamaz) ve en altta (genel kabul gören asgari düzey All-Edges, ardından All-Nodes) yer alır."
+    },
+    "14": {
+      "concept": "commission-du-paths",
+      "explanation_tr": "Gerçek tanımlama düğümleri DEF(commission, 33), DEF(commission, 37) ve DEF(commission, 38)'dir ve yalnızca bir kullanım düğümü kullanılır: USE(commission, 41). Tablo 10.4 bu üç yolun üçünü de gerçekleştirilebilir ve tanım-temiz olarak işaretler."
+    },
+    "15": {
+      "concept": "slice-lattice",
+      "explanation_tr": "Şekil 10.4'te S37'den S33 = S(commission, 33), S35 = S(commission, 37) ve S36 = S(commission, 38)'e kenarlar vardır: üç hesaplamadan hangisi seçilirse seçilsin, hepsi son dilimde birleşir. S31 ve S32 zaten S33'ün, S34 de S35'in içindedir."
+    },
+    "16": {
+      "concept": "computing-slices",
+      "explanation_tr": "Bölüm S14 = S(totalStocks, 22) = {11, 13, 14, 15, 17, 19, 20} verir: 11 ve 17'deki A-def'ler, 15'teki stocks girdisi ve locks'un kontrol ettiği While döngüsünün 13, 14, 19 ve 20. düğümleri (22. düğümün kendisi yalnızca bir O-use'dur). İstenen diğer bazı dilimler, örneğin S(commission, 28) veya S(totalLocks, 22), o deyimde geçmeyen bir değişkeni adlandırır; üslup yönergeleri bunu kötü uygulama olarak niteler."
+    },
+    "17": {
+      "concept": "sales-du-paths",
+      "explanation_tr": "sales'in yalnızca bir tanımlama düğümü (27) vardır, bu yüzden sales için her du-path tanım-temizdir. Statik seçim kaynak metni THEN dalı (30-33) üzerinden 34'e kadar izler; bölümün DD-Path düşüncesine uyduğu için kullandığı dinamik seçim ise 29'daki karardan doğrudan 34'teki ELSE IF'e gider."
+    },
+    "18": {
+      "concept": "slice-lattice",
+      "explanation_tr": "S10'un her elemanı S21'dedir; S21 buna 7. düğümü (lockPrice) ve 24. düğümü ekler, bu yüzden S10, S21'in öz alt kümesidir. S23 ve S16 12, 15 ve 18 gibi barrel düğümlerini, S6 15 ve 17 numaralı stock düğümlerini, S19 ise 8. düğümü içerir; bunların hiçbiri S21'de yoktur."
+    },
+    "19": {
+      "concept": "program-slices",
+      "explanation_tr": "Bölümdeki dilimler, bir değişkenin belirli bir noktadaki değerine katkıda bulunan program parçalarıyla ilgilenir (geriye doğru, backward); ileriye doğru dilimler (forward slices) ise değişkenin kullanıldığı program parçalarını ifade eder. İleriye doğru dilimleri du-path'lerle karşılaştırmak açık bir tartışma olarak bırakılmıştır."
+    }
+  }
+}

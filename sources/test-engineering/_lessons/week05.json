@@ -1,0 +1,266 @@
+{
+  "intro": {
+    "en": "This set is about what happens when parts that work alone are put together. You will learn how integration testing finds defects in the interfaces between components, which strategies and test doubles it uses, and how to test a system through its API with Postman, from a single request to automated runs in a CI pipeline. Modules that pass their own tests can still fail together, as the Mars Climate Orbiter showed, so the places where parts meet need tests of their own.",
+    "tr": "Bu set, tek başına çalışan parçalar bir araya getirildiğinde ne olduğunu anlatıyor. Entegrasyon testinin bileşenler arasındaki arayüzlerde hataları nasıl bulduğunu, hangi stratejileri ve test dublörlerini kullandığını ve bir sistemi Postman ile API'si üzerinden nasıl test edeceğini öğreneceksin: tek bir istekten CI hattındaki otomatik çalıştırmalara kadar. Mars Climate Orbiter'ın gösterdiği gibi, kendi testlerini geçen modüller birlikte yine de başarısız olabilir; bu yüzden parçaların buluştuğu yerlerin ayrıca test edilmesi gerekir."
+  },
+  "concepts": [
+    {
+      "id": "level-interface-pyramid",
+      "title": {
+        "en": "Test level, test interface and the test pyramid",
+        "tr": "Test seviyesi, test arayüzü ve test piramidi"
+      },
+      "body": {
+        "en": "Before you test anything, answer two separate questions.\n\n- **Test level** (how big is the piece we test?): unit, integration, system, acceptance.\n- **Test interface** (where do we touch the system?): code (call a function), API (send an HTTP request) or UI (click on the screen).\n\nThe two questions are independent: API is an interface, not a level. **Example:** a script that sends `GET /menu` to a running server which reads a real database is an API test (interface) and an integration test (level) at the same time.\n\nThe **test pyramid** (Mike Cohn, 2009) says how many tests of each kind to have:\n\n- Bottom, unit tests (many): fast, cheap, isolated.\n- Middle, integration / API tests (some): find interface defects (defects where two parts meet) that unit tests cannot, but need more setup and can fail for more reasons: network, data, timing.\n- Top, end-to-end / UI tests (few): slowest and costliest, closest to real use.\n\nThe pyramid is a heuristic (a rule of thumb), not a law.",
+        "tr": "Bir şeyi test etmeden önce iki ayrı soruyu cevapla.\n\n- **Test seviyesi (test level)** (test ettiğimiz parça ne kadar büyük?): birim (unit), entegrasyon (integration), sistem (system), kabul (acceptance).\n- **Test arayüzü (test interface)** (sisteme nereden dokunuyoruz?): kod (bir fonksiyon çağırmak), API (bir HTTP isteği göndermek) veya UI (ekranda tıklamak).\n\nBu iki soru birbirinden bağımsızdır: API bir arayüzdür, bir seviye değildir. **Örnek:** gerçek bir veritabanından okuyan, çalışır durumdaki bir sunucuya `GET /menu` gönderen bir betik aynı anda hem bir API testi (arayüz) hem de bir entegrasyon testidir (seviye).\n\n**Test piramidi (test pyramid)** (Mike Cohn, 2009) her türden kaç test olması gerektiğini söyler:\n\n- En altta birim testleri (çok sayıda): hızlı, ucuz, yalıtılmış.\n- Ortada entegrasyon / API testleri (bir miktar): birim testlerinin bulamadığı arayüz hatalarını (iki parçanın buluştuğu yerdeki hatalar) bulur, ama daha fazla kurulum ister ve daha fazla nedenle başarısız olabilir: ağ, veri, zamanlama.\n- En üstte uçtan uca (end-to-end) / UI testleri (az sayıda): en yavaş ve en pahalı, gerçek kullanıma en yakın.\n\nPiramit bir yasa değil, sezgisel bir kuraldır (heuristic)."
+      },
+      "source": "slides 3, 5, 13"
+    },
+    {
+      "id": "integration-defects",
+      "title": {
+        "en": "What integration testing looks for",
+        "tr": "Entegrasyon testi neyi arar"
+      },
+      "body": {
+        "en": "**Integration testing** checks the interfaces and interactions between components that have already passed their own unit tests. A defect can hide in the interface even when every part works alone.\n\n**Mars Climate Orbiter (1999):** ground software sent thruster impulse in pound-force seconds, but the navigation software expected newton seconds (SI units), so the values were off by a factor of 4.45. Each module had passed its own tests; the orbiter flew far too low and was lost while entering Mars orbit.\n\nTwo kinds:\n\n- **Component integration testing:** parts inside one system, e.g. the order service and its database.\n- **System integration testing:** your system and systems you do not own, e.g. your shop and a payment provider.\n\nTypical interface defects:\n\n- **Data mismatch:** formats or units differ (dates, currency, units).\n- **Missing data:** missing fields or unexpected null values.\n- **Call order:** calls in the wrong order, or calls never made.\n- **Error handling:** wrong assumptions about errors and timeouts.\n- **Configuration:** a wrong URL or expired credentials.\n\n**Example:** one service sends a price in kuruş and the other reads it as lira: a data mismatch. The textbook (Jorgensen) lists this kind of fault in its fault tables as a \"scaling or units error\" among the data faults.",
+        "tr": "**Entegrasyon testi (integration testing)**, kendi birim testlerini zaten geçmiş bileşenler arasındaki arayüzleri ve etkileşimleri kontrol eder. Her parça tek başına çalışsa bile bir hata arayüzde saklanabilir.\n\n**Mars Climate Orbiter (1999):** yer yazılımı itki darbesini (thruster impulse) pound-force saniye cinsinden gönderdi, ama navigasyon yazılımı newton saniye (SI birimleri) bekliyordu; değerler 4.45 kat farklıydı. Her modül kendi testlerini geçmişti; uzay aracı çok alçaktan uçtu ve Mars yörüngesine girerken kayboldu.\n\nİki türü vardır:\n\n- **Bileşen entegrasyon testi (component integration testing):** tek bir sistemin içindeki parçalar, ör. sipariş servisi ve veritabanı.\n- **Sistem entegrasyon testi (system integration testing):** senin sistemin ve sahibi olmadığın sistemler, ör. mağazan ve bir ödeme sağlayıcısı.\n\nTipik arayüz hataları (interface defects):\n\n- **Veri uyuşmazlığı (data mismatch):** formatlar veya birimler farklı (tarih, para birimi, birimler).\n- **Eksik veri (missing data):** eksik alanlar veya beklenmeyen null değerler.\n- **Çağrı sırası (call order):** yanlış sırada yapılan ya da hiç yapılmayan çağrılar.\n- **Hata işleme (error handling):** hatalar ve zaman aşımları (timeout) hakkında yanlış varsayımlar.\n- **Yapılandırma (configuration):** yanlış bir URL veya süresi dolmuş kimlik bilgileri.\n\n**Örnek:** bir servis fiyatı kuruş olarak gönderir, diğeri lira olarak okur: bu bir veri uyuşmazlığıdır. Ders kitabı (Jorgensen) hata tablolarında bu tür bir hatayı veri hataları arasında \"ölçekleme veya birim hatası (scaling or units error)\" olarak listeler."
+      },
+      "source": "slides 6–8; Jorgensen Ch. 1 (fault tables, data faults)"
+    },
+    {
+      "id": "test-doubles",
+      "title": {
+        "en": "Test doubles and where integration tests run",
+        "tr": "Test dublörleri ve entegrasyon testlerinin çalıştığı yer"
+      },
+      "body": {
+        "en": "A **test double** replaces a real part during a test, like a stunt double who replaces an actor for one scene. The module under test sits between a fake caller and a fake callee:\n\n- **Driver** (fake caller): calls the module under test, because the real caller is not ready yet.\n- **Stub** (fake callee): stands in for a called module and returns fixed, canned answers.\n- **Mock:** a stub that also checks how it was called: which operation, how often, with what data.\n- **Fake:** a simplified but working implementation, e.g. an in-memory database.\n\n**Example:** a test replaces the SMS service with a double that always answers \"ok\". If it only answers, it is a stub; if it also verifies that it was called twice with the right phone number, it is a mock.\n\nAn integration test needs its dependencies, and you decide how real they are:\n\n- **Real dependency in a container:** a real database or message broker is started for each run, e.g. with Testcontainers. Realism high, speed low.\n- **Fake:** realism medium, speed high.\n- **Mock server:** simulates a third-party API you do not control and can return errors or delays on demand. Realism low, speed high.",
+        "tr": "Bir **test dublörü (test double)**, test sırasında gerçek bir parçanın yerini alır; tıpkı bir sahnede oyuncunun yerine geçen dublör gibi. Test edilen modül, sahte bir çağıranla sahte bir çağrılanın arasında durur:\n\n- **Sürücü (driver)** (sahte çağıran): gerçek çağıran henüz hazır olmadığı için test edilen modülü çağırır.\n- **Saplama (stub)** (sahte çağrılan): çağrılan bir modülün yerine geçer ve sabit, hazır cevaplar döndürür.\n- **Mock:** nasıl çağrıldığını da kontrol eden bir saplama: hangi işlem, kaç kez, hangi veriyle.\n- **Fake:** basitleştirilmiş ama çalışan bir gerçekleme, ör. bellek içi (in-memory) bir veritabanı.\n\n**Örnek:** bir test, SMS servisini her zaman \"ok\" cevabı veren bir dublörle değiştirir. Yalnızca cevap veriyorsa bu bir saplamadır; doğru telefon numarasıyla iki kez çağrıldığını da doğruluyorsa bir mock'tur.\n\nBir entegrasyon testi bağımlılıklarına ihtiyaç duyar ve bunların ne kadar gerçek olacağına sen karar verirsin:\n\n- **Konteynerde gerçek bağımlılık (real dependency in a container):** her çalıştırmada gerçek bir veritabanı veya mesaj aracısı (message broker) başlatılır, ör. Testcontainers ile. Gerçekçilik yüksek, hız düşük.\n- **Fake:** gerçekçilik orta, hız yüksek.\n- **Mock sunucu (mock server):** kontrol etmediğin üçüncü taraf bir API'yi taklit eder ve istendiğinde hata veya gecikme döndürebilir. Gerçekçilik düşük, hız yüksek."
+      },
+      "source": "slides 11, 12, 14"
+    },
+    {
+      "id": "integration-strategies",
+      "title": {
+        "en": "Integration strategies: big-bang, top-down, bottom-up",
+        "tr": "Entegrasyon stratejileri: büyük patlama, yukarıdan aşağı, aşağıdan yukarı"
+      },
+      "body": {
+        "en": "An integration strategy decides in which order the modules are put together.\n\n- **Big-bang:** combine all modules, then test the whole system. Pro: no stubs or drivers needed, quick to start. Con: a failure could come from anywhere, and testing starts late.\n- **Incremental:** add one module at a time and test after each step. Pro: defects appear early and are easy to locate. Con: needs stubs or drivers, and more planning.\n\nIncremental variants:\n\n- **Top-down:** start with the top module (e.g. the UI); modules below it that are not ready are replaced by **stubs**. Gives an early working skeleton; low-level defects show up late.\n- **Bottom-up:** start with the lowest modules; **drivers** call them, because the real callers are not ready. Low-level logic is tested early; nothing is visible until late.\n- **Sandwich (hybrid):** top-down and bottom-up in parallel, meeting in the middle layer.\n\nIn the textbook's (Jorgensen) graph terms, draw an edge from each caller to the module it calls. A **source** node has indegree 0 (no edge comes in), a **sink** node has outdegree 0 (no edge goes out), a **transfer** node has both above 0, and a node with both equal to 0 is **isolated**. Top-down starts at the source; bottom-up starts at the sinks. **Example:** in App → Cart → PriceDB, App is the source, Cart a transfer node and PriceDB the sink.",
+        "tr": "Bir entegrasyon stratejisi, modüllerin hangi sırayla bir araya getirileceğine karar verir.\n\n- **Büyük patlama (big-bang):** tüm modülleri birleştir, sonra bütün sistemi test et. Artısı: saplama veya sürücü gerekmez, başlaması hızlıdır. Eksisi: bir hata her yerden gelebilir ve test geç başlar.\n- **Artımlı (incremental):** her seferinde bir modül ekle ve her adımdan sonra test et. Artısı: hatalar erken ortaya çıkar ve yerleri kolay bulunur. Eksisi: saplama veya sürücü ve daha fazla planlama gerekir.\n\nArtımlı çeşitler:\n\n- **Yukarıdan aşağı (top-down):** en üst modülden başla (ör. UI); altındaki, henüz hazır olmayan modüllerin yerini **saplamalar (stubs)** alır. Erken çalışan bir iskelet verir; alt seviye hatalar geç ortaya çıkar.\n- **Aşağıdan yukarı (bottom-up):** en alt modüllerden başla; gerçek çağıranlar hazır olmadığı için onları **sürücüler (drivers)** çağırır. Alt seviye mantık erken test edilir; sona kadar görünür bir şey olmaz.\n- **Sandviç (sandwich, hibrit):** yukarıdan aşağı ve aşağıdan yukarı paralel yürür, ortadaki katmanda buluşur.\n\nDers kitabının (Jorgensen) graf terimleriyle, her çağırandan çağırdığı modüle bir kenar çiz. **Kaynak (source)** düğümün giriş derecesi (indegree) 0'dır (hiç kenar girmez), **havuz (sink)** düğümün çıkış derecesi (outdegree) 0'dır (hiç kenar çıkmaz), **aktarma (transfer)** düğümünde ikisi de 0'dan büyüktür, ikisi de 0 olan düğüm ise **yalıtılmıştır (isolated)**. Yukarıdan aşağı kaynakta başlar; aşağıdan yukarı havuzlarda başlar. **Örnek:** App → Cart → PriceDB içinde App kaynak, Cart aktarma düğümü, PriceDB havuzdur."
+      },
+      "source": "slides 9–10; Jorgensen Ch. 4 (directed graphs, node types)"
+    },
+    {
+      "id": "http-basics",
+      "title": {
+        "en": "HTTP requests, methods and status codes",
+        "tr": "HTTP istekleri, metotları ve durum kodları"
+      },
+      "body": {
+        "en": "An API test talks to the system over HTTP, so you must be able to read a request and its response.\n\n**Request** (the order ticket):\n\n- First line: method and path, e.g. `GET /menu/7`.\n- Next lines: headers (metadata), e.g. `Content-Type: application/json` or `Authorization: Bearer …`.\n- After a blank line: the body (the data, often JSON).\n\n**Response:** a status line such as `HTTP/1.1 201 Created`, headers such as `Location: /orders/42`, then the body. The status code belongs to the response, not to the request.\n\n**Methods** (what the request wants to do with a resource):\n\n- `GET`: read\n- `POST`: create a new resource\n- `PUT`: replace\n- `PATCH`: partly update\n- `DELETE`: remove\n\n**Status codes:** the first digit gives the family.\n\n- 2xx success: 200 OK, 201 Created, 204 No Content.\n- 4xx client error: 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found.\n- 5xx server error: 500 Internal Server Error, 503 Service Unavailable.\n\n**Example:** changing only a customer's phone number is a `PATCH`; sending the whole new customer record is a `PUT`.",
+        "tr": "Bir API testi sistemle HTTP üzerinden konuşur; bu yüzden bir isteği (request) ve yanıtını (response) okuyabilmen gerekir.\n\n**İstek** (sipariş fişi):\n\n- İlk satır: metot ve yol (path), ör. `GET /menu/7`.\n- Sonraki satırlar: başlıklar (headers, üst veri), ör. `Content-Type: application/json` veya `Authorization: Bearer …`.\n- Boş satırdan sonra: gövde (body; veri, çoğunlukla JSON).\n\n**Yanıt:** `HTTP/1.1 201 Created` gibi bir durum satırı, `Location: /orders/42` gibi başlıklar, ardından gövde. Durum kodu (status code) isteğe değil, yanıta aittir.\n\n**Metotlar** (isteğin bir kaynakla ne yapmak istediği):\n\n- `GET`: okur\n- `POST`: yeni bir kaynak oluşturur\n- `PUT`: tamamen değiştirir\n- `PATCH`: kısmen günceller\n- `DELETE`: siler\n\n**Durum kodları:** ilk rakam aileyi verir.\n\n- 2xx başarı: 200 OK, 201 Created, 204 No Content.\n- 4xx istemci hatası: 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found.\n- 5xx sunucu hatası: 500 Internal Server Error, 503 Service Unavailable.\n\n**Örnek:** bir müşterinin yalnızca telefon numarasını değiştirmek bir `PATCH`'tir; müşteri kaydının tamamını yeniden göndermek bir `PUT`'tur."
+      },
+      "source": "slides 16–18"
+    },
+    {
+      "id": "api-six-checks",
+      "title": {
+        "en": "What to assert in an API test",
+        "tr": "Bir API testinde neyi doğrularız"
+      },
+      "body": {
+        "en": "Checking only that \"an answer came back\" is not enough, just as a mystery shopper checks more than \"the food arrived\". A good API test checks six things:\n\n- **Status code:** exactly the code the specification promises, e.g. 201 after creating.\n- **Body values:** the returned data is correct, e.g. status is \"received\" and quantity is 2.\n- **Schema:** every required field is present, with the right type (look up JSON Schema). This checks the shape of the data, not whether the values are right.\n- **Headers:** Content-Type, Location, caching and security headers.\n- **Response time:** within the agreed limit, e.g. under 500 ms.\n- **Side effects:** the action really happened; read the result back, e.g. with a `GET`.\n\n**Example:** `DELETE /orders/7` answers 204 and everything looks perfect. Only a follow-up `GET /orders/7` that now returns 404 proves that the order is really gone. Status code, body, schema, headers and response time can all look right while nothing changed inside the system.",
+        "tr": "Yalnızca \"bir cevap geldi\" diye kontrol etmek yetmez; gizli müşteri (mystery shopper) de \"yemek geldi\"den fazlasını kontrol eder. İyi bir API testi altı şeyi kontrol eder:\n\n- **Durum kodu (status code):** spesifikasyonun söz verdiği kodun tam kendisi, ör. oluşturmadan sonra 201.\n- **Gövde değerleri (body values):** dönen veri doğru, ör. status \"received\" ve quantity 2.\n- **Şema (schema):** gerekli her alan var ve doğru tipte (JSON Schema'ya bak). Bu, değerlerin doğru olup olmadığını değil, verinin biçimini kontrol eder.\n- **Başlıklar (headers):** Content-Type, Location, önbellek (caching) ve güvenlik başlıkları.\n- **Yanıt süresi (response time):** kabul edilen sınırın içinde, ör. 500 ms'nin altında.\n- **Yan etkiler (side effects):** işlem gerçekten gerçekleşti; sonucu geri oku, ör. bir `GET` ile.\n\n**Örnek:** `DELETE /orders/7` 204 döndürür ve her şey kusursuz görünür. Siparişin gerçekten silindiğini yalnızca ardından gelen ve artık 404 döndüren bir `GET /orders/7` kanıtlar. Sistemin içinde hiçbir şey değişmemişken durum kodu, gövde, şema, başlıklar ve yanıt süresi doğru görünebilir."
+      },
+      "source": "slide 19"
+    },
+    {
+      "id": "negative-boundary-tests",
+      "title": {
+        "en": "Negative and boundary tests",
+        "tr": "Negatif ve sınır testleri"
+      },
+      "body": {
+        "en": "Happy-path tests show that the API works. **Negative tests** show that it fails politely: a wrong request gets a 4xx answer, never a 5xx (\"the kitchen is on fire\").\n\nExpected answers in the slides' example (`POST /orders`):\n\n- a required field is missing: 400\n- no token sent: 401\n- another customer's token, reading someone else's order: 403 (or 404)\n- the order does not exist: 404\n- wrong type (quantity = \"two\"): 400\n\n**Boundary tests** check the edges of a valid range: each boundary is tested together with the value just outside it. Values on the inside must succeed (e.g. 201); values outside must be rejected with 400.\n\n**Example:** a table number must be 1 to 20. Test 0, 1, 20 and 21, and expect 400, success, success, 400.\n\nThe textbook (Jorgensen) uses a different convention. **Boundary value analysis** picks min, min+, nom, max− and max of a variable, which are all valid values (here 1, 2, a nominal value such as 10, 19 and 20). **Robustness testing** adds min− and max+ (here 0 and 21), the invalid values just outside. Its main value, says the book, is that it forces attention on exception handling.",
+        "tr": "Mutlu yol (happy-path) testleri API'nin çalıştığını gösterir. **Negatif testler (negative tests)** ise API'nin kibarca başarısız olduğunu gösterir: hatalı bir istek 4xx cevabı alır, asla 5xx (\"mutfak yanıyor\") almaz.\n\nSlaytlardaki örnekte (`POST /orders`) beklenen cevaplar:\n\n- zorunlu bir alan eksik: 400\n- hiç token gönderilmedi: 401\n- başka bir müşterinin token'ı ile başkasının siparişini okumak: 403 (veya 404)\n- sipariş yok: 404\n- yanlış tip (quantity = \"two\"): 400\n\n**Sınır testleri (boundary tests)** geçerli bir aralığın kenarlarını kontrol eder: her sınır, hemen dışındaki değerle birlikte test edilir. İçerideki değerler başarılı olmalı (ör. 201), dışarıdakiler 400 ile reddedilmelidir.\n\n**Örnek:** masa numarası 1 ile 20 arasında olmalı. 0, 1, 20 ve 21'i test et; sırasıyla 400, başarı, başarı, 400 bekle.\n\nDers kitabı (Jorgensen) farklı bir kural kullanır. **Sınır değer analizi (boundary value analysis)** bir değişkenin min, min+, nom, max− ve max değerlerini seçer; bunların hepsi geçerli değerlerdir (burada 1, 2, 10 gibi bir nominal değer, 19 ve 20). **Sağlamlık testi (robustness testing)** buna min− ve max+ değerlerini ekler (burada 0 ve 21), yani hemen dışarıdaki geçersiz değerleri. Kitaba göre asıl değeri, dikkati istisna işlemeye (exception handling) yöneltmesidir."
+      },
+      "source": "slide 20; Jorgensen Ch. 5 (boundary value analysis, robustness testing)"
+    },
+    {
+      "id": "postman-scripts",
+      "title": {
+        "en": "Postman: building blocks, scripts and tests",
+        "tr": "Postman: yapı taşları, betikler ve testler"
+      },
+      "body": {
+        "en": "**Postman** is an API platform (desktop and web app) to send, test and document API requests.\n\n- **Request:** one HTTP call: method, URL, headers, body.\n- **Collection:** an ordered group of requests and their tests, run as a whole.\n- **Environment:** variable values for one target: development, test or production.\n- **Variables:** placeholders such as `{{baseUrl}}` or `{{token}}`, reused across requests.\n- **Scripts:** JavaScript that runs before (Pre-request) or after (Post-response) a request.\n\nTests are written in a Post-response script; results appear in the Test Results tab and in command-line and CI reports.\n\n- `pm.test(name, fn)`: one named check. It passes if its function throws no error.\n- `pm.response`: the response that just arrived (status, headers, body, time).\n- `pm.expect(value)`: an assertion in Chai style, e.g. `pm.expect(x).to.eql(3)`.\n- `pm.response.to.have.status(200)` checks the HTTP status code, while `pm.response.json().status` only reads a body field that happens to be called \"status\".\n\n**Chaining** passes data between calls: `pm.environment.set(\"cartId\", pm.response.json().id);` stores a value, and later requests reuse it as `{{cartId}}`. `pm.expect` and `pm.test` only check values; they store nothing.",
+        "tr": "**Postman**, API isteklerini göndermek, test etmek ve belgelemek için bir API platformudur (masaüstü ve web uygulaması).\n\n- **İstek (request):** tek bir HTTP çağrısı: metot, URL, başlıklar, gövde.\n- **Koleksiyon (collection):** isteklerin ve testlerinin sıralı bir grubu; bir bütün olarak çalıştırılır.\n- **Ortam (environment):** tek bir hedef için değişken değerleri: development, test veya production.\n- **Değişkenler (variables):** `{{baseUrl}}` veya `{{token}}` gibi, istekler arasında tekrar kullanılan yer tutucular.\n- **Betikler (scripts):** bir istekten önce (Pre-request) veya sonra (Post-response) çalışan JavaScript kodu.\n\nTestler bir Post-response betiğine yazılır; sonuçlar Test Results sekmesinde ve komut satırı ile CI raporlarında görünür.\n\n- `pm.test(name, fn)`: adı olan tek bir kontrol. Fonksiyonu hata fırlatmazsa geçer.\n- `pm.response`: az önce gelen yanıt (durum, başlıklar, gövde, süre).\n- `pm.expect(value)`: Chai tarzı bir doğrulama (assertion), ör. `pm.expect(x).to.eql(3)`.\n- `pm.response.to.have.status(200)` HTTP durum kodunu kontrol eder; `pm.response.json().status` ise yalnızca gövdede adı \"status\" olan bir alanı okur.\n\n**Zincirleme (chaining)** veriyi çağrılar arasında taşır: `pm.environment.set(\"cartId\", pm.response.json().id);` bir değeri saklar, sonraki istekler onu `{{cartId}}` olarak tekrar kullanır. `pm.expect` ve `pm.test` yalnızca değerleri kontrol eder; hiçbir şey saklamaz."
+      },
+      "source": "slides 21–26"
+    },
+    {
+      "id": "postman-cli-ci",
+      "title": {
+        "en": "Running collections from the command line and in CI",
+        "tr": "Koleksiyonları komut satırında ve CI'da çalıştırmak"
+      },
+      "body": {
+        "en": "Automation means running the same collection without clicking, after every change. With the **Postman CLI** (`npm install -g postman-cli`):\n\n- `postman collection run orders.json -e test.json`: run with an environment (`-e`).\n- `-d data.csv`: data-driven run, one iteration per CSV row.\n- `-r cli,junit`: choose reporters, e.g. a JUnit report for CI.\n- `--bail`: stop the run at the first failure.\n\nBy default every request runs; failed tests are reported and the run continues. Any failed test gives a **non-zero exit code** (the number a program returns when it finishes). That exit code is how a CI server knows the build failed: the build turns red and the change is stopped before it reaches users. JUnit, HTML and JSON reports need a v2.1 JSON collection.\n\nIn a **CI pipeline** (e.g. GitHub Actions), every push and pull request runs the collection. **Secrets** (API keys, passwords) live in the CI secret store and are passed in as environment variables; never commit them. JUnit reports are written to `postman-cli-reports/`.\n\n**Postman CLI vs Newman:**\n\n- Postman CLI: actively developed, closed source and digitally signed, runs v2.1 JSON and v3 YAML collections, also offers monitors, mocks, performance tests and spec linting.\n- Newman: open source since 2014, no longer maintained (2026), v2.1 JSON only, runs collections only.",
+        "tr": "Otomasyon, aynı koleksiyonu tıklamadan, her değişiklikten sonra çalıştırmak demektir. **Postman CLI** ile (`npm install -g postman-cli`):\n\n- `postman collection run orders.json -e test.json`: bir ortamla (`-e`) çalıştırır.\n- `-d data.csv`: veri güdümlü (data-driven) çalıştırma, CSV'nin her satırı için bir yineleme (iteration).\n- `-r cli,junit`: raporlayıcıları (reporters) seçer, ör. CI için bir JUnit raporu.\n- `--bail`: çalıştırmayı ilk hatada durdurur.\n\nVarsayılan olarak her istek çalışır; başarısız testler raporlanır ve çalıştırma devam eder. Herhangi bir başarısız test sıfırdan farklı bir **çıkış kodu (exit code)** verir (bir programın bittiğinde döndürdüğü sayı). CI sunucusu build'in başarısız olduğunu bu çıkış kodundan anlar: build kırmızıya döner ve değişiklik kullanıcılara ulaşmadan durdurulur. JUnit, HTML ve JSON raporları bir v2.1 JSON koleksiyonu gerektirir.\n\nBir **CI hattında (pipeline)** (ör. GitHub Actions) her push ve pull request koleksiyonu çalıştırır. **Gizli bilgiler (secrets)** (API anahtarları, parolalar) CI'ın gizli bilgi deposunda (secret store) durur ve ortam değişkenleri (environment variables) olarak aktarılır; asla depoya commit edilmez. JUnit raporları `postman-cli-reports/` klasörüne yazılır.\n\n**Postman CLI ve Newman:**\n\n- Postman CLI: aktif olarak geliştiriliyor, kapalı kaynak ve dijital olarak imzalı, v2.1 JSON ve v3 YAML koleksiyonlarını çalıştırır, ayrıca monitörler, mock'lar, performans testleri ve spesifikasyon denetimi (spec linting) sunar.\n- Newman: 2014'ten beri açık kaynak, artık bakımı yapılmıyor (2026), yalnızca v2.1 JSON, sadece koleksiyon çalıştırır."
+      },
+      "source": "slides 27–32"
+    },
+    {
+      "id": "api-test-types",
+      "title": {
+        "en": "Beyond functional testing: nine API test types",
+        "tr": "Fonksiyonel testin ötesi: dokuz API test türü"
+      },
+      "body": {
+        "en": "Functional tests ask \"does it do the right thing?\". Other test types ask different questions. The chart on the slides maps nine of them:\n\n- **Smoke:** simply validate that the APIs are working.\n- **Functional:** test against the functional requirements.\n- **Integration:** test several API calls together.\n- **Regression:** changes won't break the existing behaviours of the APIs (results of the old and the new app are compared).\n- **Load:** test the application's capacity by simulating loads.\n- **Stress:** deliberately create high loads to see if the APIs still function normally.\n- **Security:** test against all possible external threats.\n- **UI:** test the interactions between the UI and the APIs.\n- **Fuzz:** identify vulnerabilities by sending unexpected data into the APIs.\n\nThree types to research next, with what to look up:\n\n- **Contract testing** (does the provider still give its consumers exactly what they rely on?): OpenAPI, consumer-driven contracts, Pact.\n- **Security testing** (can table 5 read table 7's bill?): OWASP API Security Top 10, broken object level authorization.\n- **Performance testing** (what happens in the Friday-night rush?): load vs stress testing, tools such as k6 or JMeter.",
+        "tr": "Fonksiyonel testler \"doğru şeyi yapıyor mu?\" diye sorar. Diğer test türleri farklı sorular sorar. Slayttaki grafik bunlardan dokuzunu gösterir:\n\n- **Duman testi (smoke):** API'lerin çalışıp çalışmadığını basitçe doğrular.\n- **Fonksiyonel (functional):** fonksiyonel gereksinimlere göre test eder.\n- **Entegrasyon (integration):** birkaç API çağrısını birlikte test eder.\n- **Regresyon (regression):** değişikliklerin API'lerin mevcut davranışlarını bozmadığını kontrol eder (eski ve yeni uygulamanın sonuçları karşılaştırılır).\n- **Yük (load):** yük simüle ederek uygulamanın kapasitesini test eder.\n- **Stres (stress):** API'lerin hâlâ normal çalışıp çalışmadığını görmek için bilerek yüksek yükler oluşturur.\n- **Güvenlik (security):** olası tüm dış tehditlere karşı test eder.\n- **UI:** UI ile API'ler arasındaki etkileşimleri test eder.\n- **Fuzz:** API'lere beklenmeyen veriler göndererek güvenlik açıklarını bulur.\n\nSırada araştırılacak üç tür ve neye bakılacağı:\n\n- **Sözleşme testi (contract testing)** (sağlayıcı, tüketicilerine hâlâ tam olarak güvendikleri şeyi veriyor mu?): OpenAPI, tüketici güdümlü sözleşmeler (consumer-driven contracts), Pact.\n- **Güvenlik testi (security testing)** (5 numaralı masa 7 numaralı masanın hesabını okuyabilir mi?): OWASP API Security Top 10, nesne seviyesinde bozuk yetkilendirme (broken object level authorization).\n- **Performans testi (performance testing)** (cuma akşamı yoğunluğunda ne olur?): yük ve stres testi farkı, k6 veya JMeter gibi araçlar."
+      },
+      "source": "slides 33–34 (chart: 9 Types of API Testing)"
+    }
+  ],
+  "questions": {
+    "1": {
+      "concept": "level-interface-pyramid",
+      "explanation_tr": "Test seviyesi (parça ne kadar büyük) ve test arayüzü (sisteme nereden dokunduğun) birbirinden bağımsız sorulardır: bir HTTP isteği API arayüzüdür, gerçek bir veritabanı kullanan bir servis ise entegrasyon seviyesidir. API bir seviye değil, bir arayüzdür."
+    },
+    "2": {
+      "concept": "integration-defects",
+      "explanation_tr": "Her modül kendi testlerini geçmişti; hata arayüzdeydi: pound-force saniye cinsinden gönderilen itki darbesi newton saniye olarak okundu ve değerler 4.45 kat farklı çıktı."
+    },
+    "3": {
+      "concept": "integration-defects",
+      "explanation_tr": "Sistem entegrasyon testi senin sistemini ve ödeme sağlayıcısı gibi sahibi olmadığın sistemleri kapsar; bileşen entegrasyon testi ise sipariş servisi ve veritabanı gibi tek bir sistemin içindeki parçaları kapsar."
+    },
+    "4": {
+      "concept": "integration-defects",
+      "explanation_tr": "Eksik veri (missing data), eksik alanları veya beklenmeyen null değerleri kapsar; veri uyuşmazlığı (data mismatch) ise tarih veya para birimi gibi farklı formatlar ya da birimler anlamına gelirdi."
+    },
+    "5": {
+      "concept": "integration-strategies",
+      "explanation_tr": "Büyük patlama her şeyi aynı anda birleştirir; bu yüzden saplama veya sürücü gerekmez, ama hataların yeri zor bulunur ve test geç başlar. Artımlı entegrasyon hataları erken bulur ve yerlerini kolayca gösterir; bunun bedeli saplamalar veya sürücüler ve daha fazla planlamadır."
+    },
+    "6": {
+      "concept": "integration-strategies",
+      "explanation_tr": "Aşağıdan yukarı entegrasyon alt seviye modüllerle başlar ve henüz hazır olmayan çağıranların yerine sürücüler (drivers) geçer. Saplamalar (stubs) ise çağrılan modüllerin yerine geçer; yukarıdan aşağı yaklaşımın UI'ın altında ihtiyaç duyduğu budur."
+    },
+    "7": {
+      "concept": "integration-strategies",
+      "explanation_tr": "Aşağıdan yukarı yaklaşım alt seviye mantığı erken test eder ama sona kadar görünür bir şey olmaz; yukarıdan aşağı yaklaşım erken çalışan bir iskelet verir, ama onun alt seviye hataları geç ortaya çıkar."
+    },
+    "8": {
+      "concept": "test-doubles",
+      "explanation_tr": "Sürücü (driver), test edilen modülün sahte çağıranıdır; diğer taraftaki, sabit ve hazır cevaplar döndüren sahte çağrılan ise saplamadır (stub)."
+    },
+    "9": {
+      "concept": "test-doubles",
+      "explanation_tr": "Mock, nasıl çağrıldığını da kontrol eden bir saplamadır: hangi işlem, kaç kez ve hangi veriyle. Düz bir saplama yalnızca sabit, hazır cevaplar döndürür."
+    },
+    "10": {
+      "concept": "level-interface-pyramid",
+      "explanation_tr": "Piramitte (bir yasa değil, sezgisel bir kural) en altta çok sayıda hızlı, ucuz birim testi; ortada arayüz hatalarını yakalayan ama ağ, veri veya zamanlama yüzünden başarısız olabilen bir miktar entegrasyon/API testi; en üstte az sayıda yavaş uçtan uca test bulunur."
+    },
+    "11": {
+      "concept": "test-doubles",
+      "explanation_tr": "Konteynerdeki gerçek bir bağımlılığın gerçekçiliği yüksek ama hızı düşüktür; bir fake'in gerçekçiliği orta, hızı yüksektir; bir mock sunucunun gerçekçiliği düşük, hızı yüksektir."
+    },
+    "12": {
+      "concept": "test-doubles",
+      "explanation_tr": "Mock sunucu, kontrol etmediğin üçüncü taraf bir API'yi taklit eder ve istendiğinde hata veya gecikme döndürebilir; konteynerler ise veritabanı veya mesaj aracısı gibi gerçek bağımlılıklar içindir."
+    },
+    "13": {
+      "concept": "http-basics",
+      "explanation_tr": "İlk satır metodu ve yolu içerir (ör. POST /orders), sonraki satırlar başlıklardır (üst veri), gövde (çoğunlukla JSON) ise boş satırdan sonra gelir. Durum kodu isteğe değil, yanıta aittir."
+    },
+    "14": {
+      "concept": "http-basics",
+      "explanation_tr": "PUT bir kaynağı tamamen değiştirir, PATCH kısmen günceller; oluşturmak POST, okumak GET, silmek DELETE ile yapılır."
+    },
+    "15": {
+      "concept": "http-basics",
+      "explanation_tr": "İlk rakam aileyi verir: 500 ve 503 gibi 5xx kodları sunucu hatası, 4xx kodları istemci hatası, 2xx kodları ise başarıdır."
+    },
+    "16": {
+      "concept": "api-six-checks",
+      "explanation_tr": "İşlemin gerçekten gerçekleştiğini yalnızca yan etki kontrolü, siparişi geri okuyarak doğrular; hiçbir şey kaydedilmemişken durum kodu, gövde, şema, başlıklar ve yanıt süresi doğru görünebilir."
+    },
+    "17": {
+      "concept": "api-six-checks",
+      "explanation_tr": "Şema kontrolü gerekli her alanın doğru tipte var olduğunu doğrular; gövde değeri kontrolü ise dönen verinin doğru olduğunu doğrular, ör. status \"received\" ve quantity 2."
+    },
+    "18": {
+      "concept": "negative-boundary-tests",
+      "explanation_tr": "0 ve 11 geçerli aralığın hemen dışındadır ve 400 ile reddedilir; 1 ve 10 ise siparişi 201 ile oluşturan geçerli sınırlardır. 5xx, API'nin kibarca başarısız olmadığı anlamına gelirdi."
+    },
+    "19": {
+      "concept": "negative-boundary-tests",
+      "explanation_tr": "Hiç token göndermemek 401 verir; 403 (veya 404) ise başka bir müşterinin token'ı ile başkasının siparişi okunmaya çalışıldığında beklenir."
+    },
+    "20": {
+      "concept": "postman-scripts",
+      "explanation_tr": "Ortam (environment), tek bir hedef için değişken değerlerini tutar; hangi restoran şubesine gideceğini seçmek gibi. Sıralı bir istek ve test grubu koleksiyondur (collection), tek bir HTTP çağrısı ise istektir (request)."
+    },
+    "21": {
+      "concept": "postman-scripts",
+      "explanation_tr": "Betikler (scripts), bir istekten önce (Pre-request) veya sonra (Post-response) çalışan JavaScript kodudur; {{token}} gibi yer tutucular değişkendir, hedef başına değer kümeleri ise ortamdır."
+    },
+    "22": {
+      "concept": "postman-scripts",
+      "explanation_tr": "pm.test(name, fn) adı olan tek bir kontroldür ve fonksiyonu hata fırlatmazsa geçer; durum kodu veya yanıt süresi ancak fonksiyonun içindeki bir doğrulama (assertion) onu test ederse kontrol edilir."
+    },
+    "23": {
+      "concept": "postman-scripts",
+      "explanation_tr": "pm.response.to.have.status(201) HTTP durum kodunu kontrol eder; pm.response.json().status ise durum kodunu değil, gövdedeki \"status\" alanını (ör. \"received\") okur."
+    },
+    "24": {
+      "concept": "postman-scripts",
+      "explanation_tr": "pm.environment.set değeri token değişkeni olarak saklar ve sonraki istekler onu {{token}} ile tekrar kullanır; pm.expect ve pm.test yalnızca değerleri kontrol eder, hiçbir şey saklamaz."
+    },
+    "25": {
+      "concept": "postman-cli-ci",
+      "explanation_tr": "-d, CSV'nin her satırı için bir yineleme yapılan veri güdümlü çalıştırma için veri dosyasını verir; -e bir ortam seçer, -r ise cli,junit gibi raporlayıcıları seçer."
+    },
+    "26": {
+      "concept": "postman-cli-ci",
+      "explanation_tr": "Varsayılan olarak her istek çalışır ve başarısız testler raporlanır; çalıştırmayı ilk hatada yalnızca --bail durdurur ve başarısız her test yine de sıfırdan farklı bir çıkış kodu verir."
+    },
+    "27": {
+      "concept": "postman-cli-ci",
+      "explanation_tr": "Newman açık kaynaktır (2014'ten beri), yalnızca v2.1 JSON'u destekler ve artık bakımı yapılmamaktadır (2026); kapalı kaynak olmak, v3 YAML desteği ve monitörler ya da mock'lar Postman CLI'ı tanımlar."
+    },
+    "28": {
+      "concept": "postman-cli-ci",
+      "explanation_tr": "Herhangi bir başarısız test sıfırdan farklı bir çıkış kodu verir; CI sunucusu build'in başarısız olduğunu bu çıkış kodundan anlar ve değişikliği kullanıcılara ulaşmadan durdurur."
+    },
+    "29": {
+      "concept": "postman-cli-ci",
+      "explanation_tr": "API anahtarları ve parolalar gibi gizli bilgiler CI'ın gizli bilgi deposunda durur ve ortam değişkenleri olarak aktarılır; asla depoya commit edilmemelidir."
+    },
+    "30": {
+      "concept": "api-test-types",
+      "explanation_tr": "Grafik, yük testini yük simüle ederek uygulamanın kapasitesini test etmek, stres testini ise API'lerin hâlâ normal çalışıp çalışmadığını görmek için bilerek yüksek yükler oluşturmak olarak tanımlar."
+    },
+    "31": {
+      "concept": "api-test-types",
+      "explanation_tr": "OWASP API Security Top 10 güvenlik testine aittir; OpenAPI, tüketici güdümlü sözleşmeler (consumer-driven contracts) ve Pact sözleşme testine, k6 veya JMeter ise performans testine aittir."
+    },
+    "32": {
+      "concept": "negative-boundary-tests",
+      "explanation_tr": "min = 1 ve max = 10 iken min− = 0 ve max+ = 11 geçerli aralığın dışında kalır; 1 ve 10 ise min ve max'tır ve sade sınır değer analizi bunları zaten test eder (2, bir nominal değer ve 9 ile birlikte). Bu geçersiz değerler 400 alması gereken negatif testlerdir; bu da kitabın, sağlamlık testinin dikkati istisna işlemeye (exception handling) yönelttiği görüşüne uyar."
+    },
+    "33": {
+      "concept": "integration-strategies",
+      "explanation_tr": "Aşağıdan yukarı entegrasyon, başka hiçbir şeyi çağırmayan alt seviye modüllerle başlar; bunlar çağrı grafının havuz (sink) düğümleridir ve onları çağıranların yerine sürücüler geçer. UI tek kaynak düğümdür (giriş derecesi 0) ve yukarıdan aşağı yaklaşım oradan başlar; iki servis ise hem giriş hem çıkış derecesi 0'dan büyük olan aktarma (transfer) düğümleridir."
+    },
+    "34": {
+      "concept": "integration-defects",
+      "explanation_tr": "Yer yazılımı itki darbesini pound-force saniye cinsinden gönderdi, navigasyon ise newton saniye bekliyordu; farklı formatlar veya birimler bir veri uyuşmazlığıdır (data mismatch). Jorgensen'in hata tabloları da aynı tür sorunu veri hataları arasında \"ölçekleme veya birim hatası (scaling or units error)\" olarak listeler."
+    }
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "intro": {
+    "en": "This chapter looks back at the functional (specification-based) methods of Chapters 5–7 — boundary value, equivalence class and decision table testing — and compares them. It asks how much effort each method costs, how efficient its test cases are (gaps and redundancy) and how effective they are at finding faults. It closes with guidelines for choosing a method and an insurance premium case study that blends all three, which is exactly the kind of judgment a tester needs in practice.",
+    "tr": "Bu bölüm 5–7. bölümlerdeki fonksiyonel (spesifikasyona dayalı) yöntemlere — sınır değer, denklik sınıfı ve karar tablosu testi — geri dönüp onları karşılaştırır. Her yöntemin ne kadar emek gerektirdiğini, test durumlarının ne kadar verimli olduğunu (boşluklar ve fazlalık) ve hata bulmada ne kadar etkili olduklarını sorar. Bölüm, yöntem seçimi için yönergeler ve üçünü harmanlayan bir sigorta primi vaka çalışmasıyla biter; bu, bir test mühendisinin pratikte tam da ihtiyaç duyduğu türden bir muhakemedir."
+  },
+  "concepts": [
+    {
+      "id": "functional-families",
+      "title": {
+        "en": "Three families of functional testing",
+        "tr": "Fonksiyonel testin üç ailesi"
+      },
+      "body": {
+        "en": "Functional testing views a program as a mathematical function that maps its inputs onto its outputs; test cases come from the specification, not from the code. The book compares three families, ordered by **sophistication**:\n\n- **Domain-based (boundary) techniques**: boundary value analysis, robustness testing, worst-case testing and robust worst-case testing. They have no recognition of data or logical dependencies and generate test cases very mechanically, so they are easy to automate.\n- **Equivalence class testing** (weak normal, strong normal, weak robust, strong robust): pays attention to data dependencies and to the function itself. Identifying the classes needs more thought, judgment or craft; after that the process is mechanical too. Its goal of \"similar treatment\" is to reduce the sheer number of test cases of the domain-based techniques.\n- **Decision table testing**: the most sophisticated, because the tester must consider both data and logical dependencies. The conditions may not be right on the first try, but with a good set of conditions the test cases are both complete and, in some sense, minimal.\n\n**Example:** in NextDate, whether the day resets to 1 depends on the month. Boundary values on day, month and year ignore this dependency; a decision table states it explicitly as conditions.",
+        "tr": "Fonksiyonel test (functional testing), programı girdilerini çıktılarına eşleyen matematiksel bir fonksiyon olarak görür; test durumları koddan değil spesifikasyondan çıkar. Kitap üç aileyi **gelişmişlik düzeyine (sophistication)** göre sıralayarak karşılaştırır:\n\n- **Alan tabanlı (sınır) teknikler (domain-based techniques)**: sınır değer analizi (boundary value analysis), sağlamlık testi (robustness testing), en kötü durum testi (worst-case testing) ve sağlam en kötü durum testi (robust worst-case testing). Veri veya mantıksal bağımlılıkları hiç tanımazlar ve test durumlarını çok mekanik biçimde üretirler; bu yüzden otomatikleştirilmeleri kolaydır.\n- **Denklik sınıfı testi (equivalence class testing)** (zayıf normal, güçlü normal, zayıf sağlam, güçlü sağlam): veri bağımlılıklarına ve fonksiyonun kendisine dikkat eder. Sınıfları belirlemek daha fazla düşünce, muhakeme ya da ustalık ister; sonrasında süreç yine mekaniktir. \"Benzer işlem\" (similar treatment) fikrinin amacı, alan tabanlı tekniklerin ürettiği çok sayıdaki test durumunu azaltmaktır.\n- **Karar tablosu testi (decision table testing)**: en gelişmiş yöntemdir, çünkü test eden hem veri hem de mantıksal bağımlılıkları düşünmek zorundadır. Koşullar ilk denemede doğru olmayabilir, ama iyi bir koşul kümesiyle test durumları hem eksiksiz hem de bir anlamda minimaldir.\n\n**Örnek:** NextDate'te günün 1'e dönüp dönmeyeceği aya bağlıdır. Gün, ay ve yıl üzerindeki sınır değerler bu bağımlılığı yok sayar; karar tablosu ise onu koşullar olarak açıkça yazar."
+      },
+      "source": "pp. 123–124"
+    },
+    {
+      "id": "testing-effort",
+      "title": {
+        "en": "Testing effort: number of tests vs. identification effort",
+        "tr": "Test emeği: test sayısı ve belirleme emeği"
+      },
+      "body": {
+        "en": "Testing effort has two sides: the effort to *identify* (design) test cases and the effort to *execute* them. Figures 8.1 and 8.2 plot them against sophistication (boundary value → equivalence class → decision table):\n\n- **Fig 8.1:** the number of test cases goes from high to low as sophistication increases.\n- **Fig 8.2:** the effort to identify test cases goes from low to high.\n\nThis is a satisfying trade-off: methods that are easy to use generate numerous test cases, which take more time to execute. Shifting effort toward more sophisticated methods is repaid with less execution time, which matters because tests are typically executed several times. Judging testing quality by the sheer number of test cases has drawbacks similar to judging programming productivity by lines of code.\n\nFigs 8.3–8.6 (Triangle, NextDate, Commission, and all three together) bear out these trends. The domain-based numbers are identical for all three problems (read from the graphs: about 343 robust worst-case, 125 worst-case, 19 robust boundary value and 13 boundary value tests), because they come from formulas. The main differences appear in strong equivalence class and decision table testing, which reflect each problem's logical complexity.",
+        "tr": "Test emeğinin iki yüzü vardır: test durumlarını (test cases) *belirleme* (tasarlama) emeği ve onları *çalıştırma* emeği. Şekil 8.1 ve 8.2 bunları gelişmişlik düzeyine (sophistication) göre çizer (sınır değer (boundary value) → denklik sınıfı (equivalence class) → karar tablosu (decision table)):\n\n- **Şekil 8.1:** gelişmişlik arttıkça test durumu sayısı yüksekten düşüğe iner.\n- **Şekil 8.2:** test durumlarını belirleme emeği düşükten yükseğe çıkar.\n\nBu tatmin edici bir ödünleşimdir (trade-off): kullanımı kolay yöntemler çok sayıda test durumu üretir ve bunları çalıştırmak daha uzun sürer. Emeği daha gelişmiş yöntemlere kaydırmanın karşılığı daha kısa çalıştırma süresidir; testler genellikle birkaç kez çalıştırıldığı için bu önemlidir. Test kalitesini salt test durumu sayısıyla değerlendirmek, programcı verimliliğini kod satırı sayısıyla değerlendirmeye benzer sakıncalar taşır.\n\nŞekil 8.3–8.6 (Üçgen, NextDate, Komisyon ve üçü birlikte) bu eğilimleri doğrular. Alan tabanlı (domain-based) sayılar üç problemde de aynıdır (grafiklerden okunursa yaklaşık 343 sağlam en kötü durum (robust worst-case), 125 en kötü durum, 19 sağlam sınır değer ve 13 sınır değer testi), çünkü formüllerden gelirler. Asıl farklar güçlü denklik sınıfı ve karar tablosu testinde görülür; bunlar her problemin mantıksal karmaşıklığını yansıtır."
+      },
+      "source": "pp. 123–126 (Figs 8.1–8.6)"
+    },
+    {
+      "id": "gaps-and-redundancy",
+      "title": {
+        "en": "Fundamental limitation: gaps and redundancy (NextDate)",
+        "tr": "Temel kısıt: boşluklar ve fazlalık (NextDate)"
+      },
+      "body": {
+        "en": "Looking closely at the test sets reveals the **fundamental limitation of functional testing**: the twin possibilities of **gaps** of untested functionality and **redundant** tests (several tests that check the same thing). NextDate shows both:\n\n- **Decision table:** took three tries to get right and yields 13 test cases. We trust them to be complete because the decision table is complete.\n- **Worst-case boundary value analysis:** 125 test cases. Cases 1–5 test January 1 in five different years, although the year is irrelevant there, so one would suffice. A rough \"times ten\" redundancy estimate suggests about 25 cases, \"quite compatible with the 22\" from the decision table approach. Also, no February case hits February 28 or 29 and nothing connects to leap years, so there are severe **gaps** around the end of February and leap years.\n- **Strong equivalence class:** 36 test cases, 11 of them impossible, because of the presumed independence among the equivalence classes. All but six of the decision table cases map to strong equivalence class cases; three of those six test possibilities that the strong equivalence class cases miss.\n\n**Conclusions:** gaps occur in functional test cases, and more sophisticated techniques reduce them.",
+        "tr": "Test kümelerine yakından bakınca **fonksiyonel testin temel kısıtı** ortaya çıkar: test edilmemiş işlevsellik **boşlukları (gaps)** ve **gereksiz/fazla (redundant)** testler (aynı şeyi kontrol eden birkaç test) olmak üzere iki ikiz olasılık. NextDate ikisini de gösterir:\n\n- **Karar tablosu (decision table):** doğru hâle getirmek üç deneme sürmüştür ve 13 test durumu (test case) verir. Karar tablosu eksiksiz olduğu için bu test durumlarının eksiksiz olduğuna güveniriz.\n- **En kötü durum sınır değer analizi (worst-case boundary value analysis):** 125 test durumu. 1–5 numaralı durumlar 1 Ocak'ı beş farklı yılda test eder; oysa orada yılın önemi yoktur, yani biri yeterdi. Kaba bir \"on kat\" (times ten) fazlalık tahmini yaklaşık 25 durum önerir; bu, karar tablosu yaklaşımındaki 22 ile \"oldukça uyumludur\". Ayrıca hiçbir Şubat durumu 28 veya 29 Şubat'a denk gelmez ve artık yıllarla hiçbir bağlantı kurulmaz; yani Şubat sonu ve artık yıllar çevresinde ciddi **boşluklar** vardır.\n- **Güçlü denklik sınıfı (strong equivalence class):** 36 test durumu, bunların 11'i imkânsızdır; nedeni, denklik sınıfları arasında varsayılan bağımsızlıktır. Karar tablosu durumlarından altısı hariç hepsi güçlü denklik sınıfı durumlarına karşılık gelir; bu altı durumun üçü, güçlü denklik sınıfı durumlarının kaçırdığı olasılıkları test eder.\n\n**Sonuçlar:** fonksiyonel test durumlarında boşluklar oluşur ve daha gelişmiş teknikler bu boşlukları azaltır."
+      },
+      "source": "pp. 126–127"
+    },
+    {
+      "id": "efficiency-remedies",
+      "title": {
+        "en": "Testing efficiency: \"just right\" test sets",
+        "tr": "Test verimliliği: \"tam kararında\" test kümeleri"
+      },
+      "body": {
+        "en": "Testing **efficiency** asks how well a set of test cases avoids waste. Intuitively, an efficient set of test cases is \"just right\": no gaps and no redundancy. How can a tester get closer?\n\n- **Ratios** of the number of test cases from method A to those from method B (in total or per test case) can be computed, but this is usually more trouble than it is worth. Structural approaches (Chapter 11) quantify efficiency much better.\n- **Redundancy:** annotate each test case with a brief **purpose comment**. When several test cases have the same purpose, we (correctly) sense redundancy.\n- **Gaps** are harder to detect. With functional testing only, the best we can do is **compare the test cases that result from two methods**. More sophisticated methods generally help us recognize gaps, but nothing is guaranteed: we could develop excellent strong equivalence classes and then produce a klutzy (clumsy) decision table.\n\n**Example:** three tests annotated \"check January 1\" that differ only in the year signal redundancy. A February 28 case that the decision table set has but no worst-case boundary value test has signals a gap in the boundary value set.",
+        "tr": "Test **verimliliği (efficiency)**, bir test durumu (test case) kümesinin israftan ne kadar kaçındığını sorar. Sezgisel olarak verimli bir test kümesi \"tam kararındadır\" (just right): ne boşluk ne de fazlalık vardır. Test eden buna nasıl yaklaşabilir?\n\n- A yönteminin ürettiği test durumu sayısının B yönteminin ürettiğine **oranı** (toplamda ya da test durumu başına) hesaplanabilir, ama bu genellikle değdiğinden fazla zahmettir. Yapısal yaklaşımlar (Bölüm 11) verimliliği çok daha iyi ölçer.\n- **Fazlalık (redundancy):** her test durumuna kısa bir **amaç yorumu (purpose comment)** ekle. Birkaç test durumu aynı amaca sahipse, (haklı olarak) fazlalık olduğunu sezeriz.\n- **Boşlukları (gaps)** bulmak daha zordur. Yalnızca fonksiyonel test kullanabiliyorsak, yapabileceğimizin en iyisi **iki yöntemden çıkan test durumlarını karşılaştırmaktır**. Daha gelişmiş yöntemler genellikle boşlukları fark etmemize yardım eder, ama hiçbir şey garanti değildir: mükemmel güçlü denklik sınıfları (strong equivalence classes) geliştirip ardından beceriksizce (klutzy) bir karar tablosu (decision table) üretebiliriz.\n\n**Örnek:** \"1 Ocak'ı kontrol et\" yorumunu taşıyan ve yalnızca yılda farklılaşan üç test fazlalığa işaret eder. Karar tablosu kümesinde bulunan ama hiçbir en kötü durum sınır değer (worst-case boundary value) testinde bulunmayan bir 28 Şubat durumu, sınır değer kümesindeki bir boşluğa işaret eder."
+      },
+      "source": "p. 127"
+    },
+    {
+      "id": "testing-effectiveness",
+      "title": {
+        "en": "Testing effectiveness",
+        "tr": "Test etkinliği"
+      },
+      "body": {
+        "en": "Testing **effectiveness** asks how good a set of test cases really is, but first we must clarify what \"effective\" means:\n\n- **Dogmatic choice:** mandate a method, generate the test cases with it and run them. This is absolute and conformity is measurable, so it can serve as a basis for **contractual compliance**. It improves if testers may choose \"appropriate methods\" using the chapter guidelines, and again with hybrid methods (as for the Commission Problem in Chapter 5).\n- **Structural view:** examine test cases in terms of the program **execution paths** they traverse (Chapter 9). A path traversed more than once raises the question of redundancy, although sometimes such redundancy has a purpose (Chapter 10).\n- **Best but hardest:** how effective the test cases are at **finding the faults** in a program. This is problematic for two reasons. First, it presumes we know all the faults, a circularity: if we did, we would take care of them. Second, proving a program fault-free is equivalent to the famous **halting problem**, which is known to be impossible.\n\nThe pragmatic approach is to **work backward from fault types**: choose functional and structural methods likely to reveal each kind of fault, combine this with knowledge of the most likely faults, and improve it by tracking the kinds (and frequencies) of faults in the software you develop.",
+        "tr": "Test **etkinliği (effectiveness)**, bir test durumu (test case) kümesinin gerçekte ne kadar iyi olduğunu sorar; ama önce \"etkili\"nin ne demek olduğunu netleştirmeliyiz:\n\n- **Dogmatik seçim:** bir yöntemi zorunlu kıl, test durumlarını onunla üret ve çalıştır. Bu mutlaktır ve uyum ölçülebilir; bu yüzden **sözleşmeye uygunluk (contractual compliance)** için temel olabilir. Test edenler bölüm yönergelerini kullanarak \"uygun yöntemler\" seçebilirse iyileşir; hibrit yöntemlerle (Bölüm 5'teki Komisyon Problemi gibi) bir kez daha iyileşir.\n- **Yapısal bakış:** test durumlarını geçtikleri program **çalışma yolları (execution paths)** açısından incelemek (Bölüm 9). Birden fazla kez geçilen bir yol fazlalık sorusunu doğurur; yine de bazen bu fazlalığın bir amacı vardır (Bölüm 10).\n- **En iyi ama en zor yorum:** test durumlarının programdaki **hataları (faults) bulmada** ne kadar etkili olduğu. Bu iki nedenle sorunludur. Birincisi, tüm hataları bildiğimizi varsayar; bu bir kısır döngüdür: bilseydik zaten onları giderirdik. İkincisi, bir programın hatasız olduğunu kanıtlamak, imkânsız olduğu bilinen ünlü **durma problemine (halting problem)** denktir.\n\nPragmatik yaklaşım **hata türlerinden geriye doğru çalışmaktır**: her hata türünü ortaya çıkarması muhtemel fonksiyonel ve yapısal yöntemleri seç, bunu en olası hatalar bilgisiyle birleştir ve geliştirdiğin yazılımdaki hataların türlerini (ve sıklıklarını) izleyerek iyileştir."
+      },
+      "source": "pp. 127–128"
+    },
+    {
+      "id": "method-selection-guidelines",
+      "title": {
+        "en": "Guidelines: choosing a functional method",
+        "tr": "Yönergeler: fonksiyonel yöntem seçimi"
+      },
+      "body": {
+        "en": "The author's favorite testing story: a drunk man crawls under a street light looking for his car keys. He lost them in the parking lot, \"but the light is better here.\" The message: **testing for faults that are not likely to be present is pointless**. It is far more effective to know which faults are most likely (or most damaging) and then select methods likely to reveal them.\n\nOften we have no feeling for the likely faults. Then we use known attributes of the program (a \"punishment fits the crime\" view):\n\n- Do the variables represent physical or logical quantities?\n- Do dependencies exist among the variables?\n- Are single or multiple faults assumed?\n- Is exception handling prominent?\n\nThe beginning of an \"expert system\" for choosing techniques:\n\n- Rule 1 — physical quantities: domain testing and equivalence class testing.\n- Rule 2 — independent variables: domain testing and equivalence class testing.\n- Rule 3 — dependent variables: decision table testing.\n- Rule 4 — single-fault assumption: boundary value analysis and robustness testing.\n- Rule 5 — multiple-fault assumption: worst-case, robust worst-case and decision table testing.\n- Rule 6 — significant exception handling: robustness testing and decision table testing.\n- Rule 7 — logical quantities: equivalence class testing and decision table testing.",
+        "tr": "Yazarın en sevdiği test hikâyesi: sarhoş bir adam sokak lambasının altında emekleyerek araba anahtarlarını arıyordur. Anahtarları otoparkta kaybetmiştir, \"ama burada ışık daha iyi.\" Mesaj: **bulunması olası olmayan hataları test etmek anlamsızdır**. Hangi hataların en olası (ya da en zararlı) olduğunu bilmek ve sonra onları ortaya çıkarması muhtemel yöntemleri seçmek çok daha etkilidir.\n\nÇoğu zaman olası hatalar hakkında bir fikrimiz yoktur. O zaman programın bilinen özelliklerini kullanırız (\"ceza suça uygun olsun\" bakışı):\n\n- Değişkenler fiziksel mi yoksa mantıksal nicelikler mi temsil ediyor?\n- Değişkenler arasında bağımlılık var mı?\n- Tek hata mı çoklu hata mı varsayılıyor?\n- İstisna işleme (exception handling) belirgin mi?\n\nTeknik seçimi için bir \"uzman sistemin\" (expert system) başlangıcı:\n\n- Kural 1 — fiziksel nicelikler: alan testi (domain testing) ve denklik sınıfı testi (equivalence class testing).\n- Kural 2 — bağımsız değişkenler: alan testi ve denklik sınıfı testi.\n- Kural 3 — bağımlı değişkenler: karar tablosu testi (decision table testing).\n- Kural 4 — tek hata varsayımı (single-fault assumption): sınır değer analizi (boundary value analysis) ve sağlamlık testi (robustness testing).\n- Kural 5 — çoklu hata varsayımı: en kötü durum (worst-case), sağlam en kötü durum ve karar tablosu testi.\n- Kural 6 — önemli istisna işleme: sağlamlık testi ve karar tablosu testi.\n- Kural 7 — mantıksal nicelikler: denklik sınıfı testi ve karar tablosu testi."
+      },
+      "source": "p. 128"
+    },
+    {
+      "id": "functional-choice-table",
+      "title": {
+        "en": "Table 8.1: appropriate choices for functional testing",
+        "tr": "Tablo 8.1: fonksiyonel test için uygun seçimler"
+      },
+      "body": {
+        "en": "Because the attributes occur in combinations, the book summarizes the guidelines as a decision table (Table 8.1). Its conditions are c1 variables physical (P) or logical (L), c2 independent variables?, c3 single-fault assumption?, c4 exception handling? Each column marks the appropriate techniques:\n\n- P, independent, single fault: without exception handling → boundary value analysis + weak equivalence class; with exception handling → robustness testing + traditional and weak equivalence class.\n- P, independent, multiple faults: without exception handling → worst-case testing + strong equivalence class; with exception handling → robust worst case + traditional and strong equivalence class.\n- L, independent: no boundary techniques. Single fault → weak equivalence class; multiple faults → strong equivalence class; with exception handling, traditional equivalence class is added in both cases.\n- Not independent (P or L; c3 and c4 do not matter) → strong equivalence class + decision table. These are the only columns where decision table testing is marked.\n\nPattern to remember: single fault ↔ boundary value / weak classes; multiple faults ↔ worst case / strong classes; exception handling ↔ robust variants and traditional classes; dependencies ↔ decision tables. (The book's row labels say \"equivalent class\".)\n\n**Example:** logical, independent variables, multiple faults, exception handling (L, Y, N, Y) → traditional and strong equivalence class testing.",
+        "tr": "Bu özellikler bir arada bulunabildiği için kitap yönergeleri bir karar tablosu olarak özetler (Tablo 8.1). Koşulları şunlardır: c1 değişkenler fiziksel (P) mi mantıksal (L) mı, c2 değişkenler bağımsız mı?, c3 tek hata varsayımı mı?, c4 istisna işleme var mı? Her sütun uygun teknikleri işaretler:\n\n- P, bağımsız, tek hata: istisna işleme yoksa → sınır değer analizi + zayıf denklik sınıfı; istisna işleme varsa → sağlamlık testi + geleneksel (traditional) ve zayıf denklik sınıfı.\n- P, bağımsız, çoklu hata: istisna işleme yoksa → en kötü durum testi + güçlü denklik sınıfı; istisna işleme varsa → sağlam en kötü durum + geleneksel ve güçlü denklik sınıfı.\n- L, bağımsız: sınır teknikleri yok. Tek hata → zayıf denklik sınıfı; çoklu hata → güçlü denklik sınıfı; istisna işleme varsa her iki durumda da geleneksel denklik sınıfı eklenir.\n- Bağımsız değil (P veya L; c3 ve c4 önemsiz) → güçlü denklik sınıfı + karar tablosu. Karar tablosu testinin işaretlendiği tek sütunlar bunlardır.\n\nAkılda tutulacak desen: tek hata ↔ sınır değer / zayıf sınıflar; çoklu hata ↔ en kötü durum / güçlü sınıflar; istisna işleme ↔ sağlam (robust) türler ve geleneksel sınıflar; bağımlılıklar ↔ karar tabloları. (Kitabın satır etiketlerinde \"equivalent class\" yazar.)\n\n**Örnek:** mantıksal, bağımsız değişkenler, çoklu hata, istisna işleme (L, Y, N, Y) → geleneksel ve güçlü denklik sınıfı testi."
+      },
+      "source": "p. 129 (Table 8.1)"
+    },
+    {
+      "id": "insurance-worst-case",
+      "title": {
+        "en": "Insurance premium case study: worst-case boundary values",
+        "tr": "Sigorta primi vaka çalışması: en kötü durum sınır değerleri"
+      },
+      "body": {
+        "en": "A hypothetical program computes a semiannual car insurance premium: `Premium = BaseRate * ageMultiplier − safeDrivingReduction`, BaseRate = $500. Ages run from 16 to 100; at 12 points the license is suspended. The multiplier, points cutoff and reduction depend on five age ranges, 16–25, 25–35, 35–45, 45–60 and 60–100, each including only its lower end; the reduction is given when the points are **below** the cutoff.\n\n**Plain worst-case boundary value analysis** on age (16, 17, 54, 99, 100) and points (0, 1, 6, 11, 12) gives 5 × 5 = 25 test cases (Fig 8.7). Nobody would be content: the age and point cutoffs are not tested.\n\n**Detailed worst case** (Table 8.2, Fig 8.8) uses the boundaries of every range. Since the ranges meet at endpoints, each age range gives min, min+, nom and max−; only the last also gives max (100). Point classes P1 = {0, 1}, P2 = {2, 3}, P3 = {4, 5}, P4 = {6, 7} give only min and max (discrete values do not fit min+/max−); P5 = {8, 9, 10, 11, 12} gives min, min+, nom, max− and max. Every age value is combined with every point value: severe redundancy.\n\n**Worked example (other numbers):** x ranges 0 ≤ x < 10 and 10 ≤ x ≤ 20 give 0, 1, 5, 9 and 10, 11, 15, 19, 20 (9 values); y classes {0, 1} and {2, …, 6} give 0, 1 and 2, 3, 4, 5, 6 (7 values); worst case: 9 × 7 = 63 test cases.",
+        "tr": "Varsayımsal bir program altı aylık araba sigortası primini hesaplar: `Premium = BaseRate * ageMultiplier − safeDrivingReduction`, BaseRate = 500 $. Yaşlar 16'dan 100'e kadardır; 12 puanda ehliyet askıya alınır. Çarpan, puan eşiği ve indirim beş yaş aralığına bağlıdır: 16–25, 25–35, 35–45, 45–60 ve 60–100; her biri yalnızca alt ucunu içerir. Güvenli sürüş indirimi (safe driving reduction), puanlar eşiğin **altındaysa** verilir.\n\nYaş (16, 17, 54, 99, 100) ve puan (0, 1, 6, 11, 12) üzerinde **düz en kötü durum sınır değer analizi (worst-case boundary value analysis)** 5 × 5 = 25 test durumu (test case) verir (Şekil 8.7). Kimse bununla yetinmez: yaş ve puan eşikleri test edilmez.\n\n**Ayrıntılı en kötü durum** (Tablo 8.2, Şekil 8.8) her aralığın sınırlarını kullanır. Aralıklar uç noktalarda birleştiği için her yaş aralığı min, min+, nom ve max− verir; yalnızca sonuncusu ayrıca max (100) verir. P1 = {0, 1}, P2 = {2, 3}, P3 = {4, 5}, P4 = {6, 7} puan sınıfları yalnızca min ve max verir (ayrık değerler min+/max− kuralına uymaz); P5 = {8, 9, 10, 11, 12} ise min, min+, nom, max− ve max verir. Her yaş değeri her puan değeriyle birleştirilir: ciddi fazlalık.\n\n**Çözümlü örnek (başka sayılarla):** x'in 0 ≤ x < 10 ve 10 ≤ x ≤ 20 aralıkları 0, 1, 5, 9 ve 10, 11, 15, 19, 20 değerlerini verir (9 değer); y'nin {0, 1} ve {2, …, 6} sınıfları 0, 1 ve 2, 3, 4, 5, 6 değerlerini verir (7 değer); en kötü durum: 9 × 7 = 63 test durumu."
+      },
+      "source": "pp. 129–131 (Figs 8.7–8.8, Table 8.2)"
+    },
+    {
+      "id": "insurance-hybrid",
+      "title": {
+        "en": "From equivalence classes to hybrid functional testing",
+        "tr": "Denklik sınıflarından hibrit fonksiyonel teste"
+      },
+      "body": {
+        "en": "Next the book reduces the redundancy:\n\n- **Equivalence classes:** the age ranges A1–A5 and point sets P1–P5 are natural classes. Fig 8.9 shows strong normal (open circles) and weak normal (black circles) test cases. Some excess remains: why test all point classes P2–P5 for A1? Once the point threshold is exceeded, the safe driving reduction is lost.\n- **Extended entry decision table** (Table 8.3, Fig 8.10): handles this dependency with 10 rules, two per age range: points below the cutoff (reduction given) and the remaining points (no reduction).\n- Figs 8.8 vs 8.10: \"one is overkill and the other is inadequate\", so a happy compromise is needed. Here the street-light story applies: test where faults are likely.\n\nError-prone aspects of the program:\n\n- the endpoints of the age ranges (back to boundary value mode)\n- ages under 16 and over 100 (robust boundary value thinking)\n- the point values at which the safe driving reduction is lost\n- maybe points over 12, when all insurance is lost (responses that are not in the problem statement)\n\n**Hybrid functional testing** (Fig 8.11) uses the advantages of all three forms (boundary value, equivalence class and decision table testing) in a blend determined by the nature of the application (\"shades of special value testing\").",
+        "tr": "Kitap ardından fazlalığı azaltır:\n\n- **Denklik sınıfları (equivalence classes):** A1–A5 yaş aralıkları ve P1–P5 puan kümeleri doğal sınıflardır. Şekil 8.9 güçlü normal (strong normal; boş daireler) ve zayıf normal (weak normal; siyah daireler) test durumlarını gösterir. Bir miktar fazlalık kalır: A1 için P2–P5 puan sınıflarının hepsini neden test edelim? Puan eşiği aşıldığı anda güvenli sürüş indirimi kaybedilir.\n- **Genişletilmiş girişli karar tablosu (extended entry decision table)** (Tablo 8.3, Şekil 8.10): bu bağımlılığı, her yaş aralığı için iki tane olmak üzere 10 kuralla ele alır: eşiğin altındaki puanlar (indirim verilir) ve kalan puanlar (indirim yok).\n- Şekil 8.8 ile 8.10 karşılaştırılınca: \"biri aşırı, diğeri yetersiz\"; bu yüzden makul bir orta yol gerekir. Sokak lambası hikâyesi burada devreye girer: hataların olası olduğu yerde test et.\n\nProgramın hataya açık yönleri:\n\n- yaş aralıklarının uç noktaları (yeniden sınır değer kipi)\n- 16 altı ve 100 üstü yaşlar (sağlam sınır değer düşüncesi)\n- güvenli sürüş indiriminin kaybedildiği puan değerleri\n- belki de tüm sigortanın kaybedildiği 12 üstü puanlar (problem tanımında yer almayan yanıtlar)\n\n**Hibrit fonksiyonel test (hybrid functional testing)** (Şekil 8.11), üç biçimin (sınır değer, denklik sınıfı ve karar tablosu testi) avantajlarını uygulamanın doğasına göre belirlenen bir karışımla kullanır (kitabın deyişiyle, \"özel değer testini (special value testing) andırır\")."
+      },
+      "source": "pp. 131–133 (Figs 8.9–8.11, Table 8.3)"
+    }
+  ],
+  "questions": {
+    "1": {
+      "concept": "testing-effort",
+      "explanation_tr": "Şekil 8.1, test durumu sayısının sınır değerden karar tablosu testine doğru azaldığını, Şekil 8.2 ise test durumlarını belirleme emeğinin arttığını gösterir."
+    },
+    "2": {
+      "concept": "functional-families",
+      "explanation_tr": "Alan tabanlı teknikler veri veya mantıksal bağımlılıkları hiç tanımaz ve çok mekaniktir; bu yüzden otomatikleştirilmeleri kolaydır. Denklik sınıfı teknikleri veri bağımlılıklarına dikkat eder; en gelişmiş yöntem olan karar tabloları ise hem veri hem de mantıksal bağımlılıkları dikkate alır."
+    },
+    "3": {
+      "concept": "testing-effort",
+      "explanation_tr": "Kullanımı kolay yöntemler çok sayıda test durumu üretir ve bunların çalıştırılması daha uzun sürer. Emeği daha gelişmiş yöntemlere kaydırmanın karşılığı daha kısa çalıştırma süresidir; testler genellikle birkaç kez çalıştırıldığı için bu önemlidir."
+    },
+    "4": {
+      "concept": "gaps-and-redundancy",
+      "explanation_tr": "Test durumu kümeleri yakından incelendiğinde hem test edilmemiş işlevsellik boşlukları hem de gereksiz (fazla) testler görülür. NextDate karşılaştırması iki sonucu destekler: fonksiyonel test durumlarında boşluklar oluşur ve daha gelişmiş teknikler bu boşlukları azaltır."
+    },
+    "5": {
+      "concept": "gaps-and-redundancy",
+      "explanation_tr": "Örneğin 1–5 numaralı durumlar 1 Ocak'ı beş farklı yılda test eder, oysa orada yılın hiçbir önemi yoktur; \"on kat\" tahmini yaklaşık 25 durum önerir ki bu, karar tablosunun 22 kuralına yakındır. Hiçbir Şubat durumu 28 veya 29 Şubat'a denk gelmez ve artık yıllarla hiçbir bağlantı kurulmaz."
+    },
+    "6": {
+      "concept": "gaps-and-redundancy",
+      "explanation_tr": "36 güçlü denklik sınıfı test durumundan 11'i imkânsızdır. İmkânsız durumlar, denklik sınıfları arasında varsayılan bağımsızlıktan kaynaklanır."
+    },
+    "7": {
+      "concept": "efficiency-remedies",
+      "explanation_tr": "Verimli bir test durumu kümesi \"tam kararındadır\": ne boşluk ne fazlalık vardır. Birkaç test durumu aynı amaç yorumunu taşıdığında fazlalık ortaya çıkar. Boşlukları bulmak daha zordur; yalnızca fonksiyonel testle yapabileceğimizin en iyisi iki yöntemden çıkan test durumlarını karşılaştırmaktır."
+    },
+    "8": {
+      "concept": "testing-effectiveness",
+      "explanation_tr": "Birincisi, programdaki tüm hataları bildiğimizi varsayar; bu bir kısır döngüdür. İkincisi, bir programın hatasız olduğunu kanıtlamak, imkânsız olduğu bilinen durma problemine (halting problem) denktir. Pragmatik alternatif, hata türlerinden geriye doğru çalışıp onları ortaya çıkarması muhtemel yöntemleri seçmektir."
+    },
+    "9": {
+      "concept": "method-selection-guidelines",
+      "explanation_tr": "Adam anahtarları kaybettiği yerde değil, ışığın daha iyi olduğu yerde arar. Hangi hataların en olası (ya da en zararlı) olduğunu bilmek ve sonra bunları ortaya çıkarması muhtemel test yöntemlerini seçmek çok daha etkilidir."
+    },
+    "10": {
+      "concept": "method-selection-guidelines",
+      "explanation_tr": "Kural 6, önemli istisna işleme için sağlamlık testi ve karar tablosu testini önerir. Sınır değer analizi ile sağlamlık testi tek hata varsayımının kuralıdır; alan testi ile denklik sınıfı testi ise fiziksel veya bağımsız değişkenlerin kuralıdır."
+    },
+    "11": {
+      "concept": "functional-choice-table",
+      "explanation_tr": "O sütun (P, Y, Y, N) sınır değer analizini ve zayıf denklik sınıfı testini işaretler. İstisna işleme varsa (P, Y, Y, Y) sağlamlık testi ile geleneksel ve zayıf denklik sınıfı testi işaretlenir. Karar tabloları yalnızca değişkenler bağımsız olmadığında işaretlenir."
+    },
+    "12": {
+      "concept": "insurance-worst-case",
+      "explanation_tr": "Yaşın sabit tutulduğu her dikey kümede 13 puan değeri vardır ve 21 yaş değeri vardır; bu yüzden 21 × 13 = 273 test durumu çıkar. Kitap bunu ciddi fazlalık olarak niteler ve denklik sınıfı testine geçer."
+    },
+    "13": {
+      "concept": "insurance-hybrid",
+      "explanation_tr": "Hibrit fonksiyonel test, üç biçimin de avantajlarını uygulamanın doğasına göre belirlenen bir karışımla kullanır. Vaka çalışması yaş aralıklarının uç noktalarındaki sınır değerleri, 16 altı ve 100 üstü sağlam (robust) yaşları ve güvenli sürüş indiriminin kaybedildiği puanları içerir."
+    }
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "intro": {
+    "en": "A decision table lists which actions a program takes for each combination of conditions, and each of its columns (rules) becomes a test case. Because a table can be checked for completeness, the book calls decision table methods the most rigorous functional testing methods. This set covers the parts of a table, limited and extended entries, rule counting with don't care entries, impossible, redundant and inconsistent rules, and the triangle and NextDate tables.",
+    "tr": "Karar tablosu (decision table), bir programın her koşul kombinasyonunda hangi eylemleri yaptığını listeler ve tablonun her sütunu (kuralı) bir test durumu olur. Bir tablonun tamlığı kontrol edilebildiği için kitap, karar tablolarına dayalı yöntemleri en titiz işlevsel test yöntemleri olarak görür. Bu set; tablonun bölümlerini, sınırlı ve genişletilmiş girişleri, önemsiz (don't care) girişlerle kural saymayı, imkânsız, gereksiz ve tutarsız kuralları ve üçgen ile NextDate tablolarını kapsar."
+  },
+  "concepts": [
+    {
+      "id": "dt-parts",
+      "title": {
+        "en": "Parts of a decision table",
+        "tr": "Karar tablosunun bölümleri"
+      },
+      "body": {
+        "en": "A decision table shows which actions are taken under which combinations of conditions. The book calls decision table methods the most rigorous functional testing methods, because decision tables enforce logical rigor.\n\nA table has four portions, separated by a bold vertical line and a bold horizontal line:\n- Left of the vertical line: the **stub** portion. Right of it: the **entry** portion.\n- Above the horizontal line: the **condition** portion. Below it: the **action** portion.\n- Together they give the condition stub (names c1, c2, …), the condition entries (T/F values), the action stub (names a1, a2, …) and the action entries (X marks).\n- A **column** in the entry portion is a **rule**: it says which actions are taken when its conditions hold.\n\nA **don't care** entry (written —) has two interpretations: the condition is **irrelevant**, or the condition **does not apply**. Some people write \"n/a\" for the second meaning.\n\n**Example:** a rule with c1 = T, c2 = F, c3 = — and an X at a2 means: whenever c1 is true and c2 is false, action a2 occurs, whatever c3 is.",
+        "tr": "Karar tablosu (decision table), hangi koşul kombinasyonlarında hangi eylemlerin yapıldığını gösterir. Kitap, karar tablolarına dayalı yöntemleri en titiz işlevsel test yöntemleri olarak görür, çünkü karar tabloları mantıksal titizliği zorunlu kılar.\n\nBir tablo, kalın bir dikey çizgi ve kalın bir yatay çizgiyle ayrılan dört bölümden oluşur:\n- Dikey çizginin solu: **kök (stub)** bölümü. Sağı: **giriş (entry)** bölümü.\n- Yatay çizginin üstü: **koşul (condition)** bölümü. Altı: **eylem (action)** bölümü.\n- Birlikte koşul kökünü (c1, c2, … adları), koşul girişlerini (T/F değerleri), eylem kökünü (a1, a2, … adları) ve eylem girişlerini (X işaretleri) verirler.\n- Giriş bölümündeki bir **sütun** bir **kuraldır (rule)**: koşulları sağlandığında hangi eylemlerin yapılacağını söyler.\n\n**Önemsiz (don't care)** giriş (— ile yazılır) iki şekilde yorumlanır: koşul **ilgisizdir** ya da koşul **uygulanamaz**. Bazıları ikinci anlam için \"n/a\" yazar.\n\n**Örnek:** c1 = T, c2 = F, c3 = — olan ve a2'de X bulunan bir kural şu anlama gelir: c1 doğru ve c2 yanlış olduğunda, c3 ne olursa olsun a2 eylemi gerçekleşir."
+      },
+      "source": "pp. 111–112"
+    },
+    {
+      "id": "entries-and-technique",
+      "title": {
+        "en": "Limited vs extended entry, and rules as test cases",
+        "tr": "Sınırlı ve genişletilmiş giriş; test durumu olarak kurallar"
+      },
+      "body": {
+        "en": "Decision tables come in two kinds, depending on how many values a condition may take, and their rules translate directly into test cases.\n\n- **Limited entry** decision table: all conditions are binary (true/false, yes/no, 0/1).\n- **Extended entry** decision table: conditions may take several values (e.g. \"month in M1, M2 or M3\").\n- With binary conditions, the condition portion is a truth table rotated 90°. It covers every possible combination of condition values; this **completeness** property guarantees a form of complete testing.\n- Decision tables are deliberately **declarative** (not imperative): the conditions imply no particular order, and selected actions occur in no particular order.\n\n**Technique** for identifying test cases:\n- Conditions are interpreted as **inputs** and actions as **outputs**. Conditions sometimes refer to equivalence classes of inputs, and actions to major functional processing portions.\n- Each **rule** is interpreted as a **test case**.\n- Because the table can mechanically be forced to be complete, the set of test cases is comprehensive.\n- A helpful style is to add an action that shows when a rule is **logically impossible**.\n\n**Example:** \"c1: age < 18?\" is binary (limited entry); \"c1: age group in G1, G2 or G3?\" has three values (extended entry).",
+        "tr": "Karar tabloları, bir koşulun kaç değer alabildiğine göre iki türe ayrılır ve kuralları doğrudan test durumlarına dönüşür.\n\n- **Sınırlı girişli (limited entry)** karar tablosu: tüm koşullar ikilidir (doğru/yanlış, evet/hayır, 0/1).\n- **Genişletilmiş girişli (extended entry)** karar tablosu: koşullar birden çok değer alabilir (örneğin \"month in M1, M2 or M3\").\n- İkili koşullarda koşul bölümü, 90° döndürülmüş bir doğruluk tablosudur (truth table). Koşul değerlerinin olası her kombinasyonunu kapsar; bu **tamlık (completeness)** özelliği bir tür tam testi garanti eder.\n- Karar tabloları bilerek **bildirimseldir (declarative)**, buyurgan (imperative) değildir: koşullar belirli bir sıra belirtmez ve seçilen eylemler belirli bir sırayla gerçekleşmez.\n\nTest durumu belirleme **tekniği**:\n- Koşullar **girdi**, eylemler **çıktı** olarak yorumlanır. Koşullar bazen girdilerin denklik sınıflarını, eylemler ise ana işlevsel işlem bölümlerini ifade eder.\n- Her **kural** bir **test durumu** olarak yorumlanır.\n- Tablo mekanik olarak tamamlanmaya zorlanabildiği için test durumu kümesi kapsamlıdır.\n- Yararlı bir alışkanlık, bir kuralın **mantıksal olarak imkânsız** olduğunu gösteren bir eylem eklemektir.\n\n**Örnek:** \"c1: age < 18?\" ikilidir (sınırlı giriş); \"c1: age group in G1, G2 or G3?\" üç değer alır (genişletilmiş giriş)."
+      },
+      "source": "p. 112"
+    },
+    {
+      "id": "rule-counting",
+      "title": {
+        "en": "Counting rules with don't care entries",
+        "tr": "Önemsiz girişlerle kural sayma"
+      },
+      "body": {
+        "en": "Counting rules lets you check whether a limited entry table is complete.\n\n- A limited entry table with **n conditions** has **2^n rules** (every T/F combination).\n- When don't care entries really mean \"irrelevant\", one written rule stands for several full rules. **Rule count:** a rule with no don't care entries counts 1, and **each don't care entry doubles** the count. So rule count = 2^(number of don't cares).\n- Add up the rule counts of all rules. A complete table gives exactly 2^n. The book's refined triangle table has 6 conditions, and its rule counts add up to 64 = 2^6.\n\n**Worked example:** a table with 4 conditions must cover 2^4 = 16 combinations. Its rules:\n- R1: F, —, —, — → 2^3 = 8\n- R2: T, F, —, — → 2^2 = 4\n- R3: T, T, F, — → 2^1 = 2\n- R4: T, T, T, F → 1\n- R5: T, T, T, T → 1\n- Sum: 8 + 4 + 2 + 1 + 1 = 16, so the table is complete.\n\n**Note:** this simple algorithm gives wrong totals when the don't cares really mean \"must be false\" (see the card on mutually exclusive conditions).",
+        "tr": "Kuralları saymak, sınırlı girişli bir tablonun tam olup olmadığını kontrol etmeyi sağlar.\n\n- **n koşullu** sınırlı girişli bir tablonun **2^n kuralı** vardır (her T/F kombinasyonu).\n- Önemsiz girişler gerçekten \"ilgisiz\" anlamına geliyorsa, yazılan bir kural birden çok tam kuralı temsil eder. **Kural sayısı (rule count):** önemsiz girişi olmayan bir kural 1 sayılır ve **her önemsiz giriş sayıyı ikiye katlar**. Yani kural sayısı = 2^(önemsiz giriş sayısı).\n- Tüm kuralların kural sayılarını toplayın. Tam bir tablo tam olarak 2^n verir. Kitaptaki ayrıntılandırılmış üçgen tablosunda 6 koşul vardır ve kural sayılarının toplamı 64 = 2^6'dır.\n\n**Çözümlü örnek:** 4 koşullu bir tablo 2^4 = 16 kombinasyonu kapsamalıdır. Kuralları:\n- R1: F, —, —, — → 2^3 = 8\n- R2: T, F, —, — → 2^2 = 4\n- R3: T, T, F, — → 2^1 = 2\n- R4: T, T, T, F → 1\n- R5: T, T, T, T → 1\n- Toplam: 8 + 4 + 2 + 1 + 1 = 16, yani tablo tamdır.\n\n**Not:** Önemsiz girişler aslında \"yanlış olmalı\" anlamına geldiğinde bu basit algoritma yanlış toplamlar verir (birbirini dışlayan koşullar kartına bakın)."
+      },
+      "source": "pp. 113–114"
+    },
+    {
+      "id": "mutually-exclusive-conditions",
+      "title": {
+        "en": "Mutually exclusive conditions and impossible rules",
+        "tr": "Birbirini dışlayan koşullar ve imkânsız kurallar"
+      },
+      "body": {
+        "en": "Conditions are **mutually exclusive** when at most one of them can be true, e.g. \"month in M1?\", \"month in M2?\", \"month in M3?\" (a month is in exactly one class). Each rule then has one T and don't cares elsewhere, but those don't cares really mean **\"must be false\"**, written **F!**.\n\nWhat happens with the simple rule count:\n- Every don't care is counted as doubling, so the total comes out **larger than 2^n**.\n- **Expand** each rule by replacing every — with both T and F. The same combinations show up in several expanded rules.\n- **Delete the repetitions.** All combinations except the all-false one remain; the all-false rule is missing.\n- Mark the **impossible** rules: every rule with two or more T's, and the all-false rule (each value must be in some class). Only the rules with **exactly one T** are possible.\n\n**Worked example (4 mutually exclusive conditions):** each rule has 3 don't cares → count 8 each, total 4 x 8 = 32, but there should be 2^4 = 16 rules. Expanding and deleting repeats leaves 15 distinct rules (all but FFFF). Possible: the 4 rules with exactly one T; the other 12 (including FFFF) are impossible.",
+        "tr": "En fazla biri doğru olabilen koşullar **birbirini dışlayan (mutually exclusive)** koşullardır; örneğin \"month in M1?\", \"month in M2?\", \"month in M3?\" (bir ay tam olarak bir sınıftadır). Bu durumda her kuralda bir T ve diğer yerlerde önemsiz girişler bulunur; ama bu önemsiz girişler aslında **\"yanlış olmalı\" (must be false)** anlamına gelir ve **F!** ile gösterilir.\n\nBasit kural sayımında ne olur:\n- Her önemsiz giriş sayıyı ikiye katlıyor diye sayılır, bu yüzden toplam **2^n'den büyük** çıkar.\n- Her kuralı **genişletin**: her — yerine hem T hem F koyun. Aynı kombinasyonlar birden çok genişletilmiş kuralda görünür.\n- **Tekrarları silin.** Hepsi-yanlış olan dışında tüm kombinasyonlar kalır; hepsi-yanlış kural eksiktir.\n- **İmkânsız** kuralları işaretleyin: iki veya daha fazla T içeren her kural ve hepsi-yanlış kural (her değer bir sınıfta olmalıdır). Yalnızca **tam olarak bir T** içeren kurallar mümkündür.\n\n**Çözümlü örnek (birbirini dışlayan 4 koşul):** her kuralda 3 önemsiz giriş var → her biri 8 sayılır, toplam 4 x 8 = 32; oysa 2^4 = 16 kural olmalıdır. Genişletip tekrarları silince 15 farklı kural kalır (FFFF dışında hepsi). Mümkün olanlar: tam olarak bir T içeren 4 kural; diğer 12 kural (FFFF dahil) imkânsızdır."
+      },
+      "source": "pp. 113–115"
+    },
+    {
+      "id": "redundant-inconsistent",
+      "title": {
+        "en": "Redundant and inconsistent decision tables",
+        "tr": "Gereksiz ve tutarsız karar tabloları"
+      },
+      "body": {
+        "en": "Don't care entries make it easy to write two rules that cover the same combination of conditions. The book distinguishes two cases.\n\n- **Redundant** table: some combination is covered by more than one rule (e.g. 3 conditions but 9 rules). If the actions of the extra rule are **identical** to those of the rule it repeats, this is not much of a problem.\n- **Inconsistent** rules: the two rules covering the same combination have **different** action sets. Two observations follow: (1) the two rules are **inconsistent**, and (2) the whole table is **nondeterministic**, because there is no way to decide which rule to apply.\n- Bottom line for testers: care should be taken when don't care entries are used.\n\n**Worked example:** rule A: c1 = F, c2 = — → action a1. Rule B: c1 = T, c2 = — → action a2. (Counts 2 + 2 = 4 = 2^2, complete.) An added rule C: c1 = T, c2 = T repeats a combination already covered by rule B. If C also says a2, the table is only redundant. If C says a1, rules B and C are inconsistent and the table is nondeterministic.",
+        "tr": "Önemsiz girişler, aynı koşul kombinasyonunu kapsayan iki kural yazmayı kolaylaştırır. Kitap iki durumu ayırt eder.\n\n- **Gereksiz (redundant)** tablo: bir kombinasyon birden fazla kural tarafından kapsanır (örneğin 3 koşul ama 9 kural). Fazladan kuralın eylemleri, tekrarladığı kuralın eylemleriyle **aynıysa** bu büyük bir sorun değildir.\n- **Tutarsız (inconsistent)** kurallar: aynı kombinasyonu kapsayan iki kuralın eylem kümeleri **farklıdır**. Buradan iki gözlem çıkar: (1) iki kural **tutarsızdır** ve (2) tüm tablo **belirlenimsizdir (nondeterministic)**, çünkü hangi kuralın uygulanacağına karar vermenin bir yolu yoktur.\n- Test uzmanları için sonuç: önemsiz girişler kullanılırken dikkatli olunmalıdır.\n\n**Çözümlü örnek:** Kural A: c1 = F, c2 = — → a1 eylemi. Kural B: c1 = T, c2 = — → a2 eylemi. (Sayılar 2 + 2 = 4 = 2^2, tablo tam.) Eklenen kural C: c1 = T, c2 = T, kural B'nin zaten kapsadığı bir kombinasyonu tekrarlar. C de a2 diyorsa tablo yalnızca gereksizdir. C a1 diyorsa B ve C kuralları tutarsızdır ve tablo belirlenimsizdir."
+      },
+      "source": "p. 115"
+    },
+    {
+      "id": "triangle-decision-tables",
+      "title": {
+        "en": "Decision tables for the triangle problem",
+        "tr": "Üçgen problemi için karar tabloları"
+      },
+      "body": {
+        "en": "**First table (Table 7.2):** conditions \"a, b, c form a triangle?\", \"a = b?\", \"a = c?\", \"b = c?\"; 9 rules.\n- If the sides do not form a triangle, the equalities are don't cares.\n- Three rules are **impossible**: if two pairs of sides are equal, by transitivity the third pair must be equal too.\n\n**Refined table (Table 7.3):** \"triangle?\" is expanded into the three inequalities c1: a < b + c?, c2: b < a + c?, c3: c < a + b?, followed by c4: a = b?, c5: a = c?, c6: b = c?. Lesson: **the choice of conditions can greatly expand the size of a table**.\n- Its rules become the test cases: three ways to fail the triangle property, one equilateral, one scalene, three isosceles, plus the three impossible (transitivity) rules.\n- Showing **both ways** each inequality can fail (one side exactly equal to the sum of the other two, or strictly greater) would add one test case per inequality, at the cost of an exponential growth of rules.\n\n**Right triangles (Exercise 1):** c² = a² + b², sides ordered a ≤ b ≤ c. Isosceles right triangles exist, but **not with integer sides** (the longest side would be a leg times √2), so for integer inputs that rule is impossible. Scalene right triangles with integer sides do exist, e.g. (5, 12, 13).",
+        "tr": "**İlk tablo (Tablo 7.2):** koşullar \"a, b, c bir üçgen oluşturur mu?\", \"a = b?\", \"a = c?\", \"b = c?\"; 9 kural.\n- Kenarlar üçgen oluşturmuyorsa eşitlikler önemsizdir (don't care).\n- Üç kural **imkânsızdır**: iki kenar çifti eşitse, geçişlilik (transitivity) gereği üçüncü çift de eşit olmalıdır.\n\n**Ayrıntılandırılmış tablo (Tablo 7.3):** \"üçgen mi?\" koşulu üçgen özelliğinin üç eşitsizliğine açılır: c1: a < b + c?, c2: b < a + c?, c3: c < a + b?; ardından c4: a = b?, c5: a = c?, c6: b = c? gelir. Ders: **koşulların seçimi bir tablonun boyutunu çok büyütebilir**.\n- Kuralları test durumu olur: üçgen özelliğini bozmanın üç yolu, bir eşkenar, bir çeşitkenar, üç ikizkenar ve bunlara ek olarak üç imkânsız (geçişlilik) kuralı.\n- Her eşitsizliğin bozulabileceği **iki yolu** göstermek (bir kenar diğer ikisinin toplamına tam eşit ya da ondan kesinlikle büyük) her eşitsizlik için bir test durumu eklerdi; bunun bedeli kuralların üstel olarak artmasıdır.\n\n**Dik üçgenler (Alıştırma 1):** c² = a² + b², kenarlar a ≤ b ≤ c sıralı. İkizkenar dik üçgenler vardır, ama **tamsayı kenarlı olanları yoktur** (en uzun kenar bir dik kenarın √2 katı olurdu); bu yüzden tamsayı girdilerde bu kural imkânsızdır. Tamsayı kenarlı çeşitkenar dik üçgenler ise vardır, örneğin (5, 12, 13)."
+      },
+      "source": "pp. 112–113, 116, 122"
+    },
+    {
+      "id": "nextdate-first-second-try",
+      "title": {
+        "en": "NextDate: first and second try",
+        "tr": "NextDate: birinci ve ikinci deneme"
+      },
+      "body": {
+        "en": "NextDate has **dependencies in the input domain** (day 31 cannot occur in a 30-day month). A Cartesian product of classes suppresses them, which produced \"strange\" cases such as June 31, 1812 in Chapter 6; a decision table marks them with an **impossible** action.\n\n**First try:** M1 30-day, M2 31-day, M3 February; D1 1–28, D2 29, D3 30, D4 31; Y1 leap year, Y2 not a leap year. As a **limited entry** table, every class becomes a binary condition (\"month in M1?\", …), and the year classes collapse into one condition (\"year in Y1?\"). With n conditions there are 2^n rules, many of them impossible.\n\n**Second try:** same month and day classes; Y1 year 2000, Y2 leap year, Y3 common year → a Cartesian product of 36 triples, combined into a 17-rule **extended entry** table.\n- Extended entry classes must form a **true partition**; overlaps would create a redundant case where more than one rule is satisfied.\n- \"Gray box\": only five manipulations are possible: increment day, reset day, increment month, reset month (reset = set back to 1), increment year. The year is never reset.\n- At the end of a 31-day month the day resets to 1; non-December months increment the month, but **December** resets the month to January and increments the year. M2 contains both, which causes \"cumbersome problems with December\" in rule 8 (M2, D4).",
+        "tr": "NextDate'in **girdi alanında bağımlılıklar** vardır (30 günlük bir ayda 31. gün olamaz). Sınıfların Kartezyen çarpımı bu bağımlılıkları bastırır; Bölüm 6'da 31 Haziran 1812 gibi \"tuhaf\" durumlar bu yüzden çıkmıştı. Karar tablosu bunları bir **imkânsız (impossible)** eylemiyle işaretler.\n\n**Birinci deneme:** M1 30 günlük, M2 31 günlük, M3 Şubat; D1 1–28, D2 29, D3 30, D4 31; Y1 artık yıl, Y2 artık yıl değil. **Sınırlı girişli** bir tabloda her sınıf ikili bir koşul olur (\"month in M1?\", …) ve yıl sınıfları tek bir koşula iner (\"year in Y1?\"). n koşulla 2^n kural vardır; bunların çoğu imkânsızdır.\n\n**İkinci deneme:** aynı ay ve gün sınıfları; Y1 2000 yılı, Y2 artık yıl, Y3 normal yıl → 36 üçlüden oluşan bir Kartezyen çarpım, 17 kurallı **genişletilmiş girişli** bir tabloda birleştirilir.\n- Genişletilmiş giriş sınıfları **gerçek bir bölümleme (true partition)** oluşturmalıdır; örtüşmeler, birden fazla kuralın sağlandığı gereksiz (redundant) bir durum yaratırdı.\n- \"Gri kutu (gray box)\": yalnızca beş işlem mümkündür: günü artır, günü sıfırla, ayı artır, ayı sıfırla (sıfırla = 1'e geri döndür), yılı artır. Yıl hiçbir zaman sıfırlanmaz.\n- 31 günlük bir ayın sonunda gün 1'e sıfırlanır; Aralık dışındaki aylarda ay artırılır, ama **Aralık**'ta ay Ocak'a sıfırlanır ve yıl artırılır. M2 her iki durumu da içerir; bu da 8. kuralda (M2, D4) \"Aralık ile ilgili zahmetli sorunlara\" yol açar."
+      },
+      "source": "pp. 116–119, 122"
+    },
+    {
+      "id": "nextdate-third-try",
+      "title": {
+        "en": "NextDate: third try and combining rules",
+        "tr": "NextDate: üçüncü deneme ve kuralları birleştirme"
+      },
+      "body": {
+        "en": "The **third try** is very specific about days and months and goes back to a plain leap/common year condition (2000 gets no special attention):\n- M1: 30-day months, M2: 31-day months except December, M3: December, M4: February\n- D1: 1–27, D2: 28, D3: 29, D4: 30, D5: 31\n- Y1: leap year, Y2: common year\n- The Cartesian product of these classes, combined with don't cares, gives **Table 7.14 with 22 rules**, a clearer picture than the 36 rules of the second try. Rules 1–5: 30-day months; 6–10: other 31-day months; 11–15: December; 16–22: February and leap years. The table is the basis of the Chapter 2 NextDate code.\n\n**Algebra of decision tables:** if two rules have **identical action sets**, at least one condition lets them be combined with a don't care: \"equivalence classes of rules\", the decision table version of \"treated the same\". In Table 7.14 these merge: rules 1–3 (30-day month, D1–D3), 6–9 (D1–D4), 11–14 (D1–D4) and 21–22 (February 30 and 31). The reduced Table 7.15 gives one test case per rule (Table 7.16).\n\n**Worked example:** merging k rules into one removes k − 1 rules. A 10-rule table in which rules 2–4 merge and rules 7–8 merge keeps 10 − 2 − 1 = 7 rules.",
+        "tr": "**Üçüncü deneme**, günler ve aylar konusunda çok ayrıntılıdır ve basit bir artık/normal yıl koşuluna geri döner (2000 yılına özel dikkat gösterilmez):\n- M1: 30 günlük aylar, M2: Aralık dışındaki 31 günlük aylar, M3: Aralık, M4: Şubat\n- D1: 1–27, D2: 28, D3: 29, D4: 30, D5: 31\n- Y1: artık yıl, Y2: normal yıl\n- Bu sınıfların Kartezyen çarpımı önemsiz girişlerle birleştirilince **22 kurallı Tablo 7.14** elde edilir; bu, ikinci denemenin 36 kuralından daha net bir resim verir. Kural 1–5: 30 günlük aylar; 6–10: diğer 31 günlük aylar; 11–15: Aralık; 16–22: Şubat ve artık yıllar. Tablo, Bölüm 2'deki NextDate kodunun temelidir.\n\n**Karar tablosu cebiri (algebra of decision tables):** iki kuralın **eylem kümeleri aynıysa**, en az bir koşul bu kuralların bir önemsiz girişle birleştirilmesine izin verir: \"kuralların denklik sınıfları\", yani \"aynı şekilde ele alınır\" ilkesinin karar tablosu karşılığı. Tablo 7.14'te şunlar birleşir: kural 1–3 (30 günlük ay, D1–D3), 6–9 (D1–D4), 11–14 (D1–D4) ve 21–22 (30 ve 31 Şubat). İndirgenmiş Tablo 7.15, her kural için bir test durumu verir (Tablo 7.16).\n\n**Çözümlü örnek:** k kuralı bire birleştirmek k − 1 kural azaltır. Kural 2–4'ün ve kural 7–8'in birleştiği 10 kurallı bir tabloda 10 − 2 − 1 = 7 kural kalır."
+      },
+      "source": "pp. 119–121"
+    },
+    {
+      "id": "yesterdate-exercise",
+      "title": {
+        "en": "Exercise: a decision table for YesterDate",
+        "tr": "Alıştırma: YesterDate için karar tablosu"
+      },
+      "body": {
+        "en": "YesterDate (Chapter 2 exercises) is the inverse of NextDate: it returns the date of the day **before** the input date. The book prints no solution; the reasoning below runs NextDate's third-try ideas backwards.\n\n- The manipulations become: decrement day, set the day to the last day of the previous month, decrement month, set the month to December, decrement year.\n- **Day > 1:** just decrement the day; month and year do not matter.\n- **Day = 1:** the output is the last day of the **previous** month, so the rule depends on that month's length: 30 days, 31 days, or February.\n- February has 28 days in a common year and 29 in a leap year, so only the rule whose previous month is February needs the **leap year** condition (leap year: divisible by 4; century years only if divisible by 400).\n- **January 1:** the previous month is December of the previous year: set the month to December and the day to 31, and decrement the year.\n\n**Worked example:** the day before May 1 is April 30 (April has 30 days); the day before August 1 is July 31 (July has 31 days); the day before May 16 is May 15.",
+        "tr": "YesterDate (Bölüm 2 alıştırmaları), NextDate'in tersidir: girilen tarihten **önceki** günün tarihini döndürür. Kitap bir çözüm vermez; aşağıdaki akıl yürütme NextDate'in üçüncü denemesindeki fikirleri tersinden uygular.\n\n- İşlemler şunlar olur: günü azalt, günü önceki ayın son gününe ayarla, ayı azalt, ayı Aralık'a ayarla, yılı azalt.\n- **Gün > 1:** yalnızca gün azaltılır; ay ve yıl önemli değildir.\n- **Gün = 1:** çıktı **önceki** ayın son günüdür; dolayısıyla kural o ayın uzunluğuna bağlıdır: 30 gün, 31 gün veya Şubat.\n- Şubat normal yılda 28, artık yılda 29 gündür; bu yüzden yalnızca önceki ayı Şubat olan kural **artık yıl (leap year)** koşuluna ihtiyaç duyar (artık yıl: 4'e bölünebilen yıl; yüzyıl yılları yalnızca 400'e bölünebiliyorsa).\n- **1 Ocak:** önceki ay, bir önceki yılın Aralık ayıdır: ay Aralık'a, gün 31'e ayarlanır ve yıl azaltılır.\n\n**Çözümlü örnek:** 1 Mayıs'tan önceki gün 30 Nisan'dır (Nisan 30 gündür); 1 Ağustos'tan önceki gün 31 Temmuz'dur (Temmuz 31 gündür); 16 Mayıs'tan önceki gün 15 Mayıs'tır."
+      },
+      "source": "p. 22, p. 122 (Exercise 3); reasoning derived, no printed solution"
+    },
+    {
+      "id": "dt-guidelines",
+      "title": {
+        "en": "When to use decision tables",
+        "tr": "Karar tabloları ne zaman kullanılır"
+      },
+      "body": {
+        "en": "Decision tables work well where a lot of decision making takes place (triangle problem) and where important logical relationships exist among input variables (NextDate). They are not worth the trouble for the **commission problem**: it has very little decisional logic and its variables are truly independent, so no impossible rules occur and the test cases are the same as for equivalence class testing.\n\nGuidelines (Section 7.5):\n- The technique is indicated for: prominent if-then-else logic; logical relationships among input variables; calculations involving subsets of the input variables; cause-and-effect relationships between inputs and outputs; high cyclomatic (McCabe) complexity.\n- Decision tables **do not scale up very well** (n conditions → 2^n rules). Remedies: extended entry tables, algebraic simplification, \"factoring\" large tables into smaller ones, and looking for repeating patterns of condition entries.\n- Iteration helps: use the first set of conditions and actions as a stepping stone and improve it.\n\n**Multiple faults:** a decision table covers every combination of condition values. Chapter 8's guideline 5 lists worst-case, robust worst-case and decision table testing for the multiple-fault assumption; boundary value analysis and robustness testing are the single-fault choices (guideline 4).",
+        "tr": "Karar tabloları, çok fazla karar verme işleminin olduğu yerlerde (üçgen problemi) ve girdi değişkenleri arasında önemli mantıksal ilişkilerin bulunduğu yerlerde (NextDate) iyi çalışır. **Komisyon problemi** için zahmete değmez: çok az karar mantığı içerir ve değişkenleri gerçekten bağımsızdır; bu yüzden imkânsız kural oluşmaz ve test durumları denklik sınıfı testindekilerle aynıdır.\n\nYönergeler (Bölüm 7.5):\n- Teknik şu özelliklere sahip uygulamalar için uygundur: belirgin if-then-else mantığı; girdi değişkenleri arasında mantıksal ilişkiler; girdi değişkenlerinin alt kümelerini içeren hesaplamalar; girdiler ve çıktılar arasında neden-sonuç (cause-and-effect) ilişkileri; yüksek çevrimsel karmaşıklık (cyclomatic complexity, McCabe).\n- Karar tabloları **iyi ölçeklenmez** (n koşul → 2^n kural). Çareler: genişletilmiş girişli tablolar, cebirsel sadeleştirme, büyük tabloları küçük tablolara \"ayrıştırma\" (factoring) ve koşul girişlerinde tekrar eden kalıplar aramak.\n- Yineleme yardımcı olur: ilk koşul ve eylem kümesini bir basamak taşı olarak kullanıp geliştirin.\n\n**Çoklu hatalar:** bir karar tablosu koşul değerlerinin her kombinasyonunu kapsar. Bölüm 8'in 5. yönergesi, çoklu hata varsayımı (multiple-fault assumption) için en kötü durum (worst-case), sağlam en kötü durum (robust worst-case) ve karar tablosu testini listeler; sınır değer analizi ve sağlamlık testi tek hata seçenekleridir (yönerge 4)."
+      },
+      "source": "pp. 121–122, 128"
+    }
+  ],
+  "questions": {
+    "1": {
+      "concept": "dt-parts",
+      "explanation_tr": "Kalın dikey çizginin solu kök (stub) bölümü, sağı giriş (entry) bölümüdür; giriş bölümündeki her sütun bir kuraldır (rule). Koşul ve eylem bölümleri sütun değil, kalın yatay çizginin üstündeki ve altındaki kısımlardır."
+    },
+    "2": {
+      "concept": "dt-parts",
+      "explanation_tr": "Önemsiz (don't care) giriş, ya koşulun ilgisiz olduğu ya da koşulun uygulanamadığı anlamına gelir; bazıları ikinci yorum için \"n/a\" yazar."
+    },
+    "3": {
+      "concept": "entries-and-technique",
+      "explanation_tr": "Koşullar birden çok değer alabildiğinde tablo genişletilmiş girişli (extended entry) bir karar tablosudur; sınırlı girişli (limited entry) bir karar tablosunda yalnızca ikili koşullar bulunur."
+    },
+    "4": {
+      "concept": "entries-and-technique",
+      "explanation_tr": "Koşullar girdi, eylemler çıktı olarak yorumlanır ve her kural bir test durumu olur. Tablo mekanik olarak tamamlanmaya zorlanabildiği için ortaya çıkan test durumu kümesi kapsamlıdır."
+    },
+    "5": {
+      "concept": "rule-counting",
+      "explanation_tr": "Her önemsiz giriş bir kuralın sayısını ikiye katlar; bu yüzden dört önemsiz giriş 2^4 = 16 verir. Tablo 7.5'teki sayılar (32, 16, 8 ve sayısı 1 olan sekiz kural) toplamda 64 = 2^6 eder; bu da tablonun tam olduğunu gösterir."
+    },
+    "6": {
+      "concept": "mutually-exclusive-conditions",
+      "explanation_tr": "Bir ay bu birbirini dışlayan sınıflardan tam olarak birindedir, bu yüzden iki giriş asla aynı anda doğru olamaz; önemsiz girişler aslında \"yanlış olmalı\" (F!) anlamına gelir. Bunları \"ilgisiz\" diye okumak yanlış kural sayıları verir."
+    },
+    "7": {
+      "concept": "mutually-exclusive-conditions",
+      "explanation_tr": "Her kuralda iki önemsiz giriş vardır, bu yüzden her biri 4 sayılır ve toplam 12 olur; ama üç ikili koşul yalnızca 2^3 = 8 kurala izin verir. Kurallar genişletilince tekrar eden kurallar görülür; bunlar silinince yedi kural kalır ve eksik sekizinci kural, tüm koşulların yanlış olduğu kuraldır."
+    },
+    "8": {
+      "concept": "mutually-exclusive-conditions",
+      "explanation_tr": "1.1, 1.2, 1.3, 2.3 kuralları ve hepsi-yanlış kural imkânsız olarak işaretlenir. Yalnızca 1.4 (T, F, F), 2.4 (F, T, F) ve 3.4 (F, F, T) kalır, çünkü her ay M1, M2 ve M3'ten tam olarak birine aittir."
+    },
+    "9": {
+      "concept": "redundant-inconsistent",
+      "explanation_tr": "Kural 9, kural 4'ü tekrarlar. Eylemler aynı olsaydı tablo yalnızca gereksiz (redundant) olurdu ve bu büyük bir sorun değildir. Eylemler farklı olduğunda kural 4 ve 9 tutarsızdır (inconsistent) ve tablo belirlenimsizdir (nondeterministic), çünkü hangi kuralın uygulanacağına karar veren hiçbir şey yoktur."
+    },
+    "10": {
+      "concept": "triangle-decision-tables",
+      "explanation_tr": "Tablo 7.3, 11 test durumu verir: üçgen özelliğini bozmanın üç yolu, bir eşkenar, bir çeşitkenar, üç ikizkenar ve üç imkânsız durum. Her eşitsizliğin bozulabileceği iki yolu da göstermek, bir kenarın diğer ikisinin toplamına tam eşit olduğu üç test durumu daha eklerdi."
+    },
+    "11": {
+      "concept": "nextdate-first-second-try",
+      "explanation_tr": "n koşullu sınırlı girişli bir tablonun 2^n kuralı vardır; yani 2^8 = 256 kural ve bunların çoğu imkânsızdır. Bu, karar tablolarının iyi ölçeklenmediği yönergesini örnekler."
+    },
+    "12": {
+      "concept": "nextdate-third-try",
+      "explanation_tr": "4 × 5 × 2 = 40 eleman, 22 kurallı bir tabloda birleşir. Kitap bunu ikinci denemenin 36 kuralıyla karşılaştırır ve 22 kurallı tablonun NextDate hakkında daha net bir resim verdiğini söyler."
+    },
+    "13": {
+      "concept": "nextdate-third-try",
+      "explanation_tr": "İki kuralın eylem kümeleri aynıysa, en az bir koşul bu kuralların bir önemsiz girişle birleştirilmesine izin verir; bu, \"aynı şekilde ele alınır\" ilkesinin karar tablosu karşılığıdır. İndirgenmiş tablonun 13 kuralı vardır ve bunlar Tablo 7.16'daki 13 test durumunu verir."
+    },
+    "14": {
+      "concept": "dt-guidelines",
+      "explanation_tr": "Komisyon Problemi çok az karar mantığı kullanır ve denklik sınıfı değişkenleri gerçekten bağımsızdır. İmkânsız kural oluşmaz; bu yüzden test durumları denklik sınıfı testindekilerle aynıdır."
+    },
+    "15": {
+      "concept": "dt-guidelines",
+      "explanation_tr": "Karar tabloları şunlar için önerilir: belirgin if-then-else mantığı, girdi değişkenleri arasında mantıksal ilişkiler, girdi değişkenlerinin alt kümelerini içeren hesaplamalar, girdiler ve çıktılar arasında neden-sonuç ilişkileri ve yüksek çevrimsel karmaşıklık. Az karar verme içeren, çoğunlukla aritmetik işlemler Komisyon Problemi'ni tanımlar; orada karar tabloları zahmete değmez."
+    },
+    "16": {
+      "concept": "triangle-decision-tables",
+      "explanation_tr": "Alıştırma, ikizkenar dik üçgenlerin var olduğunu ama tamsayı kenarlı olanlarının olmadığını belirtir (hipotenüs bir dik kenarın karekök 2 katı olurdu); bu yüzden tamsayı girdiler için bu kural imkânsızdır. 3, 4, 5 gibi çeşitkenar dik üçgenlerin kenarları ise tamsayıdır."
+    },
+    "17": {
+      "concept": "nextdate-first-second-try",
+      "explanation_tr": "31 günlük bir ayın sonunda gün her zaman 1'e sıfırlanır. Aralık dışındaki aylarda ardından ay artırılır, ama Aralık'ta ay Ocak'a sıfırlanır ve yıl artırılır. M2 her iki durumu da içerir, bu yüzden Tablo 7.13 kural 8 için \"?\" gösterir; üçüncü deneme Aralık'a kendi sınıfını vererek bunu düzeltir."
+    },
+    "18": {
+      "concept": "yesterdate-exercise",
+      "explanation_tr": "1 Mart'tan önceki gün artık yılda 29 Şubat, normal yılda 28 Şubat'tır; bu yüzden bu kural artık yıl koşuluna ihtiyaç duyar. 1 Ocak ise her zaman önceki yılın 31 Aralık'ı olur (ayı sıfırla, yılı azalt) ve artık yıl kontrolü gerektirmez."
+    },
+    "19": {
+      "concept": "dt-guidelines",
+      "explanation_tr": "Bölüm 8'in 5. yönergesi, çoklu hata varsayımı için en kötü durum testini, sağlam en kötü durum testini ve karar tablosu testini listeler; karar tablosu koşul değerlerinin her kombinasyonunu dikkate alır. Sınır değer analizi ve sağlamlık testi tek hata seçenekleridir."
+    }
+  }
+}

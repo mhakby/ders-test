@@ -1,0 +1,198 @@
+{
+  "intro": {
+    "en": "This set covers Chapter 1 of the textbook, which lays down the basic vocabulary of testing: errors, faults, failures and incidents, what a test case contains, and the Venn-diagram view of specified, programmed and tested behavior. It also contrasts the two fundamental ways to identify test cases (functional and structural), shows how faults can be classified, and links levels of testing to levels of design. Almost every later chapter relies on these terms.",
+    "tr": "Bu set, ders kitabının testin temel terminolojisini kuran 1. bölümünü kapsar: hata, kusur, arıza ve olay kavramları, bir test durumunun neleri içerdiği ve belirtilen, programlanan ve test edilen davranışların Venn şeması ile gösterimi. Bölüm ayrıca test durumu belirlemenin iki temel yolunu (fonksiyonel ve yapısal) karşılaştırır, kusurların nasıl sınıflandırılabileceğini gösterir ve test seviyelerini tasarım seviyeleriyle ilişkilendirir. Sonraki bölümlerin neredeyse hepsi bu terimlere dayanır."
+  },
+  "concepts": [
+    {
+      "id": "error-fault-failure-incident",
+      "title": {
+        "en": "Error, fault, failure, incident",
+        "tr": "Hata, kusur, arıza, olay"
+      },
+      "body": {
+        "en": "Testing has its own vocabulary, which the book takes from IEEE standards. The four terms form a chain: a person makes an error, the error appears as a fault, an executing fault causes a failure, and the user notices an incident.\n\n- **Error:** a mistake made by a person (synonym: mistake). Coding errors are called bugs. Errors tend to propagate: a requirements error may be magnified during design and amplified still more during coding.\n- **Fault:** the result of an error; the representation of an error in some mode of expression (narrative text, dataflow diagrams, hierarchy charts, source code). Synonyms: defect, bug.\n- **Fault of commission:** something incorrect was entered into the representation.\n- **Fault of omission:** something that should be present is missing. These are more difficult to detect and resolve.\n- **Failure:** occurs when a fault executes. Failures only occur in an executable representation (usually source code, or more precisely loaded object code). The definition relates failures only to faults of commission, and a fault can stay dormant until it executes. Reviews, by contrast, can find faults, even faults of omission.\n- **Incident:** the symptom associated with a failure that alerts the user (or customer or tester) to the occurrence of a failure.\n\n**Example:** a programmer types `+` where `-` was needed (error). The wrong `+` in the code is a fault of commission. When that line runs and computes a wrong total, a failure occurs; the wrong number on the screen is the incident.",
+        "tr": "Testin kendine ait bir terminolojisi vardır; kitap bunu IEEE standartlarından alır. Dört terim bir zincir oluşturur: bir kişi hata (error) yapar, hata bir kusur (fault) olarak ortaya çıkar, çalışan bir kusur arızaya (failure) yol açar ve kullanıcı bir olay (incident) fark eder.\n\n- **Hata (error):** bir kişinin yaptığı yanlış (eş anlamlısı: mistake). Kodlama hatalarına bug denir. Hatalar yayılma eğilimindedir: gereksinimlerdeki bir hata tasarımda büyüyebilir, kodlamada daha da büyüyebilir.\n- **Kusur (fault):** bir hatanın sonucu; hatanın bir ifade biçimindeki (düz metin, veri akış şeması, hiyerarşi şeması, kaynak kod) temsili. Eş anlamlıları: defect, bug.\n- **İşleme kusuru (fault of commission):** temsile yanlış bir şey girilmiştir.\n- **İhmal kusuru (fault of omission):** olması gereken bir şey eksiktir. Bu kusurları tespit etmek ve gidermek daha zordur.\n- **Arıza (failure):** bir kusur çalıştığında ortaya çıkar. Arızalar yalnızca çalıştırılabilir bir temsilde (genellikle kaynak kod, daha kesin olarak yüklenmiş nesne kodu) oluşur. Bu tanım arızaları yalnızca işleme kusurlarıyla ilişkilendirir ve bir kusur çalışana kadar uykuda kalabilir. Buna karşılık incelemeler (review) kusurları, hatta ihmal kusurlarını bile bulabilir.\n- **Olay (incident):** arızayla ilişkili olan ve kullanıcıyı (ya da müşteriyi veya test uzmanını) arızanın oluştuğu konusunda uyaran belirti.\n\n**Örnek:** Programcı `-` gereken yere `+` yazar (hata). Koddaki yanlış `+` bir işleme kusurudur. O satır çalışıp yanlış bir toplam hesapladığında arıza oluşur; ekrandaki yanlış sayı ise olaydır."
+      },
+      "source": "pp. 3–4"
+    },
+    {
+      "id": "test-and-life-cycle",
+      "title": {
+        "en": "What a test is and the testing life cycle",
+        "tr": "Test nedir ve test yaşam döngüsü"
+      },
+      "body": {
+        "en": "The book gives two main reasons to test: to make a judgment about quality or acceptability, and to discover problems.\n\n- **Test:** the act of exercising software with test cases. A test has two distinct goals: to find failures or to demonstrate correct execution.\n- **Testing life cycle (Figure 1.1):** Requirements Specification → Design → Coding → Testing → Fault Classification → Fault Isolation → Fault Resolution.\n- Errors can be made in the three development phases, producing faults that propagate. Fault Resolution is another opportunity for errors (and new faults): if a fix makes formerly correct software misbehave, the fix is deficient (this is revisited under regression testing).\n- Poston's (1990) summary: the first three phases are **Putting Bugs IN**, the testing phase is **Finding Bugs**, and the last three phases are **Getting Bugs OUT**.\n- The process of testing itself can be subdivided into separate steps: test planning, test case development, running test cases, and evaluating test results.\n\n**Example:** a tester runs a test, sees a failure and reports it. Deciding what kind of fault caused it, locating that fault in the code and fixing it belong to the later phases, not to the test itself.",
+        "tr": "Kitap test yapmanın iki ana nedenini verir: kalite veya kabul edilebilirlik hakkında bir yargıya varmak ve sorunları keşfetmek.\n\n- **Test:** yazılımı test durumlarıyla (test case) çalıştırma eylemi. Bir testin iki ayrı amacı vardır: arıza bulmak ya da doğru çalıştığını göstermek.\n- **Test yaşam döngüsü (Şekil 1.1):** Gereksinim Belirtimi (Requirements Specification) → Tasarım → Kodlama → Test → Kusur Sınıflandırma (Fault Classification) → Kusur Yalıtma (Fault Isolation) → Kusur Giderme (Fault Resolution).\n- Üç geliştirme aşamasında hata yapılabilir ve bunlar yayılan kusurlar üretir. Kusur Giderme de hatalar (ve yeni kusurlar) için bir fırsattır: bir düzeltme daha önce doğru çalışan yazılımın yanlış davranmasına yol açarsa, o düzeltme yetersizdir (bu konuya regresyon testi (regression testing) anlatılırken dönülür).\n- Poston'un (1990) özeti: ilk üç aşama **Putting Bugs IN** (bug'ları sokmak), test aşaması **Finding Bugs** (bug'ları bulmak), son üç aşama **Getting Bugs OUT** (bug'ları çıkarmak).\n- Test sürecinin kendisi ayrı adımlara bölünebilir: test planlama, test durumu geliştirme, test durumlarını çalıştırma ve test sonuçlarını değerlendirme.\n\n**Örnek:** Bir test uzmanı testi çalıştırır, bir arıza görür ve raporlar. Arızaya hangi tür kusurun yol açtığına karar vermek, o kusurun koddaki yerini bulmak ve düzeltmek testin kendisine değil, sonraki aşamalara aittir."
+      },
+      "source": "pp. 3–4"
+    },
+    {
+      "id": "test-cases",
+      "title": {
+        "en": "Anatomy of a test case",
+        "tr": "Bir test durumunun yapısı"
+      },
+      "body": {
+        "en": "The essence of testing is to determine a set of test cases for the item being tested. A test case has an identity and is associated with a program behavior. The book's typical test case information (Figure 1.2): Test Case ID, Purpose, Preconditions, Inputs, Expected Outputs, Postconditions, and an Execution History (Date, Result, Version, Run By).\n\n- **Inputs** are really of two types: preconditions (circumstances that hold prior to test case execution) and the actual inputs that were identified by some testing method.\n- **Expected outputs** are again of two types: postconditions and actual outputs.\n- The expected output is often the hard part. The academic response is to postulate an **oracle** that \"knows all the answers.\"\n- One industrial response is **Reference Testing**: the system is tested in the presence of expert users, who judge whether the outputs of an executed set of test case inputs are acceptable.\n- Test cases are valuable, at least as valuable as source code, so they need to be developed, reviewed, used, managed and saved.\n\n**Example:** in a cash-withdrawal test, \"the account balance is 100\" is a precondition, the requested amount 30 is an actual input, \"the balance is now 70\" is a postcondition, and the message shown on the screen is an actual output.",
+        "tr": "Testin özü, test edilen öğe için bir test durumları (test case) kümesi belirlemektir. Bir test durumunun bir kimliği vardır ve bir program davranışıyla ilişkilidir. Kitaptaki tipik test durumu bilgileri (Şekil 1.2): Test Case ID (kimlik), Purpose (amaç), Preconditions (ön koşullar), Inputs (girdiler), Expected Outputs (beklenen çıktılar), Postconditions (son koşullar) ve Execution History (çalıştırma geçmişi: Date, Result, Version, Run By).\n\n- **Girdiler** aslında iki türdür: ön koşullar (precondition; test durumu çalıştırılmadan önce geçerli olan koşullar) ve bir test yöntemiyle belirlenmiş asıl girdiler.\n- **Beklenen çıktılar** da yine iki türdür: son koşullar (postcondition) ve asıl çıktılar.\n- Beklenen çıktı çoğu zaman işin zor kısmıdır. Akademik yanıt, \"tüm cevapları bilen\" bir kâhin (oracle) varsaymaktır.\n- Endüstriyel yanıtlardan biri **Reference Testing**'dir (referans testi): sistem uzman kullanıcıların huzurunda test edilir ve bu uzmanlar çalıştırılan test girdilerinin çıktılarının kabul edilebilir olup olmadığına karar verir.\n- Test durumları değerlidir, en az kaynak kod kadar değerlidir; bu yüzden geliştirilmeleri, gözden geçirilmeleri, kullanılmaları, yönetilmeleri ve saklanmaları gerekir.\n\n**Örnek:** Bir para çekme testinde \"hesap bakiyesi 100\" bir ön koşul, istenen 30 tutarı asıl girdi, \"bakiye artık 70\" bir son koşul, ekranda gösterilen mesaj ise asıl çıktıdır."
+      },
+      "source": "pp. 4–5"
+    },
+    {
+      "id": "specified-vs-programmed",
+      "title": {
+        "en": "Venn diagram: specified vs programmed behavior",
+        "tr": "Venn şeması: belirtilen ve programlanan davranış"
+      },
+      "body": {
+        "en": "Venn diagrams make several nagging questions about testing concrete. The structural view of a program focuses on what it is; the behavioral view considers what it does. Testing is fundamentally concerned with behavior.\n\nConsider the universe of program behaviors. Let S be the set of specified behaviors (the specification, what is expected) and P the set of programmed behaviors (the program, what is observed). In Figure 1.3:\n\n- **S − P** (specified but not programmed): faults of omission.\n- **P − S** (programmed but not specified): faults of commission.\n- **S ∩ P** (both specified and programmed): the \"correct\" portion.\n\nA very good view of testing is that it is the determination of the extent of program behavior that is both specified and implemented. \"Correctness\" only has meaning with respect to a specification and an implementation; it is a relative term, not an absolute.\n\n**Example:** the specification requires a report in two formats, but the program prints only one: the missing format lies in S − P. If the program also e-mails the report, which nobody specified, that behavior lies in P − S.",
+        "tr": "Venn şemaları, testle ilgili akla takılan birçok soruyu somutlaştırır. Bir programın yapısal görünümü (structural view) onun ne olduğuna, davranışsal görünümü (behavioral view) ise ne yaptığına odaklanır. Test temelde davranışla ilgilenir.\n\nProgram davranışlarından oluşan evreni düşünün. S belirtilen (specified) davranışların kümesi (belirtim (specification), yani beklenen), P ise programlanan (programmed) davranışların kümesi (program, yani gözlenen) olsun. Şekil 1.3'te:\n\n- **S − P** (belirtilmiş ama programlanmamış): ihmal kusurları (fault of omission).\n- **P − S** (programlanmış ama belirtilmemiş): işleme kusurları (fault of commission).\n- **S ∩ P** (hem belirtilmiş hem programlanmış): \"doğru\" kısım.\n\nTeste çok iyi bir bakış şudur: test, program davranışının hem belirtilmiş hem de gerçekleştirilmiş olan kısmının ne kadar büyük olduğunu belirlemektir. \"Doğruluk\" (correctness) yalnızca bir belirtime ve bir gerçekleştirime (implementation) göre anlam taşır; mutlak değil, göreli bir terimdir.\n\n**Örnek:** Belirtim bir raporun iki biçimde verilmesini istiyor ama program yalnızca birini yazdırıyor: eksik biçim S − P'dedir. Program ayrıca raporu kimsenin belirtmediği şekilde e-postayla gönderiyorsa, bu davranış P − S'dedir."
+      },
+      "source": "pp. 5–6"
+    },
+    {
+      "id": "specified-programmed-tested",
+      "title": {
+        "en": "Venn diagram with test cases (regions 1–8)",
+        "tr": "Test durumlarıyla Venn şeması (bölge 1–8)"
+      },
+      "body": {
+        "en": "Figure 1.4 adds a third circle T for test cases, so S (specified), P (programmed) and T (tested) split the universe into eight regions:\n\n- **1:** specified, programmed and tested (S ∩ P ∩ T)\n- **2:** specified and programmed, not tested\n- **3:** programmed and tested, not specified\n- **4:** specified and tested, not programmed\n- **5:** specified only\n- **6:** programmed only\n- **7:** tested only (neither specified nor programmed)\n- **8:** in none of the three sets\n\nTo answer a question about the figure, collect every region that lies inside (or outside) the circles named. For example, the programmed behaviors that are tested are regions 1 and 3, and the test cases for unprogrammed behaviors are regions 4 and 7.\n\n- If specified behaviors exist for which there are no test cases, the testing is necessarily incomplete.\n- If a test case corresponds to an unspecified behavior, either the test case is unwarranted or the specification is deficient. Good testers often postulate such test cases, a fine reason to have them in specification and design reviews.\n- The tester's goal is to make region 1, where all three sets intersect, as large as possible; the test cases in T are determined by the testing method used.",
+        "tr": "Şekil 1.4, test durumları (test case) için üçüncü bir T çemberi ekler; böylece S (belirtilen), P (programlanan) ve T (test edilen) evreni sekiz bölgeye ayırır:\n\n- **1:** belirtilmiş, programlanmış ve test edilmiş (S ∩ P ∩ T)\n- **2:** belirtilmiş ve programlanmış, test edilmemiş\n- **3:** programlanmış ve test edilmiş, belirtilmemiş\n- **4:** belirtilmiş ve test edilmiş, programlanmamış\n- **5:** yalnızca belirtilmiş\n- **6:** yalnızca programlanmış\n- **7:** yalnızca test edilmiş (ne belirtilmiş ne programlanmış)\n- **8:** üç kümenin hiçbirinde değil\n\nŞekille ilgili bir soruyu yanıtlamak için, adı geçen çemberlerin içinde (veya dışında) kalan tüm bölgeleri toplayın. Örneğin test edilen programlanmış davranışlar bölge 1 ve 3'tür; programlanmamış davranışlar için test durumları ise bölge 4 ve 7'dir.\n\n- Test durumu bulunmayan belirtilmiş davranışlar varsa, test zorunlu olarak eksiktir.\n- Bir test durumu belirtilmemiş bir davranışa karşılık geliyorsa, ya test durumu gereksizdir (unwarranted) ya da belirtim (specification) eksiktir. İyi test uzmanları bu tür test durumlarını sık sık öne sürer; bu da onları belirtim ve tasarım incelemelerine katmak için iyi bir nedendir.\n- Test uzmanının hedefi, üç kümenin kesiştiği bölge 1'i olabildiğince büyütmektir; T'deki test durumlarını kullanılan test yöntemi belirler."
+      },
+      "source": "pp. 6–7"
+    },
+    {
+      "id": "functional-vs-structural",
+      "title": {
+        "en": "Functional vs structural testing",
+        "tr": "Fonksiyonel ve yapısal test"
+      },
+      "body": {
+        "en": "There are two fundamental approaches to identifying test cases, functional and structural; each has several distinct testing methods.\n\n- **Functional (black box) testing:** any program is viewed as a function that maps values from its input domain to values in its output range. Only the specification is used; the content (implementation) of the black box is not known (Pirsig calls this \"romantic\" comprehension).\n- Its two advantages: the test cases are independent of how the software is implemented, so they are still useful if the implementation changes; and test case development can occur in parallel with the implementation, reducing the overall project interval.\n- Its two problems: significant redundancies may exist among test cases, compounded by the possibility of gaps of untested software.\n- Functional methods (Part II): boundary value analysis, robustness testing, worst-case analysis, special value testing, input (domain) and output (range) equivalence classes, decision table-based testing. Their test cases lie inside the specified behaviors S (Figure 1.6).\n- **Structural (white box, clear box) testing:** the implementation is known and used to identify test cases. It rests on linear graph theory (Chapter 4) and lends itself to **test coverage metrics**, which explicitly state the extent to which a software item has been tested. Its test cases lie inside the programmed behaviors P (Figure 1.7).",
+        "tr": "Test durumu (test case) belirlemenin iki temel yaklaşımı vardır: fonksiyonel ve yapısal; her birinin birkaç ayrı test yöntemi vardır.\n\n- **Fonksiyonel test (functional testing, kara kutu / black box):** her program, girdi tanım kümesindeki (input domain) değerleri çıktı değer kümesindeki (output range) değerlere eşleyen bir fonksiyon olarak görülür. Yalnızca belirtim (specification) kullanılır; kara kutunun içi (gerçekleştirim, implementation) bilinmez (Pirsig buna \"romantik\" kavrayış der).\n- İki avantajı: test durumları yazılımın nasıl gerçekleştirildiğinden bağımsızdır, bu yüzden gerçekleştirim değişse de işe yarar kalır; ayrıca test durumu geliştirme gerçekleştirimle paralel yürüyebilir ve toplam proje süresini kısaltır.\n- İki sorunu: test durumları arasında ciddi fazlalıklar (redundancy) olabilir ve buna test edilmemiş yazılım boşlukları (gap) olasılığı eklenir.\n- Fonksiyonel yöntemler (Kısım II): sınır değer analizi (boundary value analysis), sağlamlık testi (robustness testing), en kötü durum analizi (worst-case analysis), özel değer testi (special value testing), girdi (domain) ve çıktı (range) denklik sınıfları, karar tablosu tabanlı test. Bu yöntemlerin test durumları belirtilmiş davranışlar kümesi S'nin içinde kalır (Şekil 1.6).\n- **Yapısal test (structural testing, beyaz kutu / white box, saydam kutu / clear box):** gerçekleştirim bilinir ve test durumlarını belirlemek için kullanılır. Doğrusal çizge kuramına (linear graph theory, Bölüm 4) dayanır ve bir yazılım öğesinin ne ölçüde test edildiğini açıkça belirten **test kapsam ölçütlerine (test coverage metrics)** uygundur. Test durumları programlanmış davranışlar kümesi P'nin içinde kalır (Şekil 1.7)."
+      },
+      "source": "pp. 7–9"
+    },
+    {
+      "id": "functional-structural-debate",
+      "title": {
+        "en": "The debate, and why both approaches are needed",
+        "tr": "Tartışma ve iki yaklaşımın neden birlikte gerektiği"
+      },
+      "body": {
+        "en": "Which approach is better has been strongly debated.\n\n- **Robert Poston (1991)**, about structural testing: \"This tool has been wasting tester's time since the 1970s.\"\n- **Edward Miller (1991)**, in defense of structural testing: branch coverage (a structural test coverage metric), if attained at the 85% or better level, tends to identify twice the number of defects that would have been found by \"intuitive\" (functional) testing.\n\nThe Venn diagrams give a strong resolution: neither approach alone is sufficient.\n- If some specified behaviors have not been implemented, structural test cases will never be able to recognize this, because they come from the code.\n- If the program implements behaviors that have not been specified, functional test cases will never reveal this, because they come from the specification. A virus is a good example of such unspecified behavior.\n- A judicious combination gives the confidence of functional testing and the measurement of structural testing: when functional test cases are executed together with structural test coverage metrics, their redundancies and gaps can be recognized and resolved.\n- Figure 1.8: functional (black box) testing \"establishes confidence\"; structural (white box) testing \"seeks faults\".\n\n**Example:** a secret shortcut that a programmer left in a game, mentioned nowhere in its specification, lies in P − S, so only test cases derived from the code can reach it.",
+        "tr": "Hangi yaklaşımın daha iyi olduğu güçlü bir şekilde tartışılmıştır.\n\n- **Robert Poston (1991)**, yapısal test hakkında: \"Bu araç 1970'lerden beri test uzmanlarının zamanını boşa harcıyor.\"\n- **Edward Miller (1991)**, yapısal testi savunarak: dal kapsamı (branch coverage; yapısal bir test kapsam ölçütü) %85 veya daha üst düzeyde sağlanırsa, \"sezgisel\" (fonksiyonel) testin bulacağı kusur sayısının iki katını bulma eğilimindedir.\n\nVenn şemaları güçlü bir çözüm sunar: tek başına hiçbir yaklaşım yeterli değildir.\n- Belirtilmiş bazı davranışlar gerçekleştirilmemişse, yapısal test durumları bunu asla fark edemez, çünkü koddan gelirler.\n- Program belirtilmemiş davranışlar gerçekleştiriyorsa, fonksiyonel test durumları bunu asla ortaya çıkaramaz, çünkü belirtimden gelirler. Virüs, bu tür belirtilmemiş davranışa iyi bir örnektir.\n- Akıllıca bir birleşim, fonksiyonel testin güvenini ve yapısal testin ölçümünü birlikte verir: fonksiyonel test durumları yapısal test kapsam ölçütleriyle birlikte çalıştırıldığında fazlalıkları (redundancy) ve boşlukları (gap) fark edilip giderilebilir.\n- Şekil 1.8: fonksiyonel (kara kutu) test \"güven oluşturur\" (establishes confidence); yapısal (beyaz kutu) test \"kusur arar\" (seeks faults).\n\n**Örnek:** Bir programcının bir oyunda bıraktığı ve belirtimde hiç geçmeyen gizli bir kısayol P − S'dedir; bu yüzden ona yalnızca koddan türetilen test durumları ulaşabilir."
+      },
+      "source": "pp. 9–10"
+    },
+    {
+      "id": "sqa-and-severity",
+      "title": {
+        "en": "SQA vs testing, and fault severity",
+        "tr": "SQA ile test farkı ve kusur önem derecesi"
+      },
+      "body": {
+        "en": "The definitions of error and fault hinge on the distinction between process and product: process refers to how we do something, and product is the end result of a process.\n\n- **Software Quality Assurance (SQA)** typically tries to improve the product by improving the process; it is more concerned with reducing errors endemic in the development process.\n- **Testing** is more product oriented; it is concerned with discovering faults in a product.\n\nFaults can be classified in several ways: by the development phase in which the error occurred, the consequences of the failures, difficulty to resolve, risk of no resolution, and so on. The author's favorite is by anomaly occurrence: one time only, intermittent, recurring, or repeatable.\n\n**Beizer's (1984) fault taxonomy by severity (Figure 1.9):** 1 Mild (misspelled word); 2 Moderate (misleading or redundant information); 3 Annoying (truncated names, bill for $0.00); 4 Disturbing (some transaction(s) not processed); 5 Serious (lose a transaction); 6 Very serious (incorrect transaction execution); 7 Extreme (frequent \"very serious\" errors); 8 Intolerable (database corruption); 9 Catastrophic (system shutdown); 10 Infectious (shutdown that spreads to others).\n\nThe IEEE Standard Classification for Software Anomalies (IEEE Std 1044-1993) defines an anomaly as \"a departure from the expected\" and an anomaly resolution process with four phases: recognition, investigation, action, and disposition.",
+        "tr": "Hata ve kusur tanımları süreç (process) ile ürün (product) ayrımına dayanır: süreç bir şeyi nasıl yaptığımızı, ürün ise bir sürecin sonucunu ifade eder.\n\n- **Yazılım Kalite Güvencesi (Software Quality Assurance, SQA)** genellikle süreci iyileştirerek ürünü iyileştirmeye çalışır; daha çok geliştirme sürecine yerleşmiş (endemik) hataları azaltmakla ilgilenir.\n- **Test** daha çok ürün odaklıdır; bir üründeki kusurları bulmakla ilgilenir.\n\nKusurlar birkaç şekilde sınıflandırılabilir: hatanın oluştuğu geliştirme aşamasına, ilgili arızaların sonuçlarına, giderme zorluğuna, giderilmeme riskine vb. göre. Yazarın favorisi anomalinin (anomaly) ortaya çıkışına göre sınıflandırmadır: yalnızca bir kez, aralıklı (intermittent), tekrarlayan (recurring) veya tekrarlanabilir (repeatable).\n\n**Beizer'in (1984) önem derecesine (severity) göre kusur sınıflandırması (Şekil 1.9):** 1 Mild (yanlış yazılmış kelime); 2 Moderate (yanıltıcı veya gereksiz bilgi); 3 Annoying (kesilmiş isimler, $0.00 tutarında fatura); 4 Disturbing (bazı işlemlerin işlenmemesi); 5 Serious (bir işlemin kaybolması); 6 Very serious (işlemin yanlış yürütülmesi); 7 Extreme (sık görülen \"very serious\" hatalar); 8 Intolerable (veritabanı bozulması); 9 Catastrophic (sistemin kapanması); 10 Infectious (başkalarına yayılan kapanma).\n\nIEEE Yazılım Anomalileri Sınıflandırma Standardı (IEEE Std 1044-1993) anomaliyi \"beklenenden sapma\" olarak tanımlar ve dört aşamalı bir anomali giderme süreci tanımlar: tanıma (recognition), araştırma (investigation), eylem (action) ve sonuçlandırma (disposition)."
+      },
+      "source": "pp. 10–11"
+    },
+    {
+      "id": "fault-types",
+      "title": {
+        "en": "Types of faults (Tables 1.1–1.5)",
+        "tr": "Kusur türleri (Tablo 1.1–1.5)"
+      },
+      "body": {
+        "en": "If we know what kinds of faults are likely in the software, we can choose more appropriate test methods. The book lists useful anomalies, mostly from the IEEE standard, in five tables:\n\n- **Input/output faults:** input: correct input not accepted, incorrect input accepted, description wrong or missing, parameters wrong or missing; output: wrong format, wrong result, correct result at wrong time (too early, too late), incomplete or missing result, spurious result, spelling/grammar, cosmetic.\n- **Logic faults:** missing case(s), duplicate case(s), extreme condition neglected, misinterpretation, missing condition, extraneous condition(s), test of wrong variable, incorrect loop iteration, wrong operator (e.g., < instead of ≤).\n- **Computation faults:** incorrect algorithm, missing computation, incorrect operand, incorrect operation, parenthesis error, insufficient precision (round-off, truncation), wrong built-in function.\n- **Interface faults:** incorrect interrupt handling, I/O timing, call to wrong procedure, call to nonexistent procedure, parameter mismatch (type, number), incompatible types, superfluous inclusion.\n- **Data faults:** incorrect initialization, incorrect storage/access, wrong flag/index value, incorrect packing/unpacking, wrong variable used, wrong data reference, scaling or units error, incorrect data dimension, incorrect subscript, incorrect type, incorrect data scope, sensor data out of limits, off by one, inconsistent data.\n\n**Example:** a loop that should run 10 times but runs 9 is an incorrect loop iteration, so it belongs with the logic faults.",
+        "tr": "Yazılımda hangi tür kusurların olası olduğunu bilirsek, daha uygun test yöntemleri seçebiliriz. Kitap, çoğu IEEE standardından alınan yararlı anomalileri beş tabloda listeler:\n\n- **Girdi/çıktı kusurları (input/output faults):** girdi: doğru girdinin kabul edilmemesi, yanlış girdinin kabul edilmesi, açıklamanın yanlış veya eksik olması, parametrelerin yanlış veya eksik olması; çıktı: yanlış biçim, yanlış sonuç, doğru sonucun yanlış zamanda verilmesi (çok erken, çok geç), eksik veya hiç olmayan sonuç, sahte (spurious) sonuç, yazım/dil bilgisi, kozmetik.\n- **Mantık kusurları (logic faults):** eksik durum(lar), tekrarlanan durum(lar), uç koşulun ihmal edilmesi, yanlış yorumlama, eksik koşul, fazladan koşul(lar), yanlış değişkenin sınanması, hatalı döngü yinelemesi, yanlış operatör (ör. ≤ yerine < kullanmak).\n- **Hesaplama kusurları (computation faults):** yanlış algoritma, eksik hesaplama, yanlış işlenen (operand), yanlış işlem, parantez hatası, yetersiz hassasiyet (yuvarlama, kesme), yanlış yerleşik fonksiyon.\n- **Arayüz kusurları (interface faults):** hatalı kesme (interrupt) işleme, G/Ç zamanlaması, yanlış prosedürün çağrılması, var olmayan prosedürün çağrılması, parametre uyuşmazlığı (tür, sayı), uyumsuz türler, gereksiz ekleme (superfluous inclusion).\n- **Veri kusurları (data faults):** hatalı ilk değer atama, hatalı saklama/erişim, yanlış bayrak/indis değeri, hatalı paketleme/paket açma, yanlış değişken kullanımı, yanlış veri referansı, ölçekleme veya birim hatası, hatalı veri boyutu, hatalı dizi indisi (subscript), hatalı tür, hatalı veri kapsamı (scope), sınır dışı sensör verisi, bir fazla/bir eksik (off by one), tutarsız veri.\n\n**Örnek:** 10 kez çalışması gereken ama 9 kez çalışan bir döngü hatalı döngü yinelemesidir, yani mantık kusurlarına girer."
+      },
+      "source": "pp. 11–12"
+    },
+    {
+      "id": "levels-of-testing",
+      "title": {
+        "en": "Levels of testing",
+        "tr": "Test seviyeleri"
+      },
+      "body": {
+        "en": "Levels of testing echo the levels of abstraction found in the Waterfall Model of the software development life cycle. Figure 1.10 is a variation of the Waterfall Model that emphasizes the correspondence between design levels and testing levels: the design levels go down one side to Coding, and the testing levels come back up the other side.\n\n- Requirements Specification ↔ **System testing**\n- Preliminary Design ↔ **Integration testing**\n- Detailed Design ↔ **Unit testing**\n- Coding is at the bottom.\n\nSo the three levels of definition (specification, preliminary design, detailed design) correspond directly to three levels of testing (system, integration, unit).\n\nMost practitioners agree that structural testing is most appropriate at the unit level, while functional testing is most appropriate at the system level. This is also a likely consequence of the information produced in the requirements specification, preliminary design and detailed design phases; the book develops structural constructs for the integration and system levels in Part IV.\n\n**Example:** testing one procedure in isolation, based on its detailed design, is unit testing; testing the whole program against its requirements is system testing.",
+        "tr": "Test seviyeleri, yazılım geliştirme yaşam döngüsünün Şelale Modeli'ndeki (Waterfall Model) soyutlama seviyelerini yansıtır. Şekil 1.10, Şelale Modeli'nin tasarım seviyeleri ile test seviyeleri arasındaki karşılığı vurgulayan bir çeşididir: tasarım seviyeleri bir taraftan Kodlama'ya iner, test seviyeleri diğer taraftan yukarı çıkar.\n\n- Gereksinim Belirtimi (Requirements Specification) ↔ **Sistem testi (system testing)**\n- Ön Tasarım (Preliminary Design) ↔ **Entegrasyon testi (integration testing)**\n- Ayrıntılı Tasarım (Detailed Design) ↔ **Birim testi (unit testing)**\n- Kodlama en alttadır.\n\nYani üç tanım seviyesi (belirtim, ön tasarım, ayrıntılı tasarım) doğrudan üç test seviyesine (sistem, entegrasyon, birim) karşılık gelir.\n\nUygulayıcıların çoğu, yapısal testin en çok birim seviyesinde, fonksiyonel testin ise en çok sistem seviyesinde uygun olduğu konusunda hemfikirdir. Bu muhtemelen gereksinim belirtimi, ön tasarım ve ayrıntılı tasarım aşamalarında üretilen bilginin de bir sonucudur; kitap entegrasyon ve sistem seviyelerinde yapısal test için gereken yapıları Kısım IV'te geliştirir.\n\n**Örnek:** Tek bir prosedürü ayrıntılı tasarımına dayanarak tek başına test etmek birim testidir; tüm programı gereksinimlerine göre test etmek sistem testidir."
+      },
+      "source": "p. 13"
+    }
+  ],
+  "questions": {
+    "1": {
+      "concept": "error-fault-failure-incident",
+      "explanation_tr": "Kusur (fault), bir hatanın (error) temsilidir; olması gereken bir şey eksik olduğunda bu bir ihmal kusurudur (fault of omission), yanlış bir şey girildiğinde ise işleme kusurudur (fault of commission). Kitap ayrıca ihmal kusurlarının tespit edilmesi ve giderilmesi daha zor olan tür olduğunu ekler."
+    },
+    "2": {
+      "concept": "error-fault-failure-incident",
+      "explanation_tr": "Arıza (failure), bir kusur çalıştığında ortaya çıkar ve arızalar yalnızca çalıştırılabilir bir temsilde (genellikle kaynak kod veya yüklenmiş nesne kodu) oluşur. Kullanıcıyı uyaran belirti olaydır (incident); ayrıca bu tanım arızaları ihmal kusurlarıyla değil, yalnızca işleme kusurlarıyla ilişkilendirir."
+    },
+    "3": {
+      "concept": "error-fault-failure-incident",
+      "explanation_tr": "Bir arıza oluştuğunda bu hemen fark edilmeyebilir; bu yüzden olay (incident), kullanıcıyı (veya müşteriyi ya da test uzmanını) arızadan haberdar eden, arızayla ilişkili belirti olarak tanımlanır. Bir kusurun çalışması ise arızanın kendisidir."
+    },
+    "4": {
+      "concept": "test-and-life-cycle",
+      "explanation_tr": "Test, yazılımı test durumlarıyla çalıştırma eylemidir ve iki ayrı amacı vardır: arıza bulmak ya da doğru çalıştığını göstermek. Kusurları yalıtmak ve gidermek yaşam döngüsünün sonraki aşamalarıdır; süreci iyileştirmek ise SQA'nın ilgi alanıdır."
+    },
+    "5": {
+      "concept": "test-and-life-cycle",
+      "explanation_tr": "İlk üç aşama (gereksinim belirtimi, tasarım, kodlama) bug'ları sisteme sokar, test aşaması onları bulur, son üç aşama (kusur sınıflandırma, yalıtma, giderme) ise onları çıkarır. Kusur giderme de hatalar için başka bir fırsattır, çünkü yetersiz bir düzeltme daha önce doğru çalışan yazılımı bozabilir."
+    },
+    "6": {
+      "concept": "test-cases",
+      "explanation_tr": "Girdiler; ön koşullar (test durumu çalıştırılmadan önce geçerli olan koşullar) ve bir test yöntemiyle belirlenen asıl girdilerdir. Son koşullar ve asıl çıktılar ise beklenen çıktıların iki türüdür."
+    },
+    "7": {
+      "concept": "test-cases",
+      "explanation_tr": "Reference Testing'de sistem, uzman kullanıcıların huzurunda test edilir; bu uzmanlar çalıştırılan test girdilerinin çıktılarının kabul edilebilir olup olmadığına karar verir. Tüm cevapları bilen bir kâhin (oracle) varsaymak ise endüstriyel değil, akademik yanıttır."
+    },
+    "8": {
+      "concept": "specified-vs-programmed",
+      "explanation_tr": "Belirtilmiş ama hiç programlanmamış davranışlar ihmal kusurlarıdır; programlanmış ama hiç belirtilmemiş davranışlar ise işleme kusurlarıdır. S ile P'nin kesişimi, hem belirtilmiş hem de gerçekleştirilmiş davranışlardan oluşan \"doğru\" kısımdır."
+    },
+    "9": {
+      "concept": "specified-programmed-tested",
+      "explanation_tr": "Bölge 2 ve 5, S'nin içinde ama T'nin dışında kalır (bölge 2 ayrıca programlanmıştır, bölge 5 değildir) ve bunların varlığı testin zorunlu olarak eksik olduğu anlamına gelir. Bölge 1 ve 4 test edilen belirtilmiş davranışlar, bölge 2 ve 6 ise test edilmeyen programlanmış davranışlardır."
+    },
+    "10": {
+      "concept": "specified-programmed-tested",
+      "explanation_tr": "Bölge 7 yalnızca T'nin içindedir: kitap onu hem belirtilmemiş davranışlar için test durumları (bölge 3 ve 7) hem de programlanmamış davranışlar için test durumları (bölge 4 ve 7) arasında sayar. Belirtilmemiş bir davranış için test durumu varsa, ya test durumu gereksizdir ya da belirtim eksiktir."
+    },
+    "11": {
+      "concept": "functional-vs-structural",
+      "explanation_tr": "Fonksiyonel test durumları arasında çoğu zaman ciddi fazlalıklar (redundancy) vardır ve buna test edilmemiş yazılım boşlukları (gap) olasılığı eklenir. Kitabın belirttiği avantajlar ise geç başlamanın ve kullanışlılığı yitirmenin tam tersidir: gerçekleştirim değişse de test durumları işe yarar kalır ve gerçekleştirimle paralel olarak geliştirilebilir."
+    },
+    "12": {
+      "concept": "functional-structural-debate",
+      "explanation_tr": "Miller (1991), dal kapsamına (branch coverage) %85 veya daha üst düzeyde ulaşılırsa bunun, \"sezgisel\" (fonksiyonel) testin bulduğu kusur sayısının iki katını bulma eğiliminde olduğunu yazmıştır. Tartışmanın diğer tarafındaki Poston ise yapısal testin 1970'lerden beri test uzmanlarının zamanını boşa harcadığını söylemiştir."
+    },
+    "13": {
+      "concept": "functional-structural-debate",
+      "explanation_tr": "Gizli mantık programlanmış ama belirtilmemiştir (bir virüs gibi tetiklenene kadar uykuda kalan bir işleme kusuru) ve belirtilmeden gerçekleştirilmiş davranışlar fonksiyonel test durumlarıyla asla ortaya çıkarılamaz. Bunu yalnızca kodun kendisini kullanan yapısal test ortaya çıkarabilir."
+    },
+    "14": {
+      "concept": "sqa-and-severity",
+      "explanation_tr": "Süreç bir şeyi nasıl yaptığımız, ürün ise onun sonucudur: SQA, süreci iyileştirerek ürünü iyileştirmeye çalışır ve geliştirme sürecine yerleşmiş hataları azaltmakla ilgilenir. Test ise daha çok ürün odaklıdır ve bir üründeki kusurları bulmakla ilgilenir."
+    },
+    "15": {
+      "concept": "sqa-and-severity",
+      "explanation_tr": "Şekil 1.9, 8. seviye olan Intolerable (dayanılmaz) düzeyini veritabanı bozulması olarak listeler. Catastrophic (9) sistemin kapanması, Infectious (10) başkalarına yayılan kapanma, Extreme (7) sık görülen \"very serious\" (çok ciddi) hatalar, Very serious (6) ise işlemin yanlış yürütülmesidir."
+    },
+    "16": {
+      "concept": "fault-types",
+      "explanation_tr": "Tablo 1.5, \"off by one\" (bir fazla/bir eksik) kusurunu veri kusurları altında listeler. Yanlış operatör ve hatalı döngü yinelemesi mantık kusurları, parametre uyuşmazlığı bir arayüz kusuru, yetersiz hassasiyet ise bir hesaplama kusurudur."
+    },
+    "17": {
+      "concept": "levels-of-testing",
+      "explanation_tr": "Gereksinim belirtimi sistem testine, ön tasarım entegrasyon testine, ayrıntılı tasarım ise birim testine karşılık gelir. Kitap ayrıca yapısal testin en çok birim seviyesinde, fonksiyonel testin ise en çok sistem seviyesinde uygun olduğunu ekler."
+    }
+  }
+}

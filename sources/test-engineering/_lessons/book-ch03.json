@@ -1,0 +1,198 @@
+{
+  "intro": {
+    "en": "Chapter 3 reviews the discrete mathematics that the book uses as tools for rigor, precision and efficiency: set theory, functions, relations, propositional logic and probability. These ideas come back throughout functional testing: a program is a function from a domain to a range, its inputs can be partitioned into equivalence classes, and conditions are written as logical expressions. Learn the definitions and notation exactly; later chapters use them without explanation.",
+    "tr": "Bölüm 3, kitabın titizlik, kesinlik ve verimlilik için araç olarak kullandığı ayrık matematiği gözden geçirir: küme kuramı, fonksiyonlar, bağıntılar, önermeler mantığı ve olasılık. Bu fikirler fonksiyonel test boyunca tekrar karşımıza çıkar: bir program, tanım kümesinden değer kümesine giden bir fonksiyondur, girdileri denklik sınıflarına bölünebilir ve koşullar mantıksal ifadeler olarak yazılır. Tanımları ve gösterimi tam olarak öğrenin; sonraki bölümler bunları açıklamadan kullanır."
+  },
+  "concepts": [
+    {
+      "id": "math-for-testers",
+      "title": {
+        "en": "Why testers need discrete math",
+        "tr": "Test uzmanları neden ayrık matematiğe ihtiyaç duyar"
+      },
+      "body": {
+        "en": "More than any other life cycle activity, testing lends itself to mathematical description and analysis. The book presents its math topics as tools: a testing craftsperson who uses them well gains rigor, precision and efficiency, all of which improve testing.\n\n- The mathematical antonym of **discrete** is **continuous**, as in calculus, which software developers (and testers) seldom use.\n- Discrete math, covered in Chapter 3, includes set theory, functions, relations, propositional logic, and probability theory.\n- Graph theory follows in Chapter 4.\n- In general, **discrete mathematics is more applicable to functional testing**, while **graph theory pertains more to structural testing**.\n\nThis fits Chapter 1: functional testing treats a program as a function from an input domain to an output range, ideas built on sets and functions, while structural testing works with the program's structure, which rests on linear graph theory.\n\n**Example:** writing the valid NextDate years as the set Y = {year : 1812 ≤ year ≤ 2012} is discrete math in the service of functional testing.",
+        "tr": "Yaşam döngüsündeki diğer tüm etkinliklerden daha çok, test matematiksel tanımlama ve analize uygundur. Kitap matematik konularını araç olarak sunar: bunları iyi kullanan bir test ustası titizlik, kesinlik ve verimlilik kazanır; bunların hepsi testi iyileştirir.\n\n- **Ayrık (discrete)** kelimesinin matematikteki zıttı **sürekli (continuous)** kelimesidir; kalkülüsteki gibi. Yazılım geliştiriciler (ve test uzmanları) kalkülüsü nadiren kullanır.\n- 3. bölümde ele alınan ayrık matematik; küme kuramı (set theory), fonksiyonlar, bağıntılar (relations), önermeler mantığı (propositional logic) ve olasılık kuramını (probability theory) içerir.\n- Çizge kuramı (graph theory) 4. bölümde gelir.\n- Genel olarak **ayrık matematik fonksiyonel teste daha uygundur**, **çizge kuramı ise daha çok yapısal testle ilgilidir**.\n\nBu, 1. bölümle uyumludur: fonksiyonel test programı bir girdi tanım kümesinden bir çıktı değer kümesine giden bir fonksiyon olarak görür (kümeler ve fonksiyonlar üzerine kurulu fikirler); yapısal test ise doğrusal çizge kuramına dayanan program yapısıyla çalışır.\n\n**Örnek:** NextDate'in geçerli yıllarını Y = {year : 1812 ≤ year ≤ 2012} kümesi olarak yazmak, fonksiyonel testin hizmetindeki ayrık matematiktir."
+      },
+      "source": "p. 33"
+    },
+    {
+      "id": "defining-sets",
+      "title": {
+        "en": "Defining sets, decision rules and the empty set",
+        "tr": "Küme tanımlama, karar kuralları ve boş küme"
+      },
+      "body": {
+        "en": "A set lets us refer to several things as a group, or a whole. In naive set theory a set is a primitive term with no explicit definition (like point and line in geometry). Membership is written `x ∈ A` (x is an element of A) and `x ∉ A`.\n\nThere are **three ways to define a set**:\n- **Listing its elements:** M1 = {April, June, September, November}, the 30-day months. The order of listing is irrelevant.\n- **Giving a decision rule:** Y = {year : 1812 ≤ year ≤ 2012}.\n- **Constructing it from other sets** (with the operations on the next card).\n\nA decision rule must be unambiguous: for any x we must be able to tell whether x is in the set. This forces clarity, and it helps testers: \"untestable requirements\" often boil down to an ambiguous decision rule. A rule can also describe sets whose elements are hard to list. Its drawback: rules can become logically complex, especially with the quantifiers ∃ (there exists) and ∀ (for all). Self-reference (the Barber of Seville puzzle) has very little application for testers.\n\n**Empty set ∅:** the set with no elements. It is unique, and ∅, {∅} and {{∅}} are all different sets. A set defined by a decision rule that is always false is empty.\n\n**Example:** {n : n is an integer and n > 5 and n < 3} = ∅. A requirement such as \"the screen must respond quickly\" stays untestable until \"quickly\" gets an exact rule.",
+        "tr": "Küme (set), birkaç şeyden bir grup ya da bir bütün olarak söz etmemizi sağlar. Naif küme kuramında (naive set theory) küme, açık bir tanımı olmayan ilkel bir terimdir (primitive term) (geometrideki nokta ve doğru gibi). Üyelik `x ∈ A` (x, A'nın elemanıdır) ve `x ∉ A` şeklinde yazılır.\n\n**Bir küme üç şekilde tanımlanabilir:**\n- **Elemanlarını listeleyerek:** M1 = {April, June, September, November}, yani 30 günlük aylar. Listeleme sırası önemsizdir.\n- **Bir karar kuralı (decision rule) vererek:** Y = {year : 1812 ≤ year ≤ 2012}.\n- **Başka kümelerden oluşturarak** (bir sonraki karttaki işlemlerle).\n\nKarar kuralı belirsiz olmamalıdır: her x için x'in kümede olup olmadığını söyleyebilmeliyiz. Bu açıklığı zorunlu kılar ve test uzmanlarına yardım eder: \"test edilemez gereksinimler\" (untestable requirements) çoğu zaman belirsiz bir karar kuralına dayanır. Bir kural, elemanlarını listelemek zor olan kümeleri de tanımlayabilir. Dezavantajı: kurallar özellikle ∃ (vardır) ve ∀ (her) niceleyicileriyle mantıksal olarak karmaşıklaşabilir. Kendine gönderme (self-reference; Sevilla Berberi bulmacası) test uzmanları için çok az uygulamaya sahiptir.\n\n**Boş küme ∅ (empty set):** hiç elemanı olmayan küme. Tektir; ∅, {∅} ve {{∅}} birbirinden farklı kümelerdir. Her zaman yanlış olan bir karar kuralıyla tanımlanan küme boştur.\n\n**Örnek:** {n : n bir tam sayı ve n > 5 ve n < 3} = ∅. \"Ekran hızlı yanıt vermelidir\" gibi bir gereksinim, \"hızlı\" kesin bir kurala bağlanana kadar test edilemez kalır."
+      },
+      "source": "pp. 33–35"
+    },
+    {
+      "id": "set-operations",
+      "title": {
+        "en": "Set operations and the Cartesian product",
+        "tr": "Küme işlemleri ve Kartezyen çarpım"
+      },
+      "body": {
+        "en": "Sets can be combined into new sets. All sets live in a universe of discourse U (often only assumed, which is a source of confusion between customers and developers). For sets A and B:\n\n- **Union:** A ∪ B = {x : x ∈ A ∨ x ∈ B} (in A or B or both)\n- **Intersection:** A ∩ B = {x : x ∈ A ∧ x ∈ B} (in both)\n- **Complement:** A' = {x : x ∉ A}\n- **Relative complement:** A − B = {x : x ∈ A ∧ x ∉ B}\n- **Symmetric difference:** A ⊕ B = {x : x ∈ A ⊕ x ∈ B}, the elements in exactly one of the two sets; equivalently A ⊕ B = (A ∪ B) − (A ∩ B)\n\n**Cartesian product:** A × B = {<x, y> : x ∈ A ∧ y ∈ B}, the set of all ordered pairs. With |A| (or Card(A)) for the cardinality, the number of elements of A: |A × B| = |A| × |B|. In Chapter 5 the Cartesian product describes test cases for programs with several inputs, which leads to very large numbers of test cases.\n\n**Ordered vs unordered pairs:** for a ≠ b, the unordered pair (a, b) = (b, a), but the ordered pair <a, b> ≠ <b, a>. This is exactly the difference between ordinary graphs and directed graphs.\n\n**Example:** A = {2, 4, 6}, B = {4, 8}: A ∪ B = {2, 4, 6, 8}, A ∩ B = {4}, A − B = {2, 6}, A ⊕ B = {2, 6, 8}, and |A × B| = 3 × 2 = 6.",
+        "tr": "Kümeler birleştirilerek yeni kümeler elde edilir. Tüm kümeler bir evrensel küme (universe of discourse) U içinde yer alır; U çoğu zaman yalnızca varsayılır ve bu, müşteriler ile geliştiriciler arasında bir karışıklık kaynağıdır. A ve B kümeleri için:\n\n- **Birleşim (union):** A ∪ B = {x : x ∈ A ∨ x ∈ B} (A'da veya B'de ya da her ikisinde)\n- **Kesişim (intersection):** A ∩ B = {x : x ∈ A ∧ x ∈ B} (her ikisinde)\n- **Tümleyen (complement):** A' = {x : x ∉ A}\n- **Fark (relative complement):** A − B = {x : x ∈ A ∧ x ∉ B}\n- **Simetrik fark (symmetric difference):** A ⊕ B = {x : x ∈ A ⊕ x ∈ B}, yani iki kümeden tam olarak birinde bulunan elemanlar; eşdeğer olarak A ⊕ B = (A ∪ B) − (A ∩ B)\n\n**Kartezyen çarpım (Cartesian product):** A × B = {<x, y> : x ∈ A ∧ y ∈ B}, tüm sıralı ikililerin kümesi. A'nın eleman sayısı (cardinality) |A| (veya Card(A)) ile gösterilirse: |A × B| = |A| × |B|. 5. bölümde Kartezyen çarpım, birden çok girdisi olan programların test durumlarını tanımlar ve bu çok büyük sayıda test durumuna yol açar.\n\n**Sıralı ve sırasız ikililer:** a ≠ b için sırasız ikili (unordered pair) (a, b) = (b, a)'dır, ama sıralı ikili (ordered pair) <a, b> ≠ <b, a>'dır. Sıradan çizgeler ile yönlü çizgeler (directed graph) arasındaki fark tam olarak budur.\n\n**Örnek:** A = {2, 4, 6}, B = {4, 8}: A ∪ B = {2, 4, 6, 8}, A ∩ B = {4}, A − B = {2, 6}, A ⊕ B = {2, 6, 8} ve |A × B| = 3 × 2 = 6."
+      },
+      "source": "pp. 36–38"
+    },
+    {
+      "id": "partitions",
+      "title": {
+        "en": "Subsets and partitions",
+        "tr": "Alt kümeler ve bölüntüler"
+      },
+      "body": {
+        "en": "Set relations compare two sets:\n- **Subset:** A ⊆ B iff a ∈ A ⇒ a ∈ B (every element of A is in B).\n- **Proper subset:** A ⊂ B iff A ⊆ B ∧ B − A ≠ ∅.\n- **Equality:** A = B iff A ⊆ B ∧ B ⊆ A.\n\nA **partition** of a set B is a set of subsets A1, A2, …, An of B such that:\n- A1 ∪ A2 ∪ … ∪ An = B, and\n- i ≠ j ⇒ Ai ∩ Aj = ∅ (the subsets are pairwise disjoint).\n\nThe subsets are called the elements of the partition. The two conditions are what matter to testers: the union condition guarantees **completeness** (everything is somewhere), and the disjointness condition guarantees **nonredundancy** (no element is in two subsets). The inherent weakness of functional testing is its vulnerability to gaps and redundancies, and one of its difficulties is finding an appropriate partition.\n\nFor the Triangle Program, the universe is all triplets of positive integers (a Cartesian product). The book tries three divisions: triangles vs nontriangles; equilateral, isosceles, scalene, nontriangles; and the same plus right triangles. The book finds a problem with the third one. Before accepting any division as a partition, check both conditions: does every triplet belong somewhere, and could any triplet belong to two subsets at once?\n\n**Example:** {even integers, odd integers} is a partition of the integers; {integers ≤ 10, integers ≥ 10} is not, because 10 lies in both.",
+        "tr": "Küme bağıntıları iki kümeyi karşılaştırır:\n- **Alt küme (subset):** A ⊆ B ancak ve ancak a ∈ A ⇒ a ∈ B (A'nın her elemanı B'dedir).\n- **Öz alt küme (proper subset):** A ⊂ B ancak ve ancak A ⊆ B ∧ B − A ≠ ∅.\n- **Eşitlik:** A = B ancak ve ancak A ⊆ B ∧ B ⊆ A.\n\nBir B kümesinin **bölüntüsü (partition)**, B'nin A1, A2, …, An alt kümelerinden oluşan ve şu koşulları sağlayan bir kümedir:\n- A1 ∪ A2 ∪ … ∪ An = B ve\n- i ≠ j ⇒ Ai ∩ Aj = ∅ (alt kümeler ikişer ikişer ayrıktır).\n\nAlt kümelere bölüntünün elemanları denir. Test uzmanları için önemli olan bu iki koşuldur: birleşim koşulu **tamlığı (completeness)** (her şey bir yerdedir), ayrıklık koşulu ise **fazlalık olmamasını (nonredundancy)** (hiçbir eleman iki alt kümede değildir) garanti eder. Fonksiyonel testin doğasındaki zayıflık boşluklara ve fazlalıklara açık olmasıdır; zorluklarından biri de uygun bir bölüntü bulmaktır.\n\nÜçgen Programı için evren, pozitif tam sayılardan oluşan tüm üçlülerdir (bir Kartezyen çarpım). Kitap üç ayrım dener: üçgenler ve üçgen olmayanlar; eşkenar, ikizkenar, çeşitkenar, üçgen olmayanlar; ve bunlara ek olarak dik üçgenler. Kitap üçüncü ayrımda bir sorun bulur. Bir ayrımı bölüntü olarak kabul etmeden önce iki koşulu da kontrol edin: her üçlü bir yere ait mi, ve herhangi bir üçlü aynı anda iki alt kümeye ait olabilir mi?\n\n**Örnek:** {çift tam sayılar, tek tam sayılar} tam sayıların bir bölüntüsüdür; {≤ 10 olan tam sayılar, ≥ 10 olan tam sayılar} değildir, çünkü 10 ikisinde de bulunur."
+      },
+      "source": "pp. 38–39"
+    },
+    {
+      "id": "function-types",
+      "title": {
+        "en": "Functions: domain, range and function types",
+        "tr": "Fonksiyonlar: tanım kümesi, değer kümesi ve fonksiyon türleri"
+      },
+      "body": {
+        "en": "Functions are central to testing; all functional testing is based on them. Any program can be thought of as a function that associates its outputs with its inputs: the inputs are the **domain** of the function and the outputs are its **range**.\n\nGiven sets A and B, a function f : A → B is a subset of A × B that is \"well-behaved\": an element of A is never associated with more than one element of B (otherwise we would have nondeterminism, and how could we test that?). The **image** of A under f is f(A) = {b ∈ B : b = f(a) for some a ∈ A}.\n\nFunction types:\n- **onto** iff f(A) = B: every element of B is associated with some element of A\n- **into** iff f(A) ⊂ B (a proper subset): at least one element of B is not associated with any element of A\n- **one-to-one** iff ai ≠ aj ⇒ f(ai) ≠ f(aj): distinct domain elements never map to the same range element\n- **many-to-one** iff there exist ai ≠ aj with f(ai) = f(aj)\n\nThe classification depends on the sets A and B, not only on the rule: the same rule can be onto one set B and into a larger one. It makes no sense for NextDate to be many-to-one, but the triangle problem can easily be many-to-one.\n\n**Example:** f(x) = x² on A = {−2, −1, 0, 1, 2}. With B = {0, 1, 4}, f is onto; with B = {0, 1, 2, 3, 4}, f(A) is a proper subset of B, so f is into. In both cases f(−1) = f(1), so f is many-to-one.",
+        "tr": "Fonksiyonlar test için merkezîdir; tüm fonksiyonel test onlara dayanır. Her program, çıktılarını girdileriyle ilişkilendiren bir fonksiyon olarak düşünülebilir: girdiler fonksiyonun **tanım kümesi (domain)**, çıktılar ise **değer kümesidir (range)**.\n\nA ve B kümeleri verildiğinde, f : A → B fonksiyonu A × B'nin \"iyi davranan\" (well-behaved) bir alt kümesidir: A'nın bir elemanı hiçbir zaman B'nin birden fazla elemanıyla ilişkilendirilmez (aksi hâlde belirlenimsizlik (nondeterminism) olurdu; bunu nasıl test ederdik?). A'nın f altındaki **görüntüsü (image)** f(A) = {b ∈ B : bazı a ∈ A için b = f(a)} kümesidir.\n\nFonksiyon türleri:\n- **örten (onto)** ancak ve ancak f(A) = B: B'nin her elemanı A'nın bir elemanıyla ilişkilidir\n- **içine (into)** ancak ve ancak f(A) ⊂ B (öz alt küme): B'nin en az bir elemanı A'nın hiçbir elemanıyla ilişkili değildir\n- **birebir (one-to-one)** ancak ve ancak ai ≠ aj ⇒ f(ai) ≠ f(aj): farklı tanım kümesi elemanları asla aynı değer kümesi elemanına eşlenmez\n- **çoka-bir (many-to-one)** ancak ve ancak ai ≠ aj olup f(ai) = f(aj) olan elemanlar vardır\n\nSınıflandırma yalnızca kurala değil, A ve B kümelerine de bağlıdır: aynı kural bir B kümesine örten, daha büyük bir kümeye ise içine olabilir. NextDate'in çoka-bir olması anlamsızdır, ama üçgen problemi kolayca çoka-bir olabilir.\n\n**Örnek:** A = {−2, −1, 0, 1, 2} üzerinde f(x) = x². B = {0, 1, 4} ise f örtendir; B = {0, 1, 2, 3, 4} ise f(A), B'nin öz alt kümesidir, yani f içinedir. Her iki durumda da f(−1) = f(1) olduğundan f çoka-birdir."
+      },
+      "source": "pp. 40–41"
+    },
+    {
+      "id": "functions-in-testing",
+      "title": {
+        "en": "Functions in testing: inverses and composition",
+        "tr": "Testte fonksiyonlar: ters fonksiyon ve bileşke"
+      },
+      "body": {
+        "en": "Function types and combinations of functions have direct consequences for testing.\n\n- The into versus onto distinction has implications for domain- and range-based functional testing.\n- **One-to-one functions require much more testing than many-to-one functions.**\n- **Inverse:** if f is a one-to-one function from A onto B, it always has an inverse function f⁻¹, which is unique, with f⁻¹·f(a) = a and f·f⁻¹(b) = b. NextDate and YesterDate are such inverses. For a given function, its inverse acts as a \"cross-check\", and this can often expedite the identification of functional test cases.\n- **Composition:** if f : A → B, g : B → C and h : C → D, then h∘g∘f(a) = h(g(f(a))). Composition is inherent in defining procedures and subroutines; in the commission program f1(locks, stocks, barrels) = sales and f2(sales) = commission.\n- Composed chains of functions can be problematic for testers, particularly when the range of one function is a proper subset of the domain of the next function in the chain.\n- In a dataflow diagram (Figure 3.4), causal flow passes values along like an assembly line. In noncausal flow, a data store B may have more than one source of b values, which can raise domain/range compatibility problems and timing anomalies (what if g uses an \"old\" b value?).\n\n**Example:** to check a function that converts kilometers to miles, feed its output to the inverse conversion and confirm that the original input comes back.",
+        "tr": "Fonksiyon türlerinin ve fonksiyon birleşimlerinin test için doğrudan sonuçları vardır.\n\n- İçine ve örten (into/onto) ayrımının tanım ve değer kümesine dayalı fonksiyonel test için sonuçları vardır.\n- **Birebir fonksiyonlar, çoka-bir fonksiyonlardan çok daha fazla test gerektirir.**\n- **Ters fonksiyon (inverse):** f, A'dan B'ye birebir ve örten bir fonksiyonsa her zaman tek olan bir f⁻¹ ters fonksiyonu vardır ve f⁻¹·f(a) = a, f·f⁻¹(b) = b'dir. NextDate ve YesterDate bu tür terslerdir. Verilen bir fonksiyon için tersi bir \"çapraz kontrol\" (cross-check) görevi görür ve bu çoğu zaman fonksiyonel test durumlarının belirlenmesini hızlandırır.\n- **Bileşke (composition):** f : A → B, g : B → C ve h : C → D ise h∘g∘f(a) = h(g(f(a))). Bileşke, prosedür ve alt program tanımlamanın doğasında vardır; komisyon programında f1(locks, stocks, barrels) = sales ve f2(sales) = commission'dır.\n- Fonksiyon bileşke zincirleri test uzmanları için sorun çıkarabilir; özellikle bir fonksiyonun değer kümesi zincirdeki sonraki fonksiyonun tanım kümesinin öz alt kümesi olduğunda.\n- Bir veri akış şemasında (dataflow diagram, Şekil 3.4), nedensel akış (causal flow) değerleri bir montaj hattı gibi aktarır. Nedensel olmayan akışta (noncausal flow) bir B veri deposunun (data store) birden fazla b değeri kaynağı olabilir; bu, tanım/değer kümesi uyumluluğu sorunlarına ve zamanlama anomalilerine yol açabilir (g \"eski\" bir b değeri kullanırsa ne olur?).\n\n**Örnek:** Kilometreyi mile çeviren bir fonksiyonu kontrol etmek için çıktısını ters çevirime verin ve orijinal girdinin geri geldiğini doğrulayın."
+      },
+      "source": "pp. 42–43"
+    },
+    {
+      "id": "relations",
+      "title": {
+        "en": "Relations: cardinality and participation",
+        "tr": "Bağıntılar: kardinalite ve katılım"
+      },
+      "body": {
+        "en": "A **relation** R between sets A and B is a subset of the Cartesian product A × B; for specific elements we write ai R bi. Functions are a special case of relations: both are subsets of a Cartesian product, but functions must be \"well-behaved\". Not all relationships are functional; patients and physicians, for example, form a many-to-many mapping.\n\n**Cardinality** of a relation R ⊆ A × B:\n- one-to-one iff R is a one-to-one function from A to B\n- many-to-one iff R is a many-to-one function from A to B\n- one-to-many iff at least one element a ∈ A is in two ordered pairs in R\n- many-to-many iff at least one a ∈ A is in two ordered pairs in R and at least one b ∈ B is in two ordered pairs in R\n\n**Participation** of R ⊆ A × B:\n- **total** iff every element of A is in some ordered pair in R\n- **partial** iff some element of A is not in any ordered pair in R\n- **onto** iff every element of B is in some ordered pair in R\n- **into** iff some element of B is not in any ordered pair in R\n\nTotal/partial participation is also called mandatory/optional participation. Onto/into bears on output-based functional testing, and the mandatory–optional distinction is the essence of exception handling.\n\n**Example:** patients {Ann, Bob}, physicians {Dr. X, Dr. Y}, R = {<Ann, Dr. X>, <Ann, Dr. Y>}. Ann is in two pairs, so R is one-to-many; every physician appears, so R is onto; Bob appears in no pair, so participation of the patients is partial.",
+        "tr": "A ve B kümeleri arasındaki bir **bağıntı (relation)** R, A × B Kartezyen çarpımının bir alt kümesidir; belirli elemanlar için ai R bi yazılır. Fonksiyonlar bağıntıların özel bir durumudur: ikisi de bir Kartezyen çarpımın alt kümesidir, ama fonksiyonlar \"iyi davranan\" (well-behaved) olmak zorundadır. Her ilişki fonksiyonel değildir; örneğin hastalar ve doktorlar çoka-çok (many-to-many) bir eşleme oluşturur.\n\nR ⊆ A × B bağıntısının **kardinalitesi (cardinality)**:\n- birebir (one-to-one) ancak ve ancak R, A'dan B'ye birebir bir fonksiyonsa\n- çoka-bir (many-to-one) ancak ve ancak R, A'dan B'ye çoka-bir bir fonksiyonsa\n- bire-çok (one-to-many) ancak ve ancak en az bir a ∈ A elemanı R'deki iki sıralı ikilide yer alıyorsa\n- çoka-çok (many-to-many) ancak ve ancak en az bir a ∈ A ve en az bir b ∈ B elemanı R'deki iki sıralı ikilide yer alıyorsa\n\nR ⊆ A × B bağıntısının **katılımı (participation)**:\n- **tam (total)** ancak ve ancak A'nın her elemanı R'deki bir sıralı ikilide yer alıyorsa\n- **kısmi (partial)** ancak ve ancak A'nın bir elemanı R'deki hiçbir sıralı ikilide yer almıyorsa\n- **örten (onto)** ancak ve ancak B'nin her elemanı R'deki bir sıralı ikilide yer alıyorsa\n- **içine (into)** ancak ve ancak B'nin bir elemanı R'deki hiçbir sıralı ikilide yer almıyorsa\n\nTam/kısmi katılıma zorunlu/isteğe bağlı (mandatory/optional) katılım da denir. Örten/içine ayrımı çıktıya dayalı fonksiyonel testle ilgilidir; zorunlu–isteğe bağlı ayrımı ise istisna işlemenin (exception handling) özüdür.\n\n**Örnek:** hastalar {Ann, Bob}, doktorlar {Dr. X, Dr. Y}, R = {<Ann, Dr. X>, <Ann, Dr. Y>}. Ann iki ikilide yer aldığı için R bire-çoktur; her doktor yer aldığı için R örtendir; Bob hiçbir ikilide yer almadığı için hastaların katılımı kısmidir."
+      },
+      "source": "pp. 43–45"
+    },
+    {
+      "id": "ordering-equivalence",
+      "title": {
+        "en": "Ordering and equivalence relations",
+        "tr": "Sıralama ve denklik bağıntıları"
+      },
+      "body": {
+        "en": "Some relations are defined on a single set, R ⊆ A × A. Four properties classify them:\n- **reflexive** iff for all a ∈ A, <a, a> ∈ R\n- **symmetric** iff <a, b> ∈ R ⇒ <b, a> ∈ R\n- **antisymmetric** iff <a, b>, <b, a> ∈ R ⇒ a = b\n- **transitive** iff <a, b>, <b, c> ∈ R ⇒ <a, c> ∈ R\n\nAn **ordering relation** is reflexive, antisymmetric and transitive. The book's examples: Older than, ≥, ⇒, Ancestor of. Ordering relations are used in data access techniques, hashing codes, tree structures and arrays. The power set P(A), the set of all subsets of A, is ordered by ⊆.\n\nAn **equivalence relation** is reflexive, symmetric and transitive (equality and congruence are quick examples).\n\nPartitions and equivalence relations are interchangeable. Given a partition, call two elements related iff they are in the same partition element: this is the equivalence relation induced by the partition. Conversely, an equivalence relation groups related elements into subsets that form a partition; these subsets are the **equivalence classes**. Since they form a partition, equivalence classes never overlap and together cover the whole set. For testers this brings great efficiency: test just one element of an equivalence class and assume that the remaining elements will behave similarly.\n\n**Example:** \"has the same number of days as\" on the 12 months is an equivalence relation; its classes are the 31-day months, the 30-day months, and February.",
+        "tr": "Bazı bağıntılar tek bir küme üzerinde tanımlanır: R ⊆ A × A. Dört özellik onları sınıflandırır:\n- **yansıyan (reflexive)** ancak ve ancak her a ∈ A için <a, a> ∈ R\n- **simetrik (symmetric)** ancak ve ancak <a, b> ∈ R ⇒ <b, a> ∈ R\n- **ters simetrik (antisymmetric)** ancak ve ancak <a, b>, <b, a> ∈ R ⇒ a = b\n- **geçişken (transitive)** ancak ve ancak <a, b>, <b, c> ∈ R ⇒ <a, c> ∈ R\n\nBir **sıralama bağıntısı (ordering relation)** yansıyan, ters simetrik ve geçişkendir. Kitabın örnekleri: Older than (daha yaşlı), ≥, ⇒, Ancestor of (atası). Sıralama bağıntıları veri erişim tekniklerinde, karma (hashing) kodlarında, ağaç yapılarında ve dizilerde kullanılır. A'nın tüm alt kümelerinin kümesi olan kuvvet kümesi (power set) P(A), ⊆ ile sıralanır.\n\nBir **denklik bağıntısı (equivalence relation)** yansıyan, simetrik ve geçişkendir (eşitlik ve eşlik (congruence) hızlı örneklerdir).\n\nBölüntüler ve denklik bağıntıları birbirinin yerine kullanılabilir. Bir bölüntü verildiğinde, aynı bölüntü elemanında bulunan iki elemanı ilişkili sayın: bu, bölüntünün oluşturduğu (induced) denklik bağıntısıdır. Tersine, bir denklik bağıntısı ilişkili elemanları bir bölüntü oluşturan alt kümelerde toplar; bu alt kümeler **denklik sınıflarıdır (equivalence class)**. Bir bölüntü oluşturdukları için denklik sınıfları asla örtüşmez ve birlikte tüm kümeyi kapsar. Bu, test uzmanlarına büyük verimlilik sağlar: bir denklik sınıfının yalnızca bir elemanını test edin ve geri kalan elemanların benzer davranacağını varsayın.\n\n**Örnek:** 12 ay üzerinde \"ile aynı sayıda güne sahiptir\" bir denklik bağıntısıdır; sınıfları 31 günlük aylar, 30 günlük aylar ve Şubat'tır."
+      },
+      "source": "pp. 45–46"
+    },
+    {
+      "id": "propositional-logic",
+      "title": {
+        "en": "Propositional logic and truth tables",
+        "tr": "Önermeler mantığı ve doğruluk tabloları"
+      },
+      "body": {
+        "en": "A **proposition** is a sentence that is either true (T) or false (F), and it is unambiguous: it is always possible to tell which. \"Mathematics is difficult\" is not a proposition, because it is ambiguous. Propositions are written p, q, r. Propositional logic is isomorphic to set theory.\n\nLogical operators (connectives) are defined by truth tables. Values below are for the rows (p, q) = TT, TF, FT, FF:\n- **conjunction** p ∧ q: T, F, F, F (true only when both are true)\n- **disjunction** p ∨ q: T, T, T, F (true when at least one is true)\n- **negation** ¬p: the opposite value; the only unary (one operand) operator\n- **exclusive-or** p ⊕ q: F, T, T, F (true only when exactly one is true)\n- **IF-THEN** p → q: T, F, T, T\n\nPrecedence: negation first, then conjunction, then disjunction; parentheses override it. The truth table of any expression is found by building it up column by column, following the parentheses.\n\n**Logical equivalence:** p ⇔ q iff their truth tables are identical. The **bi-conditional** \"p iff q\" is (p → q) ∧ (q → p), written p ↔ q.\n\nA **tautology** is always true and a **contradiction** is always false; to be either, a proposition must contain at least one connective and two or more primitive propositions. In a valid deductive syllogism, \"if premises, then conclusion\" is a tautology. DeMorgan's laws: ¬(p ∧ q) ⇔ ¬p ∨ ¬q and ¬(p ∨ q) ⇔ ¬p ∧ ¬q.\n\n**Example:** ¬(p ∨ q) has the column F, F, F, T, exactly like ¬p ∧ ¬q, so the two are logically equivalent.",
+        "tr": "Bir **önerme (proposition)**, ya doğru (T) ya da yanlış (F) olan bir cümledir ve belirsiz değildir: hangisi olduğunu her zaman söylemek mümkündür. \"Matematik zordur\" bir önerme değildir, çünkü belirsizdir. Önermeler p, q, r ile gösterilir. Önermeler mantığı küme kuramıyla eş yapılıdır (isomorphic).\n\nMantıksal operatörler (bağlaçlar, connectives) doğruluk tablolarıyla (truth table) tanımlanır. Aşağıdaki değerler (p, q) = TT, TF, FT, FF satırları içindir:\n- **ve-bağlacı (conjunction)** p ∧ q: T, F, F, F (yalnızca ikisi de doğruysa doğru)\n- **veya-bağlacı (disjunction)** p ∨ q: T, T, T, F (en az biri doğruysa doğru)\n- **değilleme (negation)** ¬p: karşıt değer; tek işlenenli (unary) olan tek operatördür\n- **dışlayıcı veya (exclusive-or)** p ⊕ q: F, T, T, F (yalnızca tam olarak biri doğruysa doğru)\n- **IF-THEN (koşullu)** p → q: T, F, T, T\n\nÖncelik sırası: önce değilleme, sonra ve-bağlacı, sonra veya-bağlacı; parantezler bu sırayı geçersiz kılar. Herhangi bir ifadenin doğruluk tablosu, parantezleri izleyerek sütun sütun adım adım kurularak bulunur.\n\n**Mantıksal denklik (logical equivalence):** p ⇔ q ancak ve ancak doğruluk tabloları aynıysa. \"p ancak ve ancak q\" şeklindeki **iki yönlü koşul (bi-conditional)** (p → q) ∧ (q → p) demektir ve p ↔ q ile gösterilir.\n\n**Totoloji (tautology)** her zaman doğru, **çelişki (contradiction)** her zaman yanlıştır; bunlardan biri olabilmek için bir önerme en az bir bağlaç ve iki veya daha fazla ilkel önerme içermelidir. Geçerli bir tümdengelimli kıyasta (syllogism) \"öncüller ise sonuç\" bir totolojidir. DeMorgan yasaları: ¬(p ∧ q) ⇔ ¬p ∨ ¬q ve ¬(p ∨ q) ⇔ ¬p ∧ ¬q.\n\n**Örnek:** ¬(p ∨ q) ifadesinin sütunu F, F, F, T'dir; ¬p ∧ ¬q ile tamamen aynıdır, bu yüzden ikisi mantıksal olarak denktir."
+      },
+      "source": "pp. 46–48"
+    },
+    {
+      "id": "probability",
+      "title": {
+        "en": "Probability with truth sets",
+        "tr": "Doğruluk kümeleriyle olasılık"
+      },
+      "body": {
+        "en": "The book uses probability on two occasions: the probability that a particular path of statements executes, and the operational profile (Chapter 14). Only the rudiments are needed.\n\n- Rosen's classic definition: the probability of an event E, which is a subset of a finite sample space S of equally likely outcomes, is p(E) = |E| / |S|. This definition is circular: what are \"equally likely\" outcomes?\n- Laplace's working definition: the probability that something occurs is the number of favorable ways it can occur divided by the total number of ways.\n\nThe book reformulates this with set theory and propositional logic. The set of all events is the universe of discourse U, and we state propositions about its elements.\n- **Truth set** T(p): the set of all elements in U for which p is true. A proposition divides U into T(p) and (T(p))', where T(p) ∪ (T(p))' = U and (T(p))' = T(¬p).\n- **Pr(p) = |T(p)| / |U|**: Laplace's favorable ways become the cardinality of the truth set, and the total ways become the cardinality of the universe.\n- The truth set of a tautology is U and that of a contradiction is ∅, so their probabilities are 1 and 0.\n\n**Example:** U = the 7 days of the week, p(d): \"d is a weekend day\". T(p) = {Saturday, Sunday}, so Pr(p) = 2/7 and Pr(¬p) = 5/7.",
+        "tr": "Kitap olasılığı iki yerde kullanır: belirli bir deyim yolunun (path) çalışma olasılığı ve işletimsel profil (operational profile, Bölüm 14). Yalnızca temel bilgiler gerekir.\n\n- Rosen'ın klasik tanımı: eşit olasılıklı sonuçlardan oluşan sonlu bir örnek uzayı (sample space) S'nin alt kümesi olan bir E olayının olasılığı p(E) = |E| / |S|'dir. Bu tanım döngüseldir: \"eşit olasılıklı\" sonuçlar nedir?\n- Laplace'ın pratik tanımı (working definition): bir şeyin olma olasılığı, olabileceği olumlu yolların sayısının toplam yol sayısına bölümüdür.\n\nKitap bunu küme kuramı ve önermeler mantığıyla yeniden kurar. Tüm olayların kümesi evrensel küme U'dur ve onun elemanları hakkında önermeler kurarız.\n- **Doğruluk kümesi (truth set)** T(p): U'da p'nin doğru olduğu tüm elemanların kümesi. Bir önerme U'yu T(p) ve (T(p))' olarak ikiye ayırır; burada T(p) ∪ (T(p))' = U ve (T(p))' = T(¬p)'dir.\n- **Pr(p) = |T(p)| / |U|**: Laplace'ın olumlu yolları doğruluk kümesinin eleman sayısı, toplam yollar ise evrensel kümenin eleman sayısı olur.\n- Bir totolojinin doğruluk kümesi U, bir çelişkininki ise ∅'dir; bu yüzden olasılıkları 1 ve 0'dır.\n\n**Örnek:** U = haftanın 7 günü, p(d): \"d bir hafta sonu günüdür\". T(p) = {Saturday, Sunday}, dolayısıyla Pr(p) = 2/7 ve Pr(¬p) = 5/7."
+      },
+      "source": "pp. 48–49"
+    }
+  ],
+  "questions": {
+    "1": {
+      "concept": "math-for-testers",
+      "explanation_tr": "Kitap, ayrık matematiğin fonksiyonel teste daha uygun olduğunu, çizge kuramının (graph theory) ise daha çok yapısal testle ilgili olduğunu belirtir; tersine çevrilmiş eşleştirme cazip bir tuzaktır."
+    },
+    "2": {
+      "concept": "defining-sets",
+      "explanation_tr": "Bir küme, elemanlarını basitçe listeleyerek, bir karar kuralı vererek veya başka kümelerden oluşturularak tanımlanır; Venn şemaları kümeleri yalnızca resimler, eleman sayısı (cardinality) ise bir kümenin özelliğidir."
+    },
+    "3": {
+      "concept": "defining-sets",
+      "explanation_tr": "Jorgensen, bu tür gereksinimlerin test edilememesinin nedeninin çoğu zaman belirsiz bir karar kuralına dayandığını söyler ((50, 50, 51) üçgeni neredeyse eşkenar mıdır?); kendine gönderme (self-reference) ise test uzmanları için çok az uygulaması olan ayrı bir sorundur."
+    },
+    "4": {
+      "concept": "defining-sets",
+      "explanation_tr": "Her zaman yanlış olan bir karar kuralıyla tanımlanan küme boştur; hiçbir yıl hem ≥ 2012 hem de ≤ 1812 olamaz, bu yüzden kural ∅ verir; bu da {∅} kümesinden farklı bir kümedir."
+    },
+    "5": {
+      "concept": "set-operations",
+      "explanation_tr": "A ⊕ B = (A ∪ B) − (A ∩ B) = {1, 2, 3, 4, 5} − {3, 4} = {1, 2, 5}, yani kümelerden tam olarak birinde bulunan elemanlar; {1, 2} ise yalnızca A − B farkıdır (relative complement)."
+    },
+    "6": {
+      "concept": "set-operations",
+      "explanation_tr": "|A × B| = |A| × |B| = 3 × 4 = 12 sıralı ikili <a, b> (a ∈ A ve b ∈ B); 7 sonucu, eleman sayılarını çarpmak yerine toplamaktan gelir."
+    },
+    "7": {
+      "concept": "set-operations",
+      "explanation_tr": "a ≠ b için (a, b) = (b, a) iken <a, b> ≠ <b, a>'dır; kitap, sıradan (yönsüz) çizgeleri yönlü çizgelerden ayıranın tam olarak bu olduğunu belirtir."
+    },
+    "8": {
+      "concept": "partitions",
+      "explanation_tr": "Birleşim koşulu tamlığı (completeness; her eleman bir alt kümededir), ayrıklık koşulu ise fazlalık olmamasını (nonredundancy; hiçbir eleman iki alt kümede değildir) garanti eder."
+    },
+    "9": {
+      "concept": "partitions",
+      "explanation_tr": "Bir bölüntü (partition) ikişer ikişer ayrık alt kümeler gerektirir, ancak 3, 4, 5 üçgeni hem çeşitkenar (scalene) hem de diktir (right); alt kümeler yine de evrenin tamamını kapsar, yani sorun kapsama (coverage) değildir."
+    },
+    "10": {
+      "concept": "function-types",
+      "explanation_tr": "Farklı tarihlerin sonraki günleri de farklıdır (birebir), ancak A'nın görüntüsü B'dir ve B, C'nin öz alt kümesidir; bu yüzden NextDate : A → C içine (into) bir fonksiyondur; birebir ve örten (onto) olan durum NextDate : A → B'dir."
+    },
+    "11": {
+      "concept": "functions-in-testing",
+      "explanation_tr": "Kitap, içine/örten (into/onto) ayrımının tanım ve değer kümesine dayalı fonksiyonel test için sonuçları olduğunu ve birebir fonksiyonların çoka-bir fonksiyonlardan çok daha fazla test gerektirdiğini söyler; birebir ve örten bir fonksiyonun her zaman çapraz kontrol (cross-check) olarak kullanılabilecek bir tersi vardır."
+    },
+    "12": {
+      "concept": "relations",
+      "explanation_tr": "A'nın her elemanı bir sıralı ikilide yer alıyorsa katılım tam (total), aksi hâlde kısmidir (partial) (zorunlu ve isteğe bağlı katılım); örten ve içine (onto/into) ise aynı fikri B'nin elemanları için ifade eder."
+    },
+    "13": {
+      "concept": "ordering-equivalence",
+      "explanation_tr": "Bir sıralama bağıntısı (ör. ≥ veya Ancestor of) yansıyan, ters simetrik ve geçişkendir; denklik bağıntısı ise yansıyan, simetrik ve geçişkendir."
+    },
+    "14": {
+      "concept": "ordering-equivalence",
+      "explanation_tr": "Bölüntüler ve denklik bağıntıları birbirinin yerine kullanılabilir ve büyük verimlilik, bir denklik sınıfının yalnızca bir elemanını test edip geri kalan elemanların benzer davranacağını varsaymaktan gelir; denklik sınıfları asla örtüşmez."
+    },
+    "15": {
+      "concept": "propositional-logic",
+      "explanation_tr": "IF-THEN doğruluk tablosu (p, q) = TT, TF, FT, FF için T, F, T, T'dir; yani p → q yalnızca p doğru ve q yanlış olduğunda yanlıştır; \"farklı doğruluk değerleri\" ise dışlayıcı veyayı (exclusive-or) tanımlar."
+    },
+    "16": {
+      "concept": "propositional-logic",
+      "explanation_tr": "¬((p → q) ∧ (q → p)) ifadesinin doğruluk tablosu F, T, T, F'dir ve p ⊕ q'nunkiyle aynıdır; olumsuzlanmamış (p → q) ∧ (q → p) ise iki yönlü koşul (bi-conditional) p ↔ q'dur."
+    },
+    "17": {
+      "concept": "probability",
+      "explanation_tr": "Doğruluk kümesi T(p) = {April, June, September, November}'dır; bu yüzden Pr(p) = |T(p)| / |U| = 4/12 olur; 11/12 ise en az 30 günü olan her ayı yanlışlıkla saymaktan gelir."
+    }
+  }
+}

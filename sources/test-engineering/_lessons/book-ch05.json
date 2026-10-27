@@ -1,0 +1,214 @@
+{
+  "intro": {
+    "en": "This set covers Chapter 5 of Jorgensen: boundary value testing, the best-known input domain (functional) testing technique. You will learn boundary value analysis, robustness, worst-case and robust worst-case testing with their test-case counts (4n + 1, 6n + 1, 5^n, 7^n), plus special value, output range and random testing. Note that the textbook chooses different boundary values than the course slides.",
+    "tr": "Bu set Jorgensen'in 5. bölümünü kapsar: en bilinen girdi alanı (input domain), yani işlevsel (functional) test tekniği olan sınır değer testi (boundary value testing). Sınır değer analizini, sağlamlık, en kötü durum ve sağlam en kötü durum testlerini test durumu sayılarıyla (4n + 1, 6n + 1, 5^n, 7^n) birlikte, ayrıca özel değer, çıktı aralığı ve rastgele testi öğreneceksiniz. Ders kitabının, ders slaytlarından farklı sınır değerleri seçtiğine dikkat edin."
+  },
+  "concepts": [
+    {
+      "id": "bva-idea",
+      "title": {
+        "en": "Boundary value analysis: the idea and the five values",
+        "tr": "Sınır değer analizi: fikir ve beş değer"
+      },
+      "body": {
+        "en": "Boundary value analysis (BVA) is a functional testing technique that picks test inputs at the edges of each input variable's range. Its rationale: errors tend to occur near the extreme values of an input variable, for example a loop condition that tests < when it should test ≤, or a counter that is \"off by one\".\n\nFor a variable with range a ≤ x ≤ b, the book (following a testing tool called T) uses five values:\n- **min**: the minimum; **min+**: just above the minimum\n- **nom**: a nominal (typical) value\n- **max-**: just below the maximum; **max**: the maximum\n\nAll five values lie inside the valid range. Values just outside (min- and max+) are not part of BVA; they belong to robustness testing.\n\n**Slides vs. textbook:** the course slides choose differently. Week 1 tests just below, at and just above each boundary (min, min±1, max, max±1), and week 6's ISTQB 2-value and 3-value BVA also test the neighbouring values in the invalid partitions. The textbook's BVA adds a nominal value instead and leaves invalid values to robustness testing.\n\n**Example:** 18 ≤ age ≤ 65 with nominal 40. Textbook BVA: 18, 19, 40, 64, 65. Week 1 slides: 17, 18, 19, 64, 65, 66.",
+        "tr": "Sınır değer analizi (boundary value analysis, BVA), test girdilerini her girdi değişkeninin aralığının kenarlarından seçen işlevsel (functional) bir test tekniğidir. Gerekçesi: hatalar bir girdi değişkeninin uç değerleri yakınında ortaya çıkma eğilimindedir; örneğin ≤ sınaması gerekirken < sınayan bir döngü koşulu ya da \"bir eksik/bir fazla\" (off by one) sayan bir sayaç.\n\na ≤ x ≤ b aralığındaki bir değişken için kitap (T adlı bir test aracını izleyerek) beş değer kullanır:\n- **min**: en küçük değer; **min+**: en küçüğün hemen üstü\n- **nom**: nominal (tipik) bir değer\n- **max-**: en büyüğün hemen altı; **max**: en büyük değer\n\nBeş değerin hepsi geçerli aralığın içindedir. Hemen dışarıdaki değerler (min- ve max+) BVA'ya dahil değildir; sağlamlık testine (robustness testing) aittir.\n\n**Slaytlar ve ders kitabı:** ders slaytları farklı seçer. 1. hafta her sınırın hemen altını, kendisini ve hemen üstünü test eder (min, min±1, max, max±1); 6. haftanın ISTQB 2 değerli ve 3 değerli BVA'sı da geçersiz bölümlerdeki (invalid partitions) komşu değerleri test eder. Ders kitabının BVA'sı ise bunun yerine nominal bir değer ekler ve geçersiz değerleri sağlamlık testine bırakır.\n\n**Örnek:** 18 ≤ yaş ≤ 65, nominal 40. Ders kitabı BVA: 18, 19, 40, 64, 65. 1. hafta slaytları: 17, 18, 19, 64, 65, 66."
+      },
+      "source": "pp. 79–80; slides week 1 (slides 9–11) and week 6 (slides 38–39)"
+    },
+    {
+      "id": "single-fault",
+      "title": {
+        "en": "The single fault assumption and 4n + 1 test cases",
+        "tr": "Tek hata varsayımı ve 4n + 1 test durumu"
+      },
+      "body": {
+        "en": "BVA rests on the **single fault assumption** of reliability theory: failures are only rarely the result of the simultaneous occurrence of two (or more) faults. So BVA changes only one variable at a time.\n\n- Hold all variables but one at their nominal values; let the remaining variable take min, min+, nom, max- and max; repeat this for each variable.\n- Each variable adds four non-nominal cases (min, min+, max-, max), and all variables share the single all-nominal case.\n- For a function of n variables, BVA yields **4n + 1** test cases.\n- A BVA test case never has two non-nominal values at once and never uses a value outside the range.\n\n**Example:** F(x1, x2) with 1 ≤ x1 ≤ 10 (nominal 5) and 0 ≤ x2 ≤ 50 (nominal 25).\n- x2 = 25 and x1 = 1, 2, 5, 9, 10: 5 cases\n- x1 = 5 and x2 = 0, 1, 49, 50: 4 more cases (5, 25 is already counted)\n- Total 9 = 4 × 2 + 1. A function of three variables would get 4 × 3 + 1 = 13.",
+        "tr": "BVA, güvenilirlik teorisindeki **tek hata varsayımına (single fault assumption)** dayanır: arızalar (failures) yalnızca nadiren iki (ya da daha fazla) hatanın (faults) aynı anda ortaya çıkmasının sonucudur. Bu yüzden BVA bir seferde yalnızca bir değişkeni değiştirir.\n\n- Bir değişken dışındaki tüm değişkenleri nominal değerlerinde tutun; kalan değişkene min, min+, nom, max- ve max değerlerini verin; bunu her değişken için tekrarlayın.\n- Her değişken dört nominal olmayan durum ekler (min, min+, max-, max); tüm değişkenler tek bir \"hepsi nominal\" durumu paylaşır.\n- n değişkenli bir fonksiyon için BVA **4n + 1** test durumu (test case) verir.\n- Bir BVA test durumunda hiçbir zaman aynı anda iki nominal olmayan değer bulunmaz ve aralık dışı bir değer kullanılmaz.\n\n**Örnek:** F(x1, x2), 1 ≤ x1 ≤ 10 (nominal 5) ve 0 ≤ x2 ≤ 50 (nominal 25).\n- x2 = 25 ve x1 = 1, 2, 5, 9, 10: 5 durum\n- x1 = 5 ve x2 = 0, 1, 49, 50: 4 durum daha (5, 25 zaten sayıldı)\n- Toplam 9 = 4 × 2 + 1. Üç değişkenli bir fonksiyon 4 × 3 + 1 = 13 durum alırdı."
+      },
+      "source": "pp. 80–81"
+    },
+    {
+      "id": "ranges-limitations",
+      "title": {
+        "en": "Kinds of ranges and the limits of BVA",
+        "tr": "Aralık türleri ve BVA'nın sınırlılıkları"
+      },
+      "body": {
+        "en": "BVA generalizes to more variables and to different kinds of ranges, but it does not fit every function.\n\n- **Clear bounds**: enumerated types (month = Jan … Dec, or 1–12) and discrete bounded variables (the quantities in the commission problem) make min, min+, nom, max- and max obvious.\n- **No explicit bounds**: create \"artificial\" bounds. A triangle side has lower bound 1 (a negative side is silly); the upper bound can be MAXINT or an arbitrary limit such as 200 or 2000.\n- **Boolean variables**: BVA does not make much sense (TRUE and FALSE, but no clear choice for the other three values); they suit decision tables (Chapter 7).\n- **Limitation**: BVA works well for a function of several **independent** variables that represent bounded **physical quantities**. Its cases are \"rudimentary\": they ignore the nature of the function and the meaning of the variables.\n- **NextDate** shows the problem. It has explicit bounds (month 1–12, day 1–31, year 1812–2012), yet its BVA cases put very little stress on February and leap years, because month, day and year depend on each other, while BVA presumes truly independent variables.\n\n**Example:** a thermostat's temperature (5–30) and fan speed (1–3) are independent physical quantities, a good fit; a date's day and month are not.",
+        "tr": "BVA daha fazla değişkene ve farklı türde aralıklara genelleştirilebilir, ama her fonksiyona uymaz.\n\n- **Açık sınırlar**: numaralandırılmış türler (enumerated types; ay = Ocak … Aralık ya da 1–12) ve ayrık, sınırlı değişkenler (komisyon problemindeki miktarlar) min, min+, nom, max- ve max değerlerini belirgin kılar.\n- **Açık sınır yok**: \"yapay\" (artificial) sınırlar oluşturun. Üçgenin bir kenarının alt sınırı 1'dir (negatif kenar saçmadır); üst sınır MAXINT ya da 200 veya 2000 gibi keyfi bir sınır olabilir.\n- **Boolean değişkenler**: BVA pek anlamlı değildir (TRUE ve FALSE vardır, ama diğer üç değer için açık bir seçim yoktur); bunlara karar tabloları (decision tables, Bölüm 7) uyar.\n- **Sınırlılık**: BVA, sınırlı **fiziksel büyüklükleri** temsil eden birkaç **bağımsız** değişkenli bir fonksiyon için iyi çalışır. Durumları \"ilkeldir\" (rudimentary): fonksiyonun doğasını ve değişkenlerin anlamını dikkate almaz.\n- **NextDate** sorunu gösterir. Açık sınırları vardır (ay 1–12, gün 1–31, yıl 1812–2012), yine de BVA durumları Şubat'ı ve artık yılları (leap years) çok az zorlar; çünkü ay, gün ve yıl birbirine bağımlıdır, BVA ise gerçekten bağımsız değişkenler varsayar.\n\n**Örnek:** bir termostatın sıcaklığı (5–30) ve fan hızı (1–3) bağımsız fiziksel büyüklüklerdir, BVA'ya iyi uyar; bir tarihin günü ve ayı ise öyle değildir."
+      },
+      "source": "pp. 81–82"
+    },
+    {
+      "id": "triangle-bva",
+      "title": {
+        "en": "Worked example: BVA for the triangle problem",
+        "tr": "Çözümlü örnek: üçgen problemi için BVA"
+      },
+      "body": {
+        "en": "The triangle problem (Chapter 2) takes three integer sides a, b and c and outputs Equilateral (all three equal), Isosceles (exactly one pair equal), Scalene (no pair equal) or Not a Triangle. The sides form a triangle only if the sum of any pair of sides is strictly greater than the third side.\n\n- The chapter takes 1 as the lower bound of each side and, arbitrarily, 200 as the upper bound, with 100 as the nominal value. Apply min, min+, nom, max-, max to these numbers.\n- Table 5.1 varies side c first, then b, then a, holding the other two sides at 100: three blocks of five rows, 15 rows in all.\n- Every block contains the all-nominal row (100, 100, 100), so that row appears three times; only 4 × 3 + 1 = 13 test cases are distinct, which matches 4n + 1.\n- To find each expected output, check the row against the triangle property and count the equal sides.\n\n**Example:** with sides 1–50 and nominal 25, the values would be 1, 2, 25, 49, 50. The input (25, 25, 50) gives Not a Triangle, because 25 + 25 = 50 is not greater than 50; (25, 25, 49) is Isosceles.",
+        "tr": "Üçgen problemi (triangle problem, Bölüm 2) üç tam sayı kenar a, b ve c alır ve Equilateral (eşkenar; üçü de eşit), Isosceles (ikizkenar; tam bir çift eşit), Scalene (çeşitkenar; hiçbir çift eşit değil) ya da Not a Triangle (üçgen değil) çıktısını verir. Kenarlar ancak herhangi iki kenarın toplamı üçüncü kenardan kesinlikle büyükse bir üçgen oluşturur.\n\n- Bölüm her kenarın alt sınırını 1, üst sınırını keyfi olarak 200 alır; nominal değer 100'dür. min, min+, nom, max-, max kuralını bu sayılara uygulayın.\n- Tablo 5.1 önce c kenarını, sonra b'yi, sonra a'yı değiştirir; diğer iki kenar 100'de tutulur: beşer satırlık üç blok, toplam 15 satır.\n- Her blokta tüm değerlerin nominal olduğu (100, 100, 100) satırı bulunur; bu yüzden bu satır üç kez görünür ve yalnızca 4 × 3 + 1 = 13 test durumu birbirinden farklıdır; bu da 4n + 1 ile uyuşur.\n- Her satırın beklenen çıktısını bulmak için satırı üçgen kuralına göre kontrol edin ve eşit kenarları sayın.\n\n**Örnek:** kenarlar 1–50 ve nominal 25 olsaydı değerler 1, 2, 25, 49, 50 olurdu. (25, 25, 50) girdisi Not a Triangle verir, çünkü 25 + 25 = 50, 50'den büyük değildir; (25, 25, 49) ise Isosceles'tir."
+      },
+      "source": "p. 85 (Table 5.1); Chapter 2, pp. 17–18"
+    },
+    {
+      "id": "robustness",
+      "title": {
+        "en": "Robustness testing (6n + 1)",
+        "tr": "Sağlamlık testi (6n + 1)"
+      },
+      "body": {
+        "en": "Robustness testing is a simple extension of BVA: it also tries values just outside the valid range, to see what the program does with invalid input.\n\n- Each variable gets two extra values: **max+** (slightly greater than the maximum) and **min-** (slightly less than the minimum), so seven values in all: min-, min, min+, nom, max-, max, max+.\n- It keeps the single fault assumption: one variable varies while the others stay nominal. Each variable now contributes six non-nominal values; adding the one all-nominal case gives **6n + 1** test cases.\n- The most interesting part is the expected output, not the input: what should happen when a value is out of range (e.g., May 32 should produce an error message)?\n- The book: \"the main value of robustness testing is that it forces attention on exception handling.\"\n- In strongly typed languages such as Pascal it can be very awkward: out-of-range values cause run-time errors that abort execution.\n- The week 1 slides' values just outside the range (min − 1 and max + 1) are the book's min- and max+.\n\n**Example:** two variables give 6 × 2 + 1 = 13 cases (Figure 5.3); three variables give 6 × 3 + 1 = 19. For 1 ≤ x ≤ 10: min- = 0 and max+ = 11.",
+        "tr": "Sağlamlık testi (robustness testing), BVA'nın basit bir uzantısıdır: programın geçersiz girdiyle ne yaptığını görmek için geçerli aralığın hemen dışındaki değerleri de dener.\n\n- Her değişken iki ek değer alır: **max+** (maksimumdan biraz büyük) ve **min-** (minimumdan biraz küçük); böylece toplam yedi değer olur: min-, min, min+, nom, max-, max, max+.\n- Tek hata varsayımını korur: bir değişken değişirken diğerleri nominal kalır. Artık her değişken altı nominal olmayan değer katar; tek \"hepsi nominal\" durum eklenince **6n + 1** test durumu elde edilir.\n- En ilginç kısım girdi değil, beklenen çıktıdır: bir değer aralık dışındayken ne olmalıdır (ör. 32 Mayıs bir hata mesajı üretmelidir)?\n- Kitap: \"Sağlamlık testinin asıl değeri, dikkati istisna işlemeye (exception handling) yöneltmesidir.\"\n- Pascal gibi güçlü tipli (strongly typed) dillerde çok zahmetli olabilir: aralık dışı değerler yürütmeyi durduran çalışma zamanı hatalarına (run-time errors) yol açar.\n- 1. hafta slaytlarındaki aralığın hemen dışındaki değerler (min − 1 ve max + 1), kitabın min- ve max+ değerleridir.\n\n**Örnek:** iki değişken 6 × 2 + 1 = 13 durum verir (Şekil 5.3); üç değişken 6 × 3 + 1 = 19 durum verir. 1 ≤ x ≤ 10 için: min- = 0 ve max+ = 11."
+      },
+      "source": "pp. 82–83; exercise 1, p. 95"
+    },
+    {
+      "id": "worst-case",
+      "title": {
+        "en": "Worst-case and robust worst-case testing (5^n, 7^n)",
+        "tr": "En kötü durum ve sağlam en kötü durum testi (5^n, 7^n)"
+      },
+      "body": {
+        "en": "Worst-case testing asks what happens when several variables are at extreme values at the same time.\n\n- It **rejects the single fault assumption** (the name comes from worst-case analysis of electronic circuits).\n- The test cases are the **Cartesian product** of the five-element sets {min, min+, nom, max-, max} of all variables: **5^n** cases for n variables, compared with 4n + 1 for BVA, so much more effort.\n- BVA cases are a proper subset of the worst-case cases. The same limitations apply, especially the assumption of independent variables. Best use: physical variables with numerous interactions, where failure is extremely costly.\n- **Robust worst-case testing** (\"for really paranoid testing\") takes the Cartesian product of the seven-element sets {min-, min, min+, nom, max-, max, max+}: **7^n** cases.\n- **NextDate (Table 5.3)**: ranges month 1–12, day 1–31, year 1812–2012; nominal values month 6, day 15, year 1912. The product combines values blindly, so some cases are impossible dates (a day the month does not have, such as February 30) and expect \"error\". April, June, September and November have 30 days.\n\n**Example:** two variables give 5² = 25 worst-case cases (Figure 5.4) and 7² = 49 robust worst-case cases (Figure 5.5); three variables give 5³ = 125 and 7³ = 343. NextDate's day values: 1, 2, 15, 30, 31.",
+        "tr": "En kötü durum testi (worst-case testing), birkaç değişken aynı anda uç değerlerdeyken ne olduğunu sorar.\n\n- **Tek hata varsayımını reddeder** (adı elektronik devrelerin en kötü durum analizinden gelir).\n- Test durumları, tüm değişkenlerin beş elemanlı {min, min+, nom, max-, max} kümelerinin **Kartezyen çarpımıdır (Cartesian product)**: n değişken için **5^n** durum (BVA'da 4n + 1); yani çok daha fazla emek.\n- BVA test durumları, en kötü durum test durumlarının öz alt kümesidir (proper subset). Aynı sınırlılıklar, özellikle bağımsız değişken varsayımı, burada da geçerlidir. En iyi kullanım: çok sayıda etkileşimi olan ve arızası son derece pahalı olan fiziksel değişkenler.\n- **Sağlam en kötü durum testi (robust worst-case testing)** (\"gerçekten paranoyak test için\"), yedi elemanlı {min-, min, min+, nom, max-, max, max+} kümelerinin Kartezyen çarpımını alır: **7^n** durum.\n- **NextDate (Tablo 5.3)**: aralıklar ay 1–12, gün 1–31, yıl 1812–2012; nominal değerler ay 6, gün 15, yıl 1912. Çarpım değerleri körü körüne birleştirir; bu yüzden bazı durumlar imkânsız tarihlerdir (ayın sahip olmadığı bir gün, ör. 30 Şubat) ve \"error\" (hata) beklenir. Nisan, Haziran, Eylül ve Kasım 30 gündür.\n\n**Örnek:** iki değişken 5² = 25 en kötü durum (Şekil 5.4) ve 7² = 49 sağlam en kötü durum (Şekil 5.5) verir; üç değişken 5³ = 125 ve 7³ = 343 verir. NextDate'in gün değerleri: 1, 2, 15, 30, 31."
+      },
+      "source": "pp. 83–84, 88–91 (Table 5.3); exercise 2, p. 95; Chapter 2, p. 22"
+    },
+    {
+      "id": "comparing-variants",
+      "title": {
+        "en": "Comparing the four variants and the guidelines",
+        "tr": "Dört çeşidin karşılaştırılması ve yönergeler"
+      },
+      "body": {
+        "en": "The book's guidelines say these input domain methods share the assumption that the input variables are truly independent (otherwise they produce unsatisfactory cases such as February 31, 1912) and have two other distinctions: **normal versus robust values**, and the **single-fault versus multiple-fault assumption**.\n\n- Normal values, single fault: BVA, 4n + 1\n- Robust values, single fault: robustness testing, 6n + 1\n- Normal values, multiple fault: worst-case testing, 5^n\n- Robust values, multiple fault: robust worst-case testing, 7^n\n\n**Placing the sets (Venn diagram):** robustness and worst-case testing both only add cases to BVA, so every BVA case is in both sets. A single-fault case varies at most one variable; a normal-value case uses only min, min+, nom, max-, max. So a case that is both a robustness case and a worst-case case varies one variable with normal values only: it is a BVA case. Every case of the other three methods uses values from the seven-element sets, so it is also a robust worst-case case.\n\nOther guidelines: each method can be applied to the output range; test that error messages are generated when appropriate and not falsely generated; robustness testing is a good choice for internal variables such as loop control variables, indices and pointers.\n\n**Example:** for two variables: BVA 9, robustness 13, worst-case 25, robust worst-case 49 cases.",
+        "tr": "Kitabın yönergelerine göre bu girdi alanı yöntemleri, girdi değişkenlerinin gerçekten bağımsız olduğu varsayımını paylaşır (aksi hâlde 31 Şubat 1912 gibi tatmin edici olmayan durumlar üretirler) ve iki ayrımları daha vardır: **normal ve sağlam (robust) değerler** ile **tek hata ve çoklu hata (multiple-fault) varsayımı**.\n\n- Normal değerler, tek hata: BVA, 4n + 1\n- Sağlam değerler, tek hata: sağlamlık testi, 6n + 1\n- Normal değerler, çoklu hata: en kötü durum testi, 5^n\n- Sağlam değerler, çoklu hata: sağlam en kötü durum testi, 7^n\n\n**Kümeleri yerleştirmek (Venn diyagramı):** sağlamlık testi de en kötü durum testi de BVA'ya yalnızca durum ekler; bu yüzden her BVA durumu iki kümede de vardır. Tek hata varsayımına uyan bir test durumunda en fazla bir değişken değişir; normal değerli bir durum yalnızca min, min+, nom, max-, max kullanır. Bu yüzden hem sağlamlık hem de en kötü durum test durumu olan bir durumda yalnızca normal değerlerle tek bir değişken değişir: bu bir BVA durumudur. Diğer üç yöntemin her durumu yedi elemanlı kümelerdeki değerleri kullanır, yani aynı zamanda bir sağlam en kötü durum durumudur.\n\nDiğer yönergeler: her yöntem çıktı aralığına (output range) da uygulanabilir; hata mesajlarının uygun olduğunda üretildiğini ve yanlışlıkla üretilmediğini test edin; sağlamlık testi döngü kontrol değişkenleri, indisler ve işaretçiler (pointers) gibi iç değişkenler için iyi bir seçimdir.\n\n**Örnek:** iki değişken için: BVA 9, sağlamlık 13, en kötü durum 25, sağlam en kötü durum 49 durum."
+      },
+      "source": "pp. 84, 94–95; exercise 3, p. 95"
+    },
+    {
+      "id": "special-value",
+      "title": {
+        "en": "Special value testing",
+        "tr": "Özel değer testi"
+      },
+      "body": {
+        "en": "Special value testing is probably the most widely practiced form of functional testing. It is also the most intuitive and the least uniform.\n\n- The tester uses domain knowledge, experience with similar programs and information about \"soft spots\" to devise test cases.\n- It is also called \"ad hoc\" testing or \"seat-of-the-pants (or -skirt)\" testing.\n- There are no guidelines other than \"best engineering judgment\", so the results depend heavily on the abilities of the tester.\n- Despite this, it often results in a set of test cases that is more effective at revealing faults than the sets generated by the other methods.\n- The guidelines call the input domain methods, with the exception of special value testing, the most rudimentary of all functional testing methods.\n\n**Example:** for NextDate, an interested tester would add cases with February 28, February 29 and leap years, which the boundary value methods barely stress. A tester who knows that an earlier version of a billing program failed on the last day of the year would test December 31.",
+        "tr": "Özel değer testi (special value testing) muhtemelen işlevsel testin en yaygın uygulanan biçimidir. Aynı zamanda en sezgisel ve en az tekdüze (uniform) olanıdır.\n\n- Test uzmanı test durumlarını tasarlarken alan bilgisini (domain knowledge), benzer programlarla deneyimini ve \"zayıf noktalar\" (soft spots) hakkındaki bilgisini kullanır.\n- \"Ad hoc\" test ya da \"seat-of-the-pants (or -skirt)\" test (sezgiyle, el yordamıyla test) olarak da adlandırılır.\n- \"En iyi mühendislik yargısı\" (best engineering judgment) dışında yönerge yoktur; bu yüzden sonuçlar büyük ölçüde test uzmanının yeteneğine bağlıdır.\n- Buna rağmen çoğu zaman, diğer yöntemlerin ürettiği kümelerden daha etkili hata bulan bir test durumu kümesi ortaya çıkarır.\n- Yönergeler, özel değer testi dışındaki girdi alanı yöntemlerini tüm işlevsel test yöntemlerinin en ilkeli (most rudimentary) olarak niteler.\n\n**Örnek:** NextDate için ilgili bir test uzmanı 28 Şubat, 29 Şubat ve artık yıllar içeren durumlar ekler; sınır değer yöntemleri bunları çok az zorlar. Bir fatura programının eski bir sürümünün yılın son gününde hata verdiğini bilen bir test uzmanı 31 Aralık'ı test eder."
+      },
+      "source": "pp. 84, 94"
+    },
+    {
+      "id": "output-range",
+      "title": {
+        "en": "Output range testing: the commission problem",
+        "tr": "Çıktı aralığı testi: komisyon problemi"
+      },
+      "body": {
+        "en": "Boundary value ideas can be applied to the output range instead of the inputs. The commission problem (Chapter 2) shows why this helps.\n\n- A salesperson sells locks ($45), stocks ($30) and barrels ($25); a month has 1–70 locks, 1–80 stocks and 1–90 barrels. Sales = 45 × locks + 30 × stocks + 25 × barrels. Commission: 10% on sales up to and including $1000, 15% on the next $800, and 20% on sales above $1800.\n- Test cases from the input ranges fall almost all in the 20% zone, so the book looks for input combinations that stress the output boundaries $100, $1000, $1800 and $7800 (Table 5.4).\n- One lock, one stock and one barrel (a whole rifle) cost $100, so equal triplets (k, k, k) give sales of $100 × k, which makes border points easy to find. Neighbouring triplets just below or above a border are labelled \"border point -\" and \"border point +\".\n- **Output range robustness** would need sales just below the minimum or just above the maximum. The $100 minimum comes from (1, 1, 1), all inputs at their minimum, and the $7800 maximum from (70, 80, 90), all at their maximum; so such sales can only be reached with an input outside its valid range.\n\n**Example:** (5, 5, 5) gives sales of $500 and a commission of $50 (a midpoint). (12, 12, 12) gives $1200 and a commission of 100 + 0.15 × 200 = $130.",
+        "tr": "Sınır değer fikirleri girdiler yerine çıktı aralığına (output range) da uygulanabilir. Komisyon problemi (commission problem, Bölüm 2) bunun neden işe yaradığını gösterir.\n\n- Bir satış temsilcisi kilit (locks, $45), kundak (stocks, $30) ve namlu (barrels, $25) satar; bir ayda 1–70 kilit, 1–80 kundak ve 1–90 namlu satılır. Satış = 45 × kilit + 30 × kundak + 25 × namlu. Komisyon: $1000'e kadar (dahil) satışın %10'u, sonraki $800'ün %15'i ve $1800'ü aşan satışın %20'si.\n- Girdi aralıklarından türetilen test durumlarının neredeyse hepsi %20 bölgesine düşer; bu yüzden kitap $100, $1000, $1800 ve $7800 çıktı sınırlarını zorlayan girdi birleşimlerini arar (Tablo 5.4).\n- Bir kilit, bir kundak ve bir namlu (tam bir tüfek) $100 eder; bu yüzden eşit üçlüler (k, k, k) $100 × k satış verir ve sınır noktaları (border points) kolayca bulunur. Bir sınırın hemen altındaki ya da üstündeki komşu üçlüler \"border point -\" ve \"border point +\" olarak etiketlenir.\n- **Çıktı aralığı sağlamlık testi** (output range robustness), minimumun hemen altında ya da maksimumun hemen üstünde satış gerektirirdi. $100 minimumu (1, 1, 1)'den, yani tüm girdiler minimumdayken; $7800 maksimumu (70, 80, 90)'dan, yani hepsi maksimumdayken gelir. Dolayısıyla böyle satışlara ancak bir girdi geçerli aralığının dışındayken ulaşılabilir.\n\n**Örnek:** (5, 5, 5) $500 satış ve $50 komisyon verir (bir orta nokta). (12, 12, 12) $1200 satış ve 100 + 0.15 × 200 = $130 komisyon verir."
+      },
+      "source": "pp. 91–92 (Tables 5.4, 5.5); exercise 4, p. 95; Chapter 2, p. 25"
+    },
+    {
+      "id": "random-testing",
+      "title": {
+        "en": "Random testing",
+        "tr": "Rastgele test"
+      },
+      "body": {
+        "en": "Random testing replaces the systematic choice of min, min+, nom, max- and max with a random number generator that picks the values of a bounded variable.\n\n- It avoids a form of bias in testing. It also raises a serious question: how many random test cases are sufficient? The book answers this later with structural test coverage metrics.\n- Values for a ≤ x ≤ b were picked with x = Int(b - a + 1) * Rnd + a, where Int returns the integer part of a number and Rnd generates random numbers in the interval [0, 1].\n- **Stopping rule**: the program kept generating random test cases until at least one of each output occurred. Each table shows seven such \"cycles\", each ending with the hard-to-generate case.\n- Rare outputs are hard to hit: for the triangle program only 0.01% of the random cases were equilateral, and for the commission program 95.37% fell in the 20% zone.\n\n**Example:** with a = 1, b = 6 and Rnd = 0.5: (6 - 1 + 1) × 0.5 + 1 = 4. A program with the outputs Low and High keeps generating cases until both have appeared at least once.",
+        "tr": "Rastgele test (random testing), min, min+, nom, max- ve max değerlerinin sistematik seçimi yerine sınırlı bir değişkenin değerlerini seçen bir rastgele sayı üreteci kullanır.\n\n- Testteki bir tür yanlılığı (bias) önler. Ciddi bir soru da doğurur: kaç rastgele test durumu yeterlidir? Kitap bunu daha sonra yapısal test kapsam ölçütleriyle (structural test coverage metrics) yanıtlar.\n- a ≤ x ≤ b için değerler x = Int(b - a + 1) * Rnd + a ile seçildi; Int bir sayının tam sayı kısmını döndürür, Rnd [0, 1] aralığında rastgele sayılar üretir.\n- **Durma kuralı**: program her çıktıdan en az biri oluşana kadar rastgele test durumu üretmeye devam etti. Her tablo, her biri üretilmesi zor durumla biten yedi böyle \"döngü\" (cycle) gösterir.\n- Nadir çıktılara ulaşmak zordur: üçgen programında rastgele durumların yalnızca %0.01'i eşkenar (equilateral) çıktı; komisyon programında durumların %95.37'si %20 bölgesine düştü.\n\n**Örnek:** a = 1, b = 6 ve Rnd = 0.5 iken: (6 - 1 + 1) × 0.5 + 1 = 4. Çıktıları Low ve High olan bir program, ikisi de en az bir kez görünene kadar durum üretmeye devam eder."
+      },
+      "source": "pp. 93–94 (Tables 5.6–5.8)"
+    }
+  ],
+  "questions": {
+    "1": {
+      "concept": "bva-idea",
+      "explanation_tr": "Kitap, hataların bir girdi değişkeninin uç değerleri yakınında ortaya çıkma eğiliminde olduğunu söyler (ör. <= yerine < sınayan bir döngü, \"bir eksik/bir fazla\" (off-by-one) sayaçlar); bu yüzden sınır değer analizi girdi uzayının sınırına odaklanır. Yanlılıktan (bias) kaçınmak rastgele testin gerekçesidir; \"aynı şekilde işlenen\" girdiler fikri ise denklik sınıflarının (equivalence classes) temelidir."
+    },
+    "2": {
+      "concept": "single-fault",
+      "explanation_tr": "Tek hata varsayımı (single fault assumption), arızaların nadiren iki ya da daha fazla hatanın aynı anda ortaya çıkmasından kaynaklandığını söyler; BVA'nın bir değişken dışındaki tüm değişkenleri nominal değerlerinde tutmasının nedeni budur. Bu varsayımı reddetmek en kötü durum testine (worst-case testing) götürür."
+    },
+    "3": {
+      "concept": "single-fault",
+      "explanation_tr": "BVA bir değişken dışındaki tüm değişkenleri nominal değerinde tutar ve o tek değişkenin min, min+, nom, max- ve max değerlerini almasına izin verir; bu yüzden <x1nom, x2max-> dokuz durumdan biridir. İki nominal olmayan değer içeren çiftler en kötü durum testine, min- ya da max+ değerleri ise sağlamlık testine (robustness testing) aittir."
+    },
+    "4": {
+      "concept": "single-fault",
+      "explanation_tr": "Sınır değer analizi 4n + 1 test durumu verir: n değişkenin her biri için dört nominal olmayan değer (min, min+, max-, max) ve tüm değişkenlerin nominal olduğu bir durum; yani 4 x 5 + 1 = 21. 31 sağlamlık testinin sayısı (6n + 1), 3125 = 5^5 ise en kötü durum testinin sayısıdır."
+    },
+    "5": {
+      "concept": "triangle-bva",
+      "explanation_tr": "BVA min, min+, nom, max- ve max değerlerini, yani 1, 2, 100, 199 ve 200'ü kullanır. 0 ve 201 değerleri (min- ve max+) yalnızca sağlamlık testinde görülürdü."
+    },
+    "6": {
+      "concept": "triangle-bva",
+      "explanation_tr": "c = 200 iken a + b = 200 toplamı c'den büyük değildir, bu yüzden kenarlar bir üçgen oluşturmaz (Tablo 5.1, durum 5). Diğer girdiler üçgen eşitsizliğini sağlar ve tam iki eşit kenarları vardır; bu yüzden beklenen çıktıları Isosceles (ikizkenar) olur."
+    },
+    "7": {
+      "concept": "triangle-bva",
+      "explanation_tr": "Tablo her kenarı sırayla değiştirir ve nominal durumu tekrarlar (3, 8 ve 13 numaralı durumların hepsi 100, 100, 100'dür); bu yüzden yalnızca 13 = 4 x 3 + 1 durum birbirinden farklıdır. Tabloda hiçbir sağlamlık ya da en kötü durum değeri (0, 201 ya da aynı anda iki uç değer) yoktur."
+    },
+    "8": {
+      "concept": "ranges-limitations",
+      "explanation_tr": "BVA durumları Şubat'ı ve artık yılları çok az zorlar, çünkü ay, gün ve yıl arasında ilginç bağımlılıklar vardır; BVA ise değişkenlerin gerçekten bağımsız olduğunu varsayar. NextDate'in değişkenlerinin açık sınırları vardır (1-12, 1-31, 1812-2012)."
+    },
+    "9": {
+      "concept": "robustness",
+      "explanation_tr": "Sağlamlık testi min- ve max+ değerlerini ekler; asıl değeri, dikkati istisna işlemeye (exception handling) yöneltmesidir. Pascal gibi güçlü tipli dillerde çok zahmetli olabilir, çünkü aralık dışı değerler yürütmeyi durduran çalışma zamanı hatalarına yol açar."
+    },
+    "10": {
+      "concept": "robustness",
+      "explanation_tr": "Sağlamlık testi BVA'yı min- ve max+ ile genişletir; böylece diğerleri nominal kalırken her değişken altı nominal olmayan değer alır, buna tüm değişkenlerin nominal olduğu bir durum eklenir: 6n + 1 (iki değişken için 13, Şekil 5.3'teki gibi). 4n + 1 düz BVA, 7^n ise sağlam en kötü durum testidir (robust worst-case testing)."
+    },
+    "11": {
+      "concept": "worst-case",
+      "explanation_tr": "En kötü durum testi tek hata varsayımını reddeder ve beş elemanlı {min, min+, nom, max-, max} kümelerinin Kartezyen çarpımını (Cartesian product) alır; bu 5^n = 5^4 = 625 durum verir, BVA ise 4n + 1 = 17 durum verir. 2401 = 7^4 sağlam en kötü durum testinin sayısı olurdu."
+    },
+    "12": {
+      "concept": "worst-case",
+      "explanation_tr": "Sağlam en kötü durum testi, sağlamlık testinde kullanılan yedi elemanlı {min-, min, min+, nom, max-, max, max+} kümelerinin Kartezyen çarpımını alır ve 7^n durum verir (iki değişken için 49, Şekil 5.5). 5^n düz en kötü durum testi, 6n + 1 ise sağlamlık testidir."
+    },
+    "13": {
+      "concept": "comparing-variants",
+      "explanation_tr": "BVA durumları hem en kötü durum durumlarının hem de sağlamlık durumlarının öz alt kümesidir (proper subset); min- ya da max+ içeren sağlamlık durumları en kötü durum durumu değildir, iki uç değer içeren en kötü durum durumları da sağlamlık durumu değildir; bu yüzden bu iki küme tam olarak BVA durumlarında kesişir. Hepsi sağlam en kötü durum kümesinin içindedir."
+    },
+    "14": {
+      "concept": "special-value",
+      "explanation_tr": "Özel değer testi (\"ad hoc\" ya da \"seat-of-the-pants\" test) test uzmanının alan bilgisini, deneyimini ve zayıf noktalar (soft spots) hakkındaki bilgisini kullanır; en yaygın uygulanan ve en sezgisel ama en az tekdüze biçimdir ve hataları çoğu zaman diğer yöntemlerden daha etkili biçimde ortaya çıkarır. Yönergeler onu açıkça \"en ilkel\" (most rudimentary) girdi alanı yöntemlerinin dışında tutar."
+    },
+    "15": {
+      "concept": "worst-case",
+      "explanation_tr": "En kötü durum testi her değişken için min, min+, nom, max- ve max değerlerini kullanır; yıl için bunlar 1812, 1813, 1912, 2011 ve 2012'dir. 1811 ve 2013 ise sağlamlık testinin min- ve max+ değerleri olurdu."
+    },
+    "16": {
+      "concept": "worst-case",
+      "explanation_tr": "Haziran yalnızca 30 gündür, bu yüzden 31 Haziran imkânsız bir tarihtir ve Tablo 5.3 \"error\" (hata) bekler; yöntem bağımsız değişkenler varsaydığı için Kartezyen çarpım değerleri körü körüne birleştirir. Diğer durumlar 1 Şubat, 1 Aralık, 31 Aralık ve 3 Şubat 1912 sonucunu verir."
+    },
+    "17": {
+      "concept": "output-range",
+      "explanation_tr": "Girdi aralığından türetilen durumların neredeyse hepsi %20 bölgesine düşer; bu yüzden kitap $100, $1000, $1800 ve $7800 çıktı sınırlarını zorlayan girdi birleşimlerini arar. Girdilerin sınırları vardır (en fazla 70 kilit (locks), 80 kundak (stocks) ve 90 namlu (barrels))."
+    },
+    "18": {
+      "concept": "output-range",
+      "explanation_tr": "Kilit $45, kundak $30 ve namlu $25 olduğunda (18, 18, 18) $1800 satış ve $220 komisyon verir (durum 17). (10, 10, 10) $1000 sınır noktasıdır (border point), (14, 14, 14) ve (48, 48, 48) orta noktalardır (midpoints), $1775 veren (18, 18, 17) ise bir \"border point -\" (sınırın hemen altı) durumudur."
+    },
+    "19": {
+      "concept": "output-range",
+      "explanation_tr": "Çıktının minimumu ve maksimumu, üç girdinin de minimum ve maksimum değerlerinden gelir; bu yüzden $100'ün hemen altında ya da $7800'ün hemen üstünde bir çıktı, en az bir girdinin minimumunun altında ya da maksimumunun üstünde olmasını gerektirir. Böylece çıktı aralığı sağlamlık testi, geçersiz girdilerle teste dönüşür. (1, 1, 2) $125 verir; bu da minimumun üstündedir."
+    },
+    "20": {
+      "concept": "random-testing",
+      "explanation_tr": "Değerler x = Int(b - a + 1) * Rnd + a ile seçildi ve program her çıktıdan en az biri oluşana kadar durum üretmeye devam etti; her tablo, üretilmesi zor durumla biten yedi böyle döngüyü (cycle) gösterir. Kaç rastgele durumun yeterli olduğu sorusu, sonraki yapısal kapsam ölçütlerine (structural coverage metrics) bırakılır."
+    },
+    "21": {
+      "concept": "comparing-variants",
+      "explanation_tr": "Yönergelere göre bu yöntemler bağımsızlık varsayımını paylaşır ve iki ayrımları daha vardır: normal ve sağlam (robust) değerler ile tek hata ve çoklu hata (multiple-fault) varsayımı; bu ayrımları dikkatle kullanmak daha iyi bir test sağlar. Her yöntem çıktı aralığına (output range) da uygulanabilir."
+    }
+  }
+}
