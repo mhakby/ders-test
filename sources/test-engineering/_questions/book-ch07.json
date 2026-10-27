@@ -1,0 +1,257 @@
+{
+  "chapter": 7,
+  "title": "Decision Table-Based Testing",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "In a decision table, the part to the left of the bold vertical line is the stub portion. What are the part to the right of that line, and a single column within it, called?",
+      "options": [
+        "The entry portion; a column is a rule",
+        "The action portion; a column is a condition",
+        "The condition portion; a column is an action",
+        "The entry portion; a column is a condition stub",
+        "The rule portion; a column is an action entry"
+      ],
+      "explanation": "Left of the bold vertical line is the stub portion and right of it is the entry portion; each column in the entry portion is a rule. Condition and action portions are the parts above and below the bold horizontal line, not columns.",
+      "page": 111
+    },
+    {
+      "n": 2,
+      "prompt": "What are the two major interpretations of a \"don't care\" entry in a decision table?",
+      "options": [
+        "The condition is irrelevant, or the condition does not apply",
+        "The condition is always true, or the condition is always false",
+        "The action is optional, or the action is impossible",
+        "The rule is redundant, or the rule is inconsistent",
+        "The condition is unknown, or it must be tested later"
+      ],
+      "explanation": "A don't care entry means either that the condition is irrelevant or that it does not apply; some people write \"n/a\" for the second interpretation.",
+      "page": 112
+    },
+    {
+      "n": 3,
+      "prompt": "A NextDate decision table uses the conditions \"c1: month in M1, M2, M3 or M4\", \"c2: day in D1 to D5\" and \"c3: year in Y1 or Y2\". What kind of decision table is this?",
+      "options": [
+        "An extended entry decision table",
+        "A limited entry decision table",
+        "A redundant decision table",
+        "An inconsistent decision table",
+        "A nondeterministic decision table"
+      ],
+      "explanation": "When conditions may take several values the table is an extended entry decision table; a limited entry decision table has only binary conditions.",
+      "page": 112
+    },
+    {
+      "n": 4,
+      "prompt": "When a decision table is used to identify test cases, how are its conditions, actions and rules interpreted?",
+      "options": [
+        "Conditions as inputs, actions as outputs, rules as test cases",
+        "Conditions as outputs, actions as inputs, rules as test cases",
+        "Conditions as inputs, actions as test cases, rules as outputs",
+        "Conditions as test cases, actions as outputs, rules as inputs",
+        "Conditions as inputs, actions as outputs, rules as equivalence classes"
+      ],
+      "explanation": "Conditions are interpreted as inputs and actions as outputs, and each rule becomes a test case. Because the table can mechanically be forced to be complete, the resulting set of test cases is comprehensive.",
+      "page": 112
+    },
+    {
+      "n": 5,
+      "prompt": "In the refined triangle decision table (six conditions c1 to c6), rule 2 has c1 = T, c2 = F and don't care entries for c3, c4, c5 and c6. What is its rule count?",
+      "options": [
+        "16",
+        "4",
+        "8",
+        "32",
+        "64"
+      ],
+      "explanation": "Each don't care entry doubles the count of a rule, so four don't cares give 2^4 = 16. The counts in Table 7.5 (32, 16, 8 and eight rules of 1) add up to 64 = 2^6, which shows that the table is complete.",
+      "page": 113
+    },
+    {
+      "n": 6,
+      "prompt": "In Table 7.4 the conditions are \"month in M1?\", \"month in M2?\" and \"month in M3?\", and each rule has one T and two don't care entries. What do those don't care entries really mean?",
+      "options": [
+        "Must be false, sometimes written F!",
+        "Irrelevant, so either T or F is allowed",
+        "Unknown until the rule is executed",
+        "Must be true, sometimes written T!",
+        "Impossible, so the rule needs an impossible action"
+      ],
+      "explanation": "A month is in exactly one of these mutually exclusive classes, so two entries can never both be true; the don't care entries really mean \"must be false\" (F!). Reading them as \"irrelevant\" gives wrong rule counts.",
+      "page": 113
+    },
+    {
+      "n": 7,
+      "prompt": "Suppose the simple rule-count algorithm (each don't care entry doubles the count) is applied to the three mutually exclusive month rules of Table 7.4. What total does it give, and how many rules should a complete table with these three conditions have?",
+      "options": [
+        "12 in total, although there should be only 8",
+        "8 in total, exactly as there should be",
+        "6 in total, although there should be 8",
+        "3 in total, although there should be 8",
+        "12 in total, exactly as there should be"
+      ],
+      "explanation": "Each rule has two don't cares, so each counts 4 and the total is 12, but three binary conditions allow only 2^3 = 8 rules. Expanding the rules shows repeated rules; deleting them leaves seven, and the missing eighth is the rule with all conditions false.",
+      "page": 114
+    },
+    {
+      "n": 8,
+      "prompt": "Table 7.8 lists all 8 rules for the conditions \"month in M1?\", \"month in M2?\" and \"month in M3?\" and marks the impossible ones. Which rules are possible (not marked impossible)?",
+      "options": [
+        "The three rules in which exactly one condition is true",
+        "The three rules in which exactly two conditions are true",
+        "Only the rule in which all three conditions are true",
+        "Only the rule in which all three conditions are false",
+        "All seven rules left after deleting the repeated rules"
+      ],
+      "explanation": "Rules 1.1, 1.2, 1.3, 2.3 and the all-false rule are marked impossible. Only 1.4 (T, F, F), 2.4 (F, T, F) and 3.4 (F, F, T) remain, because every month belongs to exactly one of M1, M2 and M3.",
+      "page": 115
+    },
+    {
+      "n": 9,
+      "prompt": "A decision table with conditions c1 to c3 has rules 1–4 (c1 = T, c2 and c3 don't care) plus an extra rule 9 (c1 = T, c2 = F, c3 = F). Rule 9 has different action entries from rules 1–4. What does the book conclude?",
+      "options": [
+        "Rules 4 and 9 are inconsistent, and the table is nondeterministic",
+        "The table is redundant, but this causes no real problem",
+        "Rule 9 is impossible and should get the impossible action",
+        "The table is incomplete, because its rule counts sum to 7",
+        "Rules 4 and 9 are consistent, because their conditions match"
+      ],
+      "explanation": "Rule 9 duplicates rule 4. With identical actions the table would only be redundant, which is not much of a problem. With different actions, rules 4 and 9 are inconsistent and the table is nondeterministic, because nothing decides which rule applies.",
+      "page": 115
+    },
+    {
+      "n": 10,
+      "prompt": "How many functional test cases does the refined triangle decision table (Table 7.3) yield, and how many of them are impossible?",
+      "options": [
+        "11 test cases, 3 of them impossible",
+        "11 test cases, none of them impossible",
+        "9 test cases, 3 of them impossible",
+        "14 test cases, 3 of them impossible",
+        "64 test cases, 5 of them impossible"
+      ],
+      "explanation": "Table 7.3 gives 11 test cases: three ways to fail the triangle property, one equilateral, one scalene, three isosceles and three impossible. Showing both ways each inequality can fail would add three more test cases, in which one side is exactly the sum of the other two.",
+      "page": 116
+    },
+    {
+      "n": 11,
+      "prompt": "The first-try NextDate decision table is a limited entry table with eight conditions: month in M1, M2, M3; day in D1, D2, D3, D4; and year in Y1. How many rules does it have?",
+      "options": [
+        "256",
+        "24",
+        "36",
+        "40",
+        "64"
+      ],
+      "explanation": "A limited entry table with n conditions has 2^n rules, so 2^8 = 256, many of them impossible. This illustrates the guideline that decision tables do not scale up very well.",
+      "page": 117
+    },
+    {
+      "n": 12,
+      "prompt": "The third try for NextDate uses M1–M4 (30-day, 31-day except December, December, February), D1–D5 and Y1–Y2 (leap, common). How many elements does the Cartesian product have, and how many rules does Table 7.14 have after rules are combined with don't care entries?",
+      "options": [
+        "40 elements and 22 rules",
+        "36 elements and 17 rules",
+        "40 elements and 36 rules",
+        "36 elements and 22 rules",
+        "80 elements and 22 rules"
+      ],
+      "explanation": "4 × 5 × 2 = 40 elements, which combine into a 22-rule table. The book compares this with the 36 rules of the second try and says the 22-rule table gives a clearer picture of NextDate.",
+      "page": 119
+    },
+    {
+      "n": 13,
+      "prompt": "Rules of the 22-rule NextDate table that have identical action sets (for example rules 1, 2 and 3 for 30-day months) are combined into the reduced Table 7.15. How many decision table test cases (Table 7.16) result?",
+      "options": [
+        "13",
+        "11",
+        "15",
+        "17",
+        "22"
+      ],
+      "explanation": "If two rules have identical action sets, at least one condition lets them be combined with a don't care entry, the decision table version of \"treated the same\". The reduced table has 13 rules, which give the 13 test cases of Table 7.16.",
+      "page": 121
+    },
+    {
+      "n": 14,
+      "prompt": "Why does decision table analysis add little for the Commission Problem?",
+      "options": [
+        "It has little decisional logic, and its variables are independent",
+        "Its variables are strongly dependent, so most of its rules are impossible",
+        "Its conditions cannot be written as either binary or multi-valued entries",
+        "Its three variables would need 2^3 rules, which is too many to test",
+        "Its outputs do not depend on its inputs, so no actions can be listed"
+      ],
+      "explanation": "The Commission Problem uses very little decisional logic and its equivalence-class variables are truly independent. No impossible rules occur, so the test cases are the same as for equivalence class testing.",
+      "page": 121
+    },
+    {
+      "n": 15,
+      "prompt": "According to the chapter's guidelines, which application characteristic indicates the decision table technique?",
+      "options": [
+        "Prominent if-then-else logic",
+        "Independent variables with wide numeric ranges",
+        "Mostly arithmetic with little decision making",
+        "Low cyclomatic (McCabe) complexity",
+        "A single input variable with no dependencies"
+      ],
+      "explanation": "Decision tables are indicated for prominent if-then-else logic, logical relationships among input variables, calculations involving subsets of the input variables, cause-and-effect relationships between inputs and outputs, and high cyclomatic complexity. Mostly arithmetic with little decision making describes the Commission Problem, where decision tables are not worth the trouble.",
+      "page": 122
+    },
+    {
+      "n": 16,
+      "prompt": "Exercise 1 extends the triangle decision table with right triangles (c² = a² + b²). If the sides a, b and c are integers, which combination must be marked impossible in the extended table?",
+      "options": [
+        "An isosceles right triangle",
+        "A scalene right triangle",
+        "A scalene triangle that is not right",
+        "An isosceles triangle that is not right",
+        "Sides that violate the triangle inequality"
+      ],
+      "explanation": "The exercise notes that isosceles right triangles exist, but not with integer sides (the hypotenuse would be a leg times the square root of 2), so that rule is impossible for integer inputs. Scalene right triangles such as 3, 4, 5 do have integer sides.",
+      "page": 122,
+      "exercise": "1"
+    },
+    {
+      "n": 17,
+      "prompt": "Exercise 2 asks you to complete the second-try NextDate table (M1 = 30-day months, M2 = 31-day months, M3 = February). Why can the month and year actions of rule 8 (month in M2, day = 31) not be filled in uniquely?",
+      "options": [
+        "M2 includes December, which needs reset month and increment year",
+        "M2 includes February, which needs a leap-year check first",
+        "Day 31 is impossible for some of the months in M2",
+        "The year class decides whether the day is reset to 1",
+        "Rule 8 duplicates rule 4, so it must copy its actions"
+      ],
+      "explanation": "At the end of a 31-day month the day is always reset to 1. Non-December months then increment the month, but December resets the month to January and increments the year. M2 mixes both cases, so Table 7.13 shows \"?\" for rule 8; the third try fixes this by giving December its own class.",
+      "page": 119,
+      "exercise": "2"
+    },
+    {
+      "n": 18,
+      "prompt": "Exercise 3 asks for a decision table for YesterDate, which returns the date of the day before. For which valid input date does the expected output depend on whether the year is a leap year?",
+      "options": [
+        "March 1",
+        "February 28",
+        "February 1",
+        "January 1",
+        "December 31"
+      ],
+      "explanation": "The day before March 1 is February 29 in a leap year but February 28 in a common year, so that rule needs the leap-year condition. January 1 always becomes December 31 of the previous year (reset month, decrement year), with no leap-year check.",
+      "page": 122,
+      "exercise": "3"
+    },
+    {
+      "n": 19,
+      "prompt": "Exercise 5 asks how well decision table testing deals with the multiple-fault assumption. According to the book's technique-selection guidelines, which techniques are indicated when the multiple-fault assumption is warranted?",
+      "options": [
+        "Worst-case, robust worst-case and decision table testing",
+        "Boundary value analysis and robustness testing",
+        "Domain testing and equivalence class testing",
+        "Weak normal equivalence class testing only",
+        "Boundary value analysis and weak equivalence class testing"
+      ],
+      "explanation": "Guideline 5 of Chapter 8 lists worst-case testing, robust worst-case testing and decision table testing for the multiple-fault assumption; a decision table considers every combination of condition values. Boundary value analysis and robustness testing are the single-fault choices.",
+      "page": 128,
+      "exercise": "5"
+    }
+  ]
+}

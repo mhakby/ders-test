@@ -1,0 +1,283 @@
+{
+  "chapter": 5,
+  "title": "Boundary Value Testing",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "What is the rationale behind boundary value testing?",
+      "options": [
+        "Errors tend to occur near the extreme values of an input variable",
+        "Failures usually result from two or more faults occurring together",
+        "Values in the middle of a range exercise the most program logic",
+        "Randomly chosen input values avoid a form of bias in testing",
+        "Inputs that are treated the same need only one test case"
+      ],
+      "explanation": "The book states that errors tend to occur near the extreme values of an input variable (e.g. a loop testing < instead of <=, off-by-one counters), so boundary value analysis focuses on the boundary of the input space. Avoiding bias is the argument for random testing, and \"treated the same\" is the idea behind equivalence classes.",
+      "page": 80
+    },
+    {
+      "n": 2,
+      "prompt": "Boundary value analysis is based on the \"single fault\" assumption of reliability theory. What does this assumption say?",
+      "options": [
+        "Failures are only rarely the result of two or more simultaneous faults",
+        "Each test case can reveal at most one fault in the program under test",
+        "A program fails only when exactly one input variable is out of its range",
+        "Every fault in a program is located near the boundary of an input variable",
+        "A fault in one input variable never changes the output computed from the others"
+      ],
+      "explanation": "The single fault assumption says failures rarely come from two or more simultaneous faults; this is why BVA holds all but one variable at their nominal values. Rejecting the assumption leads to worst-case testing.",
+      "page": 80
+    },
+    {
+      "n": 3,
+      "prompt": "For a function F(x1, x2) with a <= x1 <= b and c <= x2 <= d, which input pair is one of the boundary value analysis test cases?",
+      "options": [
+        "<x1nom, x2max->",
+        "<x1min, x2max>",
+        "<x1min-, x2nom>",
+        "<x1min+, x2min+>",
+        "<x1max+, x2max>"
+      ],
+      "explanation": "BVA holds all but one variable at its nominal value and lets that one variable take min, min+, nom, max- and max, so <x1nom, x2max-> is one of the nine cases. Pairs with two non-nominal values belong to worst-case testing, and min- or max+ values belong to robustness testing.",
+      "page": 80
+    },
+    {
+      "n": 4,
+      "prompt": "A function has 5 independent input variables. How many test cases does boundary value analysis yield?",
+      "options": [
+        "21",
+        "25",
+        "31",
+        "3125",
+        "20"
+      ],
+      "explanation": "Boundary value analysis yields 4n + 1 test cases: four non-nominal values (min, min+, max-, max) for each of the n variables plus one all-nominal case, so 4 x 5 + 1 = 21. 31 is the robustness count (6n + 1) and 3125 = 5^5 is the worst-case count.",
+      "page": 81
+    },
+    {
+      "n": 5,
+      "prompt": "For the triangle problem the book takes 1 as the lower bound and, arbitrarily, 200 as the upper bound of each side, with 100 as the nominal value. Which values of side c appear in its boundary value analysis test cases (Table 5.1)?",
+      "options": [
+        "1, 2, 100, 199, 200",
+        "0, 1, 100, 200, 201",
+        "1, 2, 100, 198, 199",
+        "1, 50, 100, 150, 200",
+        "0, 1, 2, 199, 200"
+      ],
+      "explanation": "BVA uses min, min+, nom, max- and max, i.e. 1, 2, 100, 199 and 200. The values 0 and 201 (min- and max+) would only appear in robustness testing.",
+      "page": 85
+    },
+    {
+      "n": 6,
+      "prompt": "Among the boundary value analysis test cases for the triangle problem (sides 1-200, nominal 100), which input has the expected output \"Not a Triangle\"?",
+      "options": [
+        "a = 100, b = 100, c = 200",
+        "a = 100, b = 100, c = 199",
+        "a = 100, b = 2, c = 100",
+        "a = 1, b = 100, c = 100",
+        "a = 199, b = 100, c = 100"
+      ],
+      "explanation": "With c = 200 the sum a + b = 200 is not greater than c, so the sides do not form a triangle (Table 5.1, case 5). The other inputs satisfy the triangle inequality and have exactly two equal sides, so their expected output is Isosceles.",
+      "page": 85
+    },
+    {
+      "n": 7,
+      "prompt": "Table 5.1 lists 15 boundary value analysis test cases for the three-variable triangle problem, while the formula 4n + 1 gives 13. What explains the difference?",
+      "options": [
+        "The all-nominal case (100, 100, 100) is listed three times, once for each varied side",
+        "Two robustness values, min- and max+, were added for side c of the triangle",
+        "The formula 4n + 1 counts only inputs that actually form a valid triangle",
+        "Two worst-case corner cases were added to stress the triangle inequality",
+        "Two cases with a side length of 0 were added to test invalid input"
+      ],
+      "explanation": "The table varies each side in turn and repeats the nominal case (cases 3, 8 and 13 are all 100, 100, 100), so only 13 = 4 x 3 + 1 cases are distinct. No robustness or worst-case values (0, 201 or two extremes at once) appear in the table.",
+      "page": 85
+    },
+    {
+      "n": 8,
+      "prompt": "Why does the book consider the boundary value analysis test cases for NextDate inadequate?",
+      "options": [
+        "Month, day and year have dependencies, but BVA presumes truly independent variables",
+        "Month, day and year are Boolean variables, so their extreme values are unclear",
+        "NextDate has no explicit bounds, so all of its boundaries must be artificial",
+        "BVA produces far too many test cases for a function of three variables",
+        "Strong typing of the date variables makes their boundary values impossible"
+      ],
+      "explanation": "The BVA cases put very little stress on February and leap years because interesting dependencies exist among month, day and year, while BVA presumes the variables to be truly independent. NextDate's variables do have explicit bounds (1-12, 1-31, 1812-2012).",
+      "page": 82
+    },
+    {
+      "n": 9,
+      "prompt": "According to the book, what is the main value of robustness testing?",
+      "options": [
+        "It forces attention on exception handling",
+        "It removes the need for the single fault assumption",
+        "It stresses the dependencies among input variables",
+        "It needs fewer test cases than boundary value analysis",
+        "It fits strongly typed languages such as Pascal best"
+      ],
+      "explanation": "Robustness testing adds min- and max+ values, and its main value is that it forces attention on exception handling. With strongly typed languages such as Pascal it can be very awkward, because out-of-range values cause run-time errors that abort execution.",
+      "page": 82
+    },
+    {
+      "n": 10,
+      "prompt": "Exercise: develop a formula for the number of robustness test cases for a function of n variables. Which formula is correct?",
+      "options": [
+        "6n + 1",
+        "4n + 1",
+        "7n",
+        "6^n",
+        "7^n"
+      ],
+      "explanation": "Robustness testing extends BVA with min- and max+, so each variable takes six non-nominal values while the others stay nominal, plus one all-nominal case: 6n + 1 (13 for two variables, as in Figure 5.3). 4n + 1 is plain BVA and 7^n is robust worst-case testing.",
+      "page": 95,
+      "exercise": "1"
+    },
+    {
+      "n": 11,
+      "prompt": "A function has 4 input variables. How many test cases does worst-case testing generate?",
+      "options": [
+        "625",
+        "17",
+        "25",
+        "1024",
+        "2401"
+      ],
+      "explanation": "Worst-case testing rejects the single fault assumption and takes the Cartesian product of the five-element sets {min, min+, nom, max-, max}, giving 5^n = 5^4 = 625 cases, compared with 4n + 1 = 17 for BVA. 2401 = 7^4 would be the robust worst-case count.",
+      "page": 84
+    },
+    {
+      "n": 12,
+      "prompt": "Exercise: develop a formula for the number of robust worst-case test cases for a function of n variables. Which formula is correct?",
+      "options": [
+        "7^n",
+        "5^n",
+        "6n + 1",
+        "7n + 1",
+        "6^n"
+      ],
+      "explanation": "Robust worst-case testing takes the Cartesian product of the seven-element sets {min-, min, min+, nom, max-, max, max+} used in robustness testing, giving 7^n cases (49 for two variables, Figure 5.5). 5^n is plain worst-case testing and 6n + 1 is robustness testing.",
+      "page": 95,
+      "exercise": "2"
+    },
+    {
+      "n": 13,
+      "prompt": "Exercise: draw a Venn diagram of the test case sets from boundary value analysis, robustness testing, worst-case testing and robust worst-case testing. Which relationship holds?",
+      "options": [
+        "BVA cases lie in both robustness and worst-case sets, and all three lie inside the robust worst-case set",
+        "Robustness cases are a subset of worst-case cases, and both lie inside the robust worst-case set",
+        "Worst-case cases are a subset of robustness cases, and both lie inside the robust worst-case set",
+        "BVA and worst-case cases are disjoint sets, and both lie inside the robust worst-case set",
+        "Robust worst-case cases are a subset of robustness cases, which lie inside the worst-case set"
+      ],
+      "explanation": "BVA cases are a proper subset of the worst-case cases and also of the robustness cases; robustness cases with min- or max+ are not worst-case cases, and worst-case cases with two extremes are not robustness cases, so these two sets overlap exactly in the BVA cases. All of them are contained in the robust worst-case set.",
+      "page": 95,
+      "exercise": "3"
+    },
+    {
+      "n": 14,
+      "prompt": "Which statement about special value testing is true according to the book?",
+      "options": [
+        "It is the most widely practiced but least uniform form of functional testing",
+        "It follows fixed guidelines, so its results do not depend on the tester",
+        "It derives test cases mechanically from min, min+, nom, max- and max",
+        "It is the most rudimentary of all the input domain testing methods",
+        "It rarely reveals more faults than boundary value test sets do"
+      ],
+      "explanation": "Special value testing (\"ad hoc\" or \"seat-of-the-pants\" testing) uses the tester's domain knowledge, experience and knowledge of soft spots; it is the most widely practiced and most intuitive but least uniform form, and often reveals faults more effectively than the other methods. The guidelines explicitly exclude it from the \"most rudimentary\" input domain methods.",
+      "page": 84
+    },
+    {
+      "n": 15,
+      "prompt": "NextDate accepts years 1812 <= year <= 2012. Which year values appear in the book's worst-case test cases for NextDate (Table 5.3)?",
+      "options": [
+        "1812, 1813, 1912, 2011, 2012",
+        "1811, 1812, 1912, 2012, 2013",
+        "1812, 1813, 2000, 2011, 2012",
+        "1812, 1862, 1912, 1962, 2012",
+        "1811, 1813, 1912, 2011, 2013"
+      ],
+      "explanation": "Worst-case testing uses min, min+, nom, max- and max for each variable, which for the year are 1812, 1813, 1912, 2011 and 2012. 1811 and 2013 would be the robustness values min- and max+.",
+      "page": 88
+    },
+    {
+      "n": 16,
+      "prompt": "The worst-case test cases for NextDate combine months {1, 2, 6, 11, 12}, days {1, 2, 15, 30, 31} and five year values. Which of these test cases has the expected output \"error\"?",
+      "options": [
+        "month 6, day 31, year 1912",
+        "month 1, day 31, year 1912",
+        "month 11, day 30, year 1912",
+        "month 12, day 30, year 1912",
+        "month 2, day 2, year 1912"
+      ],
+      "explanation": "June has only 30 days, so June 31 is an impossible date and Table 5.3 expects \"error\"; the Cartesian product combines values blindly because the method assumes independent variables. The other cases give February 1, December 1, December 31 and February 3, 1912.",
+      "page": 90
+    },
+    {
+      "n": 17,
+      "prompt": "Why does the book derive boundary value test cases for the commission problem from its output range?",
+      "options": [
+        "Test cases taken from the input range fall almost all in the 20% commission zone",
+        "The input variables locks, stocks and barrels have no explicit upper bounds",
+        "Output-based testing needs fewer test cases than the 4n + 1 input cases",
+        "Commission is a Boolean output, so input boundary values make no sense",
+        "Input boundary values would all produce the same error message"
+      ],
+      "explanation": "Cases from the input range are almost all in the 20% zone, so the book looks for input combinations that stress the output boundaries $100, $1000, $1800 and $7800. The inputs do have bounds (at most 70 locks, 80 stocks and 90 barrels).",
+      "page": 92
+    },
+    {
+      "n": 18,
+      "prompt": "In the output boundary value analysis test cases for the commission problem (Table 5.4), which (locks, stocks, barrels) triplet is the $1800 border point?",
+      "options": [
+        "(18, 18, 18)",
+        "(10, 10, 10)",
+        "(14, 14, 14)",
+        "(18, 18, 17)",
+        "(48, 48, 48)"
+      ],
+      "explanation": "With locks at $45, stocks at $30 and barrels at $25, (18, 18, 18) gives sales of $1800 and a commission of $220 (case 17). (10, 10, 10) is the $1000 border point, (14, 14, 14) and (48, 48, 48) are midpoints, and (18, 18, 17) at $1775 is a \"border point -\" case.",
+      "page": 92
+    },
+    {
+      "n": 19,
+      "prompt": "Exercise: what happens if we try output range robustness testing on the commission problem? Valid inputs are 1-70 locks, 1-80 stocks and 1-90 barrels, so sales range from $100 at (1, 1, 1) to $7800 at (70, 80, 90).",
+      "options": [
+        "Sales below $100 or above $7800 can only come from input values outside their valid ranges",
+        "Valid inputs such as (1, 1, 2) already produce sales just below the $100 output minimum",
+        "The output min- and max+ cases coincide with the $1000 and $1800 border points",
+        "The output robustness cases are the same as the special value cases of Table 5.5",
+        "Valid inputs close to the output minimum produce a negative commission value"
+      ],
+      "explanation": "The output minimum and maximum come from the minimum and maximum of all three inputs, so an output just below $100 or just above $7800 needs at least one input below its minimum or above its maximum; output robustness testing turns into testing with invalid inputs. (1, 1, 2) gives $125, which is above the minimum.",
+      "page": 95,
+      "exercise": "4"
+    },
+    {
+      "n": 20,
+      "prompt": "How did the book's random test generator for the triangle, commission and NextDate programs decide when to stop generating test cases?",
+      "options": [
+        "It kept generating test cases until at least one of each output occurred",
+        "It generated exactly 4n + 1 random test cases for each of the programs",
+        "It stopped as soon as a structural coverage metric reached 100%",
+        "It generated exactly one random value from each equivalence class",
+        "It stopped after a fixed number of 1000 test cases in each cycle"
+      ],
+      "explanation": "Values were picked with x = Int(b - a + 1) * Rnd + a, and the program kept generating cases until at least one of each output occurred; each table shows seven such cycles ending with the hard-to-generate case. How many random cases are sufficient is left for the later structural coverage metrics.",
+      "page": 93
+    },
+    {
+      "n": 21,
+      "prompt": "Besides the shared assumption of truly independent inputs, which two distinctions do the guidelines for boundary value testing name for these input domain methods?",
+      "options": [
+        "Normal versus robust values, and the single-fault versus multiple-fault assumption",
+        "Physical versus logical variables, and discrete versus continuous value ranges",
+        "Static versus dynamic testing, and black box versus white box testing",
+        "Random versus systematic values, and unit versus system level testing",
+        "Bounded versus unbounded variables, and nominal versus special values"
+      ],
+      "explanation": "The guidelines say the methods share the independence assumption and have two other distinctions: normal versus robust values, and the single-fault versus the multiple-fault assumption; using them carefully results in better testing. Each method can also be applied to the output range.",
+      "page": 94
+    }
+  ]
+}

@@ -1,0 +1,261 @@
+{
+  "chapter": 10,
+  "title": "Data Flow Testing",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "Early data flow analyses centered on faults now known as define/reference anomalies. Which of the following is one of them?",
+      "options": [
+        "A variable that is defined twice before it is used",
+        "A variable that is used twice before it is redefined",
+        "A variable that is used in both a predicate and a computation",
+        "A variable that is defined by input and then used only in a predicate",
+        "A variable whose definition and use are in the same statement"
+      ],
+      "explanation": "The three define/reference anomalies are a variable that is defined but never used, one that is used but never defined, and one that is defined twice before it is used; they can be found by static analysis of the compiler-generated concordance. Using a value several times, or in both predicates and computations, is normal data flow.",
+      "page": 157
+    },
+    {
+      "n": 2,
+      "prompt": "In the commission program, node 14 is \"While NOT(locks = -1)\" and node 16 is \"totalLocks = totalLocks + locks\". Which classification is correct?",
+      "options": [
+        "Node 14 is a P-use of locks; node 16 is a C-use of locks and a defining node of totalLocks",
+        "Node 14 is a C-use of locks; node 16 is a P-use of locks and a defining node of totalLocks",
+        "Node 14 is a defining node of locks; node 16 is a C-use of locks and a C-use of totalLocks",
+        "Node 14 is a P-use of locks; node 16 is a defining node of locks and a C-use of totalLocks",
+        "Node 14 and node 16 are both P-uses of locks because both lie inside the While loop"
+      ],
+      "explanation": "A use is a P-use iff the statement is a predicate (the While condition at node 14; such nodes have outdegree >= 2), otherwise it is a C-use (outdegree <= 1). Node 16 uses locks in a computation and assigns totalLocks, so it is DEF(totalLocks, 16); locks is defined only at nodes 13 and 19.",
+      "page": 164
+    },
+    {
+      "n": 3,
+      "prompt": "For totalLocks (defined at nodes 10 and 16), p7 = <10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24> is a du-path from DEF(totalLocks, 10) to USE(totalLocks, 24). Why is it not definition-clear?",
+      "options": [
+        "Node 16 on the path is another defining node of totalLocks",
+        "Node 21 on the path is an output use of totalLocks",
+        "Its initial node assigns a constant instead of reading input",
+        "It passes through the While loop's predicate node 14",
+        "Its final node 24 is a predicate use of totalLocks"
+      ],
+      "explanation": "A dc-path is a du-path in which no node other than its initial DEF and final USE node is a defining node of v; p7 contains node 16, where totalLocks is redefined. Intermediate uses such as the output at node 21 do not affect definition-clearness.",
+      "page": 164
+    },
+    {
+      "n": 4,
+      "prompt": "For locks (defined at nodes 13 and 19, used at 14 and 16), the chapter extends two du-paths to node 21 so that, together with p2 and p4, the set covers bypassing, beginning, repeating and exiting the While loop. Which path bypasses the loop?",
+      "options": [
+        "p1' = <13, 14, 21>",
+        "p3' = <19, 20, 14, 21>",
+        "p2 = <13, 14, 15, 16>",
+        "p4 = <19, 20, 14, 15, 16>",
+        "p3 = <19, 20, 14>"
+      ],
+      "explanation": "p1' reads the priming value of locks at node 13, evaluates the While predicate at node 14 and goes straight to node 21, so the loop body is never entered. Paths starting at node 19 (p3, p3', p4) only occur after the loop body has already executed, and p2 begins the loop.",
+      "page": 164
+    },
+    {
+      "n": 5,
+      "prompt": "Table 10.4 lists du-paths for commission by their (beginning, end) nodes and marks whether each is feasible. Which of these du-paths is infeasible?",
+      "options": [
+        "(31, 37)",
+        "(31, 32)",
+        "(32, 33)",
+        "(36, 37)",
+        "(36, 41)"
+      ],
+      "explanation": "Node 31 is in the THEN branch of If (sales > 1800) and node 37 is in the ELSE IF branch, so no execution path leads from 31 to 37. Table 10.4 marks the other four as feasible (only (36, 41) is not definition-clear, because node 37 redefines commission).",
+      "page": 163
+    },
+    {
+      "n": 6,
+      "prompt": "How does the All-Defs criterion differ from the All-Uses criterion?",
+      "options": [
+        "All-Defs needs a dc-path from every defining node to a use; All-Uses needs dc-paths from every defining node to every use",
+        "All-Defs needs dc-paths from every defining node to every use; All-Uses needs only one dc-path for each variable",
+        "All-Defs covers only predicate uses; All-Uses covers both predicate uses and computation uses",
+        "All-Defs needs a dc-path from every defining node to a use; All-Uses needs a dc-path from every use to the exit node",
+        "All-Defs counts only input-defined nodes; All-Uses counts both input and assignment definitions"
+      ],
+      "explanation": "All-Defs requires, for every variable, definition-clear paths from every defining node to a use; All-Uses requires them from every defining node to every use of v and to the successor node of each USE(v, n). Restricting attention to predicate or computation uses is what the All-P-Uses/Some C-Uses and All-C-Uses/Some P-Uses criteria do.",
+      "page": 166
+    },
+    {
+      "n": 7,
+      "prompt": "Compared with the All-Uses criterion, what additional condition does the All-DU-Paths criterion impose on its definition-clear paths?",
+      "options": [
+        "These paths must be either single loop traversals or cycle free",
+        "These paths must together traverse every edge of the program graph",
+        "These paths must all start at the program's single-entry node",
+        "Each predicate use must be reached once for each of its outcomes",
+        "Each of these paths must coincide with exactly one DD-Path"
+      ],
+      "explanation": "The All-DU-Paths definition adds that the definition-clear paths are either single loop traversals or cycle free. This makes it stronger than All-Uses, which it subsumes in Figure 10.3.",
+      "page": 167
+    },
+    {
+      "n": 8,
+      "prompt": "Which statement about the Rapps/Weyuker hierarchy of data flow coverage metrics (Figure 10.3) is correct?",
+      "options": [
+        "All-P-Uses subsumes All-Edges, which in turn subsumes All-Nodes",
+        "All-Defs subsumes All-P-Uses, which in turn subsumes All-Edges",
+        "All-C-Uses/Some P-Uses subsumes All-Uses, which in turn subsumes All-Defs",
+        "All-Edges subsumes All-Defs, which in turn subsumes All-Nodes",
+        "All-Uses subsumes All-DU-Paths, which in turn subsumes All-Paths"
+      ],
+      "explanation": "The figure runs All-Paths -> All-DU-Paths -> All-Uses -> {All-C-Uses/Some P-Uses, All-P-Uses/Some C-Uses}; both of these subsume All-Defs, and All-P-Uses/Some C-Uses also subsumes All-P-Uses -> All-Edges -> All-Nodes. The other statements reverse arrows or invent links.",
+      "page": 167
+    },
+    {
+      "n": 9,
+      "prompt": "In the chapter's refined definition, what is the slice S(V, n)?",
+      "options": [
+        "The set of node numbers of all statement fragments prior to n that contribute to the values of variables in V at n",
+        "The set of node numbers of all statement fragments after n at which the values of variables in V are used",
+        "The set of du-paths that run from every definition of a variable in V to the statement fragment n",
+        "The set of node numbers executed by a single test case on its way from the entry node to n",
+        "The set of DD-Paths that contain a defining node of some variable in V before the fragment n"
+      ],
+      "explanation": "S(V, n) is the set of node numbers of all statement fragments in P prior to n that contribute to the values of variables in V at statement fragment n. \"Prior to\" is meant in the dynamic sense, so a slice captures the execution-time behavior of the program with respect to the variables in V.",
+      "page": 168
+    },
+    {
+      "n": 10,
+      "prompt": "For slices, the chapter refines variable usage into five forms: P-use, C-use, O-use, L-use and I-use. As a judgment call, it excludes three of these forms from the intent of \"contribute\". Which three kinds of nodes are therefore excluded from slices?",
+      "options": [
+        "O-use, L-use and I-use nodes",
+        "P-use, C-use and O-use nodes",
+        "C-use, L-use and I-use nodes",
+        "P-use, L-use and I-use nodes",
+        "P-use, C-use and I-use nodes"
+      ],
+      "explanation": "O-use (output), L-use (location: pointers, subscripts) and I-use (iteration: internal counters, loop indices) nodes are excluded from slices. P-uses and C-uses of other variables are included to the extent that their execution affects the value of the slice variable.",
+      "page": 169
+    },
+    {
+      "n": 11,
+      "prompt": "Relative complements of slices give a diagnostic capability. If commission is wrong at its output but sales is found to be correct where it is computed, where must the problem lie?",
+      "options": [
+        "In S(commission) - S(sales): the statements of the commission slice that are not in the sales slice",
+        "In S(sales) - S(commission): the statements of the sales slice that are not in the commission slice",
+        "In the intersection of the commission slice and the sales slice",
+        "Anywhere in the union of both slices, since slices cannot narrow it down",
+        "In the slice postulated on the very first statement of the program"
+      ],
+      "explanation": "The relative complement A - B is the set of all elements of A that are not elements of B. The program is divided into the computation of sales and the computation of commission; if sales is okay, the problem must lie in the relative complement, otherwise it may be in either portion.",
+      "page": 173
+    },
+    {
+      "n": 12,
+      "prompt": "Exercise 1 asks which DD-Paths (Table 10.1: A = 7-13, B = 14, C = 15-19, D = 20-28, E = 29, F = 30-33, G = 34, H = 35-37, I = 38, J = 39, K = 40) are found in the sales du-paths p12 = <27, 28, 29, 30, 31, 32, 33>, p13 = <27, 28, 29, 34> and p14 = <27, 28, 29, 34, 35, 36, 37>. Which answer is correct?",
+      "options": [
+        "p12: D, E, F; p13: D, E, G; p14: D, E, G, H",
+        "p12: D, E, F; p13: D, E, G; p14: D, E, G, I",
+        "p12: E, F; p13: E, G; p14: E, G, H",
+        "p12: D, E, F, K; p13: D, E, G, J; p14: D, E, G, H, J",
+        "p12: C, D, F; p13: C, D, G; p14: C, D, G, H"
+      ],
+      "explanation": "Nodes 27 and 28 lie in DD-Path D, node 29 is E, nodes 30-33 are F, node 34 is G and nodes 35-37 are H. The du-paths end at their use nodes, so I (38), J (39) and K (40) are not reached.",
+      "page": 161,
+      "exercise": "1"
+    },
+    {
+      "n": 13,
+      "prompt": "Exercise 2 asks you to merge the DD-Path-based coverage metrics into the Rapps/Weyuker hierarchy. Which three Rapps-Weyuker metrics does the chapter say are equivalent to three of E.F. Miller's metrics from Chapter 9?",
+      "options": [
+        "All-Paths, All-Edges and All-Nodes",
+        "All-Defs, All-Uses and All-DU-Paths",
+        "All-Paths, All-DU-Paths and All-Uses",
+        "All-Edges, All-P-Uses and All-Defs",
+        "All-Nodes, All-Defs and All-C-Uses/Some P-Uses"
+      ],
+      "explanation": "The first three Rapps-Weyuker metrics, All-Paths, All-Edges and All-Nodes, are equivalent to Miller's metrics; the others presume that define/use nodes and du-paths have been identified. In Figure 10.3 these sit at the top (All-Paths, typically unattainable) and the bottom (All-Edges, the generally accepted minimum, then All-Nodes).",
+      "page": 166,
+      "exercise": "2"
+    },
+    {
+      "n": 14,
+      "prompt": "Exercise 3 asks for the du-paths for commission. The chapter disallows du-paths that begin at intermediate assignments such as nodes 31 and 32 and considers only the \"real\" defining nodes. Which du-paths (beginning, end) remain?",
+      "options": [
+        "(33, 41), (37, 41) and (38, 41)",
+        "(31, 41), (32, 41) and (33, 41)",
+        "(31, 33), (36, 37) and (38, 41)",
+        "(33, 37), (37, 38) and (38, 41)",
+        "(36, 41), (37, 41) and (38, 41)"
+      ],
+      "explanation": "The real defining nodes are DEF(commission, 33), DEF(commission, 37) and DEF(commission, 38), and only one usage node is used, USE(commission, 41). Table 10.4 marks all three paths as feasible and definition-clear.",
+      "page": 166,
+      "exercise": "3"
+    },
+    {
+      "n": 15,
+      "prompt": "Exercise 4 asks you to express slice S37 = S(commission, 41) as the union of other pertinent slices. Reading the edges of the lattice of slices on commission (Figure 10.4), which slices does S37 combine?",
+      "options": [
+        "S33, S35 and S36, the slices at nodes 33, 37 and 38",
+        "S31, S32 and S33, the slices at nodes 31, 32 and 33",
+        "S31, S34 and S36, the slices at nodes 31, 36 and 38",
+        "S32, S34 and S35, the slices at nodes 32, 36 and 37",
+        "S24 and S30, the slices on sales at nodes 27 and 38"
+      ],
+      "explanation": "In Figure 10.4, S37 has edges to S33 = S(commission, 33), S35 = S(commission, 37) and S36 = S(commission, 38): whichever of the three computations is taken, all come together in the last slice. S31 and S32 are already contained in S33, and S34 in S35.",
+      "page": 171,
+      "exercise": "4"
+    },
+    {
+      "n": 16,
+      "prompt": "Exercise 5 asks for several program slices, including S(totalStocks, 22). Which set is it?",
+      "options": [
+        "{11, 13, 14, 15, 17, 19, 20}",
+        "{11, 17, 22}",
+        "{13, 14, 15, 17, 19, 20}",
+        "{11, 12, 13, 14, 15, 16, 17, 18, 19, 20}",
+        "{11, 13, 14, 15, 17, 19, 20, 22, 25}"
+      ],
+      "explanation": "The chapter gives S14 = S(totalStocks, 22) = {11, 13, 14, 15, 17, 19, 20}: the A-defs at 11 and 17, the input of stocks at 15, and nodes 13, 14, 19 and 20 of the While loop controlled by locks (node 22 itself is only an O-use). Several other requested slices, such as S(commission, 28) or S(totalLocks, 22), name a variable that does not appear in that statement, which the style guidelines call bad practice.",
+      "page": 170,
+      "exercise": "5"
+    },
+    {
+      "n": 17,
+      "prompt": "Exercise 6 asks for the definition-clear paths with respect to sales from line 27. For the use at the Else If predicate (node 34), the chapter notes that the IF, ELSE IF logic allows a static and a dynamic choice of du-path. Which pairing is correct?",
+      "options": [
+        "Static: <27, 28, 29, 30, 31, 32, 33, 34>; dynamic: <27, 28, 29, 34>",
+        "Static: <27, 28, 29, 34>; dynamic: <27, 28, 29, 30, 31, 32, 33, 34>",
+        "Static: <27, 28, 29, 34>; dynamic: <27, 28, 29, 34, 35, 36, 37>",
+        "Static: <27, 28, 34>; dynamic: <27, 28, 29, 34>",
+        "Static: <27, 28, 29, 30, 31, 32, 33>; dynamic: <27, 28, 29>"
+      ],
+      "explanation": "Sales has only one defining node (27), so every du-path for sales is definition-clear. The static choice follows the source text through the THEN branch (30-33) to 34; the dynamic choice, which the chapter uses because it fits DD-Path thinking, goes from the decision at 29 directly to the ELSE IF at 34.",
+      "page": 165,
+      "exercise": "6"
+    },
+    {
+      "n": 18,
+      "prompt": "Exercise 7 asks you to complete the lattice in Figure 10.5, in which an edge represents the proper subset relationship. Given S21 = S(lockSales, 24) = {7, 10, 13, 14, 16, 19, 20, 24}, which slice is a proper subset of S21 and is therefore linked to it in the lattice?",
+      "options": [
+        "S10 = S(totalLocks, 16) = {10, 13, 14, 16, 19, 20}",
+        "S23 = S(barrelSales, 26) = {9, 12, 13, 14, 15, 18, 19, 20, 26}",
+        "S16 = S(totalBarrels, 18) = {12, 13, 14, 15, 18, 19, 20}",
+        "S6 = S(stocks, 17) = {13, 14, 15, 17, 19, 20}",
+        "S19 = S(stockPrice, 25) = {8}"
+      ],
+      "explanation": "Every element of S10 is in S21, which adds node 7 (lockPrice) and node 24, so S10 is a proper subset of S21. S23 and S16 contain barrel nodes such as 12, 15 and 18, S6 contains stock nodes 15 and 17, and S19 contains node 8, none of which are in S21.",
+      "page": 171,
+      "exercise": "7"
+    },
+    {
+      "n": 19,
+      "prompt": "Exercise 8 notes that the slices in this chapter are \"backward slices\". What distinguishes them from \"forward slices\"?",
+      "options": [
+        "Backward slices hold the parts that contribute to a variable's value at a point; forward slices hold the parts where the variable is used",
+        "Backward slices hold the parts where a variable is used; forward slices hold the parts that contribute to its value at a point",
+        "Backward slices contain only predicate uses of a variable; forward slices contain only its computation uses",
+        "Backward slices follow the static view of du-paths; forward slices follow the dynamic view of du-paths",
+        "Backward slices start from the I-def nodes of a variable; forward slices start from its A-def nodes"
+      ],
+      "explanation": "The chapter's slices are concerned with the parts of a program that contribute to the value of a variable at a certain point (backward); forward slices refer to the parts of the program where the variable is used. Comparing forward slices with du-paths is left as an open discussion.",
+      "page": 174,
+      "exercise": "8"
+    }
+  ]
+}

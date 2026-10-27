@@ -1,0 +1,287 @@
+{
+  "chapter": 9,
+  "title": "Path Testing",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "In the book's definition of the program graph of a program written in an imperative language, what do the nodes and edges represent?",
+      "options": [
+        "Nodes are statement fragments; edges represent flow of control",
+        "Nodes are DD-Paths; edges represent control flow between successor DD-Paths",
+        "Nodes are variables; edges represent define/reference relationships",
+        "Nodes are decision statements; edges are the code sequences between them",
+        "Nodes are test cases; edges link test cases that share a program path"
+      ],
+      "explanation": "A program graph is a directed graph whose nodes are statement fragments (a complete statement is a \"default\" fragment) and whose edges represent flow of control: an edge i→j exists iff fragment j can execute immediately after fragment i. Nodes that are DD-Paths belong to the DD-Path graph, not the program graph.",
+      "page": 137
+    },
+    {
+      "n": 2,
+      "prompt": "In the triangle program graph, node 10 (Then IsATriangle = True) has one incoming edge from decision node 9 and one outgoing edge to node 12, where the two branches join. Which case of the DD-Path definition applies to node 10?",
+      "options": [
+        "Case 4: a single node with indeg = 1 and outdeg = 1",
+        "Case 5: a maximal chain of length ≥ 1",
+        "Case 3: a single node with indeg ≥ 2 or outdeg ≥ 2",
+        "Case 1: a single node with indeg = 0",
+        "Case 2: a single node with outdeg = 0"
+      ],
+      "explanation": "Node 10 has indegree 1 and outdegree 1 and its neighbours 9 and 12 are Case 3 DD-Paths, so it is a single-node Case 4 DD-Path (DD-Path C in Table 9.1); Case 4 is needed for such \"short branches\". Case 5 applies to longer chains such as nodes 5–8 (DD-Path A).",
+      "page": 141
+    },
+    {
+      "n": 3,
+      "prompt": "A program graph has nodes 1–9 and edges 1→2, 2→3, 3→4, 4→5, 5→6, 5→7, 6→8, 7→8, 8→9. Applying the five cases of the DD-Path definition as in Table 9.1 for the triangle program (where source node 4 alone is DD-Path \"first\" and nodes 5–8 form DD-Path A), how many nodes does the resulting DD-Path graph have?",
+      "options": [
+        "7",
+        "9",
+        "8",
+        "6",
+        "5"
+      ],
+      "explanation": "Node 1 is Case 1 (indeg = 0), nodes 2–4 form one maximal chain (Case 5), node 5 (outdeg 2) and node 8 (indeg 2) are Case 3, nodes 6 and 7 are Case 4, and node 9 is Case 2 (outdeg = 0), giving 7 DD-Paths. Counting every node separately (9) ignores that a chain is condensed into one DD-Path, just as nodes 5–8 of the triangle program become DD-Path A.",
+      "page": 140
+    },
+    {
+      "n": 4,
+      "prompt": "Which statement about structural test coverage metrics is made in the book?",
+      "options": [
+        "Most quality organizations expect C1 (DD-Path coverage) as the minimum acceptable level",
+        "ANSI Standard 187B mandates DD-Path coverage (C1) as the minimum acceptable level",
+        "Miller observed that attaining C0 coverage reveals roughly 85% of all faults",
+        "The metrics form a lattice in which no metric is implied by another one",
+        "Most metrics in Table 9.2 come from McCabe's 1982 work on basis paths"
+      ],
+      "explanation": "Most quality organizations now expect the C1 metric as the minimum acceptable level of coverage; ANSI Standard 187B mandates statement coverage (C0), and Miller's figure of roughly 85% of faults refers to attaining DD-Path coverage. The metrics form a lattice in which some are implied by others, and most are due to E. F. Miller (1977).",
+      "page": 142
+    },
+    {
+      "n": 5,
+      "prompt": "Which metric is paired with its correct description from Table 9.2 (Structural Test Coverage Metrics)?",
+      "options": [
+        "C1p: every predicate to each outcome",
+        "C2: C1 coverage + every dependent pair of DD-Paths",
+        "Cd: C1 coverage + loop coverage",
+        "Cstat: all possible execution paths",
+        "C0: every DD-Path (predicate outcome)"
+      ],
+      "explanation": "In Table 9.2, C1p is every predicate to each outcome. C2 is C1 + loop coverage, Cd is C1 + every dependent pair of DD-Paths, Cstat is a \"statistically significant\" fraction of paths (C∞ is all possible execution paths), and C0 is every statement while C1 is every DD-Path.",
+      "page": 143
+    },
+    {
+      "n": 6,
+      "prompt": "Exercise: take Figure 9.2 as the DD-Path graph of a program; its edges are first→A, A→B, B→C, B→D, B→E, C→D, C→F, D→F, E→D, E→F, F→G, G→A, G→last. The book notes that C1 (every predicate outcome) amounts to traversing every edge of the DD-Path graph, not only every node. Which statement about the single test path first-A-B-C-D-F-G-A-B-E-F-G-last is correct?",
+      "options": [
+        "It achieves C0 but not C1, since B→D, C→F and E→D are never traversed",
+        "It achieves both C0 and C1, since every node is visited at least once",
+        "It achieves C1 but not C0, since each decision takes at least one outcome",
+        "It achieves neither C0 nor C1, since node D is never visited",
+        "It achieves neither C0 nor C1, since the edge G→A is never traversed"
+      ],
+      "explanation": "The path visits all nine nodes, so every statement is executed (C0), but it traverses only 10 of the 13 edges: B→D, C→F and E→D are missed, so C1 is not reached. Traversing every edge also visits every node, so C1 without C0 cannot happen.",
+      "page": 143,
+      "exercise": "4"
+    },
+    {
+      "n": 7,
+      "prompt": "Exercise: for multiple-condition coverage of line 16 of the triangle program, If (a ≠ b) AND (a ≠ c) AND (b ≠ c), you must consider its dependency on line 14, If (a = b) AND (b = c), whose Else leads to line 16. Which truth-value combination of line 16's three simple conditions can never occur because of this dependency?",
+      "options": [
+        "a ≠ b false, a ≠ c false, b ≠ c false",
+        "a ≠ b true, a ≠ c true, b ≠ c true",
+        "a ≠ b false, a ≠ c true, b ≠ c true",
+        "a ≠ b true, a ≠ c false, b ≠ c true",
+        "a ≠ b true, a ≠ c true, b ≠ c false"
+      ],
+      "explanation": "Line 16 is reached only when (a = b) AND (b = c) is false, so the three sides cannot all be equal and the all-false row of line 16's eight-row truth table cannot occur. The other listed rows do occur, e.g. (3, 4, 5) for all true and (3, 3, 4), (3, 4, 3), (4, 3, 3) for one false condition.",
+      "page": 144,
+      "exercise": "5"
+    },
+    {
+      "n": 8,
+      "prompt": "Exercise: lines 14–20 of the triangle program use the compound conditions If (a = b) AND (b = c) … Else If (a ≠ b) AND (a ≠ c) AND (b ≠ c). What is the cyclomatic complexity of this segment's program graph, and how does it compare with a rewrite that uses nested if-then-else statements with simple conditions?",
+      "options": [
+        "3; the nested version has a higher cyclomatic complexity",
+        "3; the nested version has the same cyclomatic complexity",
+        "3; the nested version has a lower cyclomatic complexity",
+        "4; the nested version has the same cyclomatic complexity",
+        "2; the nested version has a higher cyclomatic complexity"
+      ],
+      "explanation": "Nodes 14–20 with edges 14→15, 14→16, 15→20, 16→17, 16→18, 17→19, 18→19, 19→20 give V(G) = 8 − 7 + 2 = 3. Nested simple if-then-else logic makes each simple condition its own decision and results in more DD-Paths (e.g. a nested version with four decisions has V(G) = 5): statement complexity is traded for path complexity.",
+      "page": 144,
+      "exercise": "6"
+    },
+    {
+      "n": 9,
+      "prompt": "Exercise: in the triangle program, line 14 is If (a = b) AND (b = c), relying on transitivity instead of also testing a = c, and line 16 is Else If (a ≠ b) AND (a ≠ c) AND (b ≠ c), with Output(\"Scalene\") on line 17 and Output(\"Isosceles\") on line 18. What happens with the test case a = 3, b = 4, c = 3?",
+      "options": [
+        "Line 16 is false, so line 18 outputs Isosceles, which is correct",
+        "Line 16 is true, so line 17 outputs Scalene, which is a fault",
+        "Line 14 is true, so line 15 outputs Equilateral, which is a fault",
+        "Line 16 is false, so line 18 outputs Isosceles, which is a fault",
+        "Line 14 is false and line 16 is skipped, so nothing is output"
+      ],
+      "explanation": "(3 = 4) is false, so control reaches line 16, where a ≠ c is false; the compound condition fails and line 18 outputs Isosceles, the right answer for two equal sides. Omitting a = c from line 14 is no problem, because a = b and b = c already imply a = c.",
+      "page": 138,
+      "exercise": "7"
+    },
+    {
+      "n": 10,
+      "prompt": "How does the book recommend handling nested loops in loop coverage testing?",
+      "options": [
+        "Test the innermost loop, condense it into a single node, and repeat working outward",
+        "Test the outermost loop, condense it into a single node, and repeat working inward",
+        "Treat them as knotted loops and analyze them with dataflow methods before testing",
+        "Test only the exit outcome of each loop decision, since C1 covers the traversal",
+        "Rewrite them as concatenated loops and then apply boundary value testing to each"
+      ],
+      "explanation": "Once a loop has been tested it is condensed into a single node; for nested loops this is repeated starting with the innermost loop and working outward, giving the same multiplicity of test cases as boundary value analysis. Careful dataflow analysis is reserved for knotted (horrible) loops, which cannot occur in structured programs.",
+      "page": 145
+    },
+    {
+      "n": 11,
+      "prompt": "How does a coverage analyzer report the DD-Path coverage achieved by a set of test cases?",
+      "options": [
+        "It runs the tests on an instrumented program and tabulates the DD-Paths each test traverses",
+        "It analyzes the source code statically and lists the DD-Paths without running any test",
+        "It derives a basis set of paths from the DD-Path graph and counts the tests matching it",
+        "It compares the actual output of each test case with the expected output in the specification",
+        "It computes the cyclomatic complexity of each unit and flags units whose V(G) exceeds 10"
+      ],
+      "explanation": "The tester runs test cases on a program that has been \"instrumented\" by the analyzer; the instrumentation identifies and labels all DD-Paths, and during execution the analyzer tabulates the DD-Paths traversed by each test case, so different test sets can be compared.",
+      "page": 145
+    },
+    {
+      "n": 12,
+      "prompt": "McCabe's control graph (Figure 9.6) has 10 edges, 7 nodes, a single entry A and a single exit G. Adding an edge from G to A makes it strongly connected (Figure 9.7). Which computation gives the number of linearly independent circuits of this strongly connected graph?",
+      "options": [
+        "V(G) = e − n + p = 11 − 7 + 1 = 5",
+        "V(G) = e − n + 2p = 11 − 7 + 2(1) = 6",
+        "V(G) = e − n + p = 10 − 7 + 1 = 4",
+        "V(G) = e − n = 11 − 7 = 4",
+        "V(G) = e − n + 2p = 10 − 7 + 2(2) = 7"
+      ],
+      "explanation": "For the strongly connected graph the book uses V(G) = e − n + p = 11 − 7 + 1 = 5 circuits; the original graph gives the same 5 independent paths from A to G with V(G) = e − n + 2p = 10 − 7 + 2(1). Applying e − n + 2p to the graph that already has the added edge wrongly yields 6.",
+      "page": 147
+    },
+    {
+      "n": 13,
+      "prompt": "Exercise: find the cyclomatic complexity of the graph in Figure 9.2 (\"Trillions of paths\"), whose edges are first→A, A→B, B→C, B→D, B→E, C→D, C→F, D→F, E→D, E→F, F→G, G→A, G→last.",
+      "options": [
+        "6",
+        "5",
+        "4",
+        "7",
+        "9"
+      ],
+      "explanation": "The graph has e = 13 edges, n = 9 nodes and p = 1, so V(G) = e − n + 2p = 13 − 9 + 2 = 6 (adding an edge last→first and using e − n + p gives 14 − 9 + 1 = 6 as well). Applying e − n + p to the unmodified graph wrongly gives 5.",
+      "page": 147,
+      "exercise": "1"
+    },
+    {
+      "n": 14,
+      "prompt": "Exercise: to identify basis paths for Figure 9.2 (edges first→A, A→B, B→C, B→D, B→E, C→D, C→F, D→F, E→D, E→F, F→G, G→A, G→last) with McCabe's baseline method, the baseline first-A-B-C-F-G-last is chosen. Which basis path results from flipping the decision at node C while staying as minimally different from the baseline as possible?",
+      "options": [
+        "first-A-B-C-D-F-G-last",
+        "first-A-B-D-F-G-last",
+        "first-A-B-E-D-F-G-last",
+        "first-A-B-C-F-G-A-B-C-F-G-last",
+        "first-A-B-C-D-F-G-A-B-C-F-G-last"
+      ],
+      "explanation": "Flipping C means taking C→D instead of C→F and then retracing the baseline (F, G, last), giving first-A-B-C-D-F-G-last; the other options flip B, flip B and E, flip G, or flip both C and G. With the baseline and the flips at B (two), C, E and G, the basis has V(G) = 6 paths.",
+      "page": 148,
+      "exercise": "2"
+    },
+    {
+      "n": 15,
+      "prompt": "Exercise (flipping for nodes with outdegree ≥ 3): in Figure 9.2, node B has outdegree 3 (B→C, B→D, B→E). If the baseline path leaves B through B→C, how many basis paths must flipping the decision at B generate so that every outcome of B is traversed?",
+      "options": [
+        "2, one for each outgoing edge of B not on the baseline",
+        "1, because each decision node is flipped exactly once",
+        "3, one for each outgoing edge of B including B→C",
+        "4, one for each other path leading from B to F",
+        "0, because only nodes with outdegree 2 can be flipped"
+      ],
+      "explanation": "Flipping must make every decision outcome traversed (which is why basis path coverage guarantees DD-Path coverage), so both B→D and B→E need their own flipped path; B therefore contributes 2 of the V(G) = 6 basis paths. A path through B→C would only repeat the baseline's outcome.",
+      "page": 150,
+      "exercise": "3"
+    },
+    {
+      "n": 16,
+      "prompt": "Exercise (vector space of paths): McCabe treats path addition as one path followed by another and scalar multiplication as repetitions of a path. Which vector-space criterion does the book's question \"what does the −p1 part mean?\" show to have no sensible interpretation for program paths?",
+      "options": [
+        "For any x there is a vector −x such that x + (−x) = 0",
+        "1x = x for every vector x",
+        "(x + y) + z = x + (y + z) for all vectors x, y, z",
+        "k(lx) = (kl)x for all vectors x and scalars k, l",
+        "(k + l)x = kx + lx for all vectors x and scalars k, l"
+      ],
+      "explanation": "A path −p1 would have to cancel p1 so that p1 + (−p1) = 0, and the book asks whether that means executing p1 backward, undoing its last execution or not doing it next time; none makes sense for paths. A multiple such as 2p2, by contrast, simply means executing p2 twice.",
+      "page": 149,
+      "exercise": "9"
+    },
+    {
+      "n": 17,
+      "prompt": "Which statement about McCabe's basis path method matches the book's observations?",
+      "options": [
+        "Covering a set of basis paths also guarantees DD-Path coverage",
+        "Testing the set of basis paths is sufficient to test the program thoroughly",
+        "The baseline path should contain as few decision nodes as possible",
+        "A program has a unique basis, so every tester derives the same basis paths",
+        "Every basis path produced by flipping decisions is a feasible program path"
+      ],
+      "explanation": "The process of flipping decisions guarantees that every decision outcome is traversed, which is DD-Path coverage. The book stresses that testing the basis paths is not sufficient, that McCabe advises a baseline with as many decision nodes as possible, that a unique basis is not required, and that flipped paths (p2 and p3 of the triangle program) can be infeasible.",
+      "page": 150
+    },
+    {
+      "n": 18,
+      "prompt": "The DD-Path graph of the triangle program has no loops. How many topologically possible paths does it have, and how many of them are feasible?",
+      "options": [
+        "8 topologically possible paths, of which 4 are feasible",
+        "5 topologically possible paths, all of which are feasible",
+        "8 topologically possible paths, of which 5 are feasible",
+        "16 topologically possible paths, of which 4 are feasible",
+        "5 topologically possible paths, of which 3 are feasible"
+      ],
+      "explanation": "Two outcomes at decision B times four routes after F (via G, I, K or L) give 2 × 4 = 8 topologically possible paths, but only the four paths for scalene, not a triangle, equilateral and isosceles are feasible. Five is the number of basis paths (V(G) = 5), two of which are infeasible.",
+      "page": 150
+    },
+    {
+      "n": 19,
+      "prompt": "What is McCabe's essential complexity, and what is its value for a program composed solely of structured programming constructs?",
+      "options": [
+        "The cyclomatic complexity of the graph condensed around structured constructs; it is 1",
+        "The cyclomatic complexity of the graph condensed around strong components; it is 0",
+        "The number of unstructures that remain in the program graph; it is 0",
+        "The cyclomatic complexity of the DD-Path graph itself; it is always 2",
+        "The number of infeasible basis paths in the program; it is 0"
+      ],
+      "explanation": "Essential complexity is the cyclomatic complexity of a condensation graph obtained by repeatedly collapsing structured programming constructs into single nodes. A well-structured program reduces to a graph with one path, so its essential complexity is V(G) = 1, as for the triangle program.",
+      "page": 150
+    },
+    {
+      "n": 20,
+      "prompt": "Which statement matches the book's guidelines and observations on path testing?",
+      "options": [
+        "Basis path testing gives a lower boundary on how much testing is necessary",
+        "V(G) = 5 is the most common choice for the maximum acceptable complexity",
+        "An unstructure can occur alone, so a program can be only slightly unstructured",
+        "McCabe called these coverage metrics a procedure to identify test cases",
+        "Path formulations keep the distinction between feasible and infeasible paths visible"
+      ],
+      "explanation": "The cyclomatic complexity metric requires at least V(G) distinct program paths to be traversed, so basis path testing gives a lower bound on testing. The common guideline is V(G) = 10, unstructures never occur alone, McCabe called the metrics criteria that measure the quality of testing rather than a procedure to identify test cases, and path formulations obscure feasibility.",
+      "page": 153
+    },
+    {
+      "n": 21,
+      "prompt": "In the Venn diagram of specified behaviors, programmed behaviors (feasible paths) and topologically possible paths, which region will path-based testing never recognize?",
+      "options": [
+        "Specified behaviors that have not been implemented",
+        "Feasible paths that implement unspecified behaviors",
+        "Specified behaviors with topologically possible but infeasible paths",
+        "Unspecified, infeasible, yet topologically possible paths",
+        "Specified behaviors that are implemented by feasible paths"
+      ],
+      "explanation": "Region 5 (specified but not implemented) has no program paths, so path-based testing never recognizes it. Region 3 (feasible but unspecified) is extra functionality to examine, region 4 (specified, topologically possible but infeasible) likely indicates coding errors, and region 7 (unspecified, infeasible) is a curiosity.",
+      "page": 155
+    }
+  ]
+}

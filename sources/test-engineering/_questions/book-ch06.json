@@ -1,0 +1,258 @@
+{
+  "chapter": 6,
+  "title": "Equivalence Class Testing",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "Equivalence classes form a partition of a set. Which two implications for testing does the book draw from this?",
+      "options": [
+        "The entire set is represented (completeness) and the subsets are disjoint (nonredundancy)",
+        "Every class has the same size (balance) and each class has a single boundary (precision)",
+        "Classes overlap at their boundaries (robustness) and cover only valid inputs (validity)",
+        "Each class maps to exactly one output (determinism) and the classes are ordered (traceability)",
+        "Variables become independent (single fault) and outputs become unique (testability)"
+      ],
+      "explanation": "A partition is a collection of mutually disjoint subsets whose union is the entire set: representing the entire set gives a form of completeness, and disjointedness gives a form of nonredundancy. Overlapping classes would contradict the definition of a partition.",
+      "page": 97
+    },
+    {
+      "n": 2,
+      "prompt": "What does the book call the key (and the craft) of equivalence class testing?",
+      "options": [
+        "The choice of the equivalence relation that determines the classes",
+        "The choice of min, min+, nom, max- and max values for each variable",
+        "The choice between the single and the multiple fault assumption",
+        "The choice of a random number generator for selecting input values",
+        "The choice of expected outputs for every invalid test case"
+      ],
+      "explanation": "The key and the craft is choosing the equivalence relation, often by second-guessing the likely implementation; elements of a class should be \"treated the same\", which in structural testing maps onto traversing the same execution path. Min, min+, nom, max- and max belong to boundary value testing.",
+      "page": 98
+    },
+    {
+      "n": 3,
+      "prompt": "x1 has the valid intervals [a, b), [b, c), [c, d] and x2 has the valid intervals [e, f), [f, g]. How many weak normal and strong normal equivalence class test cases result?",
+      "options": [
+        "3 weak normal and 6 strong normal",
+        "2 weak normal and 6 strong normal",
+        "3 weak normal and 5 strong normal",
+        "5 weak normal and 6 strong normal",
+        "3 weak normal and 20 strong normal"
+      ],
+      "explanation": "Weak normal testing uses one value from each class in a test case, so it needs as many cases as the partition with the largest number of subsets (3); strong normal testing takes the Cartesian product of the classes, 3 x 2 = 6 (Figures 6.1 and 6.2). 20 = 5 x 4 would be strong robust testing once the invalid classes are added.",
+      "page": 98
+    },
+    {
+      "n": 4,
+      "prompt": "Besides the issue raised by strongly typed languages, which problem does the book identify with robust equivalence class testing?",
+      "options": [
+        "The specification often does not define the expected output for an invalid test case",
+        "It produces fewer test cases than weak normal equivalence class testing does",
+        "It requires the input variables to depend on one another to find faults",
+        "It can be applied only to equivalence classes defined on the output range",
+        "Each of its test cases must contain an invalid value for every input variable"
+      ],
+      "explanation": "Specifications often do not say what the expected output for an invalid test case should be, so testers spend a lot of time defining these outputs; the other problem is that strongly typed languages eliminate the need to consider invalid inputs. Robust forms add invalid-value cases to the valid ones, so they produce more test cases, not fewer.",
+      "page": 100
+    },
+    {
+      "n": 5,
+      "prompt": "Using the output (range) classes R1-R4 for the triangle problem, why are the strong normal equivalence class test cases identical to the weak normal ones?",
+      "options": [
+        "No valid subintervals of the variables a, b and c exist",
+        "The triangle problem has fewer output classes than variables",
+        "Strong normal testing rests on the single fault assumption",
+        "The triangle problem has no invalid inputs to consider at all",
+        "Strongly typed languages remove the extra combinations"
+      ],
+      "explanation": "Each side has a single valid interval, so the Cartesian product adds nothing and the four weak normal cases (5, 5, 5), (2, 2, 3), (3, 4, 5) and (4, 1, 2) are also the strong normal cases. Strong normal testing rests on the multiple (not single) fault assumption, and invalid inputs such as -1 or 201 do exist.",
+      "page": 101
+    },
+    {
+      "n": 6,
+      "prompt": "For the triangle problem, the four weak normal test cases (one per output class) are extended with weak robust cases for the invalid side values -1 and 201. How many test cases does the complete weak robust set contain, valid and invalid cases together?",
+      "options": [
+        "10",
+        "6",
+        "7",
+        "4",
+        "27"
+      ],
+      "explanation": "Weak robust testing keeps the four valid cases and adds one case per invalid value with the other sides valid: a, b or c set to -1 (WR1-WR3) or to 201 (WR4-WR6), so 4 + 6 = 10. Seven would result with only one valid case, as in the first NextDate version.",
+      "page": 101
+    },
+    {
+      "n": 7,
+      "prompt": "The book defines input domain classes for the triangle problem: D1-D5 by which sides are equal, and D6: a >= b + c, D7: b >= a + c, D8: c >= a + b. Which classes contain the triplet <1, 4, 1>?",
+      "options": [
+        "D3 (a = c, a != b) and D7 (b >= a + c)",
+        "D2 (a = b, a != c) and D7 (b >= a + c)",
+        "D3 (a = c, a != b) and D6 (a >= b + c)",
+        "D5 (a != b, a != c, b != c) and D8 (c >= a + b)",
+        "D4 (b = c, a != b) and D7 (b >= a + c)"
+      ],
+      "explanation": "In <1, 4, 1> exactly the pair a and c is equal, and b = 4 >= a + c = 2, so the sides do not form a triangle. The book uses this triplet to show that having one pair of equal sides does not guarantee a triangle.",
+      "page": 102
+    },
+    {
+      "n": 8,
+      "prompt": "In the first version of the NextDate classes, each variable has one valid class (M1, D1, Y1) and two invalid classes (below and above its range). How many weak normal and weak robust test cases result?",
+      "options": [
+        "1 weak normal and 7 weak robust",
+        "1 weak normal and 6 weak robust",
+        "3 weak normal and 9 weak robust",
+        "1 weak normal and 27 weak robust",
+        "3 weak normal and 7 weak robust"
+      ],
+      "explanation": "Because the number of valid classes equals the number of independent variables, there is only one weak normal case (6, 15, 1912), identical to the strong normal case. Weak robust testing adds one case per invalid class (month -1 or 13, day -1 or 32, year 1811 or 2013) to that valid case: WR1-WR7.",
+      "page": 103
+    },
+    {
+      "n": 9,
+      "prompt": "Using the revised NextDate classes (M1: 30-day months, M2: 31-day months, M3: February; D1: 1-28, D2: 29, D3: 30, D4: 31; Y1: year 2000, Y2: leap year, Y3: common year), which classes does the date February 29, 1996 belong to?",
+      "options": [
+        "M3, D2 and Y2",
+        "M3, D1 and Y2",
+        "M1, D2 and Y2",
+        "M3, D2 and Y1",
+        "M3, D2 and Y3"
+      ],
+      "explanation": "February is M3, day 29 is D2, and 1996 is a leap year other than 2000, so it is in Y2. Y1 contains only the year 2000 and Y3 only common years.",
+      "page": 104
+    },
+    {
+      "n": 10,
+      "prompt": "The weak normal test cases for the revised NextDate classes include (2, 30, 2002) and (6, 31, 2000), which are impossible dates. What reason does the book give?",
+      "options": [
+        "Input values were selected mechanically, without using domain knowledge",
+        "The weak forms are based on the multiple fault assumption",
+        "The revised classes were defined on the output range only",
+        "Weak normal testing takes the Cartesian product of the classes",
+        "The year 2000 was merged into the class of common years"
+      ],
+      "explanation": "The inputs are mechanically taken from the approximate middle of each class, and mechanical selection makes no use of domain knowledge, which is not captured in the choice of classes. Weak forms rest on the single, not the multiple, fault assumption, and only strong forms take the Cartesian product of the classes.",
+      "page": 105
+    },
+    {
+      "n": 11,
+      "prompt": "The revised NextDate classes give 3 x 4 x 3 = 36 strong normal test cases. If Y1 (year 2000) and Y3 are merged into a single class of common years, how many strong normal test cases remain?",
+      "options": [
+        "24",
+        "27",
+        "32",
+        "12",
+        "33"
+      ],
+      "explanation": "With two year classes the product becomes 3 month x 4 day x 2 year classes = 24. The book notes that this suppresses special attention to the year 2000 and adds complexity to deciding which years are leap years.",
+      "page": 106
+    },
+    {
+      "n": 12,
+      "prompt": "Two invalid classes are added for each variable to the revised NextDate classes (3 month, 4 day and 3 year classes). How many strong robust equivalence class test cases result?",
+      "options": [
+        "150",
+        "42",
+        "216",
+        "60",
+        "36"
+      ],
+      "explanation": "Strong robust testing takes the Cartesian product of all classes, valid and invalid: (3 + 2) x (4 + 2) x (3 + 2) = 5 x 6 x 5 = 150. 36 is the strong normal count, and 42 = 36 + 6 wrongly adds the invalid classes instead of multiplying.",
+      "page": 106
+    },
+    {
+      "n": 13,
+      "prompt": "In the equivalence classes for the commission problem, why is L2 = {locks = -1} listed as a valid class?",
+      "options": [
+        "-1 is a sentinel that ends the input, after which sales and commission are computed",
+        "-1 is the min- value that robustness testing adds to the range of locks",
+        "-1 represents a returned lock that reduces the month's total sales",
+        "-1 is the nominal value that weak normal testing picks for locks",
+        "-1 marks a lock sold below the $45 price used in the sales formula"
+      ],
+      "explanation": "Locks also serves as a sentinel: when -1 is entered the While loop terminates, and totalLocks, totalStocks and totalBarrels are used to compute sales and then commission. The invalid class L3 is locks = 0 or locks < -1.",
+      "page": 107
+    },
+    {
+      "n": 14,
+      "prompt": "The commission output range classes are S1: sales <= 1000, S2: 1000 < sales <= 1800, S3: sales > 1800, with sales = 45 x locks + 30 x stocks + 25 x barrels. Which class does the test case (15, 15, 15) fall into?",
+      "options": [
+        "S2, with sales of $1500",
+        "S1, with sales of $500",
+        "S3, with sales of $2500",
+        "S3, with sales of $1500",
+        "S2, with sales of $1000"
+      ],
+      "explanation": "45 x 15 + 30 x 15 + 25 x 15 = 1500, which lies in 1000 < sales <= 1800 (test case OR2, commission $175). (5, 5, 5) gives $500 in S1 and (25, 25, 25) gives $2500 in S3.",
+      "page": 108
+    },
+    {
+      "n": 15,
+      "prompt": "Exercise: starting from the 36 strong normal test cases for NextDate (3 month x 4 day x 3 year classes), the day classes are revised by splitting D1 = {1 <= day <= 28} into {1 <= day <= 27} and {day = 28}. How many strong normal test cases result?",
+      "options": [
+        "45, i.e. nine new cases with day 28",
+        "37, i.e. one new case with day 28",
+        "39, i.e. three new cases with day 28",
+        "48, i.e. twelve new cases with day 28",
+        "60, i.e. 24 new cases with day 28"
+      ],
+      "explanation": "With five day classes the Cartesian product is 3 x 5 x 3 = 45, so the new day-28 class adds one case for each of the 3 x 3 month/year class combinations: the \"other nine test cases\" of the exercise.",
+      "page": 109,
+      "exercise": "1"
+    },
+    {
+      "n": 16,
+      "prompt": "Exercise: how would an implementation in a strongly typed language react to robust equivalence class test cases, and what does the book conclude?",
+      "options": [
+        "Out-of-range values cause run-time errors, so the robust forms make no sense there",
+        "Invalid values are silently clamped to the nearest valid value, so robust cases pass",
+        "Strong typing makes the robust forms mandatory, since error handling becomes critical",
+        "Invalid values are turned into new equivalence classes during compilation",
+        "Robust cases run normally and print the out-of-range message from the specification"
+      ],
+      "explanation": "Guideline 2 says that if the implementation language is strongly typed and invalid values cause run-time errors, it makes no sense to use the robust forms; strongly typed languages eliminate the need to consider invalid inputs. The robust forms are recommended when error conditions are a high priority.",
+      "page": 109,
+      "exercise": "2"
+    },
+    {
+      "n": 17,
+      "prompt": "Exercise: revise the weak normal equivalence classes for the extended triangle problem, which adds right triangles as a fifth type of output (the outputs stay mutually exclusive). Which statement about the book's weak normal cases (5, 5, 5), (2, 2, 3), (3, 4, 5) and (4, 1, 2) is correct?",
+      "options": [
+        "A fifth class is needed, and (3, 4, 5) can no longer be the scalene case, since 3^2 + 4^2 = 5^2",
+        "A fifth class is needed, and (2, 2, 3) can no longer be the isosceles case, since 2^2 + 2^2 = 3^2",
+        "A fifth class is needed, and (5, 5, 5) can no longer be the equilateral case, since it has a right angle",
+        "No new class is needed, because every right triangle already belongs to the isosceles class",
+        "No new class is needed, because right triangles always belong to the Not a Triangle class"
+      ],
+      "explanation": "With five output classes, weak normal testing needs five cases, one per class. (3, 4, 5) satisfies 3^2 + 4^2 = 5^2, so it is a right triangle and another scalene triplet is needed; (2, 2, 3) is not a right triangle because 2^2 + 2^2 = 8, not 9.",
+      "page": 109,
+      "exercise": "3"
+    },
+    {
+      "n": 18,
+      "prompt": "Exercise: compare the single/multiple fault assumption in boundary value testing and equivalence class testing (ECT). Which pairing is correct?",
+      "options": [
+        "BVA and weak ECT assume a single fault; worst-case testing and strong ECT assume multiple faults",
+        "BVA and strong ECT assume a single fault; worst-case testing and weak ECT assume multiple faults",
+        "Robustness testing and robust ECT assume multiple faults; BVA and normal ECT assume a single fault",
+        "All boundary value methods assume a single fault; only strong ECT assumes multiple faults",
+        "Special value testing and weak ECT assume multiple faults; BVA and strong ECT assume a single fault"
+      ],
+      "explanation": "BVA varies one variable at a time (single fault) while worst-case testing takes Cartesian products (multiple faults); likewise weak ECT uses one value from each class per test case and strong ECT the Cartesian product of the classes. \"Robust\" refers to invalid values, not to the fault assumption.",
+      "page": 109,
+      "exercise": "4"
+    },
+    {
+      "n": 19,
+      "prompt": "Exercise: a long-distance service bills calls of 20 minutes or less at $0.05 per minute or fraction, and longer calls at $1.00 plus $0.10 per minute or fraction beyond 20 minutes; seconds are rounded up to the next minute and no call lasts more than 30 hours. Which valid equivalence classes for the billed duration d (whole minutes, d >= 1) follow from the rate structure?",
+      "options": [
+        "{1 <= d <= 20} and {21 <= d <= 1800}",
+        "{1 <= d < 20} and {20 <= d <= 1800}",
+        "{1 <= d <= 20} and {21 <= d <= 30}",
+        "{1 <= d <= 20} and {21 <= d <= 180}",
+        "{1 <= d <= 1800}, as every minute is billed alike"
+      ],
+      "explanation": "The rate changes after 20 minutes, and a 20-minute call still belongs to the $0.05 rate; rounding up makes durations whole minutes, and the 30-hour limit gives 30 x 60 = 1800 minutes as the upper bound (d > 1800 is invalid). The exercise also asks to consider calls that span the spring and fall clock changes.",
+      "page": 109,
+      "exercise": "5"
+    }
+  ]
+}

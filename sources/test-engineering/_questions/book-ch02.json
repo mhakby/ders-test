@@ -1,0 +1,208 @@
+{
+  "chapter": 2,
+  "title": "Examples",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "In the improved triangle problem statement, which range conditions (c1–c3) must the sides a, b, and c satisfy?",
+      "options": [
+        "Each side is an integer with 1 ≤ side ≤ 200",
+        "Each side is an integer with 0 ≤ side ≤ 200",
+        "Each side is an integer with 1 ≤ side ≤ 100",
+        "Each side is an integer with 1 ≤ side < 200",
+        "Each side is a real number with 0 < side ≤ 200"
+      ],
+      "explanation": "Conditions c1–c3 are 1 ≤ a ≤ 200, 1 ≤ b ≤ 200 and 1 ≤ c ≤ 200; the upper limit of 200 is \"both arbitrary and convenient\" and is reused for boundary value test cases in Chapter 5. Conditions c4–c6 are the triangle inequalities a < b + c, b < a + c and c < a + b.",
+      "page": 17
+    },
+    {
+      "n": 2,
+      "prompt": "Under the improved triangle specification, what is the output for a = 2, b = 2, c = 4?",
+      "options": [
+        "NotATriangle",
+        "Isosceles",
+        "Equilateral",
+        "Scalene",
+        "Value of c is not in the range of permitted values"
+      ],
+      "explanation": "All sides are in range, but condition c6 (c < a + b) becomes 4 < 4, which is false, and if any of c4, c5, c6 fails the output is NotATriangle. Isosceles is tempting because exactly one pair of sides is equal, but the Triangle Property requires the sum of any pair to be strictly greater than the third side.",
+      "page": 17
+    },
+    {
+      "n": 3,
+      "prompt": "In the traditional (FORTRAN-like) triangle implementation, match starts at 0 and is increased by 1 if a = b, by 2 if a = c, and by 3 if b = c. Which values can match actually take?",
+      "options": [
+        "0, 1, 2, 3, or 6",
+        "0, 1, 2, 3, 4, or 5",
+        "0, 1, 2, or 3 only",
+        "Any integer from 0 through 6",
+        "0, 1, 3, 5, or 6"
+      ],
+      "explanation": "If any two of the equalities hold, the third holds too, so match is 0 (no equal pair), 1, 2 or 3 (exactly one equal pair), or 1 + 2 + 3 = 6 (all equal); 4 and 5 are impossible. For the same reason the box sequence 1, 2, 5, 6 in Figure 2.1 can never execute, because a = b and b = c force a = c (box 4).",
+      "page": 18,
+      "exercise": "1"
+    },
+    {
+      "n": 4,
+      "prompt": "Program triangle2 implements the simple triangle specification and performs no range checks. What does it output for the sides a = -3, b = -3, c = 5?",
+      "options": [
+        "Not a Triangle",
+        "Isosceles",
+        "Value of a is not in the range of permitted values",
+        "Scalene",
+        "Equilateral"
+      ],
+      "explanation": "Triangle2 evaluates (a < b + c) AND (b < a + c) AND (c < a + b); the last test is 5 < -6, which is false, so IsATriangle is False and it prints \"Not a Triangle\". The range message belongs to triangle3, which implements the improved specification; negative sides are behavior the simple specification never addresses.",
+      "page": 20,
+      "exercise": "5"
+    },
+    {
+      "n": 5,
+      "prompt": "Which kind of complexity is the NextDate function used to illustrate?",
+      "options": [
+        "Logical relationships among the input variables",
+        "Relationships between the inputs and the correct outputs",
+        "A mix of computation and decision making",
+        "Event-driven interactions typical of GUI applications",
+        "Interactions typical of the client side of client–server systems"
+      ],
+      "explanation": "The book contrasts NextDate's logical relationships among input variables with the triangle program, whose complexity is due to relationships between inputs and correct outputs. The commission problem mixes computation and decision making, and the currency converter and SATM are the GUI and client–server examples.",
+      "page": 22
+    },
+    {
+      "n": 6,
+      "prompt": "Which input violates one of NextDate's range conditions c1–c3?",
+      "options": [
+        "month 1, day 1, year 1811",
+        "month 1, day 1, year 1812",
+        "month 12, day 31, year 2012",
+        "month 2, day 29, year 2000",
+        "month 7, day 31, year 1999"
+      ],
+      "explanation": "NextDate requires 1 ≤ month ≤ 12, 1 ≤ day ≤ 31 and 1812 ≤ year ≤ 2012, so year 1811 is out of range. The other inputs satisfy all three conditions, including the year bounds 1812 and 2012.",
+      "page": 22
+    },
+    {
+      "n": 7,
+      "prompt": "What should be used as the expected output for a NextDate test case of June 31, 1812?",
+      "options": [
+        "The message \"Invalid Input Date\"",
+        "The date July 1, 1812",
+        "The message \"Value of year not in the range 1812..2012\"",
+        "The message \"Value of day not in the range 1..31\"",
+        "The date June 32, 1812"
+      ],
+      "explanation": "Every variable is within its range (31 ≤ 31 and 1812 is the lower year bound), but June 31 is an invalid logical combination. The problem statement collapses all invalid day–month–year combinations into the single message \"Invalid Input Date.\"",
+      "page": 22,
+      "exercise": "3"
+    },
+    {
+      "n": 8,
+      "prompt": "YesterDate is the inverse of NextDate: it returns the date of the day before. Using the book's leap-year rule, what should YesterDate return for March 1, 1900?",
+      "options": [
+        "February 28, 1900",
+        "February 29, 1900",
+        "February 28, 1899",
+        "The message \"Invalid Input Date\"",
+        "March 0, 1900"
+      ],
+      "explanation": "A year is a leap year if it is divisible by 4 unless it is a century year, and century years are leap years only if they are multiples of 400. So 1900 is not a leap year (unlike 2000) and the day before March 1, 1900 is February 28, 1900.",
+      "page": 22,
+      "exercise": "6"
+    },
+    {
+      "n": 9,
+      "prompt": "In the simple NextDate1, the CASE clause for 30-day months (4, 6, 9, 11) is: if day < 30 then tomorrowDay = day + 1, else tomorrowDay = 1 and tomorrowMonth = month + 1. What does it do for month 6, day 31?",
+      "options": [
+        "Sets tomorrowDay to 1 and tomorrowMonth to 7",
+        "Outputs the message \"Invalid Input Date\" and stops",
+        "Sets tomorrowDay to 32 and leaves tomorrowMonth unchanged",
+        "Outputs the message \"Value of day not in the range 1..31\"",
+        "Asks the user to re-enter the date until it is valid"
+      ],
+      "explanation": "There is no special action for day = 31, so the Else branch treats June 31 like June 30 and produces July 1, which conflicts with the specification's \"Invalid Input Date\" (the improved NextDate2 adds this check). NextDate1 likewise maps February 29 to March 1 without checking whether the year is a leap year.",
+      "page": 23,
+      "exercise": "2"
+    },
+    {
+      "n": 10,
+      "prompt": "In the commission problem, what is the salesperson's commission on total monthly sales of $2,000?",
+      "options": [
+        "$260",
+        "$200",
+        "$250",
+        "$300",
+        "$400"
+      ],
+      "explanation": "Commission is 10% on sales up to and including $1000 ($100), 15% on the next $800 ($120), and 20% on sales in excess of $1800 (0.20 × $200 = $40), for $260. Applying 15% to everything above $1000 would wrongly give $250.",
+      "page": 25
+    },
+    {
+      "n": 11,
+      "prompt": "Which statement matches the commission problem statement?",
+      "options": [
+        "The salesperson can sell at most 70 locks, 80 stocks, and 90 barrels in a month",
+        "Locks cost $30, stocks cost $45, and barrels cost $25",
+        "The end of the month is signaled by a telegram showing 0 locks sold",
+        "The salesperson must sell at least $1,000 worth of parts each month",
+        "Commission is 20% on all sales in excess of $1,000"
+      ],
+      "explanation": "Production limits are 70 locks, 80 stocks and 90 barrels per month. Locks cost $45, stocks $30 and barrels $25; the salesperson must sell at least one complete rifle per month; a telegram showing -1 locks marks the end of the month; and the 20% rate applies only above $1800.",
+      "page": 25
+    },
+    {
+      "n": 12,
+      "prompt": "Which statement about the SATM (simple ATM) system is correct?",
+      "options": [
+        "After three incorrect PIN entries, screen 4 is displayed and the card is kept",
+        "Customers can choose among four transaction types, including transfers",
+        "Transactions can be applied to checking, savings, or credit accounts",
+        "If the customer's PAN is not found, screen 3 asks the customer to try again",
+        "Withdrawals can be any amount because the terminal holds every bill denomination"
+      ],
+      "explanation": "The customer has three chances to enter the PIN; after three failures screen 4 appears and the card is retained, which also happens when the PAN is not found. SATM offers three transaction types (deposit, withdrawal, balance inquiry) on two account types (checking, savings), and screen 7's $10 increments imply the terminal holds only $10 bills.",
+      "page": 27
+    },
+    {
+      "n": 13,
+      "prompt": "For the Saturn windshield wiper controller, what is the wiper speed when the lever is at INT and the dial is at position 2?",
+      "options": [
+        "6 wipes per minute",
+        "4 wipes per minute",
+        "12 wipes per minute",
+        "30 wipes per minute",
+        "60 wipes per minute"
+      ],
+      "explanation": "The decision table gives OFF = 0, INT with dial 1, 2, 3 = 4, 6, 12, LOW = 30 and HIGH = 60 wipes per minute. The dial matters only when the lever is at INT.",
+      "page": 30
+    },
+    {
+      "n": 14,
+      "prompt": "A common extension of the triangle problem adds right triangles and requires the sides in increasing order (a ≤ b ≤ c). Which input is a right triangle?",
+      "options": [
+        "a = 3, b = 4, c = 5",
+        "a = 2, b = 3, c = 4",
+        "a = 4, b = 5, c = 6",
+        "a = 5, b = 5, c = 7",
+        "a = 6, b = 8, c = 9"
+      ],
+      "explanation": "With sides in increasing order, c is the longest side and a right triangle satisfies the Pythagorean relationship c² = a² + b²; 9 + 16 = 25 holds. The other triples fail (for example 25 + 25 = 50 ≠ 49 and 36 + 64 = 100 ≠ 81).",
+      "page": 31,
+      "exercise": "4"
+    },
+    {
+      "n": 15,
+      "prompt": "Why are event-driven applications such as the currency converter particularly vulnerable to input errors?",
+      "options": [
+        "Events can occur in any order, so Compute may be clicked before a country is chosen",
+        "Radio buttons allow several currencies to be selected at the same time",
+        "The U.S. dollar amount may only be entered after a currency has been selected",
+        "The Clear button resets only the U.S. dollar amount, leaving stale results",
+        "The Quit button stays disabled until a conversion has been computed"
+      ],
+      "explanation": "Because events can occur in any order, a user could click Compute without selecting a country or without entering a dollar amount. In the actual design the radio buttons are mutually exclusive, the amount may be entered before or after the currency selection, and Clear resets the selection, the dollar amount, the equivalent amount and its label.",
+      "page": 31,
+      "exercise": "7"
+    }
+  ]
+}

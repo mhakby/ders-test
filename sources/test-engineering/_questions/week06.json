@@ -4,7 +4,7 @@
   "questions": [
     {
       "n": 1,
-      "prompt": "In a control flow graph (CFG), what does a node represent?",
+      "prompt": "As defined on the lecture slides, what does a node of a control flow graph (CFG) represent?",
       "options": [
         "A statement, or a block of statements that always run one after another",
         "A possible transfer of control from one statement or block to the next",
@@ -12,7 +12,7 @@
         "One combination of conditions together with the actions that follow from it",
         "A state the system stays in until a specific event moves it to another"
       ],
-      "explanation": "A CFG node is a single statement or a block of statements that always execute in sequence; a possible transfer of control between nodes is an edge, not a node.",
+      "explanation": "A CFG node is a single statement or a block of statements that always execute in sequence; a possible transfer of control between nodes is an edge, not a node. Jorgensen's program graph is the same idea with statements or statement fragments as nodes and flow of control as edges.",
       "slide": 5
     },
     {
@@ -25,7 +25,7 @@
         "Prime path coverage",
         "All-uses coverage"
       ],
-      "explanation": "ISTQB calls edge coverage branch coverage and measures it as branches exercised divided by all branches; statement coverage is the ISTQB name for node coverage.",
+      "explanation": "ISTQB calls edge coverage branch coverage and measures it as branches exercised divided by all branches; statement coverage is the ISTQB name for node coverage. In Jorgensen's Table 9.2 the matching metrics are C0 (every statement) and C1, which requires every edge of the DD-Path graph.",
       "slide": 7
     },
     {
@@ -121,16 +121,16 @@
     },
     {
       "n": 10,
-      "prompt": "The code is if (x > 0) { y = 1; } with no else branch. What does the single test x = 1 achieve?",
+      "prompt": "A function's control flow graph contains a loop, so the loop body can repeat any number of times. Which coverage criterion then has infinitely many test requirements, so that no finite test set can satisfy it?",
       "options": [
-        "100% node coverage but not 100% edge coverage",
-        "100% edge coverage but not 100% node coverage",
-        "100% node coverage and 100% edge coverage",
-        "Neither 100% node coverage nor 100% edge coverage",
-        "100% edge-pair coverage but not 100% edge coverage"
+        "Complete path coverage",
+        "Prime path coverage",
+        "Edge-pair coverage",
+        "All-du-paths coverage",
+        "Edge coverage"
       ],
-      "explanation": "With x = 1 every node is visited, but the false edge of the decision is never taken; this is why node coverage does not subsume edge coverage, while edge coverage does subsume node coverage.",
-      "slide": 13
+      "explanation": "Complete path coverage asks for every path, and a single loop already gives infinitely many, so it cannot be reached in practice; prime path coverage tests loops through a finite set of simple paths instead. Jorgensen makes the same point: All-Paths is typically unattainable, and his \"trillions of paths\" example comes from one loop.",
+      "slide": 11
     },
     {
       "n": 11,
@@ -142,12 +142,12 @@
         "When the path contains no decision nodes at all",
         "When the variable is defined before the function is called"
       ],
-      "explanation": "A def-clear path has no other definition of the variable between the def and the use; a def and a use joined by at least one such path form a du-pair.",
+      "explanation": "A def-clear path has no other definition of the variable between the def and the use; a def and a use joined by at least one such path form a du-pair. Jorgensen calls any path from a defining node to a use a du-path, and a du-path with no other defining node of the variable a dc-path (definition-clear path).",
       "slide": 15
     },
     {
       "n": 12,
-      "prompt": "Which list gives every du-pair (def line, use line) for the variable price?\n1  price = read_price()\n2  if price > 100:\n3      price = 100\n4  print(price)",
+      "prompt": "A du-pair is a definition and a use of the same variable joined by at least one def-clear path (no other definition of that variable on the way). Which list gives every du-pair (def line, use line) for the variable price?\n1  price = read_price()\n2  if price > 100:\n3      price = 100\n4  print(price)",
       "options": [
         "(1, 2), (1, 4), (3, 4)",
         "(1, 2), (3, 4)",
@@ -155,7 +155,7 @@
         "(1, 4), (2, 4), (3, 4)",
         "(1, 2), (1, 4), (2, 3), (3, 4)"
       ],
-      "explanation": "price is defined on lines 1 and 3 and used on lines 2 (p-use) and 4 (c-use); (1, 4) counts because 1 → 2 → 4 is def-clear, even though 1 → 2 → 3 → 4 is not. Line 3 only assigns price, so it is a def, not a use.",
+      "explanation": "price is defined on lines 1 and 3 and used on lines 2 (p-use) and 4 (c-use); (1, 4) counts because 1 → 2 → 4 is def-clear, even though 1 → 2 → 3 → 4 is not, and line 3 only assigns price, so it is a def, not a use. In Jorgensen's terms 1 → 2 → 3 → 4 is a du-path that is not a dc-path, while 1 → 2 → 4 is a dc-path.",
       "slide": 16
     },
     {
@@ -168,12 +168,12 @@
         "Line 6, print(total)",
         "Line 1, total = 0"
       ],
-      "explanation": "A p-use reads the variable inside a decision, as line 4 does; lines 3, 5 and 6 read total in a computation, which are c-uses, and line 1 is only a definition.",
+      "explanation": "A p-use reads the variable inside a decision, as line 4 does; lines 3, 5 and 6 read total in a computation, which are c-uses, and line 1 is only a definition. Jorgensen draws the same line: a use in a predicate statement is a P-use, every other use is a C-use.",
       "slide": 17
     },
     {
       "n": 14,
-      "prompt": "Which test covers the du-pair (line 1, line 6) for total in this bill code?\n1  total = 0\n2  for item in order:\n3      total = total + item.price\n4  if total > 200:\n5      total = total * 0.9\n6  print(total)",
+      "prompt": "Which test covers the du-pair (line 1, line 6) for total in this bill code, i.e. runs a def-clear path from line 1 to line 6?\n1  total = 0\n2  for item in order:\n3      total = total + item.price\n4  if total > 200:\n5      total = total * 0.9\n6  print(total)",
       "options": [
         "An empty order, so the loop body never runs",
         "An order with one item of 150 TL",
@@ -186,28 +186,28 @@
     },
     {
       "n": 15,
-      "prompt": "Which statement correctly contrasts all-defs coverage with all-uses coverage?",
+      "prompt": "Which single test achieves all-defs coverage for the variable total in this bill code?\n1  total = 0\n2  for item in order:\n3      total = total + item.price\n4  if total > 200:\n5      total = total * 0.9\n6  print(total)",
       "options": [
-        "All-defs: each def reaches at least one use; all-uses: each def reaches every use it can reach",
-        "All-defs: each def reaches every use it can reach; all-uses: each def reaches at least one use",
-        "All-defs: every def line is executed once; all-uses: every use line is executed once",
-        "All-defs: each def reaches at least one use; all-uses: every simple def-clear path is taken",
-        "All-defs: each variable is defined only once; all-uses: each variable is used only once"
+        "An order with one item of 250 TL",
+        "An order with one item of 150 TL",
+        "An order with two items of 100 TL each",
+        "An empty order with no items at all",
+        "An order with three items of 60 TL each"
       ],
-      "explanation": "All-defs needs one def-clear path from every definition to at least one of its uses, while all-uses needs a def-clear path to every use the definition can reach; taking every simple def-clear path is the stronger all-du-paths criterion.",
+      "explanation": "total is defined on lines 1, 3 and 5, and the run 1 → 2 → 3 → 2 → 4 → 5 → 6 carries each definition def-clear to a use (1 to 3, 3 to 4, 5 to 6). Every other test skips the definition on line 5, because 150, 180 and exactly 200 TL are not above 200, and an empty order also skips line 3.",
       "slide": 18
     },
     {
       "n": 16,
-      "prompt": "Which statement about all-du-paths coverage is true?",
+      "prompt": "On the slides, all-uses needs a def-clear path from each definition to every use it can reach, and all-du-paths needs every simple def-clear path from each definition to each of its uses. For the variable x (a and b are parameters), how many tests does each criterion need?\n1  x = read()\n2  if a > 0:\n3      log(\"a\")\n4  if b > 0:\n5      log(\"b\")\n6  print(x)",
       "options": [
-        "It needs every simple def-clear path from each def to each of its uses",
-        "It needs only one def-clear path from each def to one of its uses",
-        "It is subsumed by all-defs, so all-defs tests always satisfy it",
-        "It never needs more tests than all-uses, even with loops in between",
-        "It needs every path, including ones that repeat a loop many times"
+        "All-uses: 1 test; all-du-paths: 4 tests",
+        "All-uses: 1 test; all-du-paths: 2 tests",
+        "All-uses: 2 tests; all-du-paths: 4 tests",
+        "All-uses: 4 tests; all-du-paths: 4 tests",
+        "All-uses: 1 test; all-du-paths: 1 test"
       ],
-      "explanation": "All-du-paths asks for every simple def-clear path from each definition to each of its uses and subsumes all-uses, which subsumes all-defs; it can need many more tests than all-uses when branches or loops lie between a def and its use.",
+      "explanation": "x has a single du-pair, (1, 6), which any one run covers, but the two independent decisions give 2 × 2 = 4 simple def-clear paths from line 1 to line 6 and each run takes only one of them. This is why all-du-paths, which subsumes all-uses, can need many more tests; the book's All-DU-Paths also limits these paths to cycle-free ones or single loop traversals, and all four here are cycle free.",
       "slide": 18
     },
     {
@@ -220,7 +220,7 @@
         "price = 150 and price = 200",
         "price = 50 and price = 80"
       ],
-      "explanation": "price = 150 runs 1 → 2 → 3 → 4 and covers (1, 2) and (3, 4), which is already enough for all-defs; all-uses also needs (1, 4), which a value of 100 or less such as price = 50 covers through 1 → 2 → 4.",
+      "explanation": "price = 150 runs 1 → 2 → 3 → 4 and covers (1, 2) and (3, 4), which is already enough for all-defs; all-uses also needs (1, 4), which a value of 100 or less such as price = 50 covers through 1 → 2 → 4. The two tests also take both outcomes of the p-use on line 2, which Jorgensen's All-Uses additionally asks for.",
       "slide": 19
     },
     {
@@ -233,7 +233,7 @@
         "item is used before any definition",
         "item is defined and never used"
       ],
-      "explanation": "On the first iteration total + item.price reads total before anything has assigned it, so the program reads a default or leftover value where the language does not stop this at compile time. Every definition of total is followed by a use, and item is defined by the loop and used in item.price.",
+      "explanation": "On the first iteration total + item.price reads total before anything has assigned it, so the program reads a default or leftover value where the language does not stop this at compile time; every definition of total is followed by a use, and item is defined by the loop and used in item.price. Jorgensen's define/reference anomalies are the same three problems: defined but never used, used but never defined, and defined twice before use.",
       "slide": 20
     },
     {
@@ -246,12 +246,12 @@
         "Complete path, prime path, edge, edge-pair, node",
         "Complete path, prime path, edge-pair, node, edge"
       ],
-      "explanation": "In the ladder each criterion subsumes the one below it, from complete path down to edge coverage (ISTQB branch coverage) and finally node coverage (ISTQB statement coverage); the one dashed arrow holds only on graphs without self-loops.",
+      "explanation": "In the ladder each criterion subsumes the one below it, from complete path down to edge coverage (ISTQB branch coverage) and finally node coverage (ISTQB statement coverage); the one dashed arrow holds only on graphs without self-loops. Jorgensen's hierarchy agrees at both ends, with All-Paths at the top and All-Edges above All-Nodes at the bottom.",
       "slide": 21
     },
     {
       "n": 20,
-      "prompt": "A restaurant gives students 10% off and a free dessert with orders over 400 TL, but both offers end at 18:00. With the true/false conditions \"student\", \"order over 400 TL\" and \"before 18:00\", how many columns does the full decision table have before minimization?",
+      "prompt": "A restaurant gives students 10% off and gives a free dessert with orders over 400 TL, but both offers end at 18:00. With the true/false conditions \"student\", \"order over 400 TL\" and \"before 18:00\", how many columns (rules) does the full decision table have before minimization?",
       "options": [
         "8 columns",
         "6 columns",
@@ -259,7 +259,7 @@
         "9 columns",
         "5 columns"
       ],
-      "explanation": "A full decision table has a column for every combination, so n true/false conditions give 2^n columns: 2^3 = 8. Merging columns comes only afterwards, during minimization.",
+      "explanation": "A full decision table has a column for every combination, so n true/false conditions give 2^n columns: 2^3 = 8; Jorgensen states the same for a limited entry table (n conditions, 2^n rules). Merging columns comes only afterwards, during minimization.",
       "slide": 26
     },
     {
@@ -283,9 +283,9 @@
         "\"-\" means the combination is infeasible; N/A means the condition does not affect the outcome",
         "\"-\" means the condition is not satisfied; N/A means the column has not been tested yet",
         "\"-\" means the action does not happen; N/A means the action happens for this rule",
-        "They mean the same thing; N/A is only an older way of writing the dash \"-\""
+        "\"-\" means the rule is redundant; N/A means the rule is inconsistent"
       ],
-      "explanation": "ISTQB writes \"-\" for a condition that does not matter and keeps N/A for combinations that cannot happen. The tutorial's NA means \"does not matter\", so it corresponds to the ISTQB dash.",
+      "explanation": "ISTQB writes \"-\" for a condition that does not matter and keeps N/A for combinations that cannot happen; the tutorial's NA means \"does not matter\", so it corresponds to the ISTQB dash. Jorgensen differs: he treats both \"irrelevant\" and \"does not apply\" (n/a) as don't care entries and marks impossible rules with an extra \"impossible\" action.",
       "slide": 29
     },
     {
@@ -298,7 +298,7 @@
         "When C2 is T the outcome is the same for either value of C1, so two columns merge",
         "The \"Log in\" action needs no separate test, so its column is removed"
       ],
-      "explanation": "With a blank field the system asks for non-blank credentials whatever C2 is, so columns 1 and 2 merge into R1 with C2 = \"-\"; the combination is not infeasible, its C2 value simply does not matter.",
+      "explanation": "With a blank field the system asks for non-blank credentials whatever C2 is, so columns 1 and 2 merge into R1 with C2 = \"-\"; the combination is not infeasible, its C2 value simply does not matter. In Jorgensen's rule counting R1 counts 2 and R2 and R3 count 1 each, so the counts still add up to 2^2 = 4.",
       "slide": 31
     },
     {
@@ -316,7 +316,7 @@
     },
     {
       "n": 25,
-      "prompt": "A decision table has 8 columns, 2 of which are infeasible combinations. The tests exercise 3 of the feasible columns. What is the decision table coverage?",
+      "prompt": "Using ISTQB decision table coverage as defined on the slides: a decision table has 8 columns, 2 of which are infeasible combinations, and the tests exercise 3 of the feasible columns. What is the decision table coverage?",
       "options": [
         "50%",
         "37.5%",
@@ -324,7 +324,7 @@
         "60%",
         "25%"
       ],
-      "explanation": "The coverage items are only the feasible columns, so coverage is 3 / 6 = 50%; dividing by all 8 columns (37.5%) wrongly counts the infeasible ones.",
+      "explanation": "The coverage items are only the feasible columns, so coverage is 3 / 6 = 50%; dividing by all 8 columns (37.5%) wrongly counts the infeasible ones. Jorgensen still lists impossible rules in his test case tables, marked as impossible, but ISTQB coverage leaves them out.",
       "slide": 33
     },
     {
@@ -345,7 +345,7 @@
       "prompt": "Which of these is an advantage of the decision table technique?",
       "options": [
         "Missing or contradictory rules show up as empty or conflicting columns",
-        "Boundary values and partitions fit directly into the table template",
+        "Conditions are tested one at a time instead of in combination",
         "The table stays small no matter how many conditions there are",
         "It tests behaviour that depends on the order of events over time",
         "A wrong rule in the table is caught by running the table's own tests"
@@ -363,12 +363,12 @@
         "Error guessing",
         "Checklist-based testing"
       ],
-      "explanation": "A decision table describes combinations of conditions at one moment; when the result depends on the order of events, state transition testing fits better.",
+      "explanation": "A decision table describes combinations of conditions at one moment; when the result depends on the order of events, state transition testing fits better. Jorgensen makes the same point by calling decision tables declarative: their conditions imply no order.",
       "slide": 35
     },
     {
       "n": 29,
-      "prompt": "A password must be 8 to 16 characters long, which gives the length partitions 0-7, 8-16 and 17 and up. Which lengths does 3-value boundary value analysis select?",
+      "prompt": "A password must be 8 to 16 characters long, which gives the length partitions 0-7, 8-16 and 17 and up. Which lengths does ISTQB 3-value boundary value analysis select?",
       "options": [
         "0, 1, 6, 7, 8, 9, 15, 16, 17, 18",
         "0, 7, 8, 16, 17",
@@ -376,7 +376,7 @@
         "1, 6, 7, 8, 9, 15, 16, 17, 18",
         "4, 12, 20"
       ],
-      "explanation": "The boundaries are the smallest and largest value of every partition (0, 7, 8, 16, 17), and 3-value BVA adds both neighbours of each, while 0 has no lower neighbour. 0, 7, 8, 16, 17 alone is the 2-value set, and 4, 12, 20 is one equivalence partitioning value per partition.",
+      "explanation": "The boundaries are the smallest and largest value of every partition (0, 7, 8, 16, 17), and 3-value BVA adds both neighbours of each, while 0 has no lower neighbour; 0, 7, 8, 16, 17 alone is the 2-value set. Jorgensen's boundary value analysis follows a different convention (min, min+, nom, max−, max of the valid range, with min− and max+ added by robustness testing).",
       "slide": 39
     },
     {
@@ -430,6 +430,84 @@
       ],
       "explanation": "The steps are a decision table first, then boundary value analysis and equivalence partitioning for input ranges, then combinations for field-level validations, and finally error guessing with experience as a final touch.",
       "slide": 46
+    },
+    {
+      "n": 34,
+      "prompt": "A minimized decision table has four true/false conditions C1–C4 and these rules, where \"-\" means the condition does not affect the outcome: R1 = (F, -, -, -), R2 = (T, F, -, -), R3 = (T, T, F, -), R4 = (T, T, T, F). Counting how many columns of the full table each rule stands for, what does the check show?",
+      "options": [
+        "The rules stand for 15 of 16 columns, so (T, T, T, T) has no rule",
+        "The rules stand for all 16 columns, so the table is complete",
+        "The rules stand for 4 of 16 columns, so 12 combinations have no rule",
+        "The rules stand for 15 of 16 columns, so (F, F, F, F) has no rule",
+        "The rules stand for 10 of 16 columns, so 6 combinations have no rule"
+      ],
+      "explanation": "Each dash doubles the number of full-table columns a rule stands for (Jorgensen's rule count), so the rules give 8 + 4 + 2 + 1 = 15 of 2^4 = 16, and only (T, T, T, T) matches no rule; (F, F, F, F) is already inside R1. This is how a missing rule shows up as an empty column.",
+      "slide": 34
+    },
+    {
+      "n": 35,
+      "prompt": "A restaurant gives students 10% off and gives a free dessert with any order over 400 TL; both offers apply only before 18:00. The conditions are C1 student?, C2 order over 400 TL? and C3 before 18:00?. After the full 8-column table is minimized as far as possible, how many columns remain, i.e. how many tests give 100% decision table coverage?",
+      "options": [
+        "5 columns",
+        "8 columns",
+        "4 columns",
+        "6 columns",
+        "3 columns"
+      ],
+      "explanation": "When C3 is F no offer applies whatever C1 and C2 are, so those 4 columns merge into one rule (-, -, F), while the 4 columns with C3 = T all have different actions (both offers, discount only, dessert only, none), so 1 + 4 = 5 remain. As a rule count check, 4 + 1 + 1 + 1 + 1 = 8 = 2^3.",
+      "slide": 33
+    },
+    {
+      "n": 36,
+      "prompt": "McCabe's cyclomatic complexity of a graph with one entry and one exit is V(G) = e − n + 2p (e edges, n nodes, p connected components), the form Jorgensen uses in Chapter 9. With one node per line plus a single exit node, what is V(G) for this function?\n1 def classify(x, y):\n2     if x > 0:\n3         if y > 0:\n4             return \"both positive\"\n5         return \"x positive, y non-positive\"\n6     return \"x non-positive\"",
+      "options": [
+        "3",
+        "2",
+        "1",
+        "4",
+        "5"
+      ],
+      "explanation": "The graph has 7 nodes and 8 edges (1→2, 2→3, 2→6, 3→4, 3→5 and three edges into exit), so V(G) = 8 − 7 + 2 × 1 = 3, and a basis set has three paths, such as 1-2-6-exit, 1-2-3-4-exit and 1-2-3-5-exit. Using Chapter 4's e − n + p on this graph without first adding an edge from exit back to the entry gives the wrong value 2.",
+      "slide": 8
+    },
+    {
+      "n": 37,
+      "prompt": "After the single test classify(-5, 3), coverage.py --branch reports 1 of 4 branches, while the CFG (one node per line plus an exit node) gives 3 of 8 edges. What explains the different counts?",
+      "options": [
+        "The tool counts only the T and F outcomes of the two decisions; the CFG counts every edge",
+        "The tool counts only the edges into the exit node; the CFG counts every edge",
+        "The tool counts edge pairs through the join nodes; the CFG counts single edges",
+        "The tool counts prime paths of the graph; the CFG counts single edges",
+        "The tool counts every edge, but merges the three return lines into one node"
+      ],
+      "explanation": "The decisions on lines 2 and 3 each have a T and an F outcome, giving 4 branches, of which the test took only 2 → 6; the 8 CFG edges also include 1 → 2 and the three edges into exit, and the test took two of those as well. The tool's count corresponds to Jorgensen's C1p, every predicate to each outcome.",
+      "slide": 9
+    },
+    {
+      "n": 38,
+      "prompt": "Each test is one order, written as its item prices. Which test set achieves all-uses coverage for total in this bill code?\n1  total = 0\n2  for item in order:\n3      total = total + item.price\n4  if total > 200:\n5      total = total * 0.9\n6  print(total)",
+      "options": [
+        "Empty order; 150 + 150 TL; 50 TL",
+        "150 + 150 TL; 50 TL",
+        "Empty order; 150 + 150 TL",
+        "Empty order; 50 TL; 150 TL",
+        "250 TL; 50 TL"
+      ],
+      "explanation": "The empty order covers (1, 4) and (1, 6); 150 + 150 TL covers (1, 3), (3, 3) around the loop, (3, 4), (3, 5) and (5, 6); 50 TL covers (3, 6) without the discount, and (1, 5) is infeasible because total is still 0 at line 4. Every other set misses at least one pair, even under Jorgensen's convention, which does not count a pair like (3, 3) from a statement to itself.",
+      "slide": 17
+    },
+    {
+      "n": 39,
+      "prompt": "With one CFG node per line, which test set achieves prime path coverage of this loop?\n1  total, i = 0, 0\n2  while i < len(xs):\n3      total = total + xs[i]\n4      i = i + 1\n5  return total",
+      "options": [
+        "xs = [] and xs = [4, 7]",
+        "xs = [4] and xs = [4, 7]",
+        "xs = [] and xs = [4]",
+        "xs = [4, 7] on its own",
+        "xs = [4] and xs = [7]"
+      ],
+      "explanation": "The prime paths are [1, 2, 3, 4], [1, 2, 5], [2, 3, 4, 2], [3, 4, 2, 3], [4, 2, 3, 4] and [3, 4, 2, 5]: [1, 2, 5] needs an empty list, and [3, 4, 2, 3] and [4, 2, 3, 4] need at least two iterations. So the set needs an empty list plus a list of two or more items, which fits the book's loop advice to test a loop both when it is skipped and when it is traversed.",
+      "slide": 11
     }
   ]
 }

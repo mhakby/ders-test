@@ -1,0 +1,175 @@
+{
+  "chapter": 8,
+  "title": "Retrospective on Functional Testing",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "Figures 8.1 and 8.2 place boundary value, equivalence class and decision table testing along a \"sophistication\" axis. What trends do they show as sophistication increases?",
+      "options": [
+        "Fewer test cases, but more effort to identify them",
+        "More test cases, and more effort to identify them",
+        "Fewer test cases, and less effort to identify them",
+        "More test cases, but less effort to identify them",
+        "The same number of test cases, but more effort to identify them"
+      ],
+      "explanation": "Figure 8.1 shows the number of test cases falling from boundary value to decision table testing, while Figure 8.2 shows the effort to identify test cases rising.",
+      "page": 124
+    },
+    {
+      "n": 2,
+      "prompt": "Why are the domain-based (boundary value) techniques easy to automate?",
+      "options": [
+        "They ignore data and logical dependencies and generate test cases mechanically",
+        "They consider both the data and the logical dependencies among the variables",
+        "They need judgment only to identify the equivalence classes of each input",
+        "They produce the smallest number of test cases of all functional methods",
+        "They derive their test cases from the source code instead of the specification"
+      ],
+      "explanation": "Domain-based techniques have no recognition of data or logical dependencies and are very mechanical, so they are easy to automate. Equivalence class techniques pay attention to data dependencies, and decision tables, the most sophisticated, consider both data and logical dependencies.",
+      "page": 124
+    },
+    {
+      "n": 3,
+      "prompt": "What trade-off between test identification effort and test execution effort does the book describe?",
+      "options": [
+        "Easy methods give many tests that cost more to run; sophisticated methods cut run time",
+        "Sophisticated methods cut identification effort but give tests that cost more to run",
+        "Both identification and execution effort fall as methods get more sophisticated",
+        "Execution effort hardly matters, because each test is normally run only once",
+        "Easy methods give fewer tests, saving both identification and execution effort"
+      ],
+      "explanation": "Methods that are easy to use generate numerous test cases, which take more time to execute. Shifting effort to more sophisticated methods is repaid with less execution time, which matters because tests are typically executed several times.",
+      "page": 124
+    },
+    {
+      "n": 4,
+      "prompt": "What does the book identify as the fundamental limitation of functional testing?",
+      "options": [
+        "The twin possibilities of gaps of untested functionality and redundant tests",
+        "The impossibility of testing a program without access to its source code",
+        "The exponential growth of rules in limited entry decision tables",
+        "The need to execute every test case several times after each change",
+        "The inability to test invalid values outside the input domain"
+      ],
+      "explanation": "Close examination of the test case sets shows both gaps of untested functionality and redundant tests. The NextDate comparison supports two conclusions: gaps occur in functional test cases, and more sophisticated techniques reduce them.",
+      "page": 126
+    },
+    {
+      "n": 5,
+      "prompt": "Worst-case boundary value analysis of NextDate yields 125 test cases, while the decision table yields 13. What did the book find when it examined the 125 worst-case test cases?",
+      "options": [
+        "About \"times ten\" redundancy, and gaps at the end of February",
+        "No real redundancy, but gaps around the end of the 30-day months",
+        "Good coverage of February 28 and 29, but redundancy in December",
+        "About a \"times two\" redundancy, and no gaps at all",
+        "No redundancy and no gaps, since the method is fully mechanical"
+      ],
+      "explanation": "Cases 1–5, for example, test January 1 in five different years, although the year is irrelevant there; a times-ten estimate suggests about 25 cases, close to the 22 rules of the decision table. No February case hits February 28 or 29, and no connection is made with leap years.",
+      "page": 126
+    },
+    {
+      "n": 6,
+      "prompt": "Strong equivalence class testing of NextDate gives 36 test cases. How many of them are impossible, and why?",
+      "options": [
+        "11, because the equivalence classes are presumed to be independent",
+        "11, because the year classes overlap one another",
+        "6, because the classes ignore the 28th day of each month",
+        "13, because the decision table found exactly that many",
+        "None, because each test case comes from a valid class"
+      ],
+      "explanation": "Of the 36 strong equivalence class test cases, 11 are impossible. The impossible cases result from the presumed independence among the equivalence classes.",
+      "page": 126
+    },
+    {
+      "n": 7,
+      "prompt": "In the discussion of testing efficiency, which pairing of problem and suggested remedy matches the book?",
+      "options": [
+        "Redundancy: annotate tests with a purpose comment; gaps: compare tests from two methods",
+        "Gaps: annotate tests with a purpose comment; redundancy: compare tests from two methods",
+        "Redundancy: run each test several times; gaps: count the tests produced per method",
+        "Gaps: switch to worst-case testing; redundancy: switch to robustness testing",
+        "Redundancy and gaps: both are removed by a ratio of test counts between methods"
+      ],
+      "explanation": "An efficient set of test cases is \"just right\": no gaps and no redundancy. Redundancy shows up when several test cases share the same purpose comment. Gaps are harder to detect, and with functional testing alone the best we can do is compare the test cases from two methods.",
+      "page": 127
+    },
+    {
+      "n": 8,
+      "prompt": "Why is \"how effective a set of test cases is at finding the faults in a program\" a problematic measure of testing effectiveness?",
+      "options": [
+        "It presumes we already know all the faults, which is circular",
+        "It can only be measured after structural testing has reached full path coverage",
+        "It depends on how many times each of the test cases is executed",
+        "It ignores redundancy, which is the only real cost of testing",
+        "It favors boundary value methods, which always find the most faults"
+      ],
+      "explanation": "First, it presumes we know all the faults in a program, which is circular. Second, proving a program fault-free is equivalent to the halting problem, which is known to be impossible. The pragmatic alternative is to work backward from fault types and choose methods likely to reveal them.",
+      "page": 127
+    },
+    {
+      "n": 9,
+      "prompt": "What is the message for testers in the story of the man searching for his car keys under a street light?",
+      "options": [
+        "Testing for faults that are unlikely to be present is pointless",
+        "Testing should start where tool support is best",
+        "Every part of a program deserves equal testing effort",
+        "Test cases should be chosen where they are cheapest to run",
+        "Testing should stop once the obvious faults are found"
+      ],
+      "explanation": "The man searches where the light is better, not where he lost the keys. It is far more effective to know which faults are most likely (or most damaging) and then select testing methods likely to reveal them.",
+      "page": 128
+    },
+    {
+      "n": 10,
+      "prompt": "According to the book's \"expert system\" for selecting functional testing techniques, which techniques are indicated when a program contains significant exception handling?",
+      "options": [
+        "Robustness testing and decision table testing",
+        "Boundary value analysis and robustness testing",
+        "Worst-case and robust worst-case testing",
+        "Domain testing and equivalence class testing",
+        "Weak and strong equivalence class testing"
+      ],
+      "explanation": "Rule 6 indicates robustness testing and decision table testing for significant exception handling. Boundary value analysis with robustness testing is the rule for the single-fault assumption, and domain plus equivalence class testing is the rule for physical or independent variables.",
+      "page": 128
+    },
+    {
+      "n": 11,
+      "prompt": "In Table 8.1 (appropriate choices for functional testing), which techniques are marked for physical, independent variables with the single-fault assumption and no prominent exception handling?",
+      "options": [
+        "Boundary value analysis and weak equivalence class testing",
+        "Robustness testing with traditional and weak equivalence class testing",
+        "Worst-case testing and strong equivalence class testing",
+        "Strong equivalence class testing and decision table testing",
+        "Robust worst case with traditional and strong equivalence class testing"
+      ],
+      "explanation": "That column (P, Y, Y, N) marks boundary value analysis and weak equivalence class testing. With exception handling (P, Y, Y, Y) it marks robustness testing with traditional and weak equivalence class testing. Decision tables are marked only when the variables are not independent.",
+      "page": 129
+    },
+    {
+      "n": 12,
+      "prompt": "In the insurance premium case study, plain worst-case boundary value testing of age and points gives 25 test cases. How many worst-case test cases result when the boundaries of every age range and every point range are used (Table 8.2)?",
+      "options": [
+        "273",
+        "25",
+        "34",
+        "125",
+        "441"
+      ],
+      "explanation": "Each vertical set, with age held constant, has 13 point values, and there are 21 age values, so 21 × 13 = 273 test cases. The book calls this severe redundancy and moves on to equivalence class testing.",
+      "page": 131
+    },
+    {
+      "n": 13,
+      "prompt": "The final test cases for the insurance premium program (Figure 8.11) are described as \"hybrid functional testing\". What does the book mean by this term?",
+      "options": [
+        "Blending boundary value, equivalence class and decision table testing",
+        "Combining functional testing with structural (path) testing of the same program",
+        "Running both the weak normal and the strong normal equivalence class tests",
+        "Applying robust worst-case testing to every input variable of the program",
+        "Alternating between manual and automated execution of the test cases"
+      ],
+      "explanation": "Hybrid functional testing uses the advantages of all three forms, blended according to the nature of the application. The case study includes boundary values at the age-range endpoints, robust ages under 16 and over 100, and the points at which the safe driving reduction is lost.",
+      "page": 133
+    }
+  ]
+}

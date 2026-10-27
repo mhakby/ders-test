@@ -1,0 +1,178 @@
+{
+  "chapter": 11,
+  "title": "Retrospective on Structural Testing",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "The chapter lists possible answers to \"When should testing stop?\". Which answers do software reliability models support?",
+      "options": [
+        "When continued testing causes no new failures or reveals no new faults",
+        "When you run out of time or cannot think of any new test cases",
+        "When mandated coverage has been attained",
+        "When all faults have been removed",
+        "When you reach a point of diminishing returns"
+      ],
+      "explanation": "Software reliability models support the answers \"no new failures\" and \"no new faults\", and both have been used with success in industry. Running out of time is all too common, the removal of all faults cannot be guaranteed, and the coverage answer is the one the chapter calls a pretty good one.",
+      "page": 175
+    },
+    {
+      "n": 2,
+      "prompt": "Once the \"when to stop\" question reduces to which coverage metric to use, which answer does the chapter say is the most common in industrial practice?",
+      "options": [
+        "DD-paths",
+        "All-DU-Paths",
+        "Program slices",
+        "Basis paths",
+        "All-Paths"
+      ],
+      "explanation": "The chapter states that the answer most common in industrial practice is DD-paths. More sophisticated metrics such as DU-paths and slices identify more coverage items and take more effort to identify.",
+      "page": 176
+    },
+    {
+      "n": 3,
+      "prompt": "The traditional triangle program has exactly 11 feasible paths (p1-p11). When the 15 nominal boundary value test cases (Table 11.2) are run, which paths are missed?",
+      "options": [
+        "p8, p9, p10 and p11",
+        "p1, p2, p3 and p4",
+        "p3, p5, p7 and p11",
+        "p2, p4 and p6",
+        "None; together the 15 test cases cover all 11 paths"
+      ],
+      "explanation": "Nominal boundary value test cases cover p1-p7 and miss p8, p9, p10 (Not a Triangle because a + b <= c, b + c <= a or a + c <= b) and p11 (Scalene). The 125 worst-case test cases taken together provide full path coverage, but their redundancy is onerous.",
+      "page": 176
+    },
+    {
+      "n": 4,
+      "prompt": "A functional method M generates m test cases that traverse n of the s elements identified by a structural metric S. Why does the chapter consider the net redundancy NR(M,S) more useful than the redundancy R(M,S)?",
+      "options": [
+        "It refers to elements actually traversed, not to the total space of elements",
+        "It is the only one of the three metrics whose best possible value is 1",
+        "It excludes infeasible elements, which R(M,S) still counts in its denominator",
+        "It equals 1 whenever the coverage C(M,S) is 1, so redundancy is easy to spot",
+        "It shows how effective the test cases are with respect to kinds of faults"
+      ],
+      "explanation": "NR(M,S) = m/n refers to things actually traversed, whereas R(M,S) = m/s refers to the total space of things to be traversed. All three metrics have best possible value 1, infeasible paths are never counted, C(M,S) = 1 only forces R(M,S) = NR(M,S), and effectiveness with respect to kinds of faults is information the chapter says is not available.",
+      "page": 178
+    },
+    {
+      "n": 5,
+      "prompt": "In Table 11.4, worst-case boundary value testing of the triangle program has m = 125, n = 11 and s = 11, giving C(M,S) = 1.00 and R(M,S) = NR(M,S) = 11.36. What does this show?",
+      "options": [
+        "There are no gaps in path coverage, but the redundancy is very high",
+        "There are gaps in path coverage, but there is no redundancy at all",
+        "Both gaps and redundancy are at their best possible values",
+        "Path coverage is incomplete because R(M,S) is not equal to 1",
+        "Net redundancy is low because only the feasible paths were counted"
+      ],
+      "explanation": "C(M,S) below 1 would signal gaps; with C(M,S) = 1 all 11 paths are covered, and algebra then forces R(M,S) = NR(M,S). The best possible value of each metric is 1, so 11.36 means heavy redundancy.",
+      "page": 178
+    },
+    {
+      "n": 6,
+      "prompt": "In Table 11.5 (commission problem) the same 25 test cases give R(M,S) = 2.27 for DD-Paths, 0.76 for DU-Paths and 0.63 for slices, with C(M,S) = 1 in each case. What explains the decrease?",
+      "options": [
+        "More sophisticated metrics identify more elements s (11, 33, 40), so m/s falls",
+        "The test cases traverse fewer elements under the more sophisticated metrics",
+        "The DU-Path and slice counts also include infeasible elements in s",
+        "Fewer test cases were generated for the more sophisticated metrics",
+        "For data flow metrics, redundancy is computed as n/s instead of m/s"
+      ],
+      "explanation": "With m = 25 fixed, R(M,S) = m/s drops as s grows from 11 DD-Paths to 33 DU-Paths and 40 slices. In general, more sophisticated structural metrics result in more elements, so a functional method tends to look less effective when evaluated against more rigorous structural metrics.",
+      "page": 178
+    },
+    {
+      "n": 7,
+      "prompt": "Figure 11.3 plots the effort to identify test coverage items against the sophistication of structural methods (DD-Path, Basis Path, DU-Path, Slice). What trend does it show?",
+      "options": [
+        "Effort rises steadily, lowest for DD-Paths and highest for slices",
+        "Effort falls steadily, highest for DD-Paths and lowest for slices",
+        "Effort dips at Basis Path and then rises toward slices",
+        "Effort peaks at DU-Paths and then falls for slices",
+        "Effort stays roughly the same for all four methods"
+      ],
+      "explanation": "Effort increases with sophistication; the dip at Basis Path belongs to Figure 11.2 (number of test coverage items), not to the effort plot. Unlike functional methods there is no pleasing trade-off, which shows the importance of choosing an appropriate structural coverage metric.",
+      "page": 180
+    },
+    {
+      "n": 8,
+      "prompt": "For the Insurance Premium Program (11 feasible paths), boundary value testing and strong equivalence class testing each produce 25 test cases. How many paths does each cover according to Table 11.7?",
+      "options": [
+        "Boundary value 6, strong equivalence class 10",
+        "Boundary value 10, strong equivalence class 6",
+        "Boundary value 6, strong equivalence class 11",
+        "Boundary value 11, strong equivalence class 10",
+        "Boundary value 5, strong equivalence class 10"
+      ],
+      "explanation": "The 25 boundary value test cases cover only six paths (p1, p2, p7, p8, p9 and p10), while the 25 strong equivalence class test cases cover ten (p1-p10). Equal test case counts can therefore give very different path coverage.",
+      "page": 182
+    },
+    {
+      "n": 9,
+      "prompt": "Each case predicate in the Insurance Premium Program is a compound condition of the form a <= x < b. Which test sets exercise these extreme values, i.e., achieve multiple-condition coverage?",
+      "options": [
+        "Only the worst-case boundary value (273) and the hybrid (25) test cases",
+        "Only the boundary value (25) and the decision table (10) test cases",
+        "Only the weak (5) and the strong (25) equivalence class test cases",
+        "Only the decision table (10) test cases",
+        "Every method that produces at least 25 test cases"
+      ],
+      "explanation": "The chapter says the only methods whose test cases exercise these extreme values are worst-case boundary value testing (273 test cases) and the hybrid approach (25 test cases). Covering all 11 paths gives statement and DD-Path coverage, but multiple-condition coverage needs these extreme values.",
+      "page": 182
+    },
+    {
+      "n": 10,
+      "prompt": "In the case study's data flow analysis of the Insurance Premium Program, how are the uses of driverAge and points classified?",
+      "options": [
+        "Both are predicate uses (P-uses)",
+        "Both are computation uses (C-uses)",
+        "Both are output uses (O-uses)",
+        "driverAge is a P-use; points is a C-use",
+        "driverAge is a C-use; points is a P-use"
+      ],
+      "explanation": "The chapter states that the uses of driverAge (in the Select Case predicates) and points (in the If conditions) are both predicate uses. It calls data flow testing for this problem boring: driverAge, points and safeDrivingReduction all occur in six definition-clear du-paths.",
+      "page": 182
+    },
+    {
+      "n": 11,
+      "prompt": "Exercise 2 asks you to compute the coverage, redundancy and net redundancy metrics for a gaps-and-redundancies study. Suppose a functional method produces m = 20 test cases that traverse n = 8 of the s = 10 DD-Paths of a unit. What are C(M,S), R(M,S) and NR(M,S)?",
+      "options": [
+        "C = 0.80, R = 2.00, NR = 2.50",
+        "C = 0.80, R = 2.50, NR = 2.00",
+        "C = 1.25, R = 2.00, NR = 2.50",
+        "C = 0.80, R = 0.50, NR = 0.40",
+        "C = 0.40, R = 2.00, NR = 0.80"
+      ],
+      "explanation": "C(M,S) = n/s = 8/10 = 0.80 (below 1, so there are gaps), R(M,S) = m/s = 20/10 = 2.00 and NR(M,S) = m/n = 20/8 = 2.50. Swapping R and NR confuses all elements (s) with the elements actually traversed (n).",
+      "page": 178,
+      "exercise": "2"
+    },
+    {
+      "n": 12,
+      "prompt": "Exercise 3: the Insurance Premium pseudocode does not check for driver ages under 16 or over 120; the Else clause (Case 6) catches them on path p11 = 1-2-3-29-30-31-32-33. Among the functional methods in Table 11.7, which test set exercises this path?",
+      "options": [
+        "Only the hybrid test cases",
+        "Only the worst-case boundary value test cases",
+        "The strong equivalence class and decision table test cases",
+        "The boundary value and weak equivalence class test cases",
+        "All six test sets, since p11 is a feasible path"
+      ],
+      "explanation": "In Table 11.7 every method except the hybrid one covers at most p1-p10; only the 25 hybrid test cases cover p1-p11 and so reach the out-of-range Case 6 path. The worst-case boundary value test cases, despite their number (273), stop at p10.",
+      "page": 182,
+      "exercise": "3"
+    },
+    {
+      "n": 13,
+      "prompt": "Exercise 3: the Insurance Premium pseudocode does not check for driver ages under 16 or over 120; only the Else clause (Case 6) catches them. If a set of test cases never uses such an age, which structural coverage result reveals this?",
+      "options": [
+        "Path p11 (nodes 29 and 30, Case 6) is never traversed, so path coverage is incomplete",
+        "Path p1 is traversed many times, so the coverage C(M,S) rises above 1",
+        "Every DD-Path is traversed, which shows that the Case 6 branch was executed",
+        "The cyclomatic complexity V(G) of the program graph turns out to be below 11",
+        "The slices on safeDrivingReduction and ageMultiplier turn out to be identical"
+      ],
+      "explanation": "Out-of-range ages take the Else clause (Case 6) on p11 = 1-2-3-29-30-31-32-33, so test cases without them leave p11 untraversed and nodes 29-30 unexecuted, and path coverage is not met. C(M,S) can never exceed 1, and V(G) = 11 is a property of the program graph, not of the tests.",
+      "page": 182,
+      "exercise": "3"
+    }
+  ]
+}

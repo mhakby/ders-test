@@ -2,7 +2,7 @@ import { scopedIds, type CourseIndex } from './data';
 import { updateProgress, type AnswerRec, type CourseProgress, type DeckState, type Mode } from './store';
 import type { Question } from './types';
 
-// Deck ids: "set:<setId>" for a question set; "saved", "wrong", "all" for review lists;
+// Deck ids: "set:<setId>" for a question set; "saved", "wrong", "all", "exercises" for review lists;
 // "mix" for a random test from the selected sets; "retry" for the wrong answers of a finished round.
 export const isSetDeck = (deckId: string) => deckId.startsWith('set:');
 /** Review decks keep their own round of answers in deck.done so they can be solved again. */
@@ -12,8 +12,19 @@ export const followsMode = (deckId: string) => deckId !== 'mix' && deckId !== 'r
 
 export function deckTitle(ci: CourseIndex, deckId: string): string {
   if (isSetDeck(deckId)) return ci.course.sets.find(s => s.id === deckId.slice(4))?.title ?? 'Set';
-  return { saved: 'Kaydettiklerim', wrong: 'Yanlışlarım', all: 'Tüm sorular', mix: 'Karma test', retry: 'Yanlışları tekrar' }[deckId] ?? deckId;
+  return {
+    saved: 'Kaydettiklerim',
+    wrong: 'Yanlışlarım',
+    all: 'Tüm sorular',
+    exercises: '📘 Kitap alıştırmaları',
+    mix: 'Karma test',
+    retry: 'Yanlışları tekrar',
+  }[deckId] ?? deckId;
 }
+
+/** Questions derived from a textbook's end-of-chapter exercises. */
+export const isExercise = (ci: CourseIndex, id: string) => Boolean(ci.byId.get(id)?.q.source?.exercise);
+export const hasExercises = (ci: CourseIndex) => ci.ids.some(id => isExercise(ci, id));
 
 export function answerOf(p: CourseProgress, deckId: string, id: string): AnswerRec | undefined {
   return isReviewDeck(deckId) ? p.decks[deckId]?.done?.[id] : p.answers[id];
@@ -26,6 +37,7 @@ function members(ci: CourseIndex, p: CourseProgress, deckId: string): string[] |
   if (deckId === 'all') return ids;
   if (deckId === 'saved') return ids.filter(id => p.saved[id]);
   if (deckId === 'wrong') return ids.filter(id => p.answers[id] && !p.answers[id].correct);
+  if (deckId === 'exercises') return ids.filter(id => isExercise(ci, id));
   return undefined;
 }
 

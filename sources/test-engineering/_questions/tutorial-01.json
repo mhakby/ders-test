@@ -1,0 +1,254 @@
+{
+  "tutorial": 1,
+  "title": "Writing Effective Test Cases",
+  "url": "https://www.softwaretestinghelp.com/how-to-write-effective-test-cases-test-cases-procedures-and-definitions/",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "How does the article define a test case?",
+      "options": [
+        "Components describing input, action and an expected response, used to determine if a feature works correctly",
+        "A group of small related cases, maybe a maximum of 10, that are executed together as one unit",
+        "A document describing project objectives, priorities, milestones, schedule, risks and dependencies",
+        "A record of the variables and their values that the tester enters into the application under test",
+        "A description of the application's current behavior, written down as the reference for later test runs"
+      ],
+      "explanation": "The article says a test case has components that describe input, action and an expected response to determine whether a feature works correctly, i.e. a set of instructions on HOW to validate a test objective. A group of up to about 10 small cases is the article's description of a test procedure.",
+      "section": "What is a Test Case"
+    },
+    {
+      "n": 2,
+      "prompt": "According to the article, what is the basic objective of writing test cases?",
+      "options": [
+        "To validate the test coverage of an application",
+        "To replace the functional requirements document",
+        "To record the application's current behavior",
+        "To let developers skip the fixing of defects",
+        "To make ad hoc testing the main approach"
+      ],
+      "explanation": "The article states that the basic objective of writing cases is to validate the test coverage of an application. It adds that writing cases brings standardization and minimizes the ad hoc approach, rather than encouraging it.",
+      "section": "Why do we Write Tests?"
+    },
+    {
+      "n": 3,
+      "prompt": "A tester has already written basic cases from the specification and user documentation and now writes cases that depend on the application's actual functional and system flow. Which level of the test writing process is this?",
+      "options": [
+        "Level 2, the practical stage based on the actual flow",
+        "Level 1, basic cases from the available specification",
+        "Level 3, grouping cases into a test procedure",
+        "Level 4, automation of the project",
+        "Level 5, maintenance of the regression suite"
+      ],
+      "explanation": "The article calls Level 2 the practical stage in which writing cases depends on the actual functional and system flow of the application. Level 1 writes basic cases from the specification and user documentation, Level 3 groups cases into procedures, Level 4 is automation, and there is no Level 5.",
+      "section": "How to Write Test Cases (levels)"
+    },
+    {
+      "n": 4,
+      "prompt": "According to the article, what is a test procedure?",
+      "options": [
+        "A group of small test cases, maybe a maximum of 10",
+        "A single atomic step that has no further sub-steps",
+        "The plan describing documentation standards, change control and acceptance criteria",
+        "The automation script produced in the final level of test writing",
+        "The list of variables and their values used by one test case"
+      ],
+      "explanation": "The article defines the test procedure as nothing but a group of small cases, maybe a maximum of 10, written at Level 3 of the test writing process. Automation is Level 4, and the list of variables and their values is the test data field.",
+      "section": "How to Write Test Cases (levels)"
+    },
+    {
+      "n": 5,
+      "prompt": "A test case contains the entry \"User Name = Administrator, Password = admin2015\". In the article's list of test case fields, which field should hold this entry?",
+      "options": [
+        "Test data",
+        "Unit to test",
+        "Assumptions",
+        "Expected Result",
+        "Comments"
+      ],
+      "explanation": "The article's field list describes Test data as \"variables and their values\", which is exactly what this entry is. Unit to test describes what is to be verified, and Expected Result holds the response the test should produce.",
+      "section": "How to Write Test Cases (fields)"
+    },
+    {
+      "n": 6,
+      "prompt": "In the article's basic test case statement format \"Verify ... Using ... With ... To ...\", what does the \"Using\" part identify?",
+      "options": [
+        "What is being tested, such as a tool name, tag name or dialog",
+        "The conditions under which the check is carried out",
+        "What is returned, shown or demonstrated as the result",
+        "The tester's name and the timestamp of the execution",
+        "The priority of the test, such as high, medium or low"
+      ],
+      "explanation": "Verify is the first word of the statement and Using names what is being tested ([tool name, tag name, dialog, etc.]); the article notes that \"entering\" or \"selecting\" may be used instead depending on the situation. Conditions belong to With, and what is returned or shown belongs to To.",
+      "section": "Basic Format of Test Case Statement"
+    },
+    {
+      "n": 7,
+      "prompt": "A test case for an interest calculation simply says \"enter any amount and check the interest\", leaving the tester to pick the input values. Which tip from the article does this violate?",
+      "options": [
+        "Bound as well as ease the testers",
+        "Be a contributor",
+        "Never forget the end user",
+        "Review the test cases once as a tester",
+        "Prioritize the tests"
+      ],
+      "explanation": "Tip #3 says testers should be given a range of inputs, especially where calculations are performed, instead of choosing the test data items themselves, and points to boundary value analysis. The review tip concerns dry-running finished cases, not supplying input ranges.",
+      "section": "Tips for Writing Tests"
+    },
+    {
+      "n": 8,
+      "prompt": "According to the article's tricks for excellent test documentation, which pair of test cases should be written for each scenario?",
+      "options": [
+        "One positive case for the normal flow and one negative case for the exceptional flow",
+        "One UI case for the static fields and one database case for the stored credentials",
+        "One manual case for new features and one automated case for the regression checks",
+        "One high-priority case for deadlines and one low-priority case for cosmetic checks",
+        "One basic-flow case on a browser and one alternate-flow case on a mobile device"
+      ],
+      "explanation": "The trick \"Do not forget to cover the negative cases\" asks for two test cases per scenario: a positive one for the intended or normal flow and a negative one for the unintended or exceptional flow, because a negative case is as important as a positive case.",
+      "section": "Useful Tricks for Excellence"
+    },
+    {
+      "n": 9,
+      "prompt": "The article illustrates test prioritization with examples from a shopping website. Which assignment matches those examples?",
+      "options": [
+        "High: denying access after an invalid login; Low: checking the color of button text",
+        "High: checking the color of button text; Low: denying access after an invalid login",
+        "High: showing relevant products; Low: denying access after an invalid login",
+        "Medium: denying access after an invalid login; High: showing relevant products",
+        "Medium: checking the color of button text; Low: showing relevant products"
+      ],
+      "explanation": "The article's examples are High for denying access after an invalid login attempt, Medium for showing relevant products on the user screen, and Low for checking the color of button text; under tight deadlines the high-priority tests are run first.",
+      "section": "Useful Tricks for Excellence"
+    },
+    {
+      "n": 10,
+      "prompt": "In a test for placing an online order, step (e) reads \"Checkout and pay\". Which problem from the article's \"How NOT to write tests\" section is this?",
+      "options": [
+        "Composite step",
+        "Application behavior taken as expected behavior",
+        "Multiple conditions in one case",
+        "Missing negative case",
+        "Dependency conflict among test cases"
+      ],
+      "explanation": "\"Checkout and pay\" packs several actions into one step, which the article calls a composite step; it should be split into steps such as clicking Checkout, entering card, shipping and billing information, clicking Checkout and checking the confirmation page. Multiple conditions in one case means combining several scenarios, not several actions of one flow.",
+      "section": "How NOT to Write Tests"
+    },
+    {
+      "n": 11,
+      "prompt": "A tester writes the expected result for a shop's Shipping and Return page by copying what the page currently shows (\"Put your info here\" and a Continue button). What does the article recommend instead?",
+      "options": [
+        "Use the application only as a guide and write the researched intended behavior",
+        "Keep the copied result, since the running application is the most reliable source",
+        "Split the expected result into atomic sub-steps for each displayed element",
+        "Write a separate test case for each element currently displayed on the page",
+        "Tag the test as low priority because it only checks the displayed text"
+      ],
+      "explanation": "Taking application behavior as expected behavior is risky because the application itself may be wrong; the article says to use the application only as a guide and write the correct intended behavior, e.g. that the order's shipping and return details are displayed after an order number is entered.",
+      "section": "How NOT to Write Tests"
+    },
+    {
+      "n": 12,
+      "prompt": "One login test contains these steps: (a) enter valid details and click Submit, (b) leave Username empty and click Submit, (c) leave Password empty and click Submit. Besides one failure marking the whole test as failed, what problem does the article point out?",
+      "options": [
+        "After step (a) succeeds the user is logged in, so step (b) cannot proceed",
+        "Step (a) is a composite step that should be split into atomic sub-steps",
+        "The expected results are copied from the application's current behavior",
+        "Steps (b) and (c) need test data with the maximum allowed 30 characters",
+        "Steps (b) and (c) are positive cases and each need a matching negative case"
+      ],
+      "explanation": "With multiple conditions in one case the flow breaks: once step (a) logs the user in, the login option is no longer available for step (b). The article's fix is modular tests with one condition per test case, copying the shared steps where needed.",
+      "section": "How NOT to Write Tests"
+    },
+    {
+      "n": 13,
+      "prompt": "Among the documents the article says to collect before writing tests, which one is marked as OPTIONAL?",
+      "options": [
+        "Software Project Plan",
+        "User Requirements Document",
+        "Business Use Case Document",
+        "Functional Requirements Document",
+        "QA/Test Plan"
+      ],
+      "explanation": "The article lists five documents: User Requirements Document, Business Use Case Document, Functional Requirements Document, Software Project Plan (Optional) and QA/Test Plan. Only the project plan, which covers objectives, priorities, milestones, schedule, risks and dependencies, is marked optional.",
+      "section": "Document Collection for Test Writing"
+    },
+    {
+      "n": 14,
+      "prompt": "Which document from the article's collection list details scenarios from a business perspective, including actors, goals, pre- and post-conditions, basic and alternate flows, options and exceptions?",
+      "options": [
+        "Business Use Case Document",
+        "User Requirements Document",
+        "Functional Requirements Document",
+        "QA/Test Plan",
+        "Software Project Plan"
+      ],
+      "explanation": "The article describes the Business Use Case Document as detailing use-case scenarios from a business perspective with actors, goals, conditions, flows, options and exceptions. The User Requirements Document instead covers business processes, user profiles and functional and non-functional requirements, and the QA/Test Plan covers standards, change control and acceptance criteria.",
+      "section": "Document Collection for Test Writing"
+    },
+    {
+      "n": 15,
+      "prompt": "In the article's login-screen example, clicking the \"Forgot Password?\" link may email the user, so the email must be tested for the proper process and confirmation. Which category of cases from the example does this belong to?",
+      "options": [
+        "Process tests",
+        "UI tests",
+        "Functional cases",
+        "Database cases",
+        "Alternate-flow cases"
+      ],
+      "explanation": "Process tests cover the processes associated with a feature rather than the actions of the visible controls, and the article uses the Forgot Password email as its example. Functional cases cover clicking dynamic controls such as the link itself, and UI tests cover the visible fields.",
+      "section": "Real Example (login screen)"
+    },
+    {
+      "n": 16,
+      "prompt": "Applying the BAOE mantra to the login screen, clicking \"Logout\" after logging in (or a session timeout returning to the login screen) is an example of which element?",
+      "options": [
+        "Options",
+        "Basic Flow",
+        "Alternate Flow",
+        "Exceptions",
+        "Boundaries"
+      ],
+      "explanation": "BAOE stands for Basic Flow, Alternate Flow, Options and Exceptions, each applied to positive and negative tests. For login, the basic flow is logging in through a browser, the alternate flow is logging in on a mobile device, options are logout or session timeout, and exceptions are wrong credentials giving an error message.",
+      "section": "Real Example (login screen)"
+    },
+    {
+      "n": 17,
+      "prompt": "In the article's login test case document, one row enters the maximum allowed text in the User Name and Password boxes. What is the expected behaviour?",
+      "options": [
+        "The boxes should accept the maximum allowed 30 characters",
+        "The boxes should accept the maximum allowed 10 characters",
+        "An alert \"User Name and Password are Mandatory\" should appear",
+        "The text should be refused, as it is not allowed in Registration",
+        "A \"Session Expired\" alert should appear and both boxes be cleared"
+      ],
+      "explanation": "The maximum-length row expects the fields to accept the maximum allowed 30 characters. Refusal because the text is not allowed in Registration is expected for input starting with special characters or blank spaces, and the Session Expired alert belongs to the 10-minute idle test.",
+      "section": "Test Case Document"
+    },
+    {
+      "n": 18,
+      "prompt": "Which of the following is one of the article's reasons for reusing test cases across web projects?",
+      "options": [
+        "Most projects are enhancements or changes to existing functionality",
+        "Web-based projects are rarely subject to requirement changes",
+        "Each retail website has functional areas found on no other site",
+        "Reused test cases no longer need to cover negative scenarios",
+        "Browser compatibility and security testing differ for every site"
+      ],
+      "explanation": "The article's reasons include recurring functional areas (login, registration, cart, checkout), most projects being enhancements of existing functionality, frequent requirement changes in web projects and recurring test types such as browser compatibility, performance and security testing; the distractors contradict these points.",
+      "section": "Reasons to Reuse Test Cases"
+    },
+    {
+      "n": 19,
+      "prompt": "A tester adapts a standard test case from an earlier retail website for a new one. According to the article, how should the steps that must change per project be handled?",
+      "options": [
+        "Highlight them in a different color for quick find-and-replace",
+        "Delete them and write those parts from scratch for each project",
+        "Merge them into one composite step to keep the test short",
+        "List them on the separate \"Bugs\" sheet of the workbook",
+        "Tag them as low priority so that they are executed last"
+      ],
+      "explanation": "Among its guidelines for a standard test, the article says to highlight modifiable steps in a different color so they can be found and replaced quickly; the author also used color-coding so reviewers could focus on the changed parts.",
+      "section": "What is a Standard Test in Web Testing?"
+    }
+  ]
+}

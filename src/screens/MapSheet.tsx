@@ -6,6 +6,7 @@ export function MapSheet({
   pos,
   answerOf,
   isSaved,
+  isExercise,
   onPick,
   onClose,
 }: {
@@ -13,6 +14,7 @@ export function MapSheet({
   pos: number;
   answerOf: (id: string) => AnswerRec | undefined;
   isSaved: (id: string) => boolean;
+  isExercise: (id: string) => boolean;
   onPick: (index: number) => void;
   onClose: () => void;
 }) {
@@ -25,6 +27,7 @@ export function MapSheet({
   }, [onClose]);
 
   const answered = ids.filter(id => answerOf(id)).length;
+  const anyExercise = ids.some(isExercise);
   return (
     <div className="sheet-backdrop" onClick={onClose}>
       <div className="sheet" role="dialog" aria-label="Soru haritası" onClick={e => e.stopPropagation()}>
@@ -36,6 +39,7 @@ export function MapSheet({
         </div>
         <p className="muted small">
           {answered}/{ids.length} cevaplandı · ★ kaydedilen
+          {anyExercise && ' · 📘 kitap alıştırması'}
         </p>
         <div className="map-grid">
           {ids.map((id, i) => {
@@ -50,6 +54,7 @@ export function MapSheet({
               >
                 {i + 1}
                 {isSaved(id) && <span className="star">★</span>}
+                {isExercise(id) && <span className="book-mark">📘</span>}
               </button>
             );
           })}

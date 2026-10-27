@@ -12,7 +12,7 @@
         "It is computed from the number of faults the tests detect",
         "It can be measured without running the test suite at all"
       ],
-      "explanation": "Code coverage quantifies how much of the source code is executed when the test suite runs, so measuring it requires the source code. It does not check whether results are verified or count detected faults.",
+      "explanation": "Code coverage quantifies how much of the source code is executed when the test suite runs, so measuring it requires the source code; the book likewise ties coverage metrics to structural (white-box) testing. It does not check whether results are verified or count detected faults.",
       "slide": 3
     },
     {
@@ -38,7 +38,7 @@
         "50% statement coverage and 50% branch coverage",
         "100% statement coverage and 0% branch coverage"
       ],
-      "explanation": "The true outcome executes every statement, but an if without an else has two outcomes and the false outcome is never taken, so only 1 of 2 branch outcomes (50%) is covered.",
+      "explanation": "The true outcome executes every statement, but an if without an else has two outcomes and the false outcome is never taken, so only 1 of 2 branch outcomes (50%) is covered. In the book's terms the test satisfies C0 (every statement) but not C1p (every predicate to each outcome).",
       "slide": 7
     },
     {
@@ -56,7 +56,7 @@
     },
     {
       "n": 5,
-      "prompt": "For the decision if (A || B || C), assume all three conditions are evaluated in every test (no short-circuit evaluation). Across all tests A takes both true and false, B is only ever true, and C is only ever false. What is the condition coverage?",
+      "prompt": "For the decision if (A || B || C), assume all three conditions are evaluated in every test (no short-circuit evaluation). Across all tests A takes both true and false, B is only ever true, and C is only ever false. Using the lecture's condition coverage formula, what is the condition coverage?",
       "options": [
         "66.7%",
         "50%",
@@ -77,7 +77,7 @@
         "Condition coverage is 50% and branch coverage is 50%",
         "Condition coverage is 100% and branch coverage is 0%"
       ],
-      "explanation": "A and B each take both values, so condition coverage is 100%, but A && B is false in both tests, so the if body never runs and only the false outcome is covered (50%). This is why 100% condition coverage does not guarantee 100% branch coverage.",
+      "explanation": "A and B each take both values, so condition coverage is 100%, but A && B is false in both tests, so the if body never runs and only the false outcome is covered (50%). This is why 100% condition coverage does not guarantee 100% branch coverage, i.e. the book's C1p (every predicate to each outcome).",
       "slide": 10
     },
     {
@@ -103,7 +103,7 @@
         "Only 10 and 11 iterations, to check the limit",
         "0 and 1 iterations only; multiple is optional"
       ],
-      "explanation": "Loop coverage requires zero, one and multiple iterations; with a known maximum you also test max − 1 and max and try max + 1, because off-by-one errors often hide at these boundaries.",
+      "explanation": "Loop coverage requires zero, one and multiple iterations; with a known maximum you also test max − 1 and max and try max + 1, because off-by-one errors often hide at these boundaries. The book treats loops the same way, as boundary value (and robustness) testing of the loop index, and adds loop coverage to C1 to form C2.",
       "slide": 13
     },
     {
@@ -129,33 +129,33 @@
         "3 paths, and all 3 are feasible",
         "8 paths, of which 6 are feasible"
       ],
-      "explanation": "Two independent if statements create 2^2 = 4 paths, but the path that makes both decisions true needs x > 0 and x == 0 at the same time, so no input can execute it (an infeasible path).",
+      "explanation": "Two independent if statements create 2^2 = 4 paths (the book's topologically possible paths), but the path that makes both decisions true needs x > 0 and x == 0 at the same time, so no input can execute it (an infeasible path). Only the 3 feasible paths count in the path coverage formula.",
       "slide": 14
     },
     {
       "n": 11,
-      "prompt": "What does it mean that coverage criterion A subsumes criterion B?",
+      "prompt": "Criterion A subsumes criterion B. Test set T1 satisfies A, and test set T2 satisfies B. Which conclusion is valid?",
       "options": [
-        "Every test set that satisfies A also satisfies B",
-        "Every test set that satisfies B also satisfies A",
-        "A and B always need the same number of test cases",
-        "A and B count the same items with different formulas",
-        "No test set that satisfies A can also satisfy B"
+        "T1 also satisfies B, but T2 need not satisfy A",
+        "T2 also satisfies A, but T1 need not satisfy B",
+        "T1 and T2 each satisfy both A and B",
+        "Neither test set says anything about the other criterion",
+        "T1 and T2 must contain the same number of tests"
       ],
-      "explanation": "A subsumes B if every test set that satisfies A also satisfies B; the subsuming criterion is stronger, needs more tests and gives more confidence. The reversed direction is the most common mistake.",
+      "explanation": "A subsumes B means every test set that satisfies A also satisfies B, so T1 satisfies B, while the converse does not hold and T2 may fail A. The subsuming criterion is the stronger one, needing more tests but giving more confidence; the book's hierarchy of coverage metrics uses the same relation.",
       "slide": 15
     },
     {
       "n": 12,
-      "prompt": "Which statement about the relationship between coverage criteria is true?",
+      "prompt": "A test set reaches 100% branch (decision) coverage of a function. According to the lecture's subsumption diagram, which other criterion is then guaranteed to be at 100% as well?",
       "options": [
-        "Branch coverage subsumes statement coverage, but not vice versa",
-        "Statement coverage subsumes branch coverage, but not vice versa",
-        "Condition coverage subsumes branch coverage",
-        "Branch coverage subsumes condition coverage",
-        "A stronger criterion needs fewer tests and gives more confidence"
+        "Statement coverage",
+        "Condition coverage",
+        "Path coverage",
+        "MC/DC",
+        "Condition/Decision coverage"
       ],
-      "explanation": "Branch coverage subsumes statement coverage, but not the other way round, and condition coverage and branch coverage do not subsume each other. A stronger criterion needs more tests, not fewer.",
+      "explanation": "Branch coverage subsumes statement coverage, whereas condition and branch coverage do not subsume each other, and path, MC/DC and Condition/Decision coverage are stronger criteria above branch. The book's hierarchy agrees: All-Edges (every predicate outcome, C1) subsumes All-Nodes (every statement, C0).",
       "slide": 15
     },
     {
@@ -173,7 +173,7 @@
     },
     {
       "n": 14,
-      "prompt": "For a decision with 4 conditions, MC/DC can often be achieved with how many tests, compared with the number needed to try every combination?",
+      "prompt": "For a decision with 4 simple conditions, MC/DC can often be achieved with how many tests, compared with the number needed for multiple condition coverage, which tries every combination of truth values?",
       "options": [
         "5 tests instead of 16",
         "4 tests instead of 8",
@@ -181,7 +181,7 @@
         "5 tests instead of 8",
         "4 tests instead of 16"
       ],
-      "explanation": "MC/DC can often be achieved with n + 1 = 5 tests, while trying every combination needs 2^n = 2^4 = 16 tests. MC/DC is required for the most safety-critical avionics software (DO-178C, Level A).",
+      "explanation": "MC/DC can often be achieved with n + 1 = 5 tests, while trying every combination needs 2^n = 2^4 = 16 tests; this full truth table is what the book calls multiple condition coverage (3 simple conditions give 8 rows, so 8 test cases). MC/DC is required for the most safety-critical avionics software (DO-178C, Level A).",
       "slide": 16
     },
     {
@@ -220,7 +220,7 @@
         "The fault is an equivalent mutant, so no test can detect it",
         "Statement coverage counts only functions, not statements"
       ],
-      "explanation": "Coverage cannot detect missing code (faults of omission): if a requirement was never implemented, there is no code to cover, so the metric can be 100% while the feature is missing.",
+      "explanation": "Coverage cannot detect missing code (faults of omission): if a requirement was never implemented, there is no code to cover, so the metric can be 100% while the feature is missing. The book makes the same point: specified but unprogrammed behavior is a fault of omission that structural testing cannot reveal.",
       "slide": 20
     },
     {
@@ -404,6 +404,84 @@
       ],
       "explanation": "Empirical studies show that detecting mutants is correlated with detecting real faults. Mutation testing is expensive (tests run for every mutant), needs the source code, requires manual inspection of equivalent mutants, and with suitable operators is stronger than statement and branch coverage.",
       "slide": 37
+    },
+    {
+      "n": 32,
+      "prompt": "Tests sales = 2000 and sales = 1500 are run on the code below. Counting the true and false outcome of each decision, what is the branch coverage, and which single extra test would raise it to 100%?\nif (sales > 1800)\n  c = high(sales);\nelse if (sales > 1000)\n  c = mid(sales);\nelse\n  c = low(sales);",
+      "options": [
+        "75%; a test with sales = 900",
+        "50%; a test with sales = 900",
+        "75%; a test with sales = 1200",
+        "100%; no extra test is needed",
+        "66.7%; a test with sales = 1900"
+      ],
+      "explanation": "The two decisions have 4 outcomes: 2000 makes the first true, 1500 makes it false and the second true, so 3 of 4 outcomes (75%) are covered. Only sales ≤ 1000, such as 900, takes the second decision's false outcome, which the book's C1p (every predicate to each outcome) also requires.",
+      "slide": 7
+    },
+    {
+      "n": 33,
+      "prompt": "Tests x = 20 and x = 0 are run on the function below. Using the lecture's formulas, what are the branch coverage and the path coverage?\nint f(int x) {\n  int r = 0;\n  if (x > 10) r += 2;\n  if (x > 5) r += 1;\n  return r;\n}",
+      "options": [
+        "Branch coverage 100%, path coverage 66.7%",
+        "Branch coverage 100%, path coverage 50%",
+        "Branch coverage 100%, path coverage 100%",
+        "Branch coverage 50%, path coverage 50%",
+        "Branch coverage 75%, path coverage 66.7%"
+      ],
+      "explanation": "Each decision is true for x = 20 and false for x = 0, so branch coverage is 100%. Of the 2^2 = 4 paths (the book's topologically possible paths), true-then-false needs x > 10 and x ≤ 5 and is infeasible, so path coverage is 2 executed / 3 feasible ≈ 66.7%; the missing path needs 5 < x ≤ 10.",
+      "slide": 11
+    },
+    {
+      "n": 34,
+      "prompt": "A single test with n = 3 is run on the code below. Which result is correct?\nint sum = 0;\nint i = 0;\nwhile (i < n) {\n  sum += a[i];\n  i++;\n}\nreturn sum;",
+      "options": [
+        "Statement and branch coverage are 100%, but loop coverage is not met",
+        "Statement coverage is 100%, but branch coverage is only 50%",
+        "Statement, branch and loop coverage are all fully met",
+        "Loop coverage is met, but branch coverage is only 50%",
+        "Branch coverage is 100%, but statement coverage is below 100%"
+      ],
+      "explanation": "The loop condition is true three times and false once at the exit, so every statement and both outcomes of the while decision are executed. Loop coverage also needs zero and one iterations (n = 0 and n = 1); the book likewise separates C1 from C2 (C1 coverage + loop coverage).",
+      "slide": 13
+    },
+    {
+      "n": 35,
+      "prompt": "Each test below is written as (A, B). Which test set satisfies MC/DC for the decision if (A || B)?",
+      "options": [
+        "(false, false), (true, false), (false, true)",
+        "(true, true), (false, true), (true, false)",
+        "(true, true), (false, false)",
+        "(true, false), (false, true)",
+        "(false, false), (true, true), (true, false)"
+      ],
+      "explanation": "From (false, false) the decision is false, and changing only A or only B makes it true, so each condition is shown to independently affect the outcome with n + 1 = 3 tests. The set (true, true), (false, true), (true, false) works for &&, but for || it never makes the decision false.",
+      "slide": 16
+    },
+    {
+      "n": 36,
+      "prompt": "A catch block runs only when the database connection fails, so the coverage report shows it as never executed. Which approach does the lecture suggest for covering such code?",
+      "options": [
+        "Trigger the failure with a mock, stub or fault injection",
+        "Leave the block out of the total statement count",
+        "Add more tests that use a working database connection",
+        "Measure function coverage instead of statement coverage",
+        "Treat the block as an equivalent mutant and ignore it"
+      ],
+      "explanation": "Error-handling code is hard to cover; it often needs mocks, stubs or fault injection so that the error actually occurs during a test. Tests with a working connection never reach the catch block, and dropping the block from the count or switching to a weaker criterion only hides the gap.",
+      "slide": 21
+    },
+    {
+      "n": 37,
+      "prompt": "Original: z = y * 2;\nMutant: z = y + 2;\nA test with y = 2 executes this statement and asserts on z, yet the mutant survives. Which RIP condition is the first to fail?",
+      "options": [
+        "Infection",
+        "Reachability",
+        "Propagation",
+        "Equivalence",
+        "Coupling"
+      ],
+      "explanation": "Reachability holds, but with y = 2 both versions compute z = 4, so the program state after the statement does not differ and infection fails; without an infected state nothing can propagate. The mutant is not equivalent: y = 3 gives 6 versus 5 and would kill it.",
+      "slide": 30
     }
   ]
 }

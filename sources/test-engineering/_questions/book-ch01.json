@@ -1,0 +1,231 @@
+{
+  "chapter": 1,
+  "title": "A Perspective on Testing",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "A designer forgets a required behavior, so the design document lacks something that should be present. What does the book call the resulting flaw in that document?",
+      "options": [
+        "A fault of omission",
+        "A fault of commission",
+        "A failure",
+        "An incident",
+        "A spurious result"
+      ],
+      "explanation": "A fault is the representation of an error; when something that should be present is missing, it is a fault of omission, whereas entering something incorrect is a fault of commission. The book adds that faults of omission are the more difficult type to detect and resolve.",
+      "page": 3
+    },
+    {
+      "n": 2,
+      "prompt": "Which statement about failures matches the book's definition?",
+      "options": [
+        "A failure occurs when a fault executes, and failures only occur in an executable representation",
+        "A failure is the symptom that alerts the user that something has gone wrong",
+        "A failure is the representation of an error in a work product such as a design",
+        "A failure is the mistake a person makes while writing the code",
+        "The failure definition relates failures only to faults of omission"
+      ],
+      "explanation": "A failure occurs when a fault executes, and failures only occur in an executable representation (usually source code or loaded object code). The symptom that alerts the user is an incident, and the definition relates failures only to faults of commission, not omission.",
+      "page": 3
+    },
+    {
+      "n": 3,
+      "prompt": "In the book's progression of terms (error, fault, failure, incident), what is an incident?",
+      "options": [
+        "The symptom associated with a failure that alerts the user to its occurrence",
+        "The execution of a fault in an executable representation",
+        "The representation of an error in some mode of expression",
+        "A mistake made by a person, such as a coding mistake",
+        "The act of exercising software with test cases"
+      ],
+      "explanation": "When a failure occurs it may not be readily apparent, so an incident is defined as the symptom associated with a failure that alerts the user (or customer or tester) to it. The execution of a fault is the failure itself.",
+      "page": 4
+    },
+    {
+      "n": 4,
+      "prompt": "According to the book, a test has two distinct goals. What are they?",
+      "options": [
+        "To find failures or to demonstrate correct execution",
+        "To find errors or to measure code coverage",
+        "To isolate faults or to resolve faults",
+        "To prevent errors or to improve the development process",
+        "To plan tests or to evaluate test results"
+      ],
+      "explanation": "A test is the act of exercising software with test cases, and its two distinct goals are to find failures or to demonstrate correct execution. Isolating and resolving faults are later life-cycle phases, and improving the process is the concern of SQA.",
+      "page": 4
+    },
+    {
+      "n": 5,
+      "prompt": "Poston summarizes the testing life cycle of Figure 1.1 as Putting Bugs IN, Finding Bugs, and Getting Bugs OUT. Which phases make up Getting Bugs OUT?",
+      "options": [
+        "Fault classification, fault isolation, and fault resolution",
+        "Requirements specification, design, and coding",
+        "Testing, fault classification, and fault isolation",
+        "Coding, testing, and fault resolution",
+        "Test planning, test case development, and running test cases"
+      ],
+      "explanation": "The first three phases (requirements specification, design, coding) put bugs in, the testing phase finds them, and the last three phases (fault classification, isolation, resolution) get them out. Fault resolution is itself another opportunity for errors, since a deficient fix can break formerly correct software.",
+      "page": 4
+    },
+    {
+      "n": 6,
+      "prompt": "According to the book, the inputs of a test case are really of two types. Which two?",
+      "options": [
+        "Preconditions and actual inputs",
+        "Postconditions and actual outputs",
+        "Valid inputs and invalid inputs",
+        "Preconditions and postconditions",
+        "Test case ID and purpose"
+      ],
+      "explanation": "Inputs are preconditions (circumstances that hold prior to test case execution) and the actual inputs identified by some testing method. Postconditions and actual outputs are the two types of expected outputs.",
+      "page": 5
+    },
+    {
+      "n": 7,
+      "prompt": "Knowing the expected output is often the hard part of a test case. What is the industrial response that the book calls Reference Testing?",
+      "options": [
+        "Testing the system in the presence of expert users who judge whether outputs are acceptable",
+        "Postulating an oracle who knows all the answers for every test case",
+        "Re-running earlier test cases after a fix to catch newly broken behavior",
+        "Comparing outputs with the execution history recorded for each test case",
+        "Deriving the expected outputs directly from the program's source code"
+      ],
+      "explanation": "In Reference Testing the system is tested in the presence of expert users, who judge whether the outputs of executed test inputs are acceptable. Postulating an oracle that knows all the answers is the academic response, not the industrial one.",
+      "page": 5
+    },
+    {
+      "n": 8,
+      "prompt": "Map the statement \"we have left undone that which we ought to have done, and we have done that which we ought not to have done\" onto the Venn diagram of specified (S) and programmed (P) behaviors. Which mapping is correct?",
+      "options": [
+        "Left undone = specified but not programmed (omission); done but ought not = programmed but not specified (commission)",
+        "Left undone = programmed but not specified (commission); done but ought not = specified but not programmed (omission)",
+        "Left undone = specified but not programmed (commission); done but ought not = programmed but not specified (omission)",
+        "Left undone = behaviors outside both S and P; done but ought not = the intersection of S and P",
+        "Left undone = the intersection of S and P; done but ought not = behaviors outside both S and P"
+      ],
+      "explanation": "Specified behaviors that were never programmed are faults of omission, and programmed behaviors that were never specified are faults of commission. The intersection of S and P is the \"correct\" portion, behaviors that are both specified and implemented.",
+      "page": 6,
+      "exercise": "1"
+    },
+    {
+      "n": 9,
+      "prompt": "In Figure 1.4 (S = specified, P = programmed, T = test cases; regions numbered 1–8), which regions hold specified behaviors for which no test cases exist?",
+      "options": [
+        "Regions 2 and 5",
+        "Regions 1 and 4",
+        "Regions 3 and 7",
+        "Regions 2 and 6",
+        "Regions 4 and 7"
+      ],
+      "explanation": "Regions 2 and 5 lie inside S but outside T (region 2 is also programmed, region 5 is not), and their existence means testing is necessarily incomplete. Regions 1 and 4 are the specified behaviors that are tested, and regions 2 and 6 are the programmed behaviors that are not tested.",
+      "page": 6,
+      "exercise": "2"
+    },
+    {
+      "n": 10,
+      "prompt": "In Figure 1.4 (S = specified, P = programmed, T = test cases), what does region 7 represent?",
+      "options": [
+        "Behaviors that are tested but are neither specified nor programmed",
+        "Behaviors that are specified and programmed but not tested",
+        "Behaviors that are programmed and tested but were never specified",
+        "Behaviors that are specified and tested but were never programmed",
+        "Behaviors that are specified, programmed, and tested"
+      ],
+      "explanation": "Region 7 lies only in T: the book lists it among test cases for unspecified behaviors (regions 3 and 7) and for unprogrammed behaviors (regions 4 and 7). A test case for unspecified behavior means either the test case is unwarranted or the specification is deficient.",
+      "page": 6,
+      "exercise": "2"
+    },
+    {
+      "n": 11,
+      "prompt": "According to the book, which two problems do functional test cases frequently suffer from?",
+      "options": [
+        "Significant redundancies among test cases, compounded by possible gaps of untested software",
+        "Loss of usefulness when the implementation changes, compounded by a late start after coding",
+        "Frequent identification of unspecified behaviors, compounded by heavy reliance on code reading",
+        "Dependence on the program's internal structure, compounded by use only at the unit level",
+        "Reliance on linear graph theory, compounded by an inability to use the specification"
+      ],
+      "explanation": "Functional test cases often have significant redundancies among them, compounded by possible gaps of untested software. Their stated advantages are the opposite of a late start and loss of usefulness: they stay useful when the implementation changes and can be developed in parallel with it.",
+      "page": 8
+    },
+    {
+      "n": 12,
+      "prompt": "Which claim does Edward Miller make in defense of structural testing?",
+      "options": [
+        "Branch coverage at 85% or better tends to find twice the defects of intuitive testing",
+        "Statement coverage at 100% tends to find twice the defects of intuitive testing",
+        "Branch coverage at 75% or better tends to find three times the defects of intuitive testing",
+        "Path coverage at 85% or better tends to find half the defects of intuitive testing",
+        "Branch coverage at 50% tends to find as many defects as intuitive testing"
+      ],
+      "explanation": "Miller (1991) wrote that branch coverage, if attained at the 85% or better level, tends to identify twice the number of defects found by \"intuitive\" (functional) testing. Poston, on the other side of the debate, said structural testing has been wasting testers' time since the 1970s.",
+      "page": 9
+    },
+    {
+      "n": 13,
+      "prompt": "A disgruntled employee writes a payroll program with hidden logic that checks his ID and creates havoc if he is ever terminated. Which form of testing is appropriate for finding this, and why?",
+      "options": [
+        "Structural testing, because the hidden logic is implemented but unspecified behavior that functional tests cannot reveal",
+        "Functional testing, because test cases derived from the specification will exercise the termination case",
+        "Functional testing, because the hidden logic is a fault of omission that only the specification exposes",
+        "Structural testing, because the hidden logic is specified behavior that was never implemented",
+        "Neither approach, because a fault that executes only after termination can never be tested"
+      ],
+      "explanation": "The hidden logic is programmed but not specified (a fault of commission that, like a virus, stays dormant until triggered), and behaviors that were implemented without being specified are never revealed by functional test cases. Only structural testing, which uses the code itself, can expose it.",
+      "page": 10,
+      "exercise": "3"
+    },
+    {
+      "n": 14,
+      "prompt": "How does the book distinguish Software Quality Assurance (SQA) from testing?",
+      "options": [
+        "SQA improves the product by improving the process; testing is product oriented, discovering faults in a product",
+        "SQA discovers faults in a product; testing reduces the errors endemic in the development process",
+        "SQA measures structural coverage of code; testing checks behavior against the specification",
+        "SQA applies only at the system level; testing applies only at the unit level",
+        "SQA classifies faults by severity; testing classifies faults by development phase"
+      ],
+      "explanation": "Process is how we do something and product is its end result: SQA tries to improve the product by improving the process and is concerned with reducing errors endemic in development. Testing is more product oriented and is concerned with discovering faults in a product.",
+      "page": 10
+    },
+    {
+      "n": 15,
+      "prompt": "In Beizer's fault taxonomy by severity (Figure 1.9), how is \"database corruption\" classified?",
+      "options": [
+        "Intolerable",
+        "Catastrophic",
+        "Extreme",
+        "Very serious",
+        "Infectious"
+      ],
+      "explanation": "Figure 1.9 lists level 8, Intolerable, as database corruption. Catastrophic (9) is system shutdown, Infectious (10) is a shutdown that spreads to others, Extreme (7) is frequent \"very serious\" errors, and Very serious (6) is incorrect transaction execution.",
+      "page": 11
+    },
+    {
+      "n": 16,
+      "prompt": "Which fault is placed in the correct category of the book's fault tables (Tables 1.1–1.5)?",
+      "options": [
+        "Off by one: data faults",
+        "Wrong operator (< instead of ≤): computation faults",
+        "Parameter mismatch (type, number): data faults",
+        "Incorrect loop iteration: computation faults",
+        "Insufficient precision (round-off, truncation): logic faults"
+      ],
+      "explanation": "Table 1.5 lists \"off by one\" under data faults. Wrong operator and incorrect loop iteration are logic faults, parameter mismatch is an interface fault, and insufficient precision is a computation fault.",
+      "page": 12
+    },
+    {
+      "n": 17,
+      "prompt": "In the Waterfall-based Figure 1.10, which level of testing corresponds to preliminary design?",
+      "options": [
+        "Integration testing",
+        "Unit testing",
+        "System testing",
+        "Regression testing",
+        "Structural testing"
+      ],
+      "explanation": "Requirements specification corresponds to system testing, preliminary design to integration testing, and detailed design to unit testing. The book adds that structural testing is most appropriate at the unit level and functional testing at the system level.",
+      "page": 13
+    }
+  ]
+}

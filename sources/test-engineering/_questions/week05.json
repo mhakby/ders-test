@@ -43,7 +43,7 @@
     },
     {
       "n": 4,
-      "prompt": "A service starts returning null for a field that its caller assumes is always present, and the caller crashes. Which typical interface defect is this?",
+      "prompt": "A service starts returning null for a field that its caller assumes is always present, and the caller crashes. Which type from the slides' list of typical interface defects is this?",
       "options": [
         "Missing data",
         "Data mismatch",
@@ -404,6 +404,45 @@
       ],
       "explanation": "OWASP API Security Top 10 belongs to security testing; OpenAPI, consumer-driven contracts and Pact belong to contract testing, and k6 or JMeter to performance testing.",
       "slide": 34
+    },
+    {
+      "n": 32,
+      "prompt": "For POST /orders, quantity must be between 1 and 10, and the slides' boundary tests use quantity = 0, 1, 10 and 11. Jorgensen's boundary value analysis uses min, min+, nom, max− and max of a variable, and his robustness testing adds min− and max+. Which of the slides' values would only robustness testing select?",
+      "options": [
+        "0 and 11",
+        "1 and 10",
+        "2 and 9",
+        "0 and 1",
+        "10 and 11"
+      ],
+      "explanation": "With min = 1 and max = 10, min− = 0 and max+ = 11 lie outside the valid range, while 1 and 10 are min and max, which plain boundary value analysis already tests (together with 2, a nominal value and 9). These invalid values are the negative tests that must get 400, which fits the book's point that robustness testing forces attention on exception handling.",
+      "slide": 20
+    },
+    {
+      "n": 33,
+      "prompt": "The example system is drawn as a directed graph with an edge from each caller to the module it calls: UI → order service, UI → payment service, order service → database layer, payment service → bank adapter. In Jorgensen's graph terms, at which nodes does bottom-up integration start?",
+      "options": [
+        "At the sink nodes (outdegree 0): the database layer and the bank adapter",
+        "At the source node (indegree 0): the UI",
+        "At the transfer nodes: the order service and the payment service",
+        "At the source nodes (indegree 0): the database layer and the bank adapter",
+        "At the isolated nodes: the database layer and the bank adapter"
+      ],
+      "explanation": "Bottom-up starts with the low-level modules that call nothing else, which are the sinks of the call graph, and drivers stand in for their callers. The UI is the only source (indegree 0), where top-down starts, and the two services are transfer nodes with both indegree and outdegree above 0.",
+      "slide": 10
+    },
+    {
+      "n": 34,
+      "prompt": "Each Mars Climate Orbiter module passed its own tests, yet the orbiter was lost. Which type from the slides' list of typical interface defects caused this?",
+      "options": [
+        "Data mismatch",
+        "Missing data",
+        "Call order",
+        "Error handling",
+        "Configuration"
+      ],
+      "explanation": "Ground software sent thruster impulse in pound-force seconds while navigation expected newton seconds, and differing formats or units are a data mismatch. Jorgensen's fault tables list the same kind of problem as a \"scaling or units error\" among data faults.",
+      "slide": 8
     }
   ]
 }

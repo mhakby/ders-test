@@ -4,7 +4,7 @@
   "questions": [
     {
       "n": 1,
-      "prompt": "How does the modern definition describe Test Engineering?",
+      "prompt": "According to the modern definition in the lecture slides, what is Test Engineering?",
       "options": [
         "A proactive QA discipline across the whole lifecycle, aimed at preventing defects",
         "A reactive QC activity performed after implementation, focused on finding defects",
@@ -12,7 +12,7 @@
         "A process-auditing function that certifies teams against ISO standards",
         "A developer-only practice limited to writing unit tests for each function"
       ],
-      "explanation": "The modern definition calls Test Engineering a proactive quality assurance discipline that spans the entire lifecycle and focuses on preventing defects; testing as a separate downstream phase describes the older waterfall role.",
+      "explanation": "The slides define Test Engineering as a proactive quality assurance discipline that spans the entire lifecycle and focuses on preventing defects; testing as a separate downstream phase describes the older waterfall role. The textbook's remark that testing is product oriented concerns testing itself, not this broader discipline.",
       "slide": 4
     },
     {
@@ -25,12 +25,12 @@
         "Checking the conformance of the product to its specifications",
         "Checking the product's fitness for purpose together with stakeholders"
       ],
-      "explanation": "QA is process-oriented and establishes confidence that quality will be achieved through policies, standards, audits and improvement loops; evaluating whether a specific deliverable meets requirements is Quality Control.",
+      "explanation": "QA is process-oriented and establishes confidence that quality will be achieved through policies, standards, audits and improvement loops; evaluating whether a specific deliverable meets requirements is Quality Control. The textbook agrees: SQA improves the product by improving the process, whereas testing is product oriented.",
       "slide": 5
     },
     {
       "n": 3,
-      "prompt": "According to the course's definition of testing, what does testing provide?",
+      "prompt": "According to the lecture slides' definition of testing, what does testing provide?",
       "options": [
         "Information about risk and quality, not guarantees",
         "A guarantee that no defects remain in the product",
@@ -38,7 +38,7 @@
         "Confidence that the development process will achieve quality",
         "A complete record of every possible input and its output"
       ],
-      "explanation": "Testing executes the product under specified conditions and observes outcomes, which provides information about risk and quality but no guarantees; building confidence in the process is what QA does.",
+      "explanation": "Testing executes the product under specified conditions and observes outcomes, which provides information about risk and quality but no guarantees; building confidence in the process is what QA does. The textbook likewise notes that proving a program fault-free is impossible (it is equivalent to the halting problem).",
       "slide": 5
     },
     {
@@ -90,7 +90,7 @@
         "Conducting user acceptance testing (UAT)",
         "Running API/integration tests against a service"
       ],
-      "explanation": "Static testing evaluates artefacts without executing the code, and linters and SAST are listed static examples; unit, performance, UAT and API/integration tests execute the system, so they are dynamic.",
+      "explanation": "Static testing evaluates artefacts without executing the code, and linters and SAST are listed static examples; unit, performance, UAT and API/integration tests execute the system, so they are dynamic. The textbook likewise notes that reviews can find faults, including faults of omission, without executing anything.",
       "slide": 8
     },
     {
@@ -103,12 +103,12 @@
         "Rank test items by likelihood, impact and detectability before testing them",
         "Execute every possible input value to reach complete input coverage"
       ],
-      "explanation": "EP partitions inputs into classes expected to behave similarly and tests one representative from each class; testing the minimum, maximum and their neighbours is boundary value analysis.",
+      "explanation": "EP partitions inputs into classes expected to behave similarly and tests one representative from each class (the textbook's equivalence class testing likewise takes one element from each class); testing the minimum, maximum and their neighbours is boundary value analysis.",
       "slide": 9
     },
     {
       "n": 9,
-      "prompt": "Which test design technique is meant for logic with multiple conditions, enumerating their combinations and expected outcomes?",
+      "prompt": "A shop's discount depends on three conditions: whether the customer is a member, whether the order exceeds $100 and whether a coupon is entered. The tester lists every combination of these conditions with its expected discount. Which test design technique is this?",
       "options": [
         "Decision tables / cause-effect",
         "Equivalence partitioning",
@@ -116,38 +116,38 @@
         "Risk-based testing",
         "Exploratory testing"
       ],
-      "explanation": "Decision tables / cause-effect handle logic with multiple conditions by enumerating condition combinations and expected outcomes, minimized with pairwise where appropriate.",
+      "explanation": "Decision tables handle logic with multiple conditions by enumerating condition combinations and their expected outcomes; in the textbook's terms each column (rule) becomes a test case, and three binary conditions give 2^3 = 8 rules.",
       "slide": 9
     },
     {
       "n": 10,
-      "prompt": "A password must be 8–20 characters long. Which set of length equivalence classes matches the course's worked example?",
+      "prompt": "A password must be 8–20 characters long. Which set of lengths takes exactly one representative from each length equivalence class of the lecture's worked example?",
       "options": [
-        "<8 invalid, 8–20 valid, >20 invalid",
-        "<8 valid, 8–20 valid, >20 invalid",
-        "<8 invalid, 8–20 invalid, >20 valid",
-        "<7 invalid, 7–21 valid, >21 invalid",
-        "<8 invalid, 8–20 valid, >20 valid"
+        "5, 14, 25",
+        "7, 8, 20, 21",
+        "8, 14, 20",
+        "5, 14",
+        "7, 21"
       ],
-      "explanation": "The worked example partitions length into <8 (invalid), 8–20 (valid) and >20 (invalid); 7 and 21 are boundary test values, not limits of the valid class.",
+      "explanation": "The worked example partitions length into <8 (invalid), 8–20 (valid) and >20 (invalid), and 5, 14 and 25 take one value from each; 8, 14, 20 all lie in the valid class, and 7, 8, 20, 21 are boundary values with two from the valid class. In the textbook's terms this is weak robust equivalence class testing of one variable: one valid case plus one case per invalid class.",
       "slide": 10
     },
     {
       "n": 11,
-      "prompt": "An input field accepts integers from 1 to 100. Testing just below, at and just above each boundary, which values does boundary value analysis select?",
+      "prompt": "The lecture slides define boundary value analysis as testing just below, at and just above each boundary. Which values does this rule select for an input field that accepts integers 1–100?",
       "options": [
         "0, 1, 2, 99, 100, 101",
         "1, 50, 100",
         "0, 1, 100, 101",
-        "1, 2, 99, 100",
+        "0, 2, 99, 101",
         "-1, 0, 101, 102"
       ],
-      "explanation": "BVA tests just below, at and just above each boundary: 0, 1, 2 around the minimum and 99, 100, 101 around the maximum; leaving out 2 and 99 misses the just-inside values.",
+      "explanation": "Just below, at and just above each boundary gives 0, 1, 2 around the minimum and 99, 100, 101 around the maximum. The textbook's boundary value analysis is different: it uses min, min+, nom, max-, max (1, 2, a nominal value, 99, 100) and leaves 0 and 101 to robustness testing.",
       "slide": 11
     },
     {
       "n": 12,
-      "prompt": "Using the course's risk-based testing rubric, a feature is rated likelihood 4, impact 5 and detectability 2. What is its RPN?",
+      "prompt": "Using the lecture's risk-based testing rubric, a feature is rated likelihood 4, impact 5 and detectability 2. What is its RPN?",
       "options": [
         "40",
         "20",
@@ -246,7 +246,7 @@
         "Done by external users in their own real environment",
         "Done on the complete integrated application across browsers"
       ],
-      "explanation": "Unit testing is performed by developers, primarily white-box, in a development environment with mocked dependencies; an independent team in a production-like environment describes system testing.",
+      "explanation": "Unit testing is performed by developers, primarily white-box, in a development environment with mocked dependencies (the textbook likewise finds structural testing best suited to the unit level); an independent team in a production-like environment describes system testing.",
       "slide": 21
     },
     {
@@ -300,6 +300,71 @@
       ],
       "explanation": "The ethics guidance says to respect privacy and PII by using masked or synthetic data where possible, and to document residual risk and assumptions explicitly.",
       "slide": 25
+    },
+    {
+      "n": 24,
+      "prompt": "The lecture's password decision table uses four binary conditions: length_ok, has_letter, has_digit and has_space. If rules with the same outcome are merged using don't care entries, what is the smallest number of rules that still covers all combinations?",
+      "options": [
+        "5",
+        "2",
+        "4",
+        "8",
+        "16"
+      ],
+      "explanation": "Only length_ok = T, has_letter = T, has_digit = T, has_space = F is valid, and the 15 invalid combinations need one rule per failing condition (length_ok = F covers 8; length_ok = T, has_letter = F covers 4; then has_digit = F covers 2 and has_space = T covers 1), giving 1 + 4 = 5 rules whose rule counts sum to 2^4 = 16. Two rules are not enough because no single pattern of don't care entries captures all 15 invalid combinations.",
+      "slide": 10
+    },
+    {
+      "n": 25,
+      "prompt": "For an integer field that accepts 1–100, the lecture's BVA rule tests 0, 1, 2, 99, 100, 101, while the textbook's boundary value analysis uses only min, min+, nom, max- and max. Which textbook technique adds the values 0 and 101 (min- and max+)?",
+      "options": [
+        "Robustness testing",
+        "Worst-case testing",
+        "Special value testing",
+        "Weak normal equivalence class testing",
+        "Decision table testing"
+      ],
+      "explanation": "The textbook calls values slightly below the minimum and slightly above the maximum min- and max+ and adds them in robustness testing, a simple extension of BVA; worst-case testing only combines the five normal values, and weak normal equivalence classes contain valid values only.",
+      "slide": 11
+    },
+    {
+      "n": 26,
+      "prompt": "In the lecture's worked example, a password must be 8–20 characters, contain at least one letter and one digit, and contain no spaces. Which test input has the expected outcome 'valid'?",
+      "options": [
+        "a1b2c3d4",
+        "abc1234",
+        "abcdefgh",
+        "12345678",
+        "abc 12345"
+      ],
+      "explanation": "a1b2c3d4 has 8 characters, letters and digits and no space; abc1234 has only 7 characters, abcdefgh and 12345678 fall in the letters-only and digits-only classes, and abc 12345 contains a space.",
+      "slide": 10
+    },
+    {
+      "n": 27,
+      "prompt": "The homework input field accepts integers 1–999 and rejects leading zeros. Which input belongs to an invalid equivalence class even though its numeric value lies inside 1–999?",
+      "options": [
+        "007",
+        "7",
+        "999",
+        "1000",
+        "0"
+      ],
+      "explanation": "The leading-zero rule adds its own invalid class: 007 has the value 7 but must be rejected. 0 and 1000 fall in the out-of-range invalid classes, while 7 and 999 are valid inputs.",
+      "slide": 12
+    },
+    {
+      "n": 28,
+      "prompt": "A risk would delay the schedule by 3–6 months and has a probability of 50%–90%. What is its score in the 5×5 impact–probability risk matrix?",
+      "options": [
+        "16",
+        "12",
+        "20",
+        "8",
+        "25"
+      ],
+      "explanation": "A 3–6 month schedule impact is rated High (4) and a 50%–90% probability is High (4), so the cell value is 4 × 4 = 16; 20 would need Very High impact (more than 6 months) or a probability above 90%.",
+      "slide": 14
     }
   ]
 }

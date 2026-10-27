@@ -10,7 +10,9 @@ const warnings: string[] = [];
 const seenIds = new Map<string, string>();
 
 // Patterns that break option shuffling or make generated questions ambiguous.
-const FORBIDDEN_OPTION = /\b(all|none|both|neither) of the (above|following)\b|\bboth [A-E] and [A-E]\b|\b(options?|choices?|answers?) [A-E]\b/i;
+// "Both A and B" is only flagged when it is the whole option: letters A–E are also used as node names in questions.
+const FORBIDDEN_OPTION =
+  /\b(all|none|both|neither) of the (above|following)\b|^\s*(both|neither|only) [A-E] (and|nor) [A-E]\.?\s*$|\b(options?|choices?|answers?) [A-E]\b/i;
 const LETTER_REF = /\b(options?|choices?|answers?) \(?[A-E]\)?(?![a-z])/;
 
 function isText(v: unknown): v is string {
@@ -92,6 +94,10 @@ function checkCourse(file: string, expectedId: string) {
       if (course.languages.secondary && q.prompt?.[course.languages.secondary]) withSecondary++;
       if (q.answer?.length === 1) letters[q.answer[0]] = (letters[q.answer[0]] ?? 0) + 1;
     });
+  }
+  for (const preset of course.presets ?? []) {
+    if (!isText(preset.id) || !isText(preset.title)) err('preset needs id and title');
+    for (const setId of preset.sets ?? []) if (!setIds.has(setId)) err(`preset ${preset.id}: unknown set "${setId}"`);
   }
   const dist = Object.keys(letters).sort().map(l => `${l}=${letters[l]}`).join(' ');
   const sec = course.languages.secondary ? `, ${withSecondary} with ${course.languages.secondary}` : '';

@@ -65,6 +65,37 @@ Write `sources/test-engineering/_questions/weekNN.json` (UTF-8, valid JSON, 2-sp
 7. Keep prompts concise; code snippets may use `\n` line breaks and should stay short (≤ 8 lines).
 8. Numbers, formulas, percentages and names must match the slide exactly.
 
+## Textbook questions (Jorgensen, *Software Testing: A Craftsman's Approach*, 2nd ed.)
+The midterm covers Parts I–III of this book (chapters 1–11, book pages 1–183) in addition to the slides.
+The book is a scanned PDF rendered to images, two book pages per image:
+`C:\Users\Mhakby\AppData\Local\Temp\claude\C--Users-Mhakby-ce-test\19bd1f74-9064-4863-9fcb-64dba499b848\scratchpad\book\pages\pNNN.png`.
+Even page on the left half, odd page on the right half. Up to book page 49 (image p034), page *n* is on
+`p{floor(n/2)+10}` (pages 4–5 are `p012.png`); the scan skips a few pages around p035, and from p036 (pages 56–57)
+on, page *n* is on `p{floor(n/2)+8}` (page 183 is on `p099.png`). Always confirm with the printed page numbers in
+the corners.
+
+Output `sources/test-engineering/_questions/book-chNN.json`:
+
+```json
+{
+  "chapter": 5,
+  "title": "Boundary Value Testing",
+  "questions": [
+    { "n": 1, "prompt": "...", "options": ["correct", "...", "...", "...", "..."], "explanation": "...", "page": 81 },
+    { "n": 2, "prompt": "...", "options": ["..."], "explanation": "...", "page": 95, "exercise": "3" }
+  ]
+}
+```
+
+- `page`: the printed book page the answer is based on (instead of `slide`).
+- `exercise`: only for questions derived from the chapter's end-of-chapter **Exercises** section — the exercise
+  number as printed. The instructor may reuse these exercises on the exam, so every exercise whose answer can be
+  determined unambiguously from the chapter must produce at least one question (turn open "develop/compute" exercises
+  into a question about the key result: e.g. the number of test cases, which classes/cases result, which value
+  is correct). Skip only exercises that are purely open-ended opinion/essay tasks.
+- All other rules above apply; "slides" means "book pages" here. Use only what the book says.
+- Keep the book's own terminology and notation (e.g. its names for test case counts, coverage metrics, graph terms).
+
 When done, re-read your file once against the slides: check that `options[0]` really is the answer, that
 each distractor is wrong per the slides, and that the JSON parses
 (`node -e "JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'))" <file>`).

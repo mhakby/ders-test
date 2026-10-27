@@ -8,7 +8,16 @@ export interface Question {
   answer: string[];
   explanation?: Localized;
   note?: string;
-  source?: { file: string; page?: number; slide?: number };
+  source?: {
+    file: string;
+    /** What kind of material the question comes from; "book" questions are marked with an icon. */
+    kind?: 'slides' | 'book' | 'tutorial';
+    page?: number;
+    slide?: number;
+    /** End-of-chapter exercise the question is derived from, e.g. "5.3". */
+    exercise?: string;
+    section?: string;
+  };
 }
 
 export interface QuestionSet {
@@ -24,6 +33,8 @@ export interface Course {
   languages: { primary: string; secondary?: string };
   origin: 'official' | 'generated';
   sourceNote?: string;
+  /** Named scope shortcuts, e.g. the sets covered by the midterm. */
+  presets?: { id: string; title: string; sets: string[] }[];
   sets: QuestionSet[];
 }
 

@@ -1,0 +1,260 @@
+{
+  "chapter": 4,
+  "title": "Graph Theory for Testers",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "While checking the incidence matrix of a graph, you find a column whose entries sum to 3. What does this tell you?",
+      "options": [
+        "There is a mistake, since every edge has exactly two endpoints",
+        "The node in that column has degree 3",
+        "The edge in that column belongs to a loop",
+        "The graph has exactly three components",
+        "The node in that column is a transfer node"
+      ],
+      "explanation": "Incidence-matrix rows are nodes and columns are edges, so every column must sum to 2; checking column sums is an integrity check similar to a parity check. A node's degree is a row sum, not a column sum.",
+      "page": 55
+    },
+    {
+      "n": 2,
+      "prompt": "Why can no edges be present in the condensation graph of an ordinary (undirected) graph?",
+      "options": [
+        "An edge would connect two components, making them one maximal component",
+        "Every condensing node is a sink node, so it has outdegree 0",
+        "Edges are omitted by convention only, to keep the drawing readable",
+        "Condensation keeps only the isolated nodes of the original graph",
+        "Condensation removes every node whose degree is greater than 1"
+      ],
+      "explanation": "Components are maximal sets of connected nodes, so an edge between two of them would put their nodes in one path and therefore in the same component (and edges join individual nodes, not sets of nodes). As a result, components are independent and can be tested separately.",
+      "page": 58
+    },
+    {
+      "n": 3,
+      "prompt": "A digraph has nodes n1–n7 and edges <n1, n2>, <n1, n4>, <n3, n4>, <n2, n5>, <n4, n6>; n7 has no edges. Which nodes are transfer nodes?",
+      "options": [
+        "n2 and n4",
+        "n1 and n3",
+        "n5, n6 and n7",
+        "n1, n2 and n4",
+        "n4 only"
+      ],
+      "explanation": "A transfer node has indegree ≠ 0 and outdegree ≠ 0: n2 (1 in, 1 out) and n4 (2 in, 1 out). n1 and n3 are source nodes, n5 and n6 are sink nodes, and n7 is both a source and a sink, which makes it an isolated node.",
+      "page": 61
+    },
+    {
+      "n": 4,
+      "prompt": "In the adjacency matrix of a directed graph, what does the sum of the entries in a node's column give?",
+      "options": [
+        "The indegree of the node",
+        "The outdegree of the node",
+        "The degree of the node, since the matrix is symmetric",
+        "Always 2, since each edge has two endpoints",
+        "The length of the longest path ending at the node"
+      ],
+      "explanation": "In a digraph, a(i, j) = 1 iff there is an edge from node i to node j, so a row sum is the outdegree and a column sum is the indegree. The matrix need not be symmetric, and the always-2 column sum belongs to the incidence matrix.",
+      "page": 61
+    },
+    {
+      "n": 5,
+      "prompt": "The reachability matrix of a digraph is computed as R = I + A + A² + … + A^k, where A is the adjacency matrix. What is k?",
+      "options": [
+        "The length of the longest path in the digraph",
+        "The number of strong components in the digraph",
+        "The cyclomatic number of the digraph",
+        "The number of source nodes in the digraph",
+        "The largest indegree of any node in the digraph"
+      ],
+      "explanation": "k is the length of the longest path in D and I is the identity matrix; r(i, j) = 1 iff there is a path from node i to node j.",
+      "page": 62
+    },
+    {
+      "n": 6,
+      "prompt": "A digraph has edges n1→n2, n1→n4, n3→n4, n2→n5, n4→n6 and n6→n3. How are nodes n2 and n6 connected?",
+      "options": [
+        "1-connected: a semipath but no path exists between them",
+        "0-connected: they are not joined even by a semipath",
+        "2-connected: a path leads from one of them to the other",
+        "3-connected: paths lead in both directions between them",
+        "4-connected: they lie on a common cycle"
+      ],
+      "explanation": "The semipath n2–n1–n4–n6 exists, but there is no directed path either way (n2 leads only to n5, and the cycle n3→n4→n6→n3 never returns to n2). No degree of connectedness beyond 3 exists.",
+      "page": 63
+    },
+    {
+      "n": 7,
+      "prompt": "A digraph has nodes n1–n7 and edges n1→n2, n1→n4, n3→n4, n2→n5, n4→n6 and n6→n3. Which set of nodes is a strong component?",
+      "options": [
+        "{n3, n4, n6}",
+        "{n1, n3, n4, n6}",
+        "{n4, n6}",
+        "{n1, n2, n5}",
+        "{n1, n2, n3, n4, n5, n6}"
+      ],
+      "explanation": "A strong component is a maximal set of 3-connected nodes; n3, n4 and n6 lie on the cycle n3→n4→n6→n3, while n1 reaches n4 but nothing returns to n1, and {n4, n6} is not maximal. Condensing the strong components always gives a loop-free directed acyclic graph (DAG).",
+      "page": 64
+    },
+    {
+      "n": 8,
+      "prompt": "How does Jorgensen's improved definition of a program graph differ from the traditional definition?",
+      "options": [
+        "Nodes may be entire statements or statement fragments, not only whole statements",
+        "Edges represent data flow between variables instead of flow of control",
+        "Only decision statements become nodes; sequential statements are merged into edges",
+        "The graph becomes undirected, since control can flow in both directions",
+        "Nonexecutable statements such as comments become separate nodes"
+      ],
+      "explanation": "Traditionally every node is a program statement; the improved definition lets nodes be entire statements or statement fragments, while edges still represent flow of control. For nonexecutable statements such as comments, the simplest answer is to ignore them.",
+      "page": 65
+    },
+    {
+      "n": 9,
+      "prompt": "Finite state machine transition labels in Jorgensen follow a \"numerator\"/\"denominator\" convention. What do the two parts denote?",
+      "options": [
+        "Numerator: the event causing the transition; denominator: the associated action",
+        "Numerator: the action performed; denominator: the event that caused it",
+        "Numerator: the source state; denominator: the destination state",
+        "Numerator: the number of tokens; denominator: the number of input places",
+        "Numerator: the guard condition; denominator: the transition's priority"
+      ],
+      "explanation": "The numerator is the event that causes the transition and the denominator is the action associated with it; events are mandatory, while actions are optional.",
+      "page": 66
+    },
+    {
+      "n": 10,
+      "prompt": "A marked Petri net has places (p1, p2, p3, p4, p5) with marking <1, 1, 1, 2, 0>. Transition t2 has p3 as its only input place and p4 as its only output place. What is the marking after t2 fires?",
+      "options": [
+        "<1, 1, 0, 3, 0>",
+        "<1, 1, 0, 2, 0>",
+        "<1, 1, 1, 3, 0>",
+        "<0, 0, 0, 3, 0>",
+        "<1, 1, 0, 2, 1>"
+      ],
+      "explanation": "Firing an enabled transition removes one token from each of its input places and adds one token to each of its output places, so p3 goes from 1 to 0 and p4 from 2 to 3.",
+      "page": 69
+    },
+    {
+      "n": 11,
+      "prompt": "In an event-driven Petri net (EDPN), what is the situation called when no transition is enabled, and how can it be ended?",
+      "options": [
+        "Event quiescence; it ends when a token is created in a port input event place",
+        "Deadlock; it ends only when the net is reset to its initial marking",
+        "Event quiescence; it ends when a token is removed from a data place",
+        "Petri net conflict; it ends when both conflicting transitions fire together",
+        "Conservation; it ends when a port output place receives a token"
+      ],
+      "explanation": "In an EDPN, a marking with no enabled transition is a point of event quiescence, which can be broken by creating a token in a port input event place; in a traditional Petri net the same situation is called deadlock.",
+      "page": 72
+    },
+    {
+      "n": 12,
+      "prompt": "In a StateChart, state A contains substates B (its initial substate) and C, and an edge leaves the outline of A and goes to state D. What does this edge mean?",
+      "options": [
+        "The transition to D can occur from either B or C",
+        "The transition to D can occur only from B, A's initial substate",
+        "The transition to D can occur only when B and C are active together",
+        "The transition to D is ambiguous and must be redrawn from B and from C",
+        "The transition to D can occur only after A has left both B and C"
+      ],
+      "explanation": "Edges start and end on the outline of a state, and an edge from a state that contains substates refers to all of them, so A → D can occur from B or from C. This convention keeps finite state machines from looking like \"spaghetti code\".",
+      "page": 74
+    },
+    {
+      "n": 13,
+      "prompt": "Which definition of the length of a path fits the chapter's own usage, where every node lies on a path of length 0 with itself and A² gives the paths of length 2?",
+      "options": [
+        "The number of edges in the path",
+        "The number of nodes in the path",
+        "The number of components the path passes through",
+        "The sum of the degrees of the nodes on the path",
+        "The number of loops contained in the path"
+      ],
+      "explanation": "Counting edges makes a single node a path of length 0 and the entries of A² the two-edge paths (length 2); counting nodes would give a single node length 1.",
+      "page": 75,
+      "exercise": "1"
+    },
+    {
+      "n": 14,
+      "prompt": "An undirected graph has nodes n1–n7 and edges e1 = (n1, n2), e2 = (n1, n4), e3 = (n3, n4), e4 = (n2, n5), e5 = (n4, n6). Which loop(s) are created if an edge is added between n5 and n6?",
+      "options": [
+        "One loop: n1, n2, n5, n6, n4, n1",
+        "One loop: n4, n5, n6, n4",
+        "One loop: n3, n4, n6, n5, n3",
+        "Two loops: n1, n2, n5, n6, n4, n1 and n3, n4, n6, n3",
+        "No loop, since n5 and n6 lie in different components"
+      ],
+      "explanation": "Before the change the component {n1, …, n6} contains no loop, so the new edge (n5, n6) closes exactly one: n1–n2–n5–n6–n4–n1 (e1, e4, new edge, e5, e2). There is no edge n4–n5 or n3–n6, so the other loops do not exist.",
+      "page": 75,
+      "exercise": "2"
+    },
+    {
+      "n": 15,
+      "prompt": "Nodes ni and nj of a digraph are 3-connected iff a path goes from ni to nj and a path goes from nj to ni. While convincing yourself that 3-connectedness is an equivalence relation on the nodes, which justification is correct?",
+      "options": [
+        "Transitive: paths ni→nj→nk and nk→nj→ni can be chained, so ni and nk are 3-connected",
+        "Reflexive: every node lies on some cycle, so a path leads from it back to itself",
+        "Symmetric: any path from ni to nj can be reversed into a path from nj to ni",
+        "Antisymmetric: two distinct nodes can never have paths in both directions",
+        "Transitive: paths ni→nj and nj→nk give a semipath between ni and nk, which suffices"
+      ],
+      "explanation": "Chaining the paths ni→nj and nj→nk, and nk→nj and nj→ni, gives paths in both directions between ni and nk, so the relation is transitive. Reflexivity comes from the path of length 0 (not every node lies on a cycle), symmetry follows because the definition already demands both directions (directed paths cannot simply be reversed), and two distinct nodes on a cycle are 3-connected, so it is not antisymmetric.",
+      "page": 75,
+      "exercise": "3"
+    },
+    {
+      "n": 16,
+      "prompt": "Using the chapter's formula V(G) = e − n + p (p = number of components), what is the cyclomatic number of a Case construct graph made of one decision node with three branches, each through its own node, all rejoining at a single end node? Use the graph as described, with no edge added from the end node back to the decision node.",
+      "options": [
+        "2",
+        "3",
+        "1",
+        "4",
+        "0"
+      ],
+      "explanation": "The Case graph has n = 5 nodes, e = 6 edges and p = 1 component, so V(G) = 6 − 5 + 1 = 2. The value 3 would come from e − n + 2p, or from first adding an end-to-start edge, neither of which this question uses.",
+      "page": 75,
+      "exercise": "4"
+    },
+    {
+      "n": 17,
+      "prompt": "A digraph has nodes n1–n7 and edges n1→n2, n1→n4, n3→n4, n2→n5, n4→n6, n6→n3, plus three added edges n3→n1, n4→n5 and n5→n6; n7 is isolated. Using the chapter's formula V(G) = e − n + p (p = number of components), what is its cyclomatic number?",
+      "options": [
+        "4",
+        "1",
+        "3",
+        "6",
+        "2"
+      ],
+      "explanation": "Here e = 9, n = 7 and p = 2 (the main component plus the isolated n7), so V(G) = 9 − 7 + 2 = 4; adding three edges and no nodes raised it by 3 from the original 6 − 7 + 2 = 1. The value 6 would come from e − n + 2p, which this question does not use.",
+      "page": 75,
+      "exercise": "5"
+    },
+    {
+      "n": 18,
+      "prompt": "Using the chapter's formula V(G) = e − n + p (p = number of components), the digraph with nodes n1–n7 and edges n1→n2, n1→n4, n3→n4, n2→n5, n4→n6, n6→n3 (n7 isolated) has V(G) = 6 − 7 + 2 = 1. It is extended by adding nodes n8, n9 and edges n5→n8, n8→n9. What happens to the cyclomatic number?",
+      "options": [
+        "It stays 1, because each added edge comes with one added node",
+        "It rises to 3, because two edges were added",
+        "It falls to −1, because two nodes were added",
+        "It rises to 2, because the chain forms a new component",
+        "It falls to 0, because the chain contains no decision"
+      ],
+      "explanation": "Now e = 8, n = 9 and p = 2, so V(G) = 8 − 9 + 2 = 1. Each new node arrives with exactly one new edge, so e − n is unchanged, and the chain hangs off n5, so no component is added.",
+      "page": 75,
+      "exercise": "5"
+    },
+    {
+      "n": 19,
+      "prompt": "In a graph whose nodes are people and whose edges mean \"socializes with\", which graph concepts correspond to a person's popularity and to a hermit?",
+      "options": [
+        "Degree of a node; an isolated node",
+        "Cyclomatic number; a transfer node",
+        "Number of components; a condensing node",
+        "Length of the longest path; a strong component",
+        "Column sum of the incidence matrix; a cycle"
+      ],
+      "explanation": "The chapter says a node's degree indicates its \"popularity\", and a node with degree 0 is isolated, like a hermit.",
+      "page": 76,
+      "exercise": "6"
+    }
+  ]
+}

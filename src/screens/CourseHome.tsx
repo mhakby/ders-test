@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { ConfirmButton, HazardStripe, Strip, percent, stats } from '../components';
 import { courses, scopedIds, type CourseIndex } from '../data';
-import { deckCount, deckTitle, openDeck, setMode } from '../decks';
+import { deckCount, deckTitle, hasExercises, isExercise, openDeck, setMode } from '../decks';
 import { href, navigate } from '../router';
 import { exportProgress, importProgress, resetAll, updateProgress, useProgress } from '../store';
 
@@ -17,7 +17,12 @@ export function CourseHome({ ci }: { ci: CourseIndex }) {
   const inScope = new Set(scope);
   const ids = scopedIds(ci, p.scope);
   const s = stats(ids, p);
-  const setWord = course.id === 'isg' ? 'test' : 'hafta';
+  const setWord = course.id === 'isg' ? 'test' : 'set';
+  const sameScope = (sets: string[]) => scope.length === sets.length && sets.every(id => inScope.has(id));
+  const applyScope = (sets: string[] | undefined) =>
+    updateProgress(course.id, d => {
+      d.scope = !sets || sets.length === course.sets.length ? undefined : course.sets.map(x => x.id).filter(id => sets.includes(id));
+    });
 
   const start = (deckId: string) => {
     if (openDeck(ci, deckId)) navigate({ name: 'quiz', courseId: course.id, deckId });
@@ -125,22 +130,37 @@ export function CourseHome({ ci }: { ci: CourseIndex }) {
 
       <section>
         <div className="row-between section-head">
-          <h2>{course.id === 'isg' ? 'Testler' : 'Haftalar'}</h2>
+          <h2>{course.id === 'isg' ? 'Testler' : 'Setler'}</h2>
           <div className="link-row">
-            <button type="button" className="link" onClick={() => updateProgress(course.id, d => void (d.scope = undefined))}>
+            <button type="button" className={`link ${p.scope ? '' : 'on'}`} onClick={() => applyScope(undefined)}>
               Hepsi
             </button>
-            <button type="button" className="link" onClick={() => updateProgress(course.id, d => void (d.scope = []))}>
+            {course.presets?.map(preset => (
+              <button
+                type="button"
+                key={preset.id}
+                className={`link ${p.scope && sameScope(preset.sets) ? 'on' : ''}`}
+                onClick={() => applyScope(preset.sets)}
+              >
+                {preset.title}
+              </button>
+            ))}
+            <button type="button" className="link" onClick={() => applyScope([])}>
               Temizle
             </button>
           </div>
         </div>
-        <p className="muted small">Kutucuklar karma test ve tekrar listelerinin kapsamını belirler.</p>
+        <p className="muted small">
+          Kutucuklar karma test ve tekrar listelerinin kapsamını belirler.
+          {course.presets?.length ? ` ${course.presets.map(x => x.title).join(', ')} kısayolu sınav kapsamını tek dokunuşla seçer.` : ''}
+        </p>
         <ul className="set-list">
           {course.sets.map(set => {
             const setIds = set.questions.map(q => q.id);
             const st = stats(setIds, p);
             const checked = inScope.has(set.id);
+            const fromBook = set.questions.some(q => q.source?.kind === 'book');
+            const exercises = setIds.filter(id => isExercise(ci, id)).length;
             return (
               <li key={set.id} className={checked ? '' : 'out'}>
                 <button
@@ -154,10 +174,14 @@ export function CourseHome({ ci }: { ci: CourseIndex }) {
                   {checked ? '✓' : ''}
                 </button>
                 <button type="button" className="set-row" onClick={() => start(`set:${set.id}`)}>
-                  <span className="set-title">{set.title}</span>
+                  <span className="set-title">
+                    {fromBook && <span aria-label="Kitap">📘 </span>}
+                    {set.title}
+                  </span>
                   <span className="muted small">
                     {st.solved}/{st.total} çözüldü · <span className="ok-text">{st.correct} D</span> ·{' '}
                     <span className="bad-text">{st.wrong} Y</span>
+                    {exercises > 0 && <span className="exercise-count"> · {exercises} alıştırma</span>}
                   </span>
                   <Strip ids={setIds} answerOf={id => p.answers[id]} />
                 </button>
@@ -194,7 +218,7 @@ export function CourseHome({ ci }: { ci: CourseIndex }) {
       <section>
         <h2>Tekrar</h2>
         <div className="stack">
-          {(['saved', 'wrong', 'all'] as const).map(deckId => (
+          {[...(hasExercises(ci) ? ['exercises'] : []), 'saved', 'wrong', 'all'].map(deckId => (
             <button type="button" key={deckId} className="btn list-btn" onClick={() => start(deckId)}>
               <span>{deckTitle(ci, deckId)}</span>
               <span className="count">{deckCount(ci, p, deckId)}</span>

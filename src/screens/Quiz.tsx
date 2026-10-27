@@ -7,6 +7,7 @@ import {
   deckTitle,
   followsMode,
   goTo,
+  isExercise,
   isReviewDeck,
   openDeck,
   setMode,
@@ -109,10 +110,17 @@ export function Quiz({ ci, deckId }: { ci: CourseIndex; deckId: string }) {
   const correctLetters = q.answer;
   const wrongTimes = p.wrongCount[q.id] ?? 0;
   const explanation = q.explanation?.[lang] ?? q.explanation?.[primary];
-  const sourceLabel = q.source
-    ? `${q.source.file.replace(/\.\w+$/, '').replace(/^week0?/, 'Week ')}${q.source.slide ? `, slayt ${q.source.slide}` : ''}${
-        q.source.page ? `, sayfa ${q.source.page}` : ''
-      }`
+  const src = q.source;
+  const sourceLabel = src
+    ? [
+        src.file.endsWith('.pptx') ? src.file.replace(/\.pptx$/, '').replace(/^week0?/, 'Week ') : src.file,
+        src.slide && `slayt ${src.slide}`,
+        src.page && `s. ${src.page}`,
+        src.exercise && `Alıştırma ${src.exercise}`,
+        src.section,
+      ]
+        .filter(Boolean)
+        .join(', ')
     : undefined;
 
   return (
@@ -144,7 +152,15 @@ export function Quiz({ ci, deckId }: { ci: CourseIndex; deckId: string }) {
         <div className="q-meta">
           <div className="q-number">
             {isReviewDeck(deckId) && <small>{hit.set.title}</small>}
-            Soru {q.number ?? hit.index + 1}
+            <span>
+              {src?.kind === 'book' && (
+                <span role="img" aria-label="Kitap sorusu" title="Ders kitabından">
+                  📘{' '}
+                </span>
+              )}
+              Soru {q.number ?? hit.index + 1}
+              {src?.exercise && <span className="badge exercise">Alıştırma {src.exercise}</span>}
+            </span>
           </div>
           <div className="q-tools">
             <button
@@ -242,6 +258,7 @@ export function Quiz({ ci, deckId }: { ci: CourseIndex; deckId: string }) {
           pos={pos}
           answerOf={qid => answerOf(p, deckId, qid)}
           isSaved={qid => Boolean(p.saved[qid])}
+          isExercise={qid => isExercise(ci, qid)}
           onPick={i => {
             setMapOpen(false);
             go(i);

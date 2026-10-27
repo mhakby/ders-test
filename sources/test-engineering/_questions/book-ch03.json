@@ -1,0 +1,227 @@
+{
+  "chapter": 3,
+  "title": "Discrete Math for Testers",
+  "questions": [
+    {
+      "n": 1,
+      "prompt": "According to Jorgensen, how do discrete mathematics and graph theory divide between the main testing approaches?",
+      "options": [
+        "Discrete math is more applicable to functional testing; graph theory to structural testing",
+        "Discrete math is more applicable to structural testing; graph theory to functional testing",
+        "Discrete math applies to unit testing; graph theory applies only to system testing",
+        "Both mainly support structural testing; functional testing needs no mathematics",
+        "Both mainly model continuous behavior, as calculus does for developers"
+      ],
+      "explanation": "The book states that discrete mathematics is more applicable to functional testing, while graph theory pertains more to structural testing; the reversed pairing is the tempting trap.",
+      "page": 33
+    },
+    {
+      "n": 2,
+      "prompt": "In Jorgensen's set theory section, a set can be defined in three ways. Which list gives them?",
+      "options": [
+        "Listing its elements, giving a decision rule, or constructing it from other sets",
+        "Listing its elements, drawing a Venn diagram, or stating its cardinality",
+        "Giving a decision rule, computing its power set, or taking its complement",
+        "Listing its elements, naming its universe of discourse, or giving a partition",
+        "Constructing it from other sets, writing a truth table, or stating a proposition"
+      ],
+      "explanation": "A set is defined by simply listing its elements, by giving a decision rule, or by constructing it from other sets; Venn diagrams only picture sets and cardinality is a property of a set.",
+      "page": 34
+    },
+    {
+      "n": 3,
+      "prompt": "Testers often meet \"untestable requirements\", such as N = {t : t is a nearly equilateral triangle}. What does Jorgensen give as the usual reason such requirements cannot be tested?",
+      "options": [
+        "They boil down to an ambiguous decision rule",
+        "Their decision rule is always false, so the set is empty",
+        "Their sets are infinite and cannot be drawn as Venn diagrams",
+        "Their elements are listed in no particular order",
+        "Their decision rule refers to itself, like the Barber of Seville"
+      ],
+      "explanation": "Jorgensen says the reason such requirements cannot be tested often boils down to an ambiguous decision rule (is a (50, 50, 51) triangle nearly equilateral?); self-reference is a separate problem with very little application for testers.",
+      "page": 34
+    },
+    {
+      "n": 4,
+      "prompt": "Which set is defined by the decision rule {year : 2012 ≤ year ≤ 1812}?",
+      "options": [
+        "The empty set, because the decision rule is always false",
+        "All years from 1812 to 2012 inclusive",
+        "The two-element set {1812, 2012}",
+        "The set {∅}, whose only element is the empty set",
+        "No set at all, since a decision rule may never be false"
+      ],
+      "explanation": "When a set is defined by a decision rule that is always false, the set is empty; no year is both ≥ 2012 and ≤ 1812, so the rule gives ∅, which is a different set from {∅}.",
+      "page": 35
+    },
+    {
+      "n": 5,
+      "prompt": "For A = {1, 2, 3, 4} and B = {3, 4, 5}, what is the symmetric difference A ⊕ B?",
+      "options": [
+        "{1, 2, 5}",
+        "{3, 4}",
+        "{1, 2}",
+        "{1, 2, 3, 4, 5}",
+        "{5}"
+      ],
+      "explanation": "A ⊕ B = (A ∪ B) − (A ∩ B) = {1, 2, 3, 4, 5} − {3, 4} = {1, 2, 5}, the elements that are in exactly one of the sets; {1, 2} is only the relative complement A − B.",
+      "page": 36
+    },
+    {
+      "n": 6,
+      "prompt": "For A = {1, 2, 3} and B = {w, x, y, z}, how many elements does the Cartesian product A × B contain?",
+      "options": [
+        "12",
+        "7",
+        "24",
+        "64",
+        "81"
+      ],
+      "explanation": "|A × B| = |A| × |B| = 3 × 4 = 12 ordered pairs <a, b> with a ∈ A and b ∈ B; 7 would come from adding the cardinalities instead of multiplying them.",
+      "page": 37
+    },
+    {
+      "n": 7,
+      "prompt": "Jorgensen says the fundamental difference between ordinary graphs and directed graphs is exactly the difference between which two notions?",
+      "options": [
+        "Unordered pairs (a, b) versus ordered pairs <a, b>",
+        "Finite versus infinite sets of nodes",
+        "Union versus intersection of the edge sets",
+        "Total versus partial participation of the nodes",
+        "Subsets versus proper subsets of the node set"
+      ],
+      "explanation": "For a ≠ b, (a, b) = (b, a) but <a, b> ≠ <b, a>; the book notes that this is exactly what separates ordinary (undirected) graphs from directed graphs.",
+      "page": 37
+    },
+    {
+      "n": 8,
+      "prompt": "A partition of B is a set of subsets A1, …, An with A1 ∪ … ∪ An = B and i ≠ j ⇒ Ai ∩ Aj = ∅. Which two assurances do these two properties give testers?",
+      "options": [
+        "Completeness and nonredundancy",
+        "Reflexivity and antisymmetry",
+        "Total and onto participation",
+        "Determinism and unambiguity",
+        "Closure and associativity"
+      ],
+      "explanation": "The union condition guarantees completeness (every element is in some subset) and the disjointness condition guarantees nonredundancy (no element is in two subsets).",
+      "page": 39
+    },
+    {
+      "n": 9,
+      "prompt": "The Triangle Program's universe (all triplets of positive integers) is split into equilateral, isosceles, scalene, right, and nontriangles. What problem does Jorgensen point out with this partition?",
+      "options": [
+        "Scalene and right are not disjoint; the triangle with sides 3, 4, 5 is in both",
+        "The five subsets do not cover every triplet of positive integers",
+        "A partition of a set may contain at most four subsets",
+        "Nontriangles lie outside the universe of discourse",
+        "The right subset is empty, since no integer triplet forms a right triangle"
+      ],
+      "explanation": "A partition needs pairwise disjoint subsets, but the 3, 4, 5 triangle is both scalene and right; the subsets still cover the whole universe, so coverage is not the issue.",
+      "page": 39
+    },
+    {
+      "n": 10,
+      "prompt": "Let A = {date : 1 January 1812 ≤ date ≤ 31 December 2012}, B = {date : 2 January 1812 ≤ date ≤ 1 January 2013}, and C = A ∪ B. How does Jorgensen classify NextDate : A → C?",
+      "options": [
+        "One-to-one and into",
+        "One-to-one and onto",
+        "Many-to-one and onto",
+        "Many-to-one and into",
+        "One-to-many and into"
+      ],
+      "explanation": "Distinct dates have distinct next dates (one-to-one), but the image of A is B, a proper subset of C, so NextDate : A → C is into; NextDate : A → B is the one-to-one, onto case.",
+      "page": 41
+    },
+    {
+      "n": 11,
+      "prompt": "Which statement about function types and testing does Jorgensen make?",
+      "options": [
+        "One-to-one functions require much more testing than many-to-one functions",
+        "Many-to-one functions require much more testing than one-to-one functions",
+        "Into and onto functions need exactly the same domain- and range-based tests",
+        "A one-to-one, onto function has no inverse that could serve as a cross-check",
+        "Composed chains of functions are unproblematic once each function is tested"
+      ],
+      "explanation": "The book says the into/onto distinction has implications for domain- and range-based functional testing and that one-to-one functions require much more testing than many-to-one functions; a one-to-one onto function always has an inverse usable as a cross-check.",
+      "page": 42
+    },
+    {
+      "n": 12,
+      "prompt": "In a relation R ⊆ A × B, at least one element of A does not appear in any ordered pair of R. What is R's participation with respect to A?",
+      "options": [
+        "Partial",
+        "Total",
+        "Onto",
+        "Into",
+        "One-to-many"
+      ],
+      "explanation": "Participation is total if every element of A is in some ordered pair and partial otherwise (mandatory vs. optional participation); onto and into describe the same idea for the elements of B.",
+      "page": 44
+    },
+    {
+      "n": 13,
+      "prompt": "Which combination of properties defines an ordering relation R ⊆ A × A?",
+      "options": [
+        "Reflexive, antisymmetric, and transitive",
+        "Reflexive, symmetric, and transitive",
+        "Symmetric, antisymmetric, and transitive",
+        "Reflexive and symmetric, but not transitive",
+        "Symmetric and antisymmetric, but not reflexive"
+      ],
+      "explanation": "An ordering relation (e.g., ≥ or Ancestor of) is reflexive, antisymmetric and transitive, whereas an equivalence relation is reflexive, symmetric and transitive.",
+      "page": 45
+    },
+    {
+      "n": 14,
+      "prompt": "Why do equivalence relations, and the partitions they induce, bring \"great efficiency\" to testing?",
+      "options": [
+        "Testing one element of an equivalence class lets us assume the others behave similarly",
+        "Each element of the set must be tested once, in a fixed order",
+        "Overlapping classes let one test case cover several classes at once",
+        "Equivalence classes can only be the empty set or the whole universe",
+        "Antisymmetry guarantees that redundant test cases are detected automatically"
+      ],
+      "explanation": "Partitions and equivalence relations are interchangeable, and great efficiency follows from testing just one element of an equivalence class and assuming the remaining elements behave similarly; equivalence classes never overlap.",
+      "page": 46
+    },
+    {
+      "n": 15,
+      "prompt": "For which truth values of p and q is the IF-THEN proposition p → q false?",
+      "options": [
+        "p is true and q is false",
+        "p is false and q is true",
+        "p is false and q is false",
+        "p is true and q is true",
+        "Whenever p and q have different truth values"
+      ],
+      "explanation": "The IF-THEN truth table is T, F, T, T for (p, q) = TT, TF, FT, FF, so p → q is false only when p is true and q is false; \"different truth values\" describes exclusive-or.",
+      "page": 47
+    },
+    {
+      "n": 16,
+      "prompt": "Which expression is logically equivalent to ¬((p → q) ∧ (q → p))?",
+      "options": [
+        "p ⊕ q",
+        "p ↔ q",
+        "p ∧ q",
+        "p ∨ q",
+        "¬p ∧ ¬q"
+      ],
+      "explanation": "The truth table of ¬((p → q) ∧ (q → p)) is F, T, T, F, identical to that of p ⊕ q; the un-negated (p → q) ∧ (q → p) is the bi-conditional p ↔ q.",
+      "page": 48
+    },
+    {
+      "n": 17,
+      "prompt": "With Pr(p) = |T(p)| / |U| and U the set of the 12 months of a year, what is the probability of the proposition p(m): \"m is a 30-day month\"?",
+      "options": [
+        "4/12",
+        "1/12",
+        "7/12",
+        "11/12",
+        "30/365"
+      ],
+      "explanation": "The truth set T(p) is {April, June, September, November}, so Pr(p) = |T(p)| / |U| = 4/12; 11/12 would wrongly count every month with at least 30 days.",
+      "page": 49
+    }
+  ]
+}

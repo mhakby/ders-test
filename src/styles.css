@@ -361,6 +361,21 @@ h2 {
   }
 }
 
+.link-row .link.on {
+  text-decoration: none;
+  background: var(--yellow);
+  color: var(--black);
+  border-radius: 8px;
+}
+
+.badge.exercise {
+  margin-left: 8px;
+  vertical-align: middle;
+  background: var(--yellow);
+  border-color: var(--yellow);
+  color: var(--black);
+}
+
 .notice {
   background: var(--surface-2);
   border-left: 4px solid var(--yellow);
@@ -854,6 +869,18 @@ h2 {
 .map-cell.current {
   outline: 3px solid var(--yellow);
   outline-offset: 1px;
+}
+
+.map-cell .book-mark {
+  position: absolute;
+  top: -3px;
+  left: 2px;
+  font-size: 0.65rem;
+}
+
+.exercise-count {
+  color: var(--text);
+  font-weight: 600;
 }
 
 .map-cell .star {

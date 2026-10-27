@@ -186,15 +186,15 @@
     },
     {
       "n": 15,
-      "prompt": "Weak assertions can still yield high coverage. Which technique is suggested to catch such weak assertions?",
+      "prompt": "A unit test suite reaches 95% branch coverage, but many tests only call methods and barely check the results. Which technique does the lecture suggest for exposing these weak assertions?",
       "options": [
         "Mutation testing",
-        "Branch coverage",
+        "Condition coverage",
         "Smoke testing",
         "Contract testing",
         "Build matrices"
       ],
-      "explanation": "Statement/branch/condition coverage is useful but not a goal, because weak assertions can still produce high coverage; mutation testing is named as the way to catch weak assertions.",
+      "explanation": "Statement/branch/condition coverage is useful but not a goal, because weak assertions can still yield high coverage; mutation testing is named as the way to catch them. Measuring another coverage criterion such as condition coverage only shows that more code ran, not that results were checked.",
       "slide": 17
     },
     {
@@ -326,6 +326,71 @@
       ],
       "explanation": "Best practices say to keep PR pipelines under about 10 minutes and to fail fast with clear, actionable messages. Under 1 second is the target for a local test suite segment, not a whole pipeline.",
       "slide": 36
+    },
+    {
+      "n": 26,
+      "prompt": "In the red step of TDD, a new failing test specifies a behavior that has not been implemented yet. In the book's Venn diagram of specified (S), programmed (P) and tested (T) behaviors, where does this behavior lie at that moment?",
+      "options": [
+        "In S and T, but not in P",
+        "In S and P, but not in T",
+        "In P and T, but not in S",
+        "In S, P and T",
+        "In T only, outside S and P"
+      ],
+      "explanation": "The new test specifies and tests the behavior, but no code implements it yet, so it lies in S and T outside P (region 4 of the book's Figure 1.4), which is why the test fails. The green step adds the minimal code and moves the behavior into S, P and T (region 1).",
+      "slide": 4
+    },
+    {
+      "n": 27,
+      "prompt": "A developer new to a module learns how it is expected to behave by reading its TDD tests, which show concrete inputs and expected results. Which benefit of TDD does this illustrate?",
+      "options": [
+        "Self-documenting examples that act as specs",
+        "Emergent design with better cohesion",
+        "Fewer regressions and safer refactoring",
+        "A complete design that is fixed up front",
+        "Coverage figures that rise without added value"
+      ],
+      "explanation": "TDD leaves behind living examples that document expected behavior (self-documenting examples/specs). Emergent design and safer refactoring are other benefits that this scenario does not show, while a fixed up-front design and coverage without value (test theater) are not TDD benefits.",
+      "slide": 8
+    },
+    {
+      "n": 28,
+      "prompt": "Tests of an order service replace the real database with an in-memory implementation that actually stores and returns orders, so the tests stay realistic and fast. Which kind of test double is this?",
+      "options": [
+        "Fake",
+        "Stub",
+        "Mock",
+        "Spy",
+        "Dummy"
+      ],
+      "explanation": "A fake is a lightweight working implementation such as an in-memory DB, and the lecture prefers fakes to keep tests realistic and fast. A stub only returns canned values, a spy records interactions, a mock verifies them and a dummy is never used.",
+      "slide": 11
+    },
+    {
+      "n": 29,
+      "prompt": "A library must be built and tested on Windows, Linux and macOS, each with two SDK versions, on every pull request. Which CI infrastructure feature is meant for this?",
+      "options": [
+        "A build matrix over OS and SDK versions",
+        "Caching of dependencies and Docker layers",
+        "A canary rollout with gradual traffic",
+        "A quarantine list for flaky tests",
+        "Feature flags that decouple deploy and release"
+      ],
+      "explanation": "Build matrices run the same jobs across OS/SDK versions (here 3 × 2 = 6 combinations), and parallel jobs and matrices speed feedback. Caching only makes builds faster, while canary rollouts and feature flags are deployment and release techniques.",
+      "slide": 26
+    },
+    {
+      "n": 30,
+      "prompt": "A flaky test keeps blocking merges while its cause is being investigated. Which pipeline observability practice from the lecture addresses this?",
+      "options": [
+        "Track the test and put it on a quarantine list",
+        "Raise the minimum coverage threshold for merges",
+        "Make the test a required PR quality gate",
+        "Run the test only in production after deploying",
+        "Roll back the last release with blue/green"
+      ],
+      "explanation": "Observability in pipelines includes flaky test tracking and quarantine lists, because flaky tests blocking merges is a common CI/CD pitfall. The cause is then fixed separately, e.g. by controlling time and randomness.",
+      "slide": 30
     }
   ]
 }

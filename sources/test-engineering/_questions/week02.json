@@ -4,7 +4,7 @@
   "questions": [
     {
       "n": 1,
-      "prompt": "In the V-model diagram, which testing level is paired with Requirement Gathering on the opposite side of the V?",
+      "prompt": "In the lecture's V-model diagram (Requirement Gathering, System Analysis, Software Design, Module Design, Coding), which testing level is paired with Requirement Gathering on the opposite side of the V?",
       "options": [
         "Acceptance Testing",
         "System Testing",
@@ -12,7 +12,7 @@
         "Unit Testing",
         "Static Testing"
       ],
-      "explanation": "In the V-model, Requirement Gathering is paired with Acceptance Testing; System Analysis pairs with System Testing, Software Design with Integration Testing and Module Design with Unit Testing.",
+      "explanation": "In the lecture's V-model, Requirement Gathering is paired with Acceptance Testing; System Analysis pairs with System Testing, Software Design with Integration Testing and Module Design with Unit Testing. The textbook's levels figure (Fig. 1.10) has no acceptance level and pairs requirements specification with system testing, so this pairing belongs to the lecture's diagram.",
       "slide": 2
     },
     {
@@ -30,7 +30,7 @@
     },
     {
       "n": 3,
-      "prompt": "In the V-lifecycle testing diagram, which pairing of testing approach and lifecycle levels is shown?",
+      "prompt": "In the lecture's V-lifecycle testing diagram, which pairing of testing approach and lifecycle levels is shown?",
       "options": [
         "Black-box — Specification and SW Integration",
         "White-box — Analysis and System Test",
@@ -38,12 +38,12 @@
         "White-box — Specification and SW Integration",
         "White-box — Analysis and Specification"
       ],
-      "explanation": "The V-lifecycle diagram groups Specification and SW Integration as black-box, Design, Implementation and Unit Test as white-box, and Analysis and System Test as random test.",
+      "explanation": "The V-lifecycle diagram groups Specification and SW Integration as black-box, Design, Implementation and Unit Test as white-box, and Analysis and System Test as random test. Placing unit test under white-box agrees with the textbook, which finds structural (white-box) testing best suited to the unit level.",
       "slide": 4
     },
     {
       "n": 4,
-      "prompt": "What characterizes black-box testing?",
+      "prompt": "What characterizes black-box testing (called functional testing in the textbook)?",
       "options": [
         "The internal structure and code are hidden; nothing is known about them",
         "The tester knows the internal structure and code of the software",
@@ -51,7 +51,7 @@
         "Test inputs are chosen at random instead of from a specification",
         "Each individual unit is tested in isolation by its developer"
       ],
-      "explanation": "In black-box testing the internal structure, program or code is hidden and nothing is known about it; knowing the internal structure is white-box testing.",
+      "explanation": "In black-box testing the internal structure, program or code is hidden and nothing is known about it; the textbook's functional testing likewise treats the program as a function from inputs to outputs and uses only the specification. Knowing the internal structure is white-box (the textbook's structural) testing.",
       "slide": 5
     },
     {
@@ -64,7 +64,7 @@
         "Static and black-box",
         "Random and black-box"
       ],
-      "explanation": "Running the tests executes the code, so it is dynamic, and designing them from the source code means the tester looks at the code, so it is white-box.",
+      "explanation": "Running the tests executes the code, so it is dynamic, and designing them from the source code means the tester looks at the code, so it is white-box (structural testing in the textbook's terms).",
       "slide": 6
     },
     {
@@ -82,7 +82,7 @@
     },
     {
       "n": 7,
-      "prompt": "Which statement matches the testing percentages recommended in the course?",
+      "prompt": "Which statement matches the lecture's 'Testing Percentages' slide?",
       "options": [
         "System tests verify class interactions and make up 20% of tests",
         "Unit tests verify class interactions and make up 20% of tests",
@@ -90,7 +90,7 @@
         "Unit tests verify end-to-end journeys and make up 10% of tests",
         "System tests verify a single class and make up 70% of tests"
       ],
-      "explanation": "The slide gives unit tests (behavior of a single class) 70%, system tests (class interactions) 20% and GUI tests (end-to-end journeys) 10% of all tests.",
+      "explanation": "The slide gives unit tests (behavior of a single class) 70%, system tests (class interactions) 20% and GUI tests (end-to-end journeys) 10% of all tests. Note that this slide uses 'system tests' for class interactions, whereas the week 1 level definitions assign interactions between components to integration testing.",
       "slide": 8
     },
     {
@@ -287,6 +287,58 @@
       ],
       "explanation": "The pipeline order is Commit, Trigger, Build, Notify build outcome, Run tests, Notify test outcome, Deliver build to staging, then Deploy changes to production.",
       "slide": 27
+    },
+    {
+      "n": 23,
+      "prompt": "Debit_WithValidAmount_UpdatesBalance (beginning balance 11.99, debit 4.55, expected 7.44, tolerance 0.001) is run while BankAccount.Debit still contains the line m_balance += amount. What happens?",
+      "options": [
+        "The balance becomes 16.54, so the assertion fails with \"Account not debited correctly\"",
+        "The balance becomes 7.44, so the assertion passes and the test succeeds",
+        "Debit throws ArgumentOutOfRangeException because 4.55 exceeds the balance",
+        "The balance becomes 16.54, but the test passes within the 0.001 tolerance",
+        "The balance stays 11.99, so the assertion fails with \"Account not debited correctly\""
+      ],
+      "explanation": "Neither guard throws (4.55 is not negative and not above 11.99), so += raises the balance to 11.99 + 4.55 = 16.54, far from the expected 7.44, and Assert.AreEqual fails. In the textbook's terms the += line is a fault, and executing it in this test produces a failure that the assertion reveals.",
+      "slide": 15
+    },
+    {
+      "n": 24,
+      "prompt": "The textbook describes a test case by its preconditions, inputs and expected outputs. How does Debit_WithValidAmount_UpdatesBalance map onto these?",
+      "options": [
+        "Precondition: account balance 11.99; input: debit 4.55; expected output: balance 7.44",
+        "Precondition: debit 4.55; input: account balance 11.99; expected output: balance 7.44",
+        "Precondition: account balance 7.44; input: debit 4.55; expected output: balance 11.99",
+        "Precondition: account balance 11.99; input: debit 7.44; expected output: balance 4.55",
+        "Precondition: account balance 4.55; input: debit 11.99; expected output: balance 7.44"
+      ],
+      "explanation": "The Arrange section creates an account with balance 11.99 (the precondition), Act calls Debit with 4.55 (the actual input), and Assert compares the account's balance with the expected output 7.44.",
+      "slide": 18
+    },
+    {
+      "n": 25,
+      "prompt": "A requirement in the specification was never implemented, so the code contains no trace of it. Which approach can reveal this gap?",
+      "options": [
+        "Black-box testing, since its tests come from the specified behavior, not the code",
+        "White-box testing, since its tests are derived from the program's code",
+        "White-box testing, since knowing the code exposes every missing feature",
+        "Running a linter, since missing features cause static analysis warnings",
+        "Unit testing with mocks, since mocks stand in for the missing feature"
+      ],
+      "explanation": "Black-box tests are designed without knowledge of the code, from what the product should do, so a missing feature shows up as a failing test. The textbook makes the same point: structural (white-box) tests cannot detect specified behavior that was never implemented, while functional tests cannot detect implemented behavior that was never specified.",
+      "slide": 5
+    },
+    {
+      "n": 26,
+      "prompt": "A class only works together with a database connection, a message queue and several collaborating classes, so a developer struggles to test it on its own. Which disadvantage of unit testing does this illustrate?",
+      "options": [
+        "Difficulty in testing complex units",
+        "Difficulty in testing interactions",
+        "Over-reliance on automation",
+        "Difficulty in testing user interfaces",
+        "Maintenance overhead"
+      ],
+      "explanation": "Complex units are hard to isolate from the rest of the system, which makes them difficult to test in isolation; difficulty in testing interactions is instead about unit tests not covering how units work together.",
+      "slide": 22
     }
   ]
 }

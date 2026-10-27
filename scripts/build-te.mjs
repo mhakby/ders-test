@@ -1,4 +1,5 @@
-// Builds data/courses/test-engineering.json from sources/test-engineering/_questions/weekNN.json.
+// Builds data/courses/test-engineering.json from sources/test-engineering/_questions/:
+//   weekNN.json (slides), book-chNN.json (Jorgensen textbook), tutorial-NN.json (tutorial articles).
 // In the source files options[0] is always the correct answer; here options are shuffled
 // deterministically so that the correct letter is balanced (every block of 5 questions in a set
 // uses each of A–E once). Re-running on unchanged input gives identical output.
@@ -9,6 +10,8 @@ const root = path.resolve(import.meta.dirname, '..');
 const qDir = path.join(root, 'sources', 'test-engineering', '_questions');
 const outFile = path.join(root, 'data', 'courses', 'test-engineering.json');
 const LETTERS = ['A', 'B', 'C', 'D', 'E'];
+const MIDTERM_LAST_WEEK = 6;
+const BOOK = 'Jorgensen, Software Testing (2. baskı)';
 
 function hash(str) {
   let h = 2166136261;
@@ -32,36 +35,74 @@ function shuffled(items, seed) {
   return a;
 }
 
-const files = (await readdir(qDir)).filter(f => /^week\d\d\.json$/.test(f)).sort();
+// Part file kinds, in the order their sets appear in the app.
+const KINDS = [
+  {
+    match: /^week(\d\d)\.json$/,
+    setId: nn => `week-${nn}`,
+    idPrefix: nn => `te-w${nn}`,
+    title: (nn, part) => `Week ${Number(nn)}: ${part.title}`,
+    source: (nn, q) => ({ file: `week${nn}.pptx`, kind: 'slides', slide: q.slide }),
+    midterm: nn => Number(nn) <= MIDTERM_LAST_WEEK,
+  },
+  {
+    match: /^book-ch(\d\d)\.json$/,
+    setId: nn => `book-ch-${nn}`,
+    idPrefix: nn => `te-b${nn}`,
+    title: (nn, part) => `Kitap Bölüm ${Number(nn)}: ${part.title}`,
+    source: (nn, q) => ({
+      file: BOOK,
+      kind: 'book',
+      page: q.page,
+      ...(q.exercise ? { exercise: `${Number(nn)}.${q.exercise}` } : {}),
+    }),
+    midterm: () => true,
+  },
+  {
+    match: /^tutorial-(\d\d)\.json$/,
+    setId: nn => `tutorial-${nn}`,
+    idPrefix: nn => `te-t${nn}`,
+    title: (nn, part) => `Tutorial ${Number(nn)}: ${part.title}`,
+    source: (nn, q, part) => ({ file: new URL(part.url).hostname.replace(/^www\./, ''), kind: 'tutorial', section: q.section }),
+    midterm: () => true,
+  },
+];
+
+const files = (await readdir(qDir)).sort();
 const sets = [];
+const midtermSets = [];
 const problems = [];
 
-for (const file of files) {
-  const nn = file.slice(4, 6);
-  const part = JSON.parse(await readFile(path.join(qDir, file), 'utf8'));
-  const setId = `week-${nn}`;
-  const seenN = new Set();
-  const questions = part.questions.map((q, i) => {
-    const id = `te-w${nn}-${String(q.n).padStart(2, '0')}`;
-    if (seenN.has(q.n)) problems.push(`${file}: duplicate n ${q.n}`);
-    seenN.add(q.n);
-    if (q.options.length !== 5) problems.push(`${id}: ${q.options.length} options`);
-    const block = shuffled([0, 1, 2, 3, 4], hash(`${setId}:${Math.floor(i / 5)}`));
-    const target = block[i % 5] % q.options.length;
-    const distractors = shuffled(q.options.slice(1), hash(id));
-    const options = [];
-    for (let k = 0; k < q.options.length; k++) options.push(k === target ? q.options[0] : distractors.shift());
-    return {
-      id,
-      number: String(q.n),
-      prompt: { en: q.prompt },
-      options: { en: options },
-      answer: [LETTERS[target]],
-      explanation: { en: q.explanation },
-      source: { file: `week${nn}.pptx`, slide: q.slide },
-    };
-  });
-  sets.push({ id: setId, title: `Week ${Number(nn)}: ${part.title}`, questions });
+for (const kind of KINDS) {
+  for (const file of files) {
+    const nn = file.match(kind.match)?.[1];
+    if (!nn) continue;
+    const part = JSON.parse(await readFile(path.join(qDir, file), 'utf8'));
+    const setId = kind.setId(nn);
+    const seenN = new Set();
+    const questions = part.questions.map((q, i) => {
+      const id = `${kind.idPrefix(nn)}-${String(q.n).padStart(2, '0')}`;
+      if (seenN.has(q.n)) problems.push(`${file}: duplicate n ${q.n}`);
+      seenN.add(q.n);
+      if (q.options.length !== 5) problems.push(`${id}: ${q.options.length} options`);
+      const block = shuffled([0, 1, 2, 3, 4], hash(`${setId}:${Math.floor(i / 5)}`));
+      const target = block[i % 5] % q.options.length;
+      const distractors = shuffled(q.options.slice(1), hash(id));
+      const options = [];
+      for (let k = 0; k < q.options.length; k++) options.push(k === target ? q.options[0] : distractors.shift());
+      return {
+        id,
+        number: String(q.n),
+        prompt: { en: q.prompt },
+        options: { en: options },
+        answer: [LETTERS[target]],
+        explanation: { en: q.explanation },
+        source: kind.source(nn, q, part),
+      };
+    });
+    sets.push({ id: setId, title: kind.title(nn, part), questions });
+    if (kind.midterm(nn)) midtermSets.push(setId);
+  }
 }
 
 const course = {
@@ -71,14 +112,15 @@ const course = {
   languages: { primary: 'en' },
   origin: 'generated',
   sourceNote:
-    'CEN315 Introduction to Test Engineering haftalık slaytlarından (Week 1–13) Claude tarafından üretildi. Şüpheli bir cevapta slayta bakın ve "Bu soruda sorun var" ile işaretleyin.',
+    'CEN315 haftalık slaytlarından (Week 1–13), ders kitabından (Jorgensen, Software Testing: A Craftsman\'s Approach, 2. baskı, Bölüm 1–11) ve tutorial makalesinden Claude tarafından üretildi. Vize kapsamı: Week 1–6, kitap s. 1–183, tutorial. Şüpheli bir cevapta kaynağa bakın ve "Bu soruda sorun var" ile işaretleyin.',
+  presets: [{ id: 'vize', title: 'Vize', sets: midtermSets }],
   sets,
 };
 
 await writeFile(outFile, JSON.stringify(course, null, 1) + '\n');
 const total = sets.reduce((n, s) => n + s.questions.length, 0);
-console.log(`test-engineering.json: ${sets.length} sets, ${total} questions`);
-for (const s of sets) console.log(`  ${s.id}  ${String(s.questions.length).padStart(3)}  ${s.title}`);
+console.log(`test-engineering.json: ${sets.length} sets, ${total} questions (vize: ${midtermSets.length} sets)`);
+for (const s of sets) console.log(`  ${s.id.padEnd(12)} ${String(s.questions.length).padStart(3)}  ${s.title}`);
 if (problems.length) {
   console.error(problems.join('\n'));
   process.exit(1);
